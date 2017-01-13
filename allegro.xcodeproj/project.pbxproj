@@ -10,7 +10,6 @@
 		647E7D6823A9CE544AF81ACD /* Pods_allegroUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */; };
 		6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */; };
 		6B6E26F01E288F8200F9CF66 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E26EF1E288F8200F9CF66 /* ViewController.swift */; };
-		6B6E26F31E288F8200F9CF66 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F11E288F8200F9CF66 /* Main.storyboard */; };
 		6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F41E288F8200F9CF66 /* Assets.xcassets */; };
 		6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */; };
 		6B6E27031E288F8200F9CF66 /* allegroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27021E288F8200F9CF66 /* allegroTests.swift */; };
@@ -44,7 +43,6 @@
 		6B6E26EA1E288F8200F9CF66 /* allegro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = allegro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B6E26EF1E288F8200F9CF66 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		6B6E26F21E288F8200F9CF66 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6B6E26F41E288F8200F9CF66 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6B6E26F71E288F8200F9CF66 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6B6E26F91E288F8200F9CF66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 			children = (
 				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
 				6B6E26EF1E288F8200F9CF66 /* ViewController.swift */,
-				6B6E26F11E288F8200F9CF66 /* Main.storyboard */,
 				6B6E26F41E288F8200F9CF66 /* Assets.xcassets */,
 				6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */,
 				6B6E26F91E288F8200F9CF66 /* Info.plist */,
@@ -287,7 +284,6 @@
 			files = (
 				6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */,
 				6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */,
-				6B6E26F31E288F8200F9CF66 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,14 +496,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		6B6E26F11E288F8200F9CF66 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6B6E26F21E288F8200F9CF66 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -719,6 +707,7 @@
 				6B6E27141E288F8200F9CF66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6B6E27151E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegroTests" */ = {
 			isa = XCConfigurationList;
@@ -727,6 +716,7 @@
 				6B6E27171E288F8200F9CF66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6B6E27181E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegroUITests" */ = {
 			isa = XCConfigurationList;
@@ -735,6 +725,7 @@
 				6B6E271A1E288F8200F9CF66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
