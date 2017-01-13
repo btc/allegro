@@ -16,7 +16,7 @@ class CompositionViewController: UIViewController {
     
     fileprivate var debugGestureLabel: UILabel = {
         let v = UILabel()
-        v.textAlignment = .center
+        v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 24)
         return v
     }()
     
@@ -33,7 +33,7 @@ class CompositionViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        debugGestureLabel.frame = CGRect(x: 22, y: 22, width: 100, height: 16)
+        debugGestureLabel.frame = CGRect(x: 22, y: 22, width: 200, height: 24)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
