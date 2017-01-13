@@ -14,7 +14,7 @@ class CompositionViewController: UIViewController {
     
     var actionGestureRecognizer: ActionGestureRecognizer?
     
-    var debugGestureLabel: UILabel = {
+    fileprivate var debugGestureLabel: UILabel = {
         let v = UILabel()
         v.textAlignment = .center
         return v
