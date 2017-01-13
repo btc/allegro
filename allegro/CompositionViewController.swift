@@ -12,7 +12,7 @@ import UIKit
 
 class CompositionViewController: UIViewController {
     
-    var actionGestureRecognizer: AllegroGestureRecognizer?
+    var actionGestureRecognizer: ActionGestureRecognizer?
     
     var debugGestureLabel: UILabel = {
         let v = UILabel()
@@ -49,7 +49,7 @@ class CompositionViewController: UIViewController {
     }
     
     private func setupActionGestureRecognizer() {
-        actionGestureRecognizer = AllegroGestureRecognizer(view: view)
+        actionGestureRecognizer = ActionGestureRecognizer(view: view)
         actionGestureRecognizer?.delegate = self
         
         AllegroTweaks.bind(AllegroTweaks.actionDelta) { [weak self] value -> Void in
@@ -61,8 +61,8 @@ class CompositionViewController: UIViewController {
     }
 }
 
-extension CompositionViewController: AllegroGestureDelegate {
-    func actionGestureRecognized(gesture: AllegroGesture, at location: CGPoint) {
+extension CompositionViewController: ActionGestureDelegate {
+    func actionGestureRecognized(gesture: ActionGesture, at location: CGPoint) {
         debugGestureLabel.text = gesture.rawValue
         Log.info?.message("Recognized \(gesture.rawValue) action at \(location)")
     }

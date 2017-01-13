@@ -9,7 +9,7 @@
 import UIKit
 
 // TODO(btc): move this somewhere appropriate
-enum AllegroGesture: String {
+enum ActionGesture: String {
     case note // tap
     case flat
     case sharp
@@ -20,21 +20,20 @@ enum AllegroGesture: String {
     case chord // TODO(btc): should we include this at all?
 }
 
-protocol AllegroGestureDelegate: class {
-    func actionGestureRecognized(gesture: AllegroGesture, at location: CGPoint)
+protocol ActionGestureDelegate: class {
+    func actionGestureRecognized(gesture: ActionGesture, at location: CGPoint)
 }
 
-class AllegroGestureRecognizer {
+class ActionGestureRecognizer {
 
     var delta: Double = 22
     var costMax = 1
     
     private let swipeGestureRecognizer: DBPathRecognizer?
-    
     private var rawPoints: [Int] = [Int]()
     
     weak var view: UIView?
-    weak var delegate: AllegroGestureDelegate?
+    weak var delegate: ActionGestureDelegate?
 
     // TODO we should probably make it explicit that this class will add gesture recognizers to the view
     init(view: UIView) {
@@ -62,7 +61,7 @@ class AllegroGestureRecognizer {
     }
     
     private func setupSwipeGestures() {
-        let map: [AllegroGesture:[Int]] = [
+        let map: [ActionGesture : [Int]] = [
             .flat: [0,2],
             .sharp: [0,6],
             .natural: [0],
@@ -104,7 +103,7 @@ class AllegroGestureRecognizer {
         var path = Path()
         path.addPointFromRaw(rawPoints)
         if let gesture = swipeGestureRecognizer?.recognizePath(path),
-            let type = gesture.datas as? AllegroGesture,
+            let type = gesture.datas as? ActionGesture,
             rawPoints.count > 2 {
             let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
             delegate?.actionGestureRecognized(gesture: type, at: point)
