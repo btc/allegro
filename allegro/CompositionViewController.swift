@@ -8,10 +8,48 @@
 
 import UIKit
 
-class CompositionViewController: UIViewController {
 
+
+class CompositionViewController: UIViewController {
+    
+    var actionGestureRecognizer: AllegroGestureRecognizer?
+    
+    var debugGestureLabel: UILabel = {
+        let v = UILabel()
+        v.textAlignment = .center
+        return v
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
+        
+        actionGestureRecognizer = AllegroGestureRecognizer(view: view)
+        actionGestureRecognizer?.delegate = self
+        
+        view.addSubview(debugGestureLabel)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        debugGestureLabel.frame = CGRect(x: 22, y: 22, width: 100, height: 16)
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        actionGestureRecognizer?.touchesBegan(touches, with: event)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        actionGestureRecognizer?.touchesMoved(touches, with: event)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        actionGestureRecognizer?.touchesEnded(touches, with: event)
+    }
+}
+
+extension CompositionViewController: AllegroGestureDelegate {
+    func actionGestureRecognized(gesture: AllegroGesture, at location: CGPoint) {
+        debugGestureLabel.text = gesture.rawValue
+        Log.info?.message("Recognized \(gesture.rawValue) action at \(location)")
     }
 }
