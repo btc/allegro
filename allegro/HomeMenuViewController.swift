@@ -37,6 +37,8 @@ class HomeMenuViewController: UIViewController {
         view.addSubview(logo)
         view.addSubview(newCompositionButton)
         view.addSubview(instructionsButton)
+        
+        newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -69,5 +71,10 @@ class HomeMenuViewController: UIViewController {
                                           y: newCompositionButton.frame.maxY + DEFAULT_MARGIN_PTS,
                                           width: buttonW,
                                           height: buttonH)
+    }
+    
+    func newCompositionTapped() {
+        let vc = CompositionViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
