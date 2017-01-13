@@ -20,7 +20,7 @@ typealias Log = CleanroomLogger.Log // to avoid importing CleanroomLogger in eve
 
 let THE_GOLDEN_RATIO: CGFloat = 1.61803398875
 
-struct AllegroTweaks: TweakLibraryType {
+struct Tweaks: TweakLibraryType {
     static let actionCost = Tweak<Int>("General", "Gestures", "Action Cost", defaultValue: 1, min: 0)
     static let actionDelta = Tweak<Double>("General", "Gestures", "Delta", defaultValue: 22, min: 0)
     

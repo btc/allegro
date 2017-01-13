@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        window = TweakWindow(frame: UIScreen.main.bounds, tweakStore: AllegroTweaks.defaultStore)
+        window = TweakWindow(frame: UIScreen.main.bounds, tweakStore: Tweaks.defaultStore)
         window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
         window?.makeKeyAndVisible()
         Log.info?.message("App launched!")
