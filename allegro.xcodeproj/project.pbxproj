@@ -14,6 +14,8 @@
 		6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */; };
 		6B6E27031E288F8200F9CF66 /* allegroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27021E288F8200F9CF66 /* allegroTests.swift */; };
 		6B6E270E1E288F8200F9CF66 /* allegroUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E270D1E288F8200F9CF66 /* allegroUITests.swift */; };
+		6B6E271D1E28979100F9CF66 /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */; };
+		6B6E27201E28985F00F9CF66 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E271F1E28985F00F9CF66 /* Utils.swift */; };
 		89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */; };
 		A38CFF6CB5898986752C58AB /* Pods_allegroTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */; };
 /* End PBXBuildFile section */
@@ -52,6 +54,8 @@
 		6B6E27091E288F8200F9CF66 /* allegroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = allegroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B6E270D1E288F8200F9CF66 /* allegroUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = allegroUITests.swift; sourceTree = "<group>"; };
 		6B6E270F1E288F8200F9CF66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/iOS/CleanroomLogger.framework; sourceTree = SOURCE_ROOT; };
+		6B6E271F1E28985F00F9CF66 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		9EA11674E74CCF5EDB06D551 /* Pods-allegroTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.release.xcconfig"; sourceTree = "<group>"; };
 		A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegroTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B48B0377F0C8F35F8EAD5DDB /* Pods-allegro.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegro.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegro/Pods-allegro.debug.xcconfig"; sourceTree = "<group>"; };
@@ -65,6 +69,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */,
+				6B6E271D1E28979100F9CF66 /* CleanroomLogger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,8 +140,10 @@
 		6B6E26EC1E288F8200F9CF66 /* allegro */ = {
 			isa = PBXGroup;
 			children = (
+				6B6E271B1E28978100F9CF66 /* Frameworks */,
 				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
 				6B6E26EF1E288F8200F9CF66 /* ViewController.swift */,
+				6B6E271F1E28985F00F9CF66 /* Utils.swift */,
 				6B6E26F41E288F8200F9CF66 /* Assets.xcassets */,
 				6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */,
 				6B6E26F91E288F8200F9CF66 /* Info.plist */,
@@ -160,6 +167,14 @@
 				6B6E270F1E288F8200F9CF66 /* Info.plist */,
 			);
 			path = allegroUITests;
+			sourceTree = "<group>";
+		};
+		6B6E271B1E28978100F9CF66 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -325,6 +340,7 @@
 			files = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/CleanroomLogger.framework",
 			);
 			outputPaths = (
 			);
@@ -461,6 +477,7 @@
 			files = (
 				6B6E26F01E288F8200F9CF66 /* ViewController.swift in Sources */,
 				6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */,
+				6B6E27201E28985F00F9CF66 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,6 +621,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 976H852GCK;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = allegro/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = gu.allegro;
@@ -618,6 +639,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 976H852GCK;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = allegro/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = gu.allegro;
