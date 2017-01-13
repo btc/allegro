@@ -10,29 +10,32 @@ import UIKit
 
 class HomeMenuViewController: UIViewController {
     
-    private let logo: UIImageView = {
-        let v = UIImageView()
-        v.backgroundColor = UIColor.purple
+
+    private let logo: UIView = {
+        let v = UILabel() // TODO(btc): replace this with the logo image
+        v.text = Strings.APP_NAME
+        v.textAlignment = .center
+        v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 60)
         return v
     }()
     
     private let newCompositionButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = UIColor.gray
-        v.setTitle("New", for: .normal)
+        v.setTitle(Strings.NEW, for: .normal)
         return v
     }()
 
     private let instructionsButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = UIColor.gray
-        v.setTitle("Instructions", for: .normal)
+        v.setTitle(Strings.INSTRUCTIONS, for: .normal)
         return v
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.green
+        view.backgroundColor = UIColor.white
         
         view.addSubview(logo)
         view.addSubview(newCompositionButton)

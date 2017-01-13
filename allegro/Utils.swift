@@ -19,6 +19,15 @@ import SwiftTweaks
 typealias Log = CleanroomLogger.Log // to avoid importing CleanroomLogger in every file where we log things
 
 let THE_GOLDEN_RATIO: CGFloat = 1.61803398875
+let DEFAULT_FONT_BOLD = "HelveticaNeue-Bold"
+
+// TODO(btc): Handle localization
+// All strings are here so we know where to look when we want to add new languages
+struct Strings {
+    static let APP_NAME = "Allegro"
+    static let NEW = "New"
+    static let INSTRUCTIONS = "Instructions"
+}
 
 struct Tweaks: TweakLibraryType {
     static let actionCost = Tweak<Int>("General", "Gestures", "Action Cost", defaultValue: 1, min: 0)
