@@ -52,8 +52,8 @@ class CompositionViewController: UIViewController {
         actionGestureRecognizer = ActionGestureRecognizer(view: view)
         actionGestureRecognizer?.delegate = self
         
-        AllegroTweaks.bind(AllegroTweaks.actionDelta) { [weak self] value -> Void in
-            self?.actionGestureRecognizer?.delta = value
+        AllegroTweaks.bind(AllegroTweaks.actionDelta) { [weak self] (v: Double) -> Void in
+            self?.actionGestureRecognizer?.delta = v
         }
         AllegroTweaks.bind(AllegroTweaks.actionCost) { [weak self] (v: Int) -> Void in
             self?.actionGestureRecognizer?.costMax = v
