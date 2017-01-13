@@ -1,0 +1,535 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */; };
+		6B6E26F01E288F8200F9CF66 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E26EF1E288F8200F9CF66 /* ViewController.swift */; };
+		6B6E26F31E288F8200F9CF66 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F11E288F8200F9CF66 /* Main.storyboard */; };
+		6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F41E288F8200F9CF66 /* Assets.xcassets */; };
+		6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */; };
+		6B6E27031E288F8200F9CF66 /* allegroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27021E288F8200F9CF66 /* allegroTests.swift */; };
+		6B6E270E1E288F8200F9CF66 /* allegroUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E270D1E288F8200F9CF66 /* allegroUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6B6E26FF1E288F8200F9CF66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B6E26E21E288F8200F9CF66 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6B6E26E91E288F8200F9CF66;
+			remoteInfo = allegro;
+		};
+		6B6E270A1E288F8200F9CF66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6B6E26E21E288F8200F9CF66 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6B6E26E91E288F8200F9CF66;
+			remoteInfo = allegro;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		6B6E26EA1E288F8200F9CF66 /* allegro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = allegro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6B6E26EF1E288F8200F9CF66 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6B6E26F21E288F8200F9CF66 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6B6E26F41E288F8200F9CF66 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6B6E26F71E288F8200F9CF66 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6B6E26F91E288F8200F9CF66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B6E26FE1E288F8200F9CF66 /* allegroTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = allegroTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B6E27021E288F8200F9CF66 /* allegroTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = allegroTests.swift; sourceTree = "<group>"; };
+		6B6E27041E288F8200F9CF66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B6E27091E288F8200F9CF66 /* allegroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = allegroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6B6E270D1E288F8200F9CF66 /* allegroUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = allegroUITests.swift; sourceTree = "<group>"; };
+		6B6E270F1E288F8200F9CF66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6B6E26E71E288F8200F9CF66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6E26FB1E288F8200F9CF66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6E27061E288F8200F9CF66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6B6E26E11E288F8200F9CF66 = {
+			isa = PBXGroup;
+			children = (
+				6B6E26EC1E288F8200F9CF66 /* allegro */,
+				6B6E27011E288F8200F9CF66 /* allegroTests */,
+				6B6E270C1E288F8200F9CF66 /* allegroUITests */,
+				6B6E26EB1E288F8200F9CF66 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6B6E26EB1E288F8200F9CF66 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6B6E26EA1E288F8200F9CF66 /* allegro.app */,
+				6B6E26FE1E288F8200F9CF66 /* allegroTests.xctest */,
+				6B6E27091E288F8200F9CF66 /* allegroUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6B6E26EC1E288F8200F9CF66 /* allegro */ = {
+			isa = PBXGroup;
+			children = (
+				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
+				6B6E26EF1E288F8200F9CF66 /* ViewController.swift */,
+				6B6E26F11E288F8200F9CF66 /* Main.storyboard */,
+				6B6E26F41E288F8200F9CF66 /* Assets.xcassets */,
+				6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */,
+				6B6E26F91E288F8200F9CF66 /* Info.plist */,
+			);
+			path = allegro;
+			sourceTree = "<group>";
+		};
+		6B6E27011E288F8200F9CF66 /* allegroTests */ = {
+			isa = PBXGroup;
+			children = (
+				6B6E27021E288F8200F9CF66 /* allegroTests.swift */,
+				6B6E27041E288F8200F9CF66 /* Info.plist */,
+			);
+			path = allegroTests;
+			sourceTree = "<group>";
+		};
+		6B6E270C1E288F8200F9CF66 /* allegroUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6B6E270D1E288F8200F9CF66 /* allegroUITests.swift */,
+				6B6E270F1E288F8200F9CF66 /* Info.plist */,
+			);
+			path = allegroUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6B6E26E91E288F8200F9CF66 /* allegro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B6E27121E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegro" */;
+			buildPhases = (
+				6B6E26E61E288F8200F9CF66 /* Sources */,
+				6B6E26E71E288F8200F9CF66 /* Frameworks */,
+				6B6E26E81E288F8200F9CF66 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = allegro;
+			productName = allegro;
+			productReference = 6B6E26EA1E288F8200F9CF66 /* allegro.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6B6E26FD1E288F8200F9CF66 /* allegroTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B6E27151E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegroTests" */;
+			buildPhases = (
+				6B6E26FA1E288F8200F9CF66 /* Sources */,
+				6B6E26FB1E288F8200F9CF66 /* Frameworks */,
+				6B6E26FC1E288F8200F9CF66 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6B6E27001E288F8200F9CF66 /* PBXTargetDependency */,
+			);
+			name = allegroTests;
+			productName = allegroTests;
+			productReference = 6B6E26FE1E288F8200F9CF66 /* allegroTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6B6E27081E288F8200F9CF66 /* allegroUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B6E27181E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegroUITests" */;
+			buildPhases = (
+				6B6E27051E288F8200F9CF66 /* Sources */,
+				6B6E27061E288F8200F9CF66 /* Frameworks */,
+				6B6E27071E288F8200F9CF66 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6B6E270B1E288F8200F9CF66 /* PBXTargetDependency */,
+			);
+			name = allegroUITests;
+			productName = allegroUITests;
+			productReference = 6B6E27091E288F8200F9CF66 /* allegroUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6B6E26E21E288F8200F9CF66 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = gigaunicorn;
+				TargetAttributes = {
+					6B6E26E91E288F8200F9CF66 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 976H852GCK;
+						ProvisioningStyle = Automatic;
+					};
+					6B6E26FD1E288F8200F9CF66 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 976H852GCK;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 6B6E26E91E288F8200F9CF66;
+					};
+					6B6E27081E288F8200F9CF66 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 976H852GCK;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 6B6E26E91E288F8200F9CF66;
+					};
+				};
+			};
+			buildConfigurationList = 6B6E26E51E288F8200F9CF66 /* Build configuration list for PBXProject "allegro" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 6B6E26E11E288F8200F9CF66;
+			productRefGroup = 6B6E26EB1E288F8200F9CF66 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6B6E26E91E288F8200F9CF66 /* allegro */,
+				6B6E26FD1E288F8200F9CF66 /* allegroTests */,
+				6B6E27081E288F8200F9CF66 /* allegroUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6B6E26E81E288F8200F9CF66 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */,
+				6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */,
+				6B6E26F31E288F8200F9CF66 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6E26FC1E288F8200F9CF66 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6E27071E288F8200F9CF66 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6B6E26E61E288F8200F9CF66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B6E26F01E288F8200F9CF66 /* ViewController.swift in Sources */,
+				6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6E26FA1E288F8200F9CF66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B6E27031E288F8200F9CF66 /* allegroTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B6E27051E288F8200F9CF66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6B6E270E1E288F8200F9CF66 /* allegroUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6B6E27001E288F8200F9CF66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6B6E26E91E288F8200F9CF66 /* allegro */;
+			targetProxy = 6B6E26FF1E288F8200F9CF66 /* PBXContainerItemProxy */;
+		};
+		6B6E270B1E288F8200F9CF66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6B6E26E91E288F8200F9CF66 /* allegro */;
+			targetProxy = 6B6E270A1E288F8200F9CF66 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6B6E26F11E288F8200F9CF66 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B6E26F21E288F8200F9CF66 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6B6E26F61E288F8200F9CF66 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6B6E26F71E288F8200F9CF66 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6B6E27101E288F8200F9CF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		6B6E27111E288F8200F9CF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6B6E27131E288F8200F9CF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 976H852GCK;
+				INFOPLIST_FILE = allegro/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gu.allegro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		6B6E27141E288F8200F9CF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 976H852GCK;
+				INFOPLIST_FILE = allegro/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gu.allegro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		6B6E27161E288F8200F9CF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 976H852GCK;
+				INFOPLIST_FILE = allegroTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gu.allegroTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/allegro.app/allegro";
+			};
+			name = Debug;
+		};
+		6B6E27171E288F8200F9CF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 976H852GCK;
+				INFOPLIST_FILE = allegroTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gu.allegroTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/allegro.app/allegro";
+			};
+			name = Release;
+		};
+		6B6E27191E288F8200F9CF66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 976H852GCK;
+				INFOPLIST_FILE = allegroUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gu.allegroUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = allegro;
+			};
+			name = Debug;
+		};
+		6B6E271A1E288F8200F9CF66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				DEVELOPMENT_TEAM = 976H852GCK;
+				INFOPLIST_FILE = allegroUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = gu.allegroUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_TARGET_NAME = allegro;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6B6E26E51E288F8200F9CF66 /* Build configuration list for PBXProject "allegro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B6E27101E288F8200F9CF66 /* Debug */,
+				6B6E27111E288F8200F9CF66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6B6E27121E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B6E27131E288F8200F9CF66 /* Debug */,
+				6B6E27141E288F8200F9CF66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6B6E27151E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegroTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B6E27161E288F8200F9CF66 /* Debug */,
+				6B6E27171E288F8200F9CF66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		6B6E27181E288F8200F9CF66 /* Build configuration list for PBXNativeTarget "allegroUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B6E27191E288F8200F9CF66 /* Debug */,
+				6B6E271A1E288F8200F9CF66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6B6E26E21E288F8200F9CF66 /* Project object */;
+}
