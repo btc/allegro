@@ -6,6 +6,7 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
+import SwiftTweaks
 import UIKit
 
 @UIApplicationMain
@@ -19,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
+        window = TweakWindow(frame: UIScreen.main.bounds, tweakStore: AllegroTweaks.defaultStore)
         window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
         window?.makeKeyAndVisible()
         Log.info?.message("App launched!")

@@ -25,10 +25,11 @@ protocol AllegroGestureDelegate: class {
 }
 
 class AllegroGestureRecognizer {
-    static let SWIPE_MOVEMENT_DISTANCE: Double = 22
-    private let swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8,
-                                                          deltaMove: SWIPE_MOVEMENT_DISTANCE,
-                                                          costMax: 1)
+
+    var delta: Double = 22
+    var costMax = 1
+    
+    private let swipeGestureRecognizer: DBPathRecognizer?
     
     private var rawPoints: [Int] = [Int]()
     
@@ -38,6 +39,9 @@ class AllegroGestureRecognizer {
     // TODO we should probably make it explicit that this class will add gesture recognizers to the view
     init(view: UIView) {
         self.view = view
+        swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8,
+                         deltaMove: delta,
+                         costMax: costMax)
         setupTapGestures()
         setupSwipeGestures()
     }
@@ -67,7 +71,7 @@ class AllegroGestureRecognizer {
         for (gesture, pattern) in map {
             let any = gesture as AnyObject
             let p = PathModel(directions: pattern, datas: any)
-            swipeGestureRecognizer.addModel(p)
+            swipeGestureRecognizer?.addModel(p)
         }
     }
     
@@ -99,7 +103,7 @@ class AllegroGestureRecognizer {
     func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         var path = Path()
         path.addPointFromRaw(rawPoints)
-        if let gesture = swipeGestureRecognizer.recognizePath(path),
+        if let gesture = swipeGestureRecognizer?.recognizePath(path),
             let type = gesture.datas as? AllegroGesture,
             rawPoints.count > 2 {
             let point = CGPoint(x: rawPoints[0], y: rawPoints[1])

@@ -20,6 +20,7 @@
 		6B6E27271E28B05100F9CF66 /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27261E28B05100F9CF66 /* CompositionViewController.swift */; };
 		6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */; };
 		6B6E272B1E28B77900F9CF66 /* AllegroGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E272A1E28B77900F9CF66 /* AllegroGestureRecognizer.swift */; };
+		6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */; };
 		89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */; };
 		A38CFF6CB5898986752C58AB /* Pods_allegroTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */; };
 /* End PBXBuildFile section */
@@ -64,6 +65,7 @@
 		6B6E27261E28B05100F9CF66 /* CompositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
 		6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DBPathRecognizer.swift; path = vendor/DBPathRecognizer.swift; sourceTree = SOURCE_ROOT; };
 		6B6E272A1E28B77900F9CF66 /* AllegroGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllegroGestureRecognizer.swift; sourceTree = "<group>"; };
+		6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftTweaks.framework; path = Carthage/Build/iOS/SwiftTweaks.framework; sourceTree = SOURCE_ROOT; };
 		9EA11674E74CCF5EDB06D551 /* Pods-allegroTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.release.xcconfig"; sourceTree = "<group>"; };
 		A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegroTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B48B0377F0C8F35F8EAD5DDB /* Pods-allegro.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegro.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegro/Pods-allegro.debug.xcconfig"; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			files = (
 				89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */,
 				6B6E271D1E28979100F9CF66 /* CleanroomLogger.framework in Frameworks */,
+				6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */,
+				6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */,
 				6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */,
 			);
 			name = Frameworks;
@@ -361,6 +365,7 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/CleanroomLogger.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftTweaks.framework",
 			);
 			outputPaths = (
 			);

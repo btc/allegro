@@ -24,10 +24,12 @@ class CompositionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         
-        actionGestureRecognizer = AllegroGestureRecognizer(view: view)
-        actionGestureRecognizer?.delegate = self
+        setupActionGestureRecognizer()
+
+        if DEBUG {
+            view.addSubview(debugGestureLabel)
+        }
         
-        view.addSubview(debugGestureLabel)
     }
     
     override func viewDidLayoutSubviews() {
@@ -44,6 +46,18 @@ class CompositionViewController: UIViewController {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         actionGestureRecognizer?.touchesEnded(touches, with: event)
+    }
+    
+    private func setupActionGestureRecognizer() {
+        actionGestureRecognizer = AllegroGestureRecognizer(view: view)
+        actionGestureRecognizer?.delegate = self
+        
+        AllegroTweaks.bind(AllegroTweaks.actionDelta) { [weak self] value -> Void in
+            self?.actionGestureRecognizer?.delta = value
+        }
+        AllegroTweaks.bind(AllegroTweaks.actionCost) { [weak self] (v: Int) -> Void in
+            self?.actionGestureRecognizer?.costMax = v
+        }
     }
 }
 
