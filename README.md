@@ -16,6 +16,6 @@ You may find these links useful:
 [Install Fastlane](https://github.com/fastlane/fastlane#installation)
 
 Cocoapods and Fastlane are both made with Ruby. If you are familiar with Ruby,
-you can install the two gems using the provided Gemfile. Run `bundle install`.
-Afterward, instead of running `pod install`, you run `bundle exec pod install`.
-The same goes for Fastlane.
+you can install the two gems using the provided Gemfile. To do so, run `bundle
+install`. Afterward, instead of running `pod install`, you run `bundle exec pod
+install`. The same goes for Fastlane. Prefix your command with `bundle exec`.
