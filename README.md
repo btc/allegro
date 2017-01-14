@@ -14,3 +14,8 @@ You may find these links useful:
 [Install Carthage](https://github.com/Carthage/Carthage#installing-carthage)
 
 [Install Fastlane](https://github.com/fastlane/fastlane#installation)
+
+Cocoapods and Fastlane are both made with Ruby. If you are familiar with Ruby,
+you can install the two gems using the provided Gemfile. Run `bundle install`.
+Afterward, instead of running `pod install`, you run `bundle exec pod install`.
+The same goes for Fastlane.
