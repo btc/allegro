@@ -19,6 +19,8 @@ import SwiftTweaks
 typealias Log = CleanroomLogger.Log // to avoid importing CleanroomLogger in every file where we log things
 
 let THE_GOLDEN_RATIO: CGFloat = 1.61803398875
+let DEFAULT_MARGIN_PTS: CGFloat = 22
+let DEFAULT_TAP_TARGET_SIZE: CGFloat = 60
 let DEFAULT_FONT_BOLD = "HelveticaNeue-Bold"
 
 // TODO(btc): Handle localization

@@ -47,7 +47,6 @@ class HomeMenuViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
 
-        let DEFAULT_MARGIN_PTS: CGFloat = 22 // an aesthetic choice
         let parent = view.bounds
         let centerX = parent.width / 2
 
