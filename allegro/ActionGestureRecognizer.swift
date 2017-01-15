@@ -23,6 +23,8 @@ protocol ActionGestureDelegate: class {
     func actionGestureRecognized(gesture: ActionGesture, at location: CGPoint)
 }
 
+// TODO(btc): I suspect this is not idiomatic.
+
 // TODO(btc): Note that one obvious improvement is to subclass UIGestureRecognizer. That makes it so that clients don't
 // have to delegate their touches(Began|Moved|Ended) methods to this class. Instead, with the subclass, the UIKit framework
 // will be responsible for calling our methods and managing our state. However, this alternative limits us when it comes
