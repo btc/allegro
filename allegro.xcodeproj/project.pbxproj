@@ -128,14 +128,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		32B867881E2D79EB0029F946 /* Measure */ = {
-			isa = PBXGroup;
-			children = (
-				32B867891E2D79F80029F946 /* MeasureView.swift */,
-			);
-			name = Measure;
-			sourceTree = "<group>";
-		};
 		3EEFE93C8BB82DBAAA4FCB9E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +153,7 @@
 		6B6774A11E2D7FAE00399BDC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				32B867891E2D79F80029F946 /* MeasureView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -190,7 +183,6 @@
 		6B6E26EC1E288F8200F9CF66 /* allegro */ = {
 			isa = PBXGroup;
 			children = (
-				32B867881E2D79EB0029F946 /* Measure */,
 				6B6E271B1E28978100F9CF66 /* Frameworks */,
 				6B6774A01E2D7FAA00399BDC /* Models */,
 				6B6774A11E2D7FAE00399BDC /* Views */,
