@@ -16,6 +16,11 @@ Download dependencies
 fastlane ios test
 ```
 Runs all the tests
+### ios bump
+```
+fastlane ios bump
+```
+Bump the build version and commit it
 ### ios beta
 ```
 fastlane ios beta
