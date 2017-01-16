@@ -27,6 +27,13 @@ platform :ios do
     scan
   end
 
+  desc "Bump the build version and commit it"
+  lane :bump do
+    ensure_git_status_clean
+    increment_build_number
+    commit_version_bump(xcodeproj: "allegro.xcodeproj", message: "misc: Bump Build Number")
+  end
+
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
