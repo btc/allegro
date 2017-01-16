@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "D0440A327A87C5BE492648658B8988D00F33F4DD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "881DA33B4FA237BCA008D90F4AD5A37C6CC85A36" : 9223372036854775807,
+    "D0440A327A87C5BE492648658B8988D00F33F4DD" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E998484F-5C69-42A3-90CC-58C3BAF17510",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "881DA33B4FA237BCA008D90F4AD5A37C6CC85A36" : "..",
+    "D0440A327A87C5BE492648658B8988D00F33F4DD" : "allegro\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "allegro",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "allegro.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/qphe\/stanford.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "881DA33B4FA237BCA008D90F4AD5A37C6CC85A36"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:TeamAllegro\/allegro.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D0440A327A87C5BE492648658B8988D00F33F4DD"
+    }
+  ]
+}
