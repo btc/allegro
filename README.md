@@ -1,4 +1,6 @@
-How to build the project:
+[![CircleCI](https://circleci.com/gh/TeamAllegro/allegro.svg?style=svg&circle-token=027c45e319de130d49216fe2fcc036eeb5a800f5)](https://circleci.com/gh/TeamAllegro/allegro)
+
+# Getting Started
 
 1. Install Xcode 8 (for Swift 3)
 1. Run `pod install` to install Cocoapods dependencies
