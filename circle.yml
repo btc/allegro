@@ -1,3 +1,7 @@
 machine:
     xcode:
         version: 8.0
+
+dependencies:
+    pre:
+        - carthage bootstrap --no-use-binaries
