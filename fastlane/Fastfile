@@ -30,7 +30,8 @@ platform :ios do
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
   lane :beta do
-    match(type: "development")
+    ensure_git_status_clean
+    match(type: "appstore", readonly: true)
     gym(scheme: "allegro") # Build your app - more options available
     pilot
 
