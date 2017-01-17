@@ -30,3 +30,5 @@ install`. Afterward, instead of running `pod install`, you run `bundle exec pod
 install`. The same goes for Fastlane. Prefix your command with `bundle exec`.
 
 [Awesome iOS](https://github.com/vsouza/awesome-ios)
+
+[List of Musical Symbols](https://en.wikipedia.org/wiki/List_of_musical_symbols)
