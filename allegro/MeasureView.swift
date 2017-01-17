@@ -10,31 +10,39 @@ import Foundation
 import UIKit
 
 class MeasureView: UIView {
-    var lines: [UIView] = []
+    var thickness: CGFloat = 0.0;
+    var distanceApart: CGFloat = 0.0;
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        for _ in 1...5 {
-            let view = UIView()
-            view.backgroundColor = UIColor.black
-            lines.append(view)
-            self.addSubview(view)
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func layoutLines(thickness: CGFloat, distanceApart: CGFloat) {
-        for (index, view) in lines.enumerated() {
-            view.frame = CGRect(
+    override func layoutSubviews() {
+        let bars = UIBezierPath()
+        
+        for i in 0...NUM_BARS - 1 {
+            let path = UIBezierPath(rect: CGRect(
                 x: 0,
-                y: 0 + CGFloat(index) * (thickness + distanceApart),
+                y: 0 + CGFloat(i) * (thickness + distanceApart),
                 width: self.frame.width,
                 height: thickness
-            );
+                )
+            )
+            
+            UIColor.black.setFill()
+            path.fill()
+            
+            bars.append(path)
         }
+        
+        bars.close()
+        
+        let barLayer = CAShapeLayer()
+        barLayer.path = bars.cgPath
+        self.layer.addSublayer(barLayer)
     }
 }

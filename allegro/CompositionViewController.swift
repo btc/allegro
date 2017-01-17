@@ -39,7 +39,8 @@ class CompositionViewController: UIViewController {
         debugGestureLabel.frame = CGRect(x: 22, y: 22, width: 200, height: 24)
         
         measureView.frame = CGRect(x: 0, y: 0, width:200, height: 200)
-        measureView.layoutLines(thickness: 5.0, distanceApart: 15.0)
+        measureView.thickness = 5.0
+        measureView.distanceApart = 15.0
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

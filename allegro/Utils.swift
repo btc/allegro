@@ -23,6 +23,8 @@ let DEFAULT_MARGIN_PTS: CGFloat = 22
 let DEFAULT_TAP_TARGET_SIZE: CGFloat = 60
 let DEFAULT_FONT_BOLD = "HelveticaNeue-Bold"
 
+let NUM_BARS = 5
+
 // TODO(btc): Handle localization
 // All strings are here so we know where to look when we want to add new languages
 struct Strings {
