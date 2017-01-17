@@ -10,18 +10,23 @@ import UIKit
 
 class NoteSelectorMenu: UICollectionView {
 
-    private let indexofDefaultSelectedNote = 0
+    // TODO(btc): expose a method that gives the selected note
+    // TODO(btc): create a delegate for the menu
+
+    fileprivate var selectedNote = 0
     fileprivate let numNotesVisibleAtOnce: CGFloat = 5
-    fileprivate let notes = ["1", "2", "4", "8", "16", "18", "32", "64", "128", "256"] // TODO(btc): replace with actual notes
+    fileprivate let notes = ["1", "2", "4", "8", "16", "32", "64", "128", "256"] // TODO(btc): replace with actual notes
     private let layout = UICollectionViewFlowLayout()
 
     init() {
         super.init(frame: .zero, collectionViewLayout: layout)
         register(NoteSelectorCell.self, forCellWithReuseIdentifier: NoteSelectorCell.reuseID)
         dataSource = self
-        delegate = self
+        delegate = self // to get selected note callback
+        isPagingEnabled = true // snaps the menu
+        selectItem(at: IndexPath(row: selectedNote, section: 0), animated: true, scrollPosition: .top)
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) not supported")
     }
@@ -29,7 +34,9 @@ class NoteSelectorMenu: UICollectionView {
 
 
 extension NoteSelectorMenu: UICollectionViewDelegate {
-    // TODO(btc): manage highlighting and selection
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedNote = indexPath.row
+    }
 }
 
 extension NoteSelectorMenu: UICollectionViewDataSource {
