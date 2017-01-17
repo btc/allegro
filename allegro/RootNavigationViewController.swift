@@ -19,6 +19,7 @@ class RootNavigationViewController: UINavigationController {
         
         ipr = InteractivePopRecognizer(self)
         interactivePopGestureRecognizer?.delegate = ipr
+        interactivePopGestureRecognizer?.delaysTouchesBegan = false
     }
     
     private class InteractivePopRecognizer: NSObject, UIGestureRecognizerDelegate {
