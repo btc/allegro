@@ -7,3 +7,4 @@ dependencies:
         - bin/carthage_bootstrap_if_needed
     cache_directories:
         - "Carthage"
+        - "/Users/distiller/.cocoapods/"
