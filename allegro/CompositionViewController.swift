@@ -12,8 +12,8 @@ import UIKit
 
 class CompositionViewController: UIViewController {
     
-    var actionGestureRecognizer: ActionGestureRecognizer?
-    
+    fileprivate var actionGestureRecognizer: ActionGestureRecognizer?
+
     fileprivate var debugGestureLabel: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 24)
