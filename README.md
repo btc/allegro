@@ -2,10 +2,12 @@
 
 # Getting Started
 
-1. Install Xcode 8 (for Swift 3)
+1. Clone the repo
 1. Run `pod install` to install Cocoapods dependencies
 1. Run `carthage bootstrap --no-use-binaries` to install Carthage dependencies
-1. Run `fastlane match development --readonly` to download the iOS Provisioning Profile. You'll be prompted for a password. The password is farm.
+1. Run `fastlane match development --readonly` to download the Development Provisioning Profile. You'll be prompted for a password. The password is farm.
+1. Run `fastlane match appstore --readonly` to download the AppStore Provisioning Profile. Again, you'll be prompted for a password. Enter the same one as before.
+1. Install Xcode 8 (for Swift 3)
 1. Open `allegro.xcworkspace` in Xcode
 1. Build!
 
