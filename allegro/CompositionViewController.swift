@@ -38,7 +38,7 @@ class CompositionViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         debugGestureLabel.frame = CGRect(x: 22, y: 22, width: 200, height: 24)
         
-        measureView.frame = CGRect(x: 0, y: 0, width:200, height: 200)
+        measureView.frame = view.bounds
         measureView.thickness = 5.0
         measureView.distanceApart = 15.0
     }
