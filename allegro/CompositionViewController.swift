@@ -14,6 +14,11 @@ class CompositionViewController: UIViewController {
     
     fileprivate var actionGestureRecognizer: ActionGestureRecognizer?
 
+    fileprivate var noteSelectorMenu: UIView = {
+        let v = NoteSelectorMenu()
+        return v
+    }()
+
     fileprivate var debugGestureLabel: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 24)
@@ -25,7 +30,8 @@ class CompositionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
-        
+
+        // TODO(btc): move this into the measure view
         setupActionGestureRecognizer()
 
         if DEBUG {
@@ -33,12 +39,28 @@ class CompositionViewController: UIViewController {
         }
 
         view.addSubview(measureView)
+        view.addSubview(noteSelectorMenu)
+
     }
-    
+
     override func viewDidLayoutSubviews() {
-        debugGestureLabel.frame = CGRect(x: 22, y: 22, width: 200, height: 24)
-        
-        measureView.frame = view.bounds
+        // occupies the left side of the screen
+        noteSelectorMenu.frame = CGRect(x: 0,
+                                        y: 0,
+                                        width: DEFAULT_TAP_TARGET_SIZE,
+                                        height: view.bounds.height)
+
+        // show at the top of the screen, to the right of the menu
+        debugGestureLabel.frame = CGRect(x: noteSelectorMenu.frame.maxX + DEFAULT_MARGIN_PTS,
+                                         y: 0,
+                                         width: 200,
+                                         height: 24)
+
+        // occupies space to the right of the menu
+        measureView.frame = CGRect(x: noteSelectorMenu.frame.maxX,
+                                   y: 0,
+                                   width: view.bounds.width - noteSelectorMenu.frame.width,
+                                   height: view.bounds.height)
         measureView.thickness = 5.0
         measureView.distanceApart = 15.0
     }
