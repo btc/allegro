@@ -10,6 +10,7 @@ import UIKit
 
 class NoteSelectorCell: UICollectionViewCell {
     static let reuseID = "NoteSelectorCell"
+    static let unselectedCellColor = UIColor.gray
 
     override var isHighlighted: Bool {
         didSet {
@@ -17,7 +18,7 @@ class NoteSelectorCell: UICollectionViewCell {
                 label.textColor = .gray
                 label.backgroundColor = .white
             } else {
-                label.backgroundColor = .gray
+                label.backgroundColor = NoteSelectorCell.unselectedCellColor
                 label.textColor = .white
             }
         }
@@ -29,7 +30,7 @@ class NoteSelectorCell: UICollectionViewCell {
                 label.textColor = .white
                 label.backgroundColor = .lightGray
             } else {
-                label.backgroundColor = .gray
+                label.backgroundColor = NoteSelectorCell.unselectedCellColor
                 label.textColor = .white
             }
         }
@@ -37,7 +38,7 @@ class NoteSelectorCell: UICollectionViewCell {
 
     private let label: UILabel = {
         let v = UILabel()
-        v.backgroundColor = .gray
+        v.backgroundColor = NoteSelectorCell.unselectedCellColor
         v.textColor = .white
         v.textAlignment = .center
         return v
@@ -55,7 +56,6 @@ class NoteSelectorCell: UICollectionViewCell {
     // TODO(btc): replace with Note model
     var note: String? = nil {
         didSet {
-            backgroundColor = .red
             label.text = note
         }
     }
