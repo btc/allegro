@@ -8,4 +8,7 @@
 
 class Measure {
     
+    // the key signature eg. G Major or d minor
+    let key = Key()
+    
 }
