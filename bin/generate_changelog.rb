@@ -5,10 +5,6 @@ require 'logger'
 require 'optparse'
 require 'git'
 
-TEAM_MEMBERS = {
-  "Brian Tiger Chow" => "brian.holderchow@gmail.com",
-}
-
 if __FILE__ == $0
   options = {}
   OptionParser.new do |opts|
@@ -26,7 +22,22 @@ if __FILE__ == $0
 
   git = Git.open(".")
 
-  TEAM_MEMBERS.each do |name, email|
+  committers = git.log.since(from).until(to)
+    .map { |commit| commit.author }
+    .reduce([]) do |acc, author|
+    ret = acc + [author]
+    for existing in acc do
+      if existing.email == author.email
+        ret = acc
+      end
+    end
+    ret
+  end.flatten
+
+  committers.each do |author|
+
+    name = author.name
+    email = author.email
 
     puts "=" * (name.length + " <>".length + email.length)
     puts "#{name} <#{email}>"
