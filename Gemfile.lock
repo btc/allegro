@@ -95,6 +95,7 @@ GEM
     fourflusher (2.0.1)
     fuzzy_match (2.0.4)
     gh_inspector (1.0.3)
+    git (1.3.0)
     google-api-client (0.9.20)
       addressable (~> 2.3)
       googleauth (~> 0.5)
@@ -181,6 +182,7 @@ PLATFORMS
 DEPENDENCIES
   cocoapods
   fastlane
+  git
 
 BUNDLED WITH
    1.13.7
