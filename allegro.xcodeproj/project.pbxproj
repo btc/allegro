@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		32B8678A1E2D79F80029F946 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B867891E2D79F80029F946 /* MeasureView.swift */; };
 		647E7D6823A9CE544AF81ACD /* Pods_allegroUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */; };
+		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A41E2D7FD600399BDC /* Measure.swift */; };
 		6B6774A71E2D7FE600399BDC /* Part.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A61E2D7FE600399BDC /* Part.swift */; };
@@ -57,6 +58,7 @@
 		32B867891E2D79F80029F946 /* MeasureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureView.swift; sourceTree = "<group>"; };
 		39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegroUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CB49C9AC2B9AA905E6A3B0A /* Pods-allegro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegro.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegro/Pods-allegro.release.xcconfig"; sourceTree = "<group>"; };
+		6B0B267D1E2F2E5F00F1870A /* Rational.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rational.framework; path = Carthage/Build/iOS/Rational.framework; sourceTree = SOURCE_ROOT; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A41E2D7FD600399BDC /* Measure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
 		6B6774A61E2D7FE600399BDC /* Part.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */,
 				89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */,
 				6B6E271D1E28979100F9CF66 /* CleanroomLogger.framework in Frameworks */,
 				6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */,
@@ -229,6 +232,7 @@
 			children = (
 				6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */,
 				6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */,
+				6B0B267D1E2F2E5F00F1870A /* Rational.framework */,
 				6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */,
 			);
 			name = Frameworks;
@@ -409,6 +413,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/CleanroomLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftTweaks.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Rational.framework",
 			);
 			outputPaths = (
 			);
