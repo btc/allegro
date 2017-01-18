@@ -49,6 +49,30 @@ if __FILE__ == $0
       puts "* #{line1}"
     end
 
+    file_changes = {}
+    git.log.author(email).since(from).until(to).each do |commit|
+      commit.diff_parent.stats[:files].each do |file_name, changes|
+        existing_changes = file_changes[file_name]
+        if existing_changes.nil?
+          existing_changes = {
+            insertions: 0,
+            deletions: 0,
+          }
+        end
+        # NB: changes are relative to parent, so we actually need to count
+        # deletions as insertions and insertions as deletions
+        file_changes[file_name] = {
+          insertions: existing_changes[:insertions] + changes[:deletions],
+          deletions: existing_changes[:deletions] + changes[:insertions],
+        }
+      end
+    end
+
+    puts "\n"
+    file_changes.each do |file_name,  changes|
+      puts "+#{changes[:insertions]}\t -#{changes[:deletions]}\t #{file_name}"
+    end
+
     puts "\n"
     puts "\n"
   end
