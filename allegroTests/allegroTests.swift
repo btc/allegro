@@ -26,6 +26,17 @@ class allegroTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
+    func testKey() {
+        let cMajor = Key()
+        XCTAssert(cMajor.fifths == 0 && cMajor.mode == Key.Mode.major, "Key default initialization to C Major")
+        
+        let fsharpMajor = Key(mode: Key.Mode.major, fifths: 5)
+        XCTAssert(fsharpMajor.getName() == "F♯M", "Major Key naming in circle of fifths")
+        
+        let bflatMinor = Key(mode: Key.Mode.minor, fifths: -5)
+        XCTAssert(bflatMinor.getName() == "b♭m", "minor key naming in circle of fifths")
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {

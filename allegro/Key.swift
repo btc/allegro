@@ -6,14 +6,17 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
-class Key {
+struct Key {
     // Represents a musical key eg. G Major or d minor
     
     // Useful unicode: ♯ sharp, ♭ flat, ♮ natural
     
-    let MAJOR = 0
-    let MINOR = 1
-    var mode: Int
+    // Major or minor key determines how accidentals are used in the circle of fifths
+    enum Mode {
+        case major
+        case minor
+    }
+    let mode: Key.Mode
     
     // represents the number of accidentals in the key following the circle of fifths
     // negative numbers represent number of flats
@@ -49,25 +52,21 @@ class Key {
                     6: "d♯"]
     
     // default key is C Major, which has no sharps or flats
-    init() {
-        mode = MAJOR
-        fifths = 0
+    init(mode: Key.Mode = .major, fifths: Int = 0) {
+        self.mode = mode
+        self.fifths = fifths
     }
     
     // lookup the name of the key in the circle of fifths
     func getName() -> String {
-        var prefix = ""
-        var suffix = ""
-        if mode == MAJOR {
-            prefix = MajorCoF[fifths]! // nlele: why is the ! necessary?
-            suffix = "M"
-            
-        } else {
-            prefix = MinorCoF[fifths]!
-            suffix = "m"
+        switch mode {
+        case .major:
+            guard let root = MajorCoF[fifths] else { return "" }
+            return "\(root)M"
+        case .minor:
+            guard let root = MinorCoF[fifths] else { return "" }
+            return "\(root)m"
         }
-        
-        return "\(prefix)\(suffix)"
     }
 }
 
