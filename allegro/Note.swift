@@ -7,7 +7,8 @@
 //
 
 
-struct Note {
+class Note {
+
     // TODO pitch (see #42)
     /* Pitch is composed of a letter and an octave # indicating where the pitch lands (on a piano or staff) 
         see #42 for more information.
