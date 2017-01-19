@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class MeasureView: UIView {
-    var staffLineThickness: CGFloat = 5
-    var staffHeight: CGFloat = 200
+    var staffLineThickness: CGFloat = 0
+    var staffHeight: CGFloat = 0
     var staffDrawStart: CGFloat {
         return (self.frame.size.height - staffHeight) / 2
     }
