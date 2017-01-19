@@ -17,10 +17,7 @@ class Note {
     enum Letter {
         case A, B, C, D, E, F, G
     }
-    let letter: Letter
-    
-    let octave: Int
-    
+
     enum Accidental {
         case natural        // unicode ♮
         case sharp          // unicode ♯
@@ -28,16 +25,18 @@ class Note {
         case doubleSharp    // unicode ♯♯
         case doubleFlat     // unicode ♭♭
     }
-    let accidental: Note.Accidental
-    
+
     enum Value {
         case whole, half, quarter, eighth, sixteenth
     }
-    
+
+    let letter: Letter
+    let octave: Int
+    let accidental: Accidental
     let value: Value
-    
-    // TODO can we remove the "!"s? Rational probably has it in case of divide by 0
-    func getDuration() -> Rational {
+    let rest: Bool // true if the Note is a rest
+
+    var duration: Rational {
         switch self.value {
         case .whole:
             return 1
@@ -52,8 +51,7 @@ class Note {
         }
     }
     
-    // true if the Note is a rest
-    let rest: Bool
+
     
     init(value: Value, letter: Letter, octave: Int, accidental: Note.Accidental = .natural, rest: Bool = false) {
         self.value = value
