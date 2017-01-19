@@ -43,5 +43,30 @@ class MeasureView: UIView {
             UIColor.black.setFill()
             path.fill()
         }
+        
+        let bounds = CGRect(x: 0, y: 0, width: 100, height: 50)
+        let xDelta: CGFloat = 5
+        let yDelta: CGFloat = 15
+        let centerX = bounds.size.width / 2
+        let centerY = bounds.size.height / 2
+        
+        let path = UIBezierPath(ovalIn: bounds)
+        path.append(UIBezierPath(ovalIn: bounds.insetBy(dx: xDelta, dy: yDelta)))
+        path.usesEvenOddFillRule = true
+        
+        var transform = CGAffineTransform.identity
+        transform = transform.translatedBy(
+            x: centerX,
+            y: centerY
+        )
+        transform = transform.rotated(by: CGFloat(30 * Double.pi / 180))
+        transform = transform.translatedBy(
+            x: -centerX,
+            y: -centerY
+        )
+        path.apply(transform)
+        
+        UIColor.black.set()
+        path.fill()
     }
 }
