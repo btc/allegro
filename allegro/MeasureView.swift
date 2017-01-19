@@ -29,7 +29,7 @@ class MeasureView: UIView {
         super.draw(_: rect)
         
         let staffDrawStart = (rect.height - staffHeight) / 2
-        let staffLineOffset = staffHeight / CGFloat(NUM_BARS)
+        let staffLineOffset = (staffHeight - thickness) / CGFloat(NUM_BARS - 1)
         
         for i in 0..<NUM_BARS {
             let path = UIBezierPath(rect: CGRect(
@@ -44,29 +44,35 @@ class MeasureView: UIView {
             path.fill()
         }
         
-        let bounds = CGRect(x: 0, y: 0, width: 100, height: 50)
-        let xDelta: CGFloat = 5
-        let yDelta: CGFloat = 15
-        let centerX = bounds.size.width / 2
-        let centerY = bounds.size.height / 2
+        func drawHalfNote(point: CGPoint) {
+            let width = 100
+            let height = 50
+            let xDelta: CGFloat = 5
+            let yDelta: CGFloat = 15
+
+            let bounds = CGRect(x: -width / 2, y: -height / 2, width: width, height: height)
+            let smaller = bounds.insetBy(dx: xDelta, dy: yDelta)
+
+            let path = UIBezierPath(ovalIn: bounds)
+            path.append(UIBezierPath(ovalIn: bounds.insetBy(dx: xDelta, dy: yDelta)))
+            path.usesEvenOddFillRule = true
+            
+            var transform = CGAffineTransform.identity
+            transform = transform.translatedBy(x: point.x, y: point.y)
+            transform = transform.rotated(by: CGFloat(-30 * Double.pi / 180))
+            
+            path.apply(transform)
+            
+            UIColor.black.set()
+            path.fill()
+        }
         
-        let path = UIBezierPath(ovalIn: bounds)
-        path.append(UIBezierPath(ovalIn: bounds.insetBy(dx: xDelta, dy: yDelta)))
-        path.usesEvenOddFillRule = true
-        
-        var transform = CGAffineTransform.identity
-        transform = transform.translatedBy(
-            x: centerX,
-            y: centerY
-        )
-        transform = transform.rotated(by: CGFloat(30 * Double.pi / 180))
-        transform = transform.translatedBy(
-            x: -centerX,
-            y: -centerY
-        )
-        path.apply(transform)
-        
-        UIColor.black.set()
-        path.fill()
+        let notes = [Note(pitch: 0), Note(pitch: -3), Note(pitch: 3)]
+        for (i, note) in notes.enumerated() {
+            let x = CGFloat(100 * (i + 1))
+            let y = staffDrawStart + staffHeight / 2 + staffLineOffset / 2 * CGFloat(note.pitch)
+            
+            drawHalfNote(point: CGPoint(x: x, y: y))
+        }
     }
 }
