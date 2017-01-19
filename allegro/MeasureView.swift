@@ -10,8 +10,19 @@ import Foundation
 import UIKit
 
 class MeasureView: UIView {
-    var thickness: CGFloat = 0.0
+    var staffLineThickness: CGFloat = 0.0
     var staffHeight: CGFloat = 0.0
+    var staffDrawStart: CGFloat {
+        return (self.frame.size.height - staffHeight) / 2
+    }
+    
+    var staffLineOffset: CGFloat {
+        return (staffHeight - staffLineThickness) / CGFloat(staffCount - 1)
+    }
+    
+    fileprivate let staffCount = 5
+    fileprivate let noteWidth = CGFloat(100)
+    fileprivate let noteHeight = CGFloat(50)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,52 +38,33 @@ class MeasureView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(_: rect)
-        
-        let staffDrawStart = (rect.height - staffHeight) / 2
-        let staffLineOffset = (staffHeight - thickness) / CGFloat(NUM_BARS - 1)
-        
-        for i in 0..<NUM_BARS {
+
+        for i in 0..<staffCount {
             let path = UIBezierPath(rect: CGRect(
                 x: 0,
                 y: staffDrawStart + CGFloat(i) * staffLineOffset,
                 width: rect.width,
-                height: thickness
+                height: staffLineThickness
                 )
             )
             
             UIColor.black.setFill()
             path.fill()
         }
-        
-        func drawHalfNote(point: CGPoint) {
-            let width = 100
-            let height = 50
-            let xDelta: CGFloat = 5
-            let yDelta: CGFloat = 15
-
-            let bounds = CGRect(x: -width / 2, y: -height / 2, width: width, height: height)
-            let smaller = bounds.insetBy(dx: xDelta, dy: yDelta)
-
-            let path = UIBezierPath(ovalIn: bounds)
-            path.append(UIBezierPath(ovalIn: bounds.insetBy(dx: xDelta, dy: yDelta)))
-            path.usesEvenOddFillRule = true
-            
-            var transform = CGAffineTransform.identity
-            transform = transform.translatedBy(x: point.x, y: point.y)
-            transform = transform.rotated(by: CGFloat(-30 * Double.pi / 180))
-            
-            path.apply(transform)
-            
-            UIColor.black.set()
-            path.fill()
-        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
         let notes = [Note(pitch: 0), Note(pitch: -3), Note(pitch: 3)]
         for (i, note) in notes.enumerated() {
-            let x = CGFloat(100 * (i + 1))
-            let y = staffDrawStart + staffHeight / 2 + staffLineOffset / 2 * CGFloat(note.pitch)
+            let noteView = NoteView()
             
-            drawHalfNote(point: CGPoint(x: x, y: y))
+            let x = CGFloat(100 * (i + 1))
+            let y = staffDrawStart + staffHeight / 2 + staffLineOffset / 2 * CGFloat(note.pitch) - noteHeight / 2
+            
+            noteView.frame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
+            self.addSubview(noteView)
         }
     }
 }
