@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class MeasureView: UIView {
-    var staffLineThickness: CGFloat = 0.0
-    var staffHeight: CGFloat = 0.0
+    var staffLineThickness: CGFloat = 5
+    var staffHeight: CGFloat = 200
     var staffDrawStart: CGFloat {
         return (self.frame.size.height - staffHeight) / 2
     }
@@ -30,6 +30,7 @@ class MeasureView: UIView {
         // the view region with opaque content. This causes
         // the view background to be black unless we disable this.
         self.isOpaque = false
+        backgroundColor = .white
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,14 +59,15 @@ class MeasureView: UIView {
         
         let notes = [Note(value: .half, letter: .B, octave: 4), Note(value: .half, letter: .G, octave: 4), Note(value: .half, letter: .D, octave: 5)]
         let noteViewModels = notes.map { NoteViewModel(note: $0) }
-        for (i, note) in noteViewModels.enumerated() {
-            let noteView = NoteView()
-            
+        let noteViews = noteViewModels.map { NoteView(note: $0) }
+        for v in noteViews {
+            addSubview(v)
+        }
+
+        for (i, noteView) in noteViews.enumerated() {
             let x = CGFloat(100 * (i + 1))
-            let y = staffDrawStart + staffHeight / 2 + staffLineOffset / 2 * CGFloat(note.pitch) - noteHeight / 2
-            
+            let y = staffDrawStart + staffHeight / 2 + staffLineOffset / 2 * CGFloat(noteView.note.pitch) - noteHeight / 2
             noteView.frame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
-            self.addSubview(noteView)
         }
     }
 }

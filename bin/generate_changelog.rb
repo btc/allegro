@@ -28,7 +28,7 @@ if __FILE__ == $0
       end
     end
     ret
-  end.flatten
+  end
 
   committers.each do |author|
 
