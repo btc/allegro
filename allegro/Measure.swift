@@ -11,10 +11,19 @@ import Rational
 struct Measure {
     
     // the key signature eg. G Major or d minor
-    let key: Key = Key()
+    let key: Key
     
-    // TODO time signature and duration checking (see #37)
+    let time: Rational
+    
     // TODO collection of notes (see #40)
-
+    // simplest way to hold notes
+    let notes: [Note] = [Note]()
     
+    // default time is 4/4 which simplifies to 1
+    init(time: Rational = Rational(1), key: Key = Key()) {
+        self.time = time
+        self.key = key
+    }
+    
+    // TODO duration checking (see #37)
 }
