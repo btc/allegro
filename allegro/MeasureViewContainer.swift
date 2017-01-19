@@ -12,6 +12,8 @@ class MeasureViewContainer: UIScrollView {
 
     let measureView: UIView = {
         let v = MeasureView()
+        v.staffLineThickness = 5
+        v.staffHeight = 200
         return v
     }()
 
