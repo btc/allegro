@@ -19,8 +19,7 @@ struct Measure {
     // simplest way to hold notes
     let notes: [Note] = [Note]()
     
-    // default time is 4/4 which simplifies to 1
-    init(time: Rational = 1, key: Key = Key()) {
+    init(time: Rational = 4/4, key: Key = Key()) {
         self.time = time
         self.key = key
     }
