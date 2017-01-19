@@ -13,11 +13,8 @@ if __FILE__ == $0
     opts.on("-t", "--to DATE", "End Date (Inclusive)") { |v| options[:to] = v }
   end.parse!
 
-  raise OptionParser::MissingArgument if options[:from].nil?
-  raise OptionParser::MissingArgument if options[:to].nil?
-
-  from = options[:from]
-  to = options[:to]
+  from = if options[:from].nil? then "7 days ago" else options[:from] end
+  to = if options[:to].nil? then "now" else options[:to] end
 
   git = Git.open(".")
 
