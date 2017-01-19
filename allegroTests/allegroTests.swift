@@ -26,6 +26,19 @@ class allegroTests: XCTestCase {
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
     
+    func testPart() {
+        let part = Part()
+        XCTAssert(part.tempo == 120, "New Part tempo default is 120 bpm")
+        XCTAssert(part.measures.count == 1, "New Part must have 1 Measure")
+    }
+    
+    func testMeasure() {
+        let measure = Measure()
+        let defaultKey = Key()
+        XCTAssert(measure.key.mode == defaultKey.mode &&
+            measure.key.fifths == defaultKey.fifths, "New Measure has a default Key")
+    }
+    
     func testKey() {
         let cMajor = Key()
         XCTAssert(cMajor.fifths == 0 && cMajor.mode == Key.Mode.major, "Key default initialization to C Major")
