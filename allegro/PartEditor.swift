@@ -51,8 +51,6 @@ extension PartEditor: UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PartEditorCell.reuseID,
                                                       for: indexPath)
-        if let c = cell as? PartEditorCell {
-        }
         return cell
     }
 }
