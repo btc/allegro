@@ -25,7 +25,9 @@ class CompositionViewController: UIViewController {
 
         view.addSubview(measureView)
         view.addSubview(noteSelectorMenu)
-
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        self.view.addGestureRecognizer(swipeLeft)
     }
 
     override func viewDidLayoutSubviews() {
@@ -42,5 +44,20 @@ class CompositionViewController: UIViewController {
                                    height: view.bounds.height)
         measureView.thickness = 5.0
         measureView.distanceApart = 15.0
+    }
+    
+    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
+        
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+            switch swipeGesture.direction {
+            case UISwipeGestureRecognizerDirection.left:
+                print("Swiped left")
+                let vc = SideMenuViewController()
+                navigationController?.pushViewController(vc, animated: true)
+            default:
+                break
+            }
+        }
     }
 }
