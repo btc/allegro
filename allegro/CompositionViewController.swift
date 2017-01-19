@@ -26,9 +26,8 @@ class CompositionViewController: UIViewController {
         view.addSubview(partEditor)
         view.addSubview(noteSelectorMenu)
 
-        // TODO(btc): only recognize swipe on edge
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        let swipeLeft = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeLeft.edges = .right
         self.view.addGestureRecognizer(swipeLeft)
     }
 
@@ -48,10 +47,10 @@ class CompositionViewController: UIViewController {
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
-        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+        if let g = gesture as? UIScreenEdgePanGestureRecognizer {
             
-            switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.left:
+            switch g.edges {
+            case UIRectEdge.right:
                 print("Swiped left")
                 let vc = SideMenuViewController()
                 navigationController?.pushViewController(vc, animated: true)
