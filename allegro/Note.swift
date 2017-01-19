@@ -9,12 +9,25 @@
 
 struct Note {
     // TODO pitch (see #42)
+    /* Pitch is composed of a letter and an octave # indicating where the pitch lands (on a piano or staff) 
+        see #42 for more information.
+     */
+    struct Pitch {
+        enum Letter {
+            case A, B, C, D, E, F, G
+        }
+        let octave: Int
+        let letter: Letter
+    }
+    
     // TODO duration (see #37)
     
     enum Accidental {
-        case natural    // unicode ♮
-        case sharp      // unicode ♯
-        case flat       // unicode ♭
+        case natural        // unicode ♮
+        case sharp          // unicode ♯
+        case flat           // unicode ♭
+        case doubleSharp    // unicode ♯♯
+        case doubleFlat     // unicode ♭♭
     }
     let accidental: Note.Accidental
     
