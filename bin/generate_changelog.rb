@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'byebug'
 require 'logger'
 require 'optparse'
 require 'git'
