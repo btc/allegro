@@ -37,7 +37,7 @@ class Note {
     let rest: Bool // true if the Note is a rest
 
     var duration: Rational {
-        switch self.value {
+        switch value {
         case .whole:
             return 1
         case .half:
@@ -50,15 +50,16 @@ class Note {
             return 1/16
         }
     }
-    
 
-    
-    init(value: Value, letter: Letter, octave: Int, accidental: Note.Accidental = .natural, rest: Bool = false) {
+    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
         self.value = value
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
         self.rest = rest
     }
-    
+
+    static func range(from startLetter: Letter, _ startOctave: Int, to endLetter: Letter, _ endOctave: Int) -> [Note] {
+        return [] // TODO
+    }
 }
