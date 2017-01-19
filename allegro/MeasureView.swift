@@ -56,8 +56,9 @@ class MeasureView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let notes = [Note(pitch: 0), Note(pitch: -3), Note(pitch: 3)]
-        for (i, note) in notes.enumerated() {
+        let notes = [Note(), Note(), Note()]
+        let noteViewModels = notes.map { NoteViewModel(note: $0) }
+        for (i, note) in noteViewModels.enumerated() {
             let noteView = NoteView()
             
             let x = CGFloat(100 * (i + 1))
