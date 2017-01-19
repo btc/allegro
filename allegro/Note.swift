@@ -9,19 +9,16 @@
 
 class Note {
 
-    // TODO pitch (see #42)
-    /* Pitch is composed of a letter and an octave # indicating where the pitch lands (on a piano or staff) 
-        see #42 for more information.
-     */
-    struct Pitch {
-        enum Letter {
-            case A, B, C, D, E, F, G
-        }
-        let octave: Int
-        let letter: Letter
+    // The pitch is decomposed into the letter, octave, and accidental
+    // Octave is a # indicating where the note lies on a piano or a staff
+    // Accidentals are semitone modifiers that do not affect the vertical placement of the note on the staff
+    // See #42 for more information
+    enum Letter {
+        case A, B, C, D, E, F, G
     }
+    let letter: Letter
     
-    // TODO duration (see #37)
+    let octave: Int
     
     enum Accidental {
         case natural        // unicode ♮
@@ -32,11 +29,16 @@ class Note {
     }
     let accidental: Note.Accidental
     
+    // TODO duration (see #37)
+    
     // true if the Note is a rest
     let rest: Bool
     
-    init(accidental: Note.Accidental = .natural, rest: Bool = false) {
+    init(letter: Letter, octave: Int, accidental: Note.Accidental = .natural, rest: Bool = false) {
+        self.letter = letter
+        self.octave = octave
         self.accidental = accidental
         self.rest = rest
     }
+    
 }

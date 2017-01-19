@@ -29,7 +29,6 @@ class allegroTests: XCTestCase {
     func testPart() {
         let part = Part()
         XCTAssert(part.tempo == 120, "New Part tempo default is 120 bpm")
-        XCTAssert(part.measures.count == 1, "New Part must have 1 Measure")
     }
     
     func testMeasure() {
@@ -37,6 +36,13 @@ class allegroTests: XCTestCase {
         let defaultKey = Key()
         XCTAssert(measure.key.mode == defaultKey.mode &&
             measure.key.fifths == defaultKey.fifths, "New Measure has a default Key")
+    }
+    
+    func testNote() {
+        let G4 = Note(letter: .G, octave: 4)
+        XCTAssert(G4.accidental == .natural, "Notes are natural by default")
+        XCTAssert(G4.rest == false, "Notes are not rest by default")
+        
     }
     
     func testKey() {
