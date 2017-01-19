@@ -20,7 +20,7 @@ struct Measure {
     let notes: [Note] = [Note]()
     
     // default time is 4/4 which simplifies to 1
-    init(time: Rational = Rational(1), key: Key = Key()) {
+    init(time: Rational = 1, key: Key = Key()) {
         self.time = time
         self.key = key
     }

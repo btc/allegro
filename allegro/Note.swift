@@ -40,15 +40,15 @@ class Note {
     func getDuration() -> Rational {
         switch self.value {
         case .whole:
-            return Rational(1)
+            return 1
         case .half:
-            return Rational(1,2)!
+            return 1/2
         case .quarter:
-            return Rational(1,4)!
+            return 1/4
         case .eighth:
-            return Rational(1,8)!
+            return 1/8
         case .sixteenth:
-            return Rational(1,16)!
+            return 1/16
         }
     }
     
