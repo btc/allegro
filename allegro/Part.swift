@@ -16,7 +16,7 @@ struct Part {
     var comment: String = ""
     
     // ordered list of measures in the piece
-    fileprivate var measures: [Measure] = [Measure()]
+    fileprivate var measures: [Measure] = [Measure]()
     
     // initialize with 1 empty measure
     init() {

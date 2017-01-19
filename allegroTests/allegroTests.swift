@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import allegro
+import Rational // TODO figure out how to import Rational here without linker error
 
 class allegroTests: XCTestCase {
     
@@ -36,13 +37,15 @@ class allegroTests: XCTestCase {
         let defaultKey = Key()
         XCTAssert(measure.key.mode == defaultKey.mode &&
             measure.key.fifths == defaultKey.fifths, "New Measure has a default Key")
+        
+        XCTAssert(measure.time == Rational(4,4), "New measure has a default of 4/4 time")
     }
     
     func testNote() {
-        let G4 = Note(letter: .G, octave: 4)
-        XCTAssert(G4.accidental == .natural, "Notes are natural by default")
-        XCTAssert(G4.rest == false, "Notes are not rest by default")
-        
+        let G4quarter = Note(value: .quarter, letter: .G, octave: 4)
+        XCTAssert(G4quarter.accidental == .natural, "Notes are natural by default")
+        XCTAssert(G4quarter.rest == false, "Notes are not rest by default")
+        XCTAssert(G4quarter.getDuration() == Rational(1,4), "Quarter note == 1/4")
     }
     
     func testKey() {

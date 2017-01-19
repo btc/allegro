@@ -6,6 +6,7 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
+import Rational
 
 class Note {
 
@@ -29,12 +30,33 @@ class Note {
     }
     let accidental: Note.Accidental
     
-    // TODO duration (see #37)
+    enum Value {
+        case whole, half, quarter, eighth, sixteenth
+    }
+    
+    let value: Value
+    
+    // TODO can we remove the "!"s? Rational probably has it in case of divide by 0
+    func getDuration() -> Rational {
+        switch self.value {
+        case .whole:
+            return Rational(1)
+        case .half:
+            return Rational(1,2)!
+        case .quarter:
+            return Rational(1,4)!
+        case .eighth:
+            return Rational(1,8)!
+        case .sixteenth:
+            return Rational(1,16)!
+        }
+    }
     
     // true if the Note is a rest
     let rest: Bool
     
-    init(letter: Letter, octave: Int, accidental: Note.Accidental = .natural, rest: Bool = false) {
+    init(value: Value, letter: Letter, octave: Int, accidental: Note.Accidental = .natural, rest: Bool = false) {
+        self.value = value
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
