@@ -25,6 +25,8 @@ class CompositionViewController: UIViewController {
 
         view.addSubview(measureView)
         view.addSubview(noteSelectorMenu)
+
+        // TODO(btc): only recognize swipe on edge
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
         self.view.addGestureRecognizer(swipeLeft)
