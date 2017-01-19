@@ -63,3 +63,8 @@ fastlane/screenshots
 fastlane/test_output
 
 .env
+
+# Xcode
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
