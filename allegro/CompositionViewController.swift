@@ -45,7 +45,7 @@ class CompositionViewController: UIViewController {
                                    width: view.bounds.width - noteSelectorMenu.frame.width,
                                    height: view.bounds.height)
         measureView.thickness = 5.0
-        measureView.distanceApart = 15.0
+        measureView.staffHeight = 200.0
     }
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {

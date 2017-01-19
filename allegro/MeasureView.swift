@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 class MeasureView: UIView {
-    var thickness: CGFloat = 0.0;
-    var distanceApart: CGFloat = 0.0;
+    var thickness: CGFloat = 0.0
+    var staffHeight: CGFloat = 0.0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,10 +28,13 @@ class MeasureView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(_: rect)
         
-        for i in 0...NUM_BARS - 1 {
+        let staffDrawStart = (rect.height - staffHeight) / 2
+        let staffLineOffset = staffHeight / CGFloat(NUM_BARS)
+        
+        for i in 0..<NUM_BARS {
             let path = UIBezierPath(rect: CGRect(
                 x: 0,
-                y: 0 + CGFloat(i) * (thickness + distanceApart),
+                y: staffDrawStart + CGFloat(i) * staffLineOffset,
                 width: rect.width,
                 height: thickness
                 )
