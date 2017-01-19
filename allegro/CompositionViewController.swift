@@ -29,7 +29,7 @@ class CompositionViewController: UIViewController {
         // TODO(btc): only recognize swipe on edge
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
-        // self.view.addGestureRecognizer(swipeLeft)
+        self.view.addGestureRecognizer(swipeLeft)
     }
 
     override func viewDidLayoutSubviews() {
@@ -41,9 +41,9 @@ class CompositionViewController: UIViewController {
 
         // occupies space to the right of the menu
         partEditor.frame = CGRect(x: noteSelectorMenu.frame.maxX,
-                                   y: 0,
-                                   width: view.bounds.width - noteSelectorMenu.frame.width,
-                                   height: view.bounds.height)
+                                  y: 0,
+                                  width: view.bounds.width - noteSelectorMenu.frame.width,
+                                  height: view.bounds.height)
     }
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {
