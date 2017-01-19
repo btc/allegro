@@ -14,6 +14,7 @@
 		6B096E581E31C6DC00615723 /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B096E5A1E31D0E300615723 /* Rational.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
+		6B0B26801E2F3DFB00F1870A /* PartEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A41E2D7FD600399BDC /* Measure.swift */; };
 		6B6774A71E2D7FE600399BDC /* Part.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A61E2D7FE600399BDC /* Part.swift */; };
@@ -33,6 +34,8 @@
 		6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */; };
 		6B6E272B1E28B77900F9CF66 /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E272A1E28B77900F9CF66 /* ActionGestureRecognizer.swift */; };
 		6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */; };
+		6B92BE631E308A6A00CE2C9F /* PartEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE621E308A6A00CE2C9F /* PartEditorCell.swift */; };
+		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
 		6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */; };
 		82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */; };
 		89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */; };
@@ -79,6 +82,7 @@
 		3CB49C9AC2B9AA905E6A3B0A /* Pods-allegro.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegro.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegro/Pods-allegro.release.xcconfig"; sourceTree = "<group>"; };
 		6B096E551E313B7200615723 /* NoteViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteViewModel.swift; sourceTree = "<group>"; };
 		6B0B267D1E2F2E5F00F1870A /* Rational.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rational.framework; path = Carthage/Build/iOS/Rational.framework; sourceTree = SOURCE_ROOT; };
+		6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartEditor.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A41E2D7FD600399BDC /* Measure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
 		6B6774A61E2D7FE600399BDC /* Part.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part.swift; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 		6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DBPathRecognizer.swift; path = vendor/DBPathRecognizer.swift; sourceTree = SOURCE_ROOT; };
 		6B6E272A1E28B77900F9CF66 /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
 		6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftTweaks.framework; path = Carthage/Build/iOS/SwiftTweaks.framework; sourceTree = SOURCE_ROOT; };
+		6B92BE621E308A6A00CE2C9F /* PartEditorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartEditorCell.swift; sourceTree = "<group>"; };
+		6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewContainer.swift; sourceTree = "<group>"; };
 		6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteSelectorMenu.swift; sourceTree = "<group>"; };
 		82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		9EA11674E74CCF5EDB06D551 /* Pods-allegroTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -194,9 +200,12 @@
 			isa = PBXGroup;
 			children = (
 				32B867891E2D79F80029F946 /* MeasureView.swift */,
+				6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */,
 				6B6BE38D1E2DE023007E0491 /* NoteSelectorCell.swift */,
 				6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */,
 				32B8678B1E3062C60029F946 /* NoteView.swift */,
+				6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */,
+				6B92BE621E308A6A00CE2C9F /* PartEditorCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -583,6 +592,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B6774AB1E2D7FF700399BDC /* Triplet.swift in Sources */,
+				6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */,
 				6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */,
 				6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
@@ -597,10 +607,12 @@
 				6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */,
 				6B6E27271E28B05100F9CF66 /* CompositionViewController.swift in Sources */,
 				32B8678C1E3062C60029F946 /* NoteView.swift in Sources */,
+				6B92BE631E308A6A00CE2C9F /* PartEditorCell.swift in Sources */,
 				6B6E27201E28985F00F9CF66 /* Utils.swift in Sources */,
 				B9ADCB821E2ED1F5001D72AE /* Key.swift in Sources */,
 				6B6774A71E2D7FE600399BDC /* Part.swift in Sources */,
 				6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */,
+				6B0B26801E2F3DFB00F1870A /* PartEditor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
