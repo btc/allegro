@@ -4,7 +4,7 @@ machine:
 
 dependencies:
     pre:
-        - bin/carthage_bootstrap_if_needed
+        - carthage bootstrap --no-use-binaries
     cache_directories:
         - "Carthage"
         - "/Users/distiller/.cocoapods/"
