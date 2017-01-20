@@ -19,6 +19,7 @@ class MeasureViewContainer: UIScrollView {
 
     init() {
         super.init(frame: .zero)
+        panGestureRecognizer.minimumNumberOfTouches = 2
 
         addSubview(measureView)
     }
