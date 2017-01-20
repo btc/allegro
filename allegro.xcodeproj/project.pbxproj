@@ -12,6 +12,7 @@
 		647E7D6823A9CE544AF81ACD /* Pods_allegroUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */; };
 		6B096E561E313B7200615723 /* NoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E551E313B7200615723 /* NoteViewModel.swift */; };
 		6B096E581E31C6DC00615723 /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
+		6B096E5A1E31D0E300615723 /* Rational.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A41E2D7FD600399BDC /* Measure.swift */; };
@@ -55,6 +56,19 @@
 			remoteInfo = allegro;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6B096E591E31D0CD00615723 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6B096E5A1E31D0E300615723 /* Rational.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		29F82434DECE1C4DB0338477 /* Pods-allegroUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -301,6 +315,7 @@
 				6B6E26FC1E288F8200F9CF66 /* Resources */,
 				E2C2EA73734A957A318784FC /* [CP] Embed Pods Frameworks */,
 				DC731A5C64E62C72909554E1 /* [CP] Copy Pods Resources */,
+				6B096E591E31D0CD00615723 /* CopyFiles */,
 			);
 			buildRules = (
 			);
