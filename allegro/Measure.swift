@@ -17,7 +17,7 @@ struct Measure {
     
     // TODO collection of notes (see #40)
     // simplest way to hold notes
-    let notes: [Note] = [Note]()
+    var notes: [(Rational,Note)] = [(Rational,Note)]()
     
     init(time: Rational = 4/4, key: Key = Key()) {
         self.time = time

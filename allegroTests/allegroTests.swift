@@ -33,12 +33,17 @@ class allegroTests: XCTestCase {
     }
     
     func testMeasure() {
-        let measure = Measure()
+        var measure = Measure()
         let defaultKey = Key()
         XCTAssert(measure.key.mode == defaultKey.mode &&
             measure.key.fifths == defaultKey.fifths, "New Measure has a default Key")
         
         XCTAssert(measure.time == 4/4, "New measure has a default of 4/4 time")
+        
+        measure.notes.append((0, Note(value: .quarter, letter: .A, octave: 4)))
+        measure.notes.append((1/4, Note(value: .quarter, letter: .B, octave: 4)))
+        measure.notes.append((1/2, Note(value: .quarter, letter: .C, octave: 4)))
+        measure.notes.append((3/4, Note(value: .quarter, letter: .D, octave: 4)))
     }
     
     func testNote() {
