@@ -11,6 +11,7 @@
 		32B8678C1E3062C60029F946 /* NoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B8678B1E3062C60029F946 /* NoteView.swift */; };
 		647E7D6823A9CE544AF81ACD /* Pods_allegroUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */; };
 		6B096E561E313B7200615723 /* NoteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E551E313B7200615723 /* NoteViewModel.swift */; };
+		6B096E581E31C6DC00615723 /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A41E2D7FD600399BDC /* Measure.swift */; };
@@ -116,6 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A38CFF6CB5898986752C58AB /* Pods_allegroTests.framework in Frameworks */,
+				6B096E581E31C6DC00615723 /* Rational.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,7 +658,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Carthage/Build/iOS/**";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -706,7 +708,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Carthage/Build/iOS/**";
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -731,7 +733,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 976H852GCK;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = allegro/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -751,7 +756,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 976H852GCK;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = allegro/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -770,7 +778,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 976H852GCK;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = allegroTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = gu.allegroTests;
@@ -787,7 +798,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 976H852GCK;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = allegroTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = gu.allegroTests;
