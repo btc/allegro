@@ -50,7 +50,7 @@ class allegroTests: XCTestCase {
     
     func testNoteView() {
         let C4 = NoteViewModel(note: Note(value: .quarter, letter: .C, octave: 4))
-        XCTAssert(C4.pitch == -6, "C4 is 6 notes below centerline")
+        XCTAssert(C4.pitch == -6, "C4 is 6 notes below centerline, on the first ledger line")
         
         let A4 = NoteViewModel(note: Note(value: .quarter, letter: .A, octave: 4))
         XCTAssert(A4.pitch == -1, "A4 is 1 note below centerline")
@@ -63,6 +63,9 @@ class allegroTests: XCTestCase {
         
         let G5 = NoteViewModel(note: Note(value: .quarter, letter: .G, octave: 5))
         XCTAssert(G5.pitch == 5, "G5 is 5 notes above centerline")
+        
+        let B5 = NoteViewModel(note: Note(value: .quarter, letter: .B, octave: 5))
+        XCTAssert(B5.pitch == 7, "B5 is 7 notes above centerline, right above first ledger line")
     }
     
     func testKey() {
