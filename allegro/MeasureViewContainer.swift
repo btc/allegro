@@ -30,6 +30,8 @@ class MeasureViewContainer: UIScrollView {
         delegate = self
         isDirectionalLockEnabled = true
 
+        minimumZoomScale = 0.5
+
         addSubview(measureView)
     }
     
