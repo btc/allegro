@@ -2,7 +2,7 @@
 |:--------:|
 | [![CircleCI](https://circleci.com/gh/TeamAllegro/allegro.svg?style=svg&circle-token=027c45e319de130d49216fe2fcc036eeb5a800f5)](https://circleci.com/gh/TeamAllegro/allegro) |
 
-# Getting Started
+# Configuring Your Development Environment
 
 1. Clone the repo
 1. Run `pod install` to install Cocoapods dependencies
@@ -11,6 +11,9 @@
 1. Run `fastlane match appstore --readonly` to download the AppStore Provisioning Profile. Again, you'll be prompted for a password. Enter the same one as before.
 1. Install Xcode 8 (for Swift 3)
 1. Open `allegro.xcworkspace` in Xcode. macOS may attempt to woo you into opening `allegro.xcodeproj`. Resist. Because we use Cocoapods, we *must* use `allegro.xcworkspace`.
+
+# Diving into the Code
+
 1. Have a look at [AppDelegate.swift](https://github.com/TeamAllegro/allegro/blob/master/allegro/AppDelegate.swift). That's the entrypoint of the application. That's where we hold references to the objects we keep in memory. That's where we manage application lifecycle.
 1. Notice the line: `window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
 `. `RootNavigationViewController` is a container that handles navigation. Into this, we inject the controller that handles the home screen.
