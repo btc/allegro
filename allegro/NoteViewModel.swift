@@ -16,9 +16,13 @@ struct NoteViewModel {
     // Every increment by 1 moves up half staff height
     // -1 moves it down
     var pitch: Int {
-        get {            
+        get {
+            // the number of notes away this note is from octave 5
+            // 5 is the center, and 7 is the total number of notes (ABCDEFG)
+            let octaveDiff = 7 * (5 - note.octave)
+            
             // +1 is because we're counting from C5 but we want the center at B4
-            return note.letter.rawValue - 7 * (5 - note.octave) + 1
+            return note.letter.rawValue - octaveDiff + 1
         }
     }
 
