@@ -15,9 +15,12 @@
 # Diving into the Code
 
 1. Have a look at [AppDelegate.swift](https://github.com/TeamAllegro/allegro/blob/master/allegro/AppDelegate.swift). That's the entrypoint of the application. That's where we hold references to the objects we keep in memory. That's where we manage application lifecycle.
-1. Notice the line: `window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
-`. `RootNavigationViewController` is a container that handles navigation. Into this, we inject the controller that handles the home screen.
+1. Notice the line below. `RootNavigationViewController` is a container that handles navigation. Into this, we inject the controller that handles the home screen.
 1. Follow `HomeMenuViewController`
+
+``` swift
+window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
+```
 
 # Resources
 
