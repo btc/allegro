@@ -10,16 +10,25 @@ import UIKit
 
 class MeasureViewContainer: UIScrollView {
 
-    let measureView: UIView = {
+    fileprivate struct State {
+        let rect: CGRect
+        let scale: CGFloat
+    }
+
+    fileprivate var stateBeforeZoom: State?
+
+    let measureView: MeasureView = {
         let v = MeasureView()
         v.staffLineThickness = 5
-        v.staffHeight = 200
         return v
     }()
 
     init() {
         super.init(frame: .zero)
+        backgroundColor = .white
         panGestureRecognizer.minimumNumberOfTouches = 2
+        delegate = self
+        isDirectionalLockEnabled = true
 
         addSubview(measureView)
     }
@@ -28,10 +37,25 @@ class MeasureViewContainer: UIScrollView {
         fatalError("init(coder:) not supported")
     }
 
-
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        measureView.frame = bounds
+        measureView.sizeOfParentsVisibleArea = bounds.size
+        contentSize = measureView.bounds.size
+    }
+}
+
+extension MeasureViewContainer: UIScrollViewDelegate {
+
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+    }
+    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
+    }
+
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return measureView
     }
 }
