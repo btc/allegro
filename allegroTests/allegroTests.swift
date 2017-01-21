@@ -40,10 +40,18 @@ class allegroTests: XCTestCase {
         
         XCTAssert(measure.time == 4/4, "New measure has a default of 4/4 time")
         
-        measure.notes.append((0, Note(value: .quarter, letter: .A, octave: 4)))
-        measure.notes.append((1/4, Note(value: .quarter, letter: .B, octave: 4)))
-        measure.notes.append((1/2, Note(value: .quarter, letter: .C, octave: 4)))
-        measure.notes.append((3/4, Note(value: .quarter, letter: .D, octave: 4)))
+        let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
+        let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
+        let C5eighth = Note(value: .eighth, letter: .C, octave: 5)
+        let D5quarter = Note(value: .quarter, letter: .D, octave: 5)
+        
+        XCTAssert(measure.insertNoteAt(note: A4quarter, position: 0) == true, "Note can be placed at start of free space")
+        XCTAssert(measure.insertNoteAt(note: B4quarter, position: 3/4) == true, "Note can be placed at end of free space")
+        XCTAssert(measure.insertNoteAt(note: C5eighth, position: 3/8) == true, "Note can be placed in the middle of free space")
+        
+        XCTAssert(measure.insertNoteAt(note: D5quarter, position: 0) == false, "Notes can't be placed on another note")
+        XCTAssert(measure.insertNoteAt(note: D5quarter, position: 1/4) == false, "Notes can't be placed overlapping another note")
+        
     }
     
     func testNote() {
