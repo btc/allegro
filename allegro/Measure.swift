@@ -16,7 +16,7 @@ struct Measure {
     let time: Rational
     
     // holds duration because note is immutable
-    struct NotePosition {
+    private struct NotePosition {
         var pos: Rational
         var duration: Rational
         var note: Note
@@ -104,11 +104,43 @@ struct Measure {
         return false
     }
     
-    // TODO coalesce
+    // gets a Note at a specific position in the measure
+    func getNoteAt(position: Rational) -> Note? {
+        for notePosition in notes {
+            if notePosition.pos == position && !notePosition.isFree {
+                return notePosition.note
+            }
+        }
+        return nil
+    }
     
-    // TODO getAt(Rational)
-    // TODO getAll
-    // TODO removeAt(Rational
+    // returns all notes and their positions
+    func getAllNotes() -> [(pos: Rational,note: Note)] {
+        var ret = [(Rational,Note)]()
+        for notePosition in notes {
+            if !notePosition.isFree {
+                ret.append((notePosition.pos, notePosition.note))
+            }
+        }
+        return ret
+    }
+    
+    // TODO removeAt(Rational)
+    
+    // coalesces free space
+    private mutating func coalesce() {
+        for i in 0..<notes.count - 1 {
+            if notes[i].isFree {
+                let nextNotePosition = notes[i+1]
+                
+                if nextNotePosition.isFree {
+                    // coalesce i+1 into i
+                    notes[i].duration = notes[i].duration + nextNotePosition.duration
+                    notes.remove(at: i+1)
+                }
+            }
+        }
+    }
     
     init(time: Rational = 4/4, key: Key = Key()) {
         self.time = time
