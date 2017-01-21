@@ -68,4 +68,12 @@ class Note {
     static func range(from startLetter: Letter, _ startOctave: Int, to endLetter: Letter, _ endOctave: Int) -> [Note] {
         return [] // TODO
     }
+    
+    static func == (lhs: Note, rhs: Note) -> Bool {
+        return  lhs.letter == rhs.letter &&
+                lhs.octave == rhs.octave &&
+                lhs.accidental == rhs.accidental &&
+                lhs.value == rhs.value &&
+                lhs.rest == rhs.rest
+    }
 }
