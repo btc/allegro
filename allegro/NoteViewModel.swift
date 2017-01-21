@@ -12,12 +12,17 @@ struct NoteViewModel {
 
     let note: Note
     
-    // 0 is the center of the bars.
+    // 0 is the center of the bars (B4 in treble clef)
     // Every increment by 1 moves up half staff height
     // -1 moves it down
     var pitch: Int {
         get {
-            return Int(arc4random_uniform(6)) - 3 // TODO translate note's pitch for ease of use in UI
+            // the number of notes away this note is from octave 5
+            // 5 is the center, and 7 is the total number of notes (ABCDEFG)
+            let octaveDiff = 7 * (5 - note.octave)
+            
+            // +1 is because we're counting from C5 but we want the center at B4
+            return note.letter.rawValue - octaveDiff + 1
         }
     }
 

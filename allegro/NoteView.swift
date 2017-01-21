@@ -13,10 +13,13 @@ class NoteView: UIView {
     let xDelta: CGFloat = 5
     let yDelta: CGFloat = 15
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    let note: NoteViewModel
+
+    init(note: NoteViewModel) {
+        self.note = note
+        super.init(frame: .zero)
         //self.layer.masksToBounds = false
-        self.isOpaque = false
+        isOpaque = false
     }
     
     required init?(coder aDecoder: NSCoder) {

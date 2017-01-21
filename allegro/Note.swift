@@ -14,8 +14,14 @@ class Note {
     // Octave is a # indicating where the note lies on a piano or a staff
     // Accidentals are semitone modifiers that do not affect the vertical placement of the note on the staff
     // See #42 for more information
-    enum Letter {
-        case A, B, C, D, E, F, G
+    enum Letter : Int {
+        case C = 0
+        case D = 1
+        case E = 2
+        case F = 3
+        case G = 4
+        case A = 5
+        case B = 6
     }
 
     enum Accidental {

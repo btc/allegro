@@ -17,18 +17,17 @@ class CompositionViewController: UIViewController {
         return v
     }()
 
-    fileprivate var measureView = MeasureView()
+    fileprivate var partEditor = PartEditor()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        view.addSubview(measureView)
+        view.addSubview(partEditor)
         view.addSubview(noteSelectorMenu)
 
-        // TODO(btc): only recognize swipe on edge
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        let swipeLeft = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        swipeLeft.edges = .right
         self.view.addGestureRecognizer(swipeLeft)
     }
 
@@ -40,20 +39,18 @@ class CompositionViewController: UIViewController {
                                         height: view.bounds.height)
 
         // occupies space to the right of the menu
-        measureView.frame = CGRect(x: noteSelectorMenu.frame.maxX,
-                                   y: 0,
-                                   width: view.bounds.width - noteSelectorMenu.frame.width,
-                                   height: view.bounds.height)
-        measureView.staffLineThickness = 5.0
-        measureView.staffHeight = 200.0
+        partEditor.frame = CGRect(x: noteSelectorMenu.frame.maxX,
+                                  y: 0,
+                                  width: view.bounds.width - noteSelectorMenu.frame.width,
+                                  height: view.bounds.height)
     }
     
     func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         
-        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+        if let g = gesture as? UIScreenEdgePanGestureRecognizer {
             
-            switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.left:
+            switch g.edges {
+            case UIRectEdge.right:
                 print("Swiped left")
                 let vc = SideMenuViewController()
                 navigationController?.pushViewController(vc, animated: true)
