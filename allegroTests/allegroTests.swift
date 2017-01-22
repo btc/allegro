@@ -31,7 +31,13 @@ class allegroTests: XCTestCase {
         let part = Part()
         XCTAssert(part.tempo == 120, "New Part tempo default is 120 bpm")
     }
-    
+
+    func testMeasureBasic() {
+        let n = Note(value: .whole, letter: .A, octave: 1)
+        var m = Measure(time: 3/4)
+        XCTAssert(m.insert(note: n, at: 0) == false, "Whole note doesn't fit in a 3/4 measure")
+    }
+
     func testMeasure() {
         var measure = Measure()
         let defaultKey = Key()
