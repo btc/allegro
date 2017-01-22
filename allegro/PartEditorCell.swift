@@ -29,7 +29,7 @@ class PartEditorCell: UICollectionViewCell {
         }
     }
 
-    let measureViewContainer: MeasureViewContainer = {
+    var measureViewContainer: MeasureViewContainer = {
         let v = MeasureViewContainer()
         return v
     }()
@@ -48,5 +48,13 @@ class PartEditorCell: UICollectionViewCell {
         super.layoutSubviews()
 
         measureViewContainer.frame = bounds
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        Log.warning?.trace()
+        subviews.forEach { $0.removeFromSuperview() }
+        measureViewContainer = MeasureViewContainer()
+        addSubview(measureViewContainer)
     }
 }
