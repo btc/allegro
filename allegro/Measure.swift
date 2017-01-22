@@ -8,6 +8,8 @@
 
 import Rational
 
+// TODO(btc): make note and durationOfFree optional types
+
 private struct NotePosition {
     var pos: Rational
     var note: Note
