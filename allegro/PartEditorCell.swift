@@ -13,9 +13,7 @@ class PartEditorCell: UICollectionViewCell {
 
     var store: PartStore? {
         didSet {
-            if let store = store {
-                measureViewContainer.store = store
-            }
+            measureViewContainer.store = store
         }
     }
 

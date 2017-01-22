@@ -12,9 +12,7 @@ class MeasureViewContainer: UIScrollView {
 
     var store: PartStore? {
         didSet {
-            if let store = store {
-                measureView.store = store
-            }
+            measureView.store = store
         }
     }
 
