@@ -18,6 +18,8 @@ class PartEditor: UICollectionView {
         self.store = store
         super.init(frame: .zero, collectionViewLayout: layout)
 
+        store.observers.append(Weak<PartStoreObserver>(self))
+
         panGestureRecognizer.minimumNumberOfTouches = 3
         panGestureRecognizer.maximumNumberOfTouches = 3
         isPagingEnabled = true
@@ -49,7 +51,7 @@ extension PartEditor: UICollectionViewDelegateFlowLayout {
 extension PartEditor: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return store.part.measureCount + 1 // + 1 for the new measure that hasn't been created yet, but exists in UI
+        return store.measureCount
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -61,5 +63,11 @@ extension PartEditor: UICollectionViewDataSource {
             c.index = indexPath.row
         }
         return cell
+    }
+}
+
+extension PartEditor: PartStoreObserver {
+    func partStoreChanged() {
+        // TODO(btc): update collection view to reflect any changes in number of measures
     }
 }

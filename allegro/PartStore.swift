@@ -8,11 +8,21 @@
 
 import Rational
 
+@objc protocol PartStoreObserver: AnyObject {
+    func partStoreChanged()
+}
+
 class PartStore {
 
-    let part: Part
+    private let part: Part
 
     var selectedNoteDuration: Note.Duration = .whole
+
+    var observers: [Weak<PartStoreObserver>] = [Weak<PartStoreObserver>]()
+
+    var measureCount: Int {
+        return part.measureCount + 1 // + 1 for the new measure that hasn't been created yet, but exists in UI
+    }
 
     init(part: Part) {
         self.part = part
@@ -23,7 +33,12 @@ class PartStore {
             part.extend() // allows caller to insert into a measure that doesn't exist until _now_.
         }
         Log.info?.message("insert \(note.duration.description) into measure \(i) at \(position)")
-        return part.insert(note: note, intoMeasureIndex: i, at: position)
+        let succeeded = part.insert(note: note, intoMeasureIndex: i, at: position)
+
+        if succeeded {
+            observers.forEach { $0.value?.partStoreChanged() }
+        }
+        return succeeded
     }
 
     func getNotes(measureIndex i: Int) -> [(pos: Rational, note: Note)] {
