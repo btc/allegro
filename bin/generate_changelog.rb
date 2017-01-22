@@ -4,6 +4,33 @@ require 'logger'
 require 'optparse'
 require 'git'
 
+
+def get_file_changes(h)
+  email = h[:email]
+  from = h[:from]
+  to = h[:to]
+  git = h[:repo]
+  file_changes = {}
+  git.log.author(email).since(from).until(to).each do |commit|
+    commit.diff_parent.stats[:files].each do |file_name, changes|
+      existing_changes = file_changes[file_name]
+      if existing_changes.nil?
+        existing_changes = {
+          insertions: 0,
+          deletions: 0,
+        }
+      end
+      # NB: changes are relative to parent, so we actually need to count
+      # deletions as insertions and insertions as deletions
+      file_changes[file_name] = {
+        insertions: existing_changes[:insertions] + changes[:deletions],
+        deletions: existing_changes[:deletions] + changes[:insertions],
+      }
+    end
+  end
+end
+
+
 if __FILE__ == $0
   options = {}
   OptionParser.new do |opts|
@@ -13,14 +40,17 @@ if __FILE__ == $0
     opts.on("-t", "--to DATE", "End Date (Inclusive)") { |v| options[:to] = v }
   end.parse!
 
-  from = if options[:from].nil? then "7 days ago" else options[:from] end
-  to = if options[:to].nil? then "now" else options[:to] end
+  from = if options[:from].nil? then "7 days" else options[:from] end
+  to = if options[:to].nil? then "today" else options[:to] end
 
   git = Git.open(".")
 
   committers = git.log.since(from).until(to)
     .map { |commit| commit.author }
     .reduce([]) do |acc, author|
+
+    # keep unique authors (by email)
+
     ret = acc + [author]
     for existing in acc do
       if existing.email == author.email
@@ -40,29 +70,15 @@ if __FILE__ == $0
     puts "=" * (name.length + " <>".length + email.length)
     puts "\n"
 
-    git.log.author(email).since(from).until(to).each do |commit|
-      line1 = if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
-      puts "* #{line1}"
+    msgs = git.log.author(email).since(from).until(to).map do |commit|
+      if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
     end
 
-    file_changes = {}
-    git.log.author(email).since(from).until(to).each do |commit|
-      commit.diff_parent.stats[:files].each do |file_name, changes|
-        existing_changes = file_changes[file_name]
-        if existing_changes.nil?
-          existing_changes = {
-            insertions: 0,
-            deletions: 0,
-          }
-        end
-        # NB: changes are relative to parent, so we actually need to count
-        # deletions as insertions and insertions as deletions
-        file_changes[file_name] = {
-          insertions: existing_changes[:insertions] + changes[:deletions],
-          deletions: existing_changes[:deletions] + changes[:insertions],
-        }
-      end
+    msgs.sort.each do |m|
+      puts "* #{m}"
     end
+
+    file_changes = get_file_changes(repo: git, email: email, from: from, until: to)
 
     puts "\n"
     file_changes.each do |file_name,  changes|
