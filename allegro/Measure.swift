@@ -19,6 +19,8 @@ private struct NotePosition {
 
 struct Measure {
 
+    static let defaultTimeSignature: Rational = 4/4
+
     // the key signature eg. G Major or d minor
     let key: Key
     
@@ -26,7 +28,7 @@ struct Measure {
 
     private var notes: [NotePosition]
 
-    init(time: Rational = 4/4, key: Key = Key()) {
+    init(time: Rational = Measure.defaultTimeSignature, key: Key = Key()) {
         self.timeSignature = time
         self.key = key
 

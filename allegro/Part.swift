@@ -6,7 +6,9 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
-struct Part {
+import Rational
+
+class Part {
     
     // beats per minute (bpm) eg. 120
     var tempo: Int = 120
@@ -14,14 +16,26 @@ struct Part {
     var composer: String = ""
     var title: String = ""
     var comment: String = ""
-    
+
+    var measureCount: Int {
+        return measures.count
+    }
+
     // ordered list of measures in the piece
     fileprivate var measures: [Measure] = [Measure]()
     
     // initialize with 1 empty measure
     init() {
-        self.measures.append(Measure())
-        
+        measures.append(Measure())
     }
-    
+
+    func extend() {
+        let timeSigForNewMeasure = measures.last?.timeSignature ?? Measure.defaultTimeSignature
+        measures.append(Measure(time: timeSigForNewMeasure))
+    }
+
+    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
+        guard measures.indices.contains(i) else { return false }
+        return measures[i].insert(note: note, at: position)
+    }
 }
