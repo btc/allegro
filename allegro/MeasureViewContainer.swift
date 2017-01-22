@@ -46,7 +46,7 @@ class MeasureViewContainer: UIScrollView {
         delegate = self
         isDirectionalLockEnabled = true
 
-        minimumZoomScale = 0.5
+        // TODO(btc): add support for toggling edit and view modes with minimumZoomScale = 0.5
 
         addSubview(measureView)
     }
