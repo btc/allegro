@@ -77,8 +77,16 @@ class CompositionViewController: UIViewController {
             switch g.edges {
             case UIRectEdge.right:
                 print("Swiped left")
-                let vc = SideMenuViewController()
-                navigationController?.pushViewController(vc, animated: true)
+                if self.presentedViewController == nil {
+                    let vc = SideMenuViewController()
+                    vc.modalPresentationStyle = .overCurrentContext
+                    let transition = CATransition()
+                    transition.duration = 0.5
+                    transition.type = kCATransitionMoveIn
+                    transition.subtype = kCATransitionFromRight
+                    view.window!.layer.add(transition, forKey: kCATransition)
+                    navigationController?.present(vc, animated: false, completion: nil)
+                }
             default:
                 break
             }
