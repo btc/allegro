@@ -49,7 +49,7 @@ extension PartEditor: UICollectionViewDelegateFlowLayout {
 extension PartEditor: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return 2 // TODO(btc): this is where the shadow measure comes into play
+        return store.part.measureCount + 1 // + 1 for the new measure that hasn't been created yet, but exists in UI
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -58,6 +58,7 @@ extension PartEditor: UICollectionViewDataSource {
                                                       for: indexPath)
         if let c = cell as? PartEditorCell {
             c.store = store
+            c.index = indexPath.row
         }
         return cell
     }

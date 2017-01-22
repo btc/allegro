@@ -22,11 +22,11 @@ class Part {
     }
 
     // ordered list of measures in the piece
-    fileprivate var measures: [Measure] = [Measure]()
+    private(set) var measures: [Measure] = [Measure]()
     
     // initialize with 1 empty measure
     init() {
-        measures.append(Measure())
+        extend()
     }
 
     func extend() {

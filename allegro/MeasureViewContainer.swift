@@ -11,8 +11,20 @@ import UIKit
 class MeasureViewContainer: UIScrollView {
 
     var store: PartStore? {
-        didSet {
-            measureView.store = store
+        set {
+            measureView.store = newValue
+        }
+        get {
+            return measureView.store
+        }
+    }
+
+    var index: Int? {
+        set {
+            measureView.index = newValue
+        }
+        get {
+            return measureView.index
         }
     }
 

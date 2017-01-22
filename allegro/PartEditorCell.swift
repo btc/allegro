@@ -12,8 +12,20 @@ class PartEditorCell: UICollectionViewCell {
     static let reuseID = "PartEditorCell"
 
     var store: PartStore? {
-        didSet {
-            measureViewContainer.store = store
+        set {
+            measureViewContainer.store = newValue
+        }
+        get {
+            return measureViewContainer.store
+        }
+    }
+
+    var index: Int? {
+        set {
+            measureViewContainer.index = newValue
+        }
+        get {
+            return measureViewContainer.index
         }
     }
 

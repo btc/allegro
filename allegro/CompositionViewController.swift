@@ -7,8 +7,7 @@
 //
 
 import UIKit
-
-
+import Rational
 
 class CompositionViewController: UIViewController {
 
@@ -27,6 +26,12 @@ class CompositionViewController: UIViewController {
 
         let p = Part()
         store = PartStore(part: p)
+
+        // TODO(btc): remove these notes
+        _ = store?.insert(note: Note(value: .quarter, letter: .B, octave: 4), intoMeasureIndex: 0, at: 0)
+        _ = store?.insert(note: Note(value: .quarter, letter: .G, octave: 4), intoMeasureIndex: 0, at: 1/4)
+        _ = store?.insert(note: Note(value: .quarter, letter: .D, octave: 4), intoMeasureIndex: 0, at: 1/2)
+
         guard let store = store else { return }
 
         editor = PartEditor(store: store)

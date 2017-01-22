@@ -13,6 +13,8 @@ class MeasureView: UIView {
 
     var store: PartStore?
 
+    var index: Int?
+
     var staffLineThickness: CGFloat = 0
 
     var staffHeight: CGFloat {
@@ -83,10 +85,9 @@ class MeasureView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        guard let store = store, let index = index else { return }
 
-        let notes = [Note(value: .half, letter: .B, octave: 4),
-                     Note(value: .half, letter: .G, octave: 4),
-                     Note(value: .half, letter: .D, octave: 4)]
+        let notes = store.getNotes(measureIndex: index).map { $0.note } // TODO(btc): render notes in the right position
         let noteViewModels = notes.map { NoteViewModel(note: $0) }
         let noteViews = noteViewModels.map { NoteView(note: $0) }
 
