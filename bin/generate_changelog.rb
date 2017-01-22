@@ -89,6 +89,15 @@ if __FILE__ == $0
       puts "+#{changes[:insertions]}\t -#{changes[:deletions]}\t #{file_name}"
     end
 
+    total_insertions = 0
+    total_deletions = 0
+    file_changes.each do |_, changes|
+      total_insertions += changes[:insertions]
+      total_deletions += changes[:deletions]
+    end
+    puts "\n"
+    puts "+#{total_insertions}\t -#{total_deletions}"
+
     puts "\n"
     puts "\n"
   end
