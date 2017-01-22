@@ -21,8 +21,6 @@ class MeasureViewContainer: UIScrollView {
         let scale: CGFloat
     }
 
-    fileprivate var stateBeforeZoom: State?
-
     let measureView: MeasureView = {
         let v = MeasureView()
         v.staffLineThickness = 5
