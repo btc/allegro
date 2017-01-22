@@ -38,19 +38,19 @@ class allegroTests: XCTestCase {
         XCTAssert(measure.key.mode == defaultKey.mode &&
             measure.key.fifths == defaultKey.fifths, "New Measure has a default Key")
         
-        XCTAssert(measure.time == 4/4, "New measure has a default of 4/4 time")
+        XCTAssert(measure.timeSignature == 4/4, "New measure has a default of 4/4 time")
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
         let C5eighth = Note(value: .eighth, letter: .C, octave: 5)
         let D5quarter = Note(value: .quarter, letter: .D, octave: 5)
         
-        XCTAssert(measure.insertNoteAt(note: A4quarter, position: 0) == true, "Note can be placed at start of free space")
-        XCTAssert(measure.insertNoteAt(note: B4quarter, position: 3/4) == true, "Note can be placed at end of free space")
-        XCTAssert(measure.insertNoteAt(note: C5eighth, position: 3/8) == true, "Note can be placed in the middle of free space")
+        XCTAssert(measure.insert(note: A4quarter, at: 0) == true, "Note can be placed at start of free space")
+        XCTAssert(measure.insert(note: B4quarter, at: 3/4) == true, "Note can be placed at end of free space")
+        XCTAssert(measure.insert(note: C5eighth, at: 3/8) == true, "Note can be placed in the middle of free space")
         
-        XCTAssert(measure.insertNoteAt(note: D5quarter, position: 0) == false, "Notes can't be placed on another note")
-        XCTAssert(measure.insertNoteAt(note: D5quarter, position: 1/4) == false, "Notes can't be placed overlapping another note")
+        XCTAssert(measure.insert(note: D5quarter, at: 0) == false, "Notes can't be placed on another note")
+        XCTAssert(measure.insert(note: D5quarter, at: 1/4) == false, "Notes can't be placed overlapping another note")
         
         if let n0 = measure.getNote(at: 0) {
             XCTAssert(n0 == A4quarter, "Note can be accessed directly")

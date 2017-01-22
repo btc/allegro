@@ -8,26 +8,34 @@
 
 import Rational
 
+private struct NotePosition {
+    var pos: Rational
+    var note: Note
+    var isFree: Bool
+    var durationOfFree: Rational
+}
+
 struct Measure {
-    
+
     // the key signature eg. G Major or d minor
     let key: Key
     
-    let time: Rational
-    
-    // holds duration because note is immutable
-    private struct NotePosition {
-        var pos: Rational
-        var freeDuration: Rational
-        var note: Note
-        var isFree: Bool
-    }
-    
+    let timeSignature: Rational
+
     private var notes: [NotePosition]
-    
+
+    init(time: Rational = 4/4, key: Key = Key()) {
+        self.timeSignature = time
+        self.key = key
+
+        // notes starts with a single free note that takes up the whole measure
+        let np = NotePosition(pos: 0, note: Note(value: .whole, letter: .B, octave: 5), isFree: true, durationOfFree: time)
+        self.notes = [np]
+    }
+
     // inserts a Note at the given position in the measure
     // returns whether the operation succeeded
-    mutating func insertNoteAt(note: Note, position: Rational) -> Bool {
+    mutating func insert(note: Note, at position: Rational) -> Bool {
         
         let noteEnd = position + note.duration
         
@@ -36,7 +44,7 @@ struct Measure {
             let currPos = notePosition.pos
             let currNote = notePosition.note
             
-            let currEnd = currPos + notePosition.freeDuration
+            let currEnd = currPos + notePosition.durationOfFree
             
             if notePosition.isFree {
             
@@ -53,7 +61,7 @@ struct Measure {
                     
                     if currPos == position {
                         // need to put the free space after the new note if the start is the same
-                        notes.insert(NotePosition(pos: position, freeDuration: note.duration, note: note, isFree: false), at: i)
+                        notes.insert(NotePosition(pos: position, note: note, isFree: false, durationOfFree: note.duration), at: i)
                         
                         if diff == 0 {
                             // remove this free space
@@ -61,7 +69,7 @@ struct Measure {
 
                         } else {
                             // resize and reposition free space
-                            notes[i+1].freeDuration = diff
+                            notes[i+1].durationOfFree = diff
                             notes[i+1].pos = notes[i].pos + note.duration
                         }
 
@@ -70,7 +78,7 @@ struct Measure {
                     } else if currEnd == noteEnd {
                         // need to put the free space before the new note if the end is the same
                         
-                        notes.insert(NotePosition(pos: position, freeDuration: note.duration, note: note, isFree: false), at: i+1)
+                        notes.insert(NotePosition(pos: position, note: note, isFree: false, durationOfFree: note.duration), at: i+1)
                         
                         if diff == 0 {
                             // remove this free space
@@ -78,7 +86,7 @@ struct Measure {
                             
                         } else {
                             // resize free space
-                            notes[i].freeDuration = diff
+                            notes[i].durationOfFree = diff
                         }
                         
                         return true
@@ -86,13 +94,13 @@ struct Measure {
                     } else {
                         // need to put the note in the middle of the free space and cut it up
                         
-                        notes.insert(NotePosition(pos: position, freeDuration: note.duration, note: note, isFree: false), at: i+1)
+                        notes.insert(NotePosition(pos: position, note: note, isFree: false, durationOfFree: note.duration), at: i+1)
                         
                         // resize free space before the note
-                        notes[i].freeDuration = position - currPos
+                        notes[i].durationOfFree = position - currPos
                         
                         // add leftovers in new free space after new note
-                        let np = NotePosition(pos: noteEnd, freeDuration: currEnd - noteEnd, note: Note(value: .whole, letter: .B, octave: 5), isFree: true)
+                        let np = NotePosition(pos: noteEnd, note: Note(value: .whole, letter: .B, octave: 5), isFree: true, durationOfFree: currEnd - noteEnd)
                         self.notes.insert(np, at: i+2)
                         
                         return true
@@ -115,7 +123,7 @@ struct Measure {
     }
     
     // returns all notes and their positions
-    func getAllNotes() -> [(pos: Rational,note: Note)] {
+    func getAllNotes() -> [(pos: Rational, note: Note)] {
         var ret = [(Rational,Note)]()
         for notePosition in notes {
             if !notePosition.isFree {
@@ -135,20 +143,11 @@ struct Measure {
                 
                 if nextNotePosition.isFree {
                     // coalesce i+1 into i
-                    notes[i].freeDuration = notes[i].freeDuration + nextNotePosition.freeDuration
+                    notes[i].durationOfFree = notes[i].durationOfFree + nextNotePosition.durationOfFree
                     notes.remove(at: i+1)
                 }
             }
         }
-    }
-    
-    init(time: Rational = 4/4, key: Key = Key()) {
-        self.time = time
-        self.key = key
-        
-        // notes starts with a single free note that takes up the whole measure
-        let np = NotePosition(pos: 0, freeDuration: time, note: Note(value: .whole, letter: .B, octave: 5), isFree: true)
-        self.notes = [np]
     }
     
     // TODO duration checking (see #37)
