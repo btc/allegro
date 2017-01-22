@@ -10,6 +10,14 @@ import UIKit
 
 class MeasureViewContainer: UIScrollView {
 
+    var store: PartStore? {
+        didSet {
+            if let store = store {
+                measureView.store = store
+            }
+        }
+    }
+
     fileprivate struct State {
         let rect: CGRect
         let scale: CGFloat

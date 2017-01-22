@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 
 class MeasureView: UIView {
+
+    var store: PartStore?
+
     var staffLineThickness: CGFloat = 0
 
     var staffHeight: CGFloat {

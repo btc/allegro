@@ -10,11 +10,16 @@ import UIKit
 
 class PartEditor: UICollectionView {
 
-    init() {
+    let store: PartStore
+    
+    init(store: PartStore) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        self.store = store
         super.init(frame: .zero, collectionViewLayout: layout)
+
         panGestureRecognizer.minimumNumberOfTouches = 3
+        panGestureRecognizer.maximumNumberOfTouches = 3
         isPagingEnabled = true
         register(PartEditorCell.self, forCellWithReuseIdentifier: PartEditorCell.reuseID)
         dataSource = self
@@ -51,6 +56,9 @@ extension PartEditor: UICollectionViewDataSource {
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PartEditorCell.reuseID,
                                                       for: indexPath)
+        if let c = cell as? PartEditorCell {
+            c.store = store
+        }
         return cell
     }
 }

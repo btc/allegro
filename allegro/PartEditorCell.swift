@@ -11,6 +11,14 @@ import UIKit
 class PartEditorCell: UICollectionViewCell {
     static let reuseID = "PartEditorCell"
 
+    var store: PartStore? {
+        didSet {
+            if let store = store {
+                measureViewContainer.store = store
+            }
+        }
+    }
+
     let measureViewContainer: MeasureViewContainer = {
         let v = MeasureViewContainer()
         return v

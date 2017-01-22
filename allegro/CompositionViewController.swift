@@ -17,13 +17,22 @@ class CompositionViewController: UIViewController {
         return v
     }()
 
-    fileprivate var partEditor = PartEditor()
+    fileprivate var store: PartStore?
+
+    fileprivate var editor: PartEditor?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        view.addSubview(partEditor)
+        let p = Part()
+        store = PartStore(part: p)
+        guard let store = store else { return }
+
+        editor = PartEditor(store: store)
+        guard let editor = editor else { return }
+
+        view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
 
         let swipeLeft = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
@@ -39,7 +48,7 @@ class CompositionViewController: UIViewController {
                                         height: view.bounds.height)
 
         // occupies space to the right of the menu
-        partEditor.frame = CGRect(x: noteSelectorMenu.frame.maxX,
+        editor?.frame = CGRect(x: noteSelectorMenu.frame.maxX,
                                   y: 0,
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
