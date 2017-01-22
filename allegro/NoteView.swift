@@ -18,19 +18,23 @@ class NoteView: UIView {
     //radians only!
     fileprivate let rotationAngle = CGFloat(-30 * Double.pi / 180.0)
     
-    fileprivate let noteHeadFrame: CGRect
+    var noteFrame = CGRect.zero {
+        didSet {
+            updateNoteFrame()
+        }
+    }
+    var stemEndY = CGFloat(0) {
+        didSet {
+            updateNoteFrame()
+        }
+    }
+    fileprivate var noteHeadFrame = CGRect.zero
     
-    // we're assuming the stem is always going up for now
-    init(noteHeadFrame: CGRect, stemEndY: CGFloat) {
-        let offset = noteHeadFrame.origin.y - stemEndY
-        let noteFrame = CGRect(
-            x: noteHeadFrame.origin.x,
-            y: stemEndY,
-            width: noteHeadFrame.size.width,
-            height: noteHeadFrame.size.height + offset)
-        self.noteHeadFrame = CGRect(origin: CGPoint(x: 0, y: offset), size: noteHeadFrame.size)
-        
-        super.init(frame: noteFrame)
+    let note: NoteViewModel
+
+    init(note: NoteViewModel) {
+        self.note = note
+        super.init(frame: .zero)
         isOpaque = false
     }
     
@@ -38,16 +42,26 @@ class NoteView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func updateNoteFrame() {
+        let offset = noteFrame.origin.y - stemEndY
+        frame = CGRect(
+            x: noteFrame.origin.x,
+            y: stemEndY,
+            width: noteFrame.size.width,
+            height: noteFrame.size.height + offset)
+        noteHeadFrame = CGRect(origin: CGPoint(x: 0, y: offset), size: noteFrame.size)
+    }
+    
     func getNoteHeadPath(drawRect: CGRect) -> UIBezierPath {
-        let frame = noteHeadFrame.offsetBy(dx: drawRect.origin.x, dy: drawRect.origin.y)
+        let rect = noteHeadFrame.offsetBy(dx: drawRect.origin.x, dy: drawRect.origin.y)
         
         let center = CGPoint(
-            x: frame.origin.x + frame.size.width / 2,
-            y: frame.origin.y + frame.size.height / 2
+            x: rect.origin.x + rect.size.width / 2,
+            y: rect.origin.y + rect.size.height / 2
         )
         
-        let path = UIBezierPath(ovalIn: frame)
-        path.append(UIBezierPath(ovalIn: frame.insetBy(dx: noteInset.x, dy: noteInset.y)))
+        let path = UIBezierPath(ovalIn: rect)
+        path.append(UIBezierPath(ovalIn: rect.insetBy(dx: noteInset.x, dy: noteInset.y)))
         path.usesEvenOddFillRule = true
         
         let rotation = CGAffineTransform.identity
@@ -59,8 +73,8 @@ class NoteView: UIView {
         
         let pathBounds = path.cgPath.boundingBox
         
-        let sw     = frame.size.width / pathBounds.width
-        let sh     = frame.size.height / pathBounds.height
+        let sw     = rect.size.width / pathBounds.width
+        let sh     = rect.size.height / pathBounds.height
         let factor = min(sw, sh)
         
         let scale = CGAffineTransform.identity
