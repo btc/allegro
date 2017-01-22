@@ -28,6 +28,7 @@ def get_file_changes(h)
       }
     end
   end
+  file_changes
 end
 
 
@@ -79,9 +80,12 @@ if __FILE__ == $0
     end
 
     file_changes = get_file_changes(repo: git, email: email, from: from, until: to)
+    sorted_file_changes = file_changes.sort_by { |k,v| k }
 
     puts "\n"
-    file_changes.each do |file_name,  changes|
+    sorted_file_changes.each do |pair|
+      file_name = pair[0]
+      changes = pair[1]
       puts "+#{changes[:insertions]}\t -#{changes[:deletions]}\t #{file_name}"
     end
 
