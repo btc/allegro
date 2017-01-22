@@ -52,17 +52,17 @@ class allegroTests: XCTestCase {
         XCTAssert(measure.insertNoteAt(note: D5quarter, position: 0) == false, "Notes can't be placed on another note")
         XCTAssert(measure.insertNoteAt(note: D5quarter, position: 1/4) == false, "Notes can't be placed overlapping another note")
         
-        if let n0 = measure.getNoteAt(position: 0) {
+        if let n0 = measure.getNote(at: 0) {
             XCTAssert(n0 == A4quarter, "Note can be accessed directly")
         } else {
             XCTFail("Note can be accessed directly")
         }
-        if let n1 = measure.getNoteAt(position: 3/8) {
+        if let n1 = measure.getNote(at: 3/8) {
             XCTAssert(n1 == C5eighth, "Note can be accessed directly")
         } else {
             XCTFail("Note can be accessed directly")
         }
-        if let n2 = measure.getNoteAt(position: 3/4) {
+        if let n2 = measure.getNote(at: 3/4) {
             XCTAssert(n2 == B4quarter, "Note can be accessed directly")
         } else {
             XCTFail("Note can be accessed directly")
