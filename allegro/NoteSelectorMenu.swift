@@ -8,14 +8,31 @@
 
 import UIKit
 
+protocol NoteSelectorDelegate: class {
+    func didChangeSelection(duration: Note.Duration)
+}
+
 class NoteSelectorMenu: UICollectionView {
 
-    // TODO(btc): expose a method that gives the selected note
-    // TODO(btc): create a delegate for the menu
+    var selectedNoteDuration: Note.Duration {
+        get {
+            return notes[selectedNote]
+        }
+    }
 
-    fileprivate var selectedNote = 0
+    weak var selectorDelegate: NoteSelectorDelegate?
+
+    fileprivate var selectedNote = 0 {
+        didSet {
+            selectorDelegate?.didChangeSelection(duration: selectedNoteDuration)
+        }
+    }
+
     fileprivate let numNotesVisibleAtOnce: CGFloat = 5
-    fileprivate let notes = ["1", "2", "4", "8", "16", "32", "64", "128", "256"] // TODO(btc): replace with actual notes
+
+    fileprivate let notes: [Note.Duration] = [.whole, .half, .quarter, .eighth, .sixteenth,
+                                           .thirtysecond, .sixtyfourth, .onetwentyeighth, .twofiftysixth]
+
     private let layout = UICollectionViewFlowLayout()
 
     init() {

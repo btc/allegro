@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Rational
 
 class MeasureView: UIView {
 
@@ -77,7 +78,7 @@ class MeasureView: UIView {
                 height: staffLineThickness
                 )
             )
-            
+
             UIColor.black.setFill()
             path.fill()
         }
@@ -85,6 +86,8 @@ class MeasureView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        subviews.forEach { $0.removeFromSuperview() }
+
         guard let store = store, let index = index else { return }
 
         let notes = store.getNotes(measureIndex: index).map { $0.note } // TODO(btc): render notes in the correct horizontal position
@@ -106,6 +109,41 @@ class MeasureView: UIView {
 
     @objc private func tapped(sender: UITapGestureRecognizer) {
         let p = sender.location(in: self)
-        Log.info?.value(p)
+        guard let store = store, let index = index else { return }
+        let duration = store.selectedNoteDuration
+
+        // determine pitch
+        let pitchRelativeToCenterLine = pointToPitch(p)
+
+        // determine position
+        let measure = store.measure(at: index)
+        guard let rational = pointToPositionInTime(p, timeSignature: measure.timeSignature, noteDuration: duration) else { return }
+
+        // instantiate note
+        let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
+        let note = Note(duration: duration, letter: letter, octave: octave)
+
+        // attempt to inert
+        let succeeded = store.insert(note: note, intoMeasureIndex: index, at: rational)
+
+        if !succeeded {
+            // TODO(btc): display helpful feedback to the user
+        }
+
+        setNeedsLayout()
+
+        Log.info?.value(succeeded)
+    }
+
+    private func pointToPitch(_ point: CGPoint) -> Int {
+        let numSpacesBetweenAllLines: CGFloat = CGFloat(staffCount + numLedgerLinesAbove + numLedgerLinesBelow - 1)
+        let lengthOfSemitoneInPoints = staffHeight / 2
+        return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / lengthOfSemitoneInPoints + numSpacesBetweenAllLines))
+    }
+
+    private func pointToPositionInTime(_ point: CGPoint, timeSignature: Rational, noteDuration: Note.Duration) -> Rational? {
+        let numPositionsInTime = timeSignature.numerator // TODO(btc): take into consideration the selected note's duration
+        let positionInTime = Int(floor(point.x / bounds.width * CGFloat(numPositionsInTime)))
+        return Rational(positionInTime, numPositionsInTime)
     }
 }

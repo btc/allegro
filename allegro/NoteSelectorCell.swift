@@ -44,6 +44,13 @@ class NoteSelectorCell: UICollectionViewCell {
         return v
     }()
 
+    // TODO(btc): replace with Note model
+    var note: Note.Duration? = nil {
+        didSet {
+            label.text = note?.description
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(label)
@@ -51,13 +58,6 @@ class NoteSelectorCell: UICollectionViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // TODO(btc): replace with Note model
-    var note: String? = nil {
-        didSet {
-            label.text = note
-        }
     }
 
     override func layoutSubviews() {

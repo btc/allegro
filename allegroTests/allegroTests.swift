@@ -33,7 +33,7 @@ class allegroTests: XCTestCase {
     }
 
     func testMeasureBasic() {
-        let n = Note(value: .whole, letter: .A, octave: 1)
+        let n = Note(duration: .whole, letter: .A, octave: 1)
         var m = Measure(time: 3/4)
         XCTAssert(m.insert(note: n, at: 0) == false, "Whole note doesn't fit in a 3/4 measure")
     }
@@ -46,10 +46,10 @@ class allegroTests: XCTestCase {
         
         XCTAssert(measure.timeSignature == 4/4, "New measure has a default of 4/4 time")
         
-        let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
-        let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
-        let C5eighth = Note(value: .eighth, letter: .C, octave: 5)
-        let D5quarter = Note(value: .quarter, letter: .D, octave: 5)
+        let A4quarter = Note(duration: .quarter, letter: .A, octave: 4)
+        let B4quarter = Note(duration: .quarter, letter: .B, octave: 4)
+        let C5eighth = Note(duration: .eighth, letter: .C, octave: 5)
+        let D5quarter = Note(duration: .quarter, letter: .D, octave: 5)
         
         XCTAssert(measure.insert(note: A4quarter, at: 0) == true, "Note can be placed at start of free space")
         XCTAssert(measure.insert(note: B4quarter, at: 3/4) == true, "Note can be placed at end of free space")
@@ -83,29 +83,29 @@ class allegroTests: XCTestCase {
     }
     
     func testNote() {
-        let G4quarter = Note(value: .quarter, letter: .G, octave: 4)
+        let G4quarter = Note(duration: .quarter, letter: .G, octave: 4)
         XCTAssert(G4quarter.accidental == .natural, "Notes are natural by default")
         XCTAssert(G4quarter.rest == false, "Notes are not rest by default")
-        XCTAssert(G4quarter.duration == 1/4, "Quarter note == 1/4")
+        XCTAssert(G4quarter.duration.rational == 1/4, "Quarter note == 1/4")
     }
     
     func testNoteView() {
-        let C4 = NoteViewModel(note: Note(value: .quarter, letter: .C, octave: 4))
+        let C4 = NoteViewModel(note: Note(duration: .quarter, letter: .C, octave: 4))
         XCTAssert(C4.pitch == -6, "C4 is 6 notes below centerline, on the first ledger line")
         
-        let A4 = NoteViewModel(note: Note(value: .quarter, letter: .A, octave: 4))
+        let A4 = NoteViewModel(note: Note(duration: .quarter, letter: .A, octave: 4))
         XCTAssert(A4.pitch == -1, "A4 is 1 note below centerline")
         
-        let B4 = NoteViewModel(note: Note(value: .quarter, letter: .B, octave: 4))
+        let B4 = NoteViewModel(note: Note(duration: .quarter, letter: .B, octave: 4))
         XCTAssert(B4.pitch == 0, "B4 is at the centerline")
         
-        let C5 = NoteViewModel(note: Note(value: .quarter, letter: .C, octave: 5))
+        let C5 = NoteViewModel(note: Note(duration: .quarter, letter: .C, octave: 5))
         XCTAssert(C5.pitch == 1, "C5 is 1 note above centerline")
         
-        let G5 = NoteViewModel(note: Note(value: .quarter, letter: .G, octave: 5))
+        let G5 = NoteViewModel(note: Note(duration: .quarter, letter: .G, octave: 5))
         XCTAssert(G5.pitch == 5, "G5 is 5 notes above centerline")
         
-        let B5 = NoteViewModel(note: Note(value: .quarter, letter: .B, octave: 5))
+        let B5 = NoteViewModel(note: Note(duration: .quarter, letter: .B, octave: 5))
         XCTAssert(B5.pitch == 7, "B5 is 7 notes above centerline, right above first ledger line")
     }
     

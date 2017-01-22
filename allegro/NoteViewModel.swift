@@ -26,6 +26,10 @@ struct NoteViewModel {
         }
     }
 
+    static func pitchToLetterAndOffset(pitch: Int) -> (Note.Letter, Int) {
+        return (.G, 5) // TODO(btc): Someone who understands this, please implement
+    }
+
     init(note: Note) {
         self.note = note
     }

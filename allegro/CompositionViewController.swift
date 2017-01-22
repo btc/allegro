@@ -11,31 +11,33 @@ import Rational
 
 class CompositionViewController: UIViewController {
 
-    fileprivate var noteSelectorMenu: UIView = {
+    fileprivate var noteSelectorMenu: NoteSelectorMenu = {
+        // TODO(btc): when noteSelectorMenu's selected note changes, update the PartStore
         let v = NoteSelectorMenu()
         return v
     }()
 
-    fileprivate var store: PartStore?
+    fileprivate var store: PartStore
 
-    fileprivate var editor: PartEditor?
+    fileprivate var editor: PartEditor
+
+    init(part: Part) {
+        store = PartStore(part: part)
+        editor = PartEditor(store: store)
+
+        super.init(nibName: nil, bundle: nil)
+
+        store.selectedNoteDuration = noteSelectorMenu.selectedNoteDuration // first
+        noteSelectorMenu.selectorDelegate = self // second
+    }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) not supported")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
-
-        let p = Part()
-        store = PartStore(part: p)
-
-        // TODO(btc): remove these notes
-        _ = store?.insert(note: Note(value: .quarter, letter: .B, octave: 4), intoMeasureIndex: 0, at: 0)
-        _ = store?.insert(note: Note(value: .quarter, letter: .G, octave: 4), intoMeasureIndex: 0, at: 1/4)
-        _ = store?.insert(note: Note(value: .quarter, letter: .D, octave: 4), intoMeasureIndex: 0, at: 1/2)
-
-        guard let store = store else { return }
-
-        editor = PartEditor(store: store)
-        guard let editor = editor else { return }
 
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
@@ -53,7 +55,7 @@ class CompositionViewController: UIViewController {
                                         height: view.bounds.height)
 
         // occupies space to the right of the menu
-        editor?.frame = CGRect(x: noteSelectorMenu.frame.maxX,
+        editor.frame = CGRect(x: noteSelectorMenu.frame.maxX,
                                   y: 0,
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
@@ -72,5 +74,13 @@ class CompositionViewController: UIViewController {
                 break
             }
         }
+    }
+}
+
+
+extension CompositionViewController: NoteSelectorDelegate {
+    func didChangeSelection(duration: Note.Duration) {
+        store.selectedNoteDuration = duration
+        Log.info?.message("user selected \(duration) duration")
     }
 }
