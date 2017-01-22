@@ -23,7 +23,7 @@ class MeasureViewContainer: UIScrollView {
 
     let measureView: MeasureView = {
         let v = MeasureView()
-        v.staffLineThickness = 5
+        v.staffLineThickness = 2
         return v
     }()
 
