@@ -69,6 +69,7 @@ class allegroTests: XCTestCase {
         }
         
         let notes = measure.getAllNotes()
+        XCTAssert(notes.count == 3, "There are exactly 3 notes")
         XCTAssert(notes[0].pos == 0 && notes[0].note == A4quarter, "Note can be accessed")
         XCTAssert(notes[1].pos == 3/8 && notes[1].note == C5eighth, "Note can be accessed")
         XCTAssert(notes[2].pos == 3/4 && notes[2].note == B4quarter, "Note can be accessed")

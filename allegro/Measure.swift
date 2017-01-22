@@ -44,8 +44,6 @@ struct Measure {
         for (i, notePosition) in notes.enumerated() {
             
             let currPos = notePosition.pos
-            let currNote = notePosition.note
-            
             let currEnd = currPos + notePosition.durationOfFree
             
             if notePosition.isFree {
@@ -57,7 +55,7 @@ struct Measure {
                 
                 if (startOK && endOK) {
                     
-                    let diff = currNote.duration - note.duration
+                    let diff = notePosition.durationOfFree - note.duration
                     
                     // add Note and change free space
                     
