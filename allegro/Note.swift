@@ -32,33 +32,49 @@ class Note {
         case doubleFlat     // unicode ♭♭
     }
 
-    enum Value {
-        case whole, half, quarter, eighth, sixteenth
+    enum Duration: CustomStringConvertible {
+        case whole, half, quarter, eighth, sixteenth, thirtysecond, sixtyfourth, onetwentyeighth, twofiftysixth
+
+        // TODO: reformat into 1/1 1/2 format
+        var description: String {
+            switch self {
+            case .whole: return "1"
+            case .half: return "2"
+            case .quarter: return "4"
+            case .eighth: return "8"
+            case .sixteenth: return "16"
+            case .thirtysecond: return "32"
+            case .sixtyfourth: return "64"
+            case .onetwentyeighth: return "128"
+            case .twofiftysixth: return "256"
+            }
+        }
+
+        var rational: Rational {
+            switch self {
+            case .whole: return 1
+            case .half: return 1/2
+            case .quarter: return 1/4
+            case .eighth: return 1/8
+            case .sixteenth: return 1/16
+            case .thirtysecond: return 1/32
+            case .sixtyfourth: return 1/64
+            case .onetwentyeighth: return 1/128
+            case .twofiftysixth: return 1/256
+            }
+        }
     }
 
     let letter: Letter
     let octave: Int
     let accidental: Accidental
-    let value: Value
+    let duration: Duration
     let rest: Bool // true if the Note is a rest
 
-    var duration: Rational {
-        switch value {
-        case .whole:
-            return 1
-        case .half:
-            return 1/2
-        case .quarter:
-            return 1/4
-        case .eighth:
-            return 1/8
-        case .sixteenth:
-            return 1/16
-        }
-    }
 
-    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
-        self.value = value
+
+    init(duration: Duration, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
+        self.duration = duration
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
@@ -73,7 +89,7 @@ class Note {
         return  lhs.letter == rhs.letter &&
                 lhs.octave == rhs.octave &&
                 lhs.accidental == rhs.accidental &&
-                lhs.value == rhs.value &&
+                lhs.duration == rhs.duration &&
                 lhs.rest == rhs.rest
     }
 }
