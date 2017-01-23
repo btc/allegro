@@ -23,6 +23,10 @@ let DEFAULT_MARGIN_PTS: CGFloat = 22
 let DEFAULT_TAP_TARGET_SIZE: CGFloat = 60
 let DEFAULT_FONT_BOLD = "HelveticaNeue-Bold"
 
+extension UIColor {
+    static let allegroBlue = UIColor(red:0.68, green:0.92, blue:1.0, alpha:1.0)
+}
+
 // TODO(btc): Handle localization
 // All strings are here so we know where to look when we want to add new languages
 struct Strings {
