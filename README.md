@@ -39,4 +39,4 @@ install`. The same goes for Fastlane. Prefix your command with `bundle exec`.
 
 [List of Musical Symbols](https://en.wikipedia.org/wiki/List_of_musical_symbols)
 
-Swift Style Guides: [GitHub](https://github.com/github/swift-style-guide#only-explicitly-refer-to-self-when-required) [LinkedIn](https://github.com/linkedin/swift-style-guide)
+Swift Style Guides: [GitHub](https://github.com/github/swift-style-guide#only-explicitly-refer-to-self-when-required), [LinkedIn](https://github.com/linkedin/swift-style-guide)
