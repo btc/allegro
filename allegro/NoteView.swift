@@ -10,24 +10,49 @@ import Foundation
 import UIKit
 
 class NoteView: UIView {
+    // The NoteView draws the note as two separate UIBezierPaths.
+    // One for the note head and one for the stem
+    
+    // For drawing whole/half notes, we draw it as two ovals, an outer one
+    // and an inner one that cuts out the white inner region.
+    // This offset describes the offset to shrink the outer rectangle
+    // into the inner rectangle
     fileprivate let noteInset = CGPoint(x: 5, y: 15)
     
+    // thickness in the x direction of the stem
     fileprivate let stemThickness: CGFloat = 3.5
+    
+    // since the note head is a rotated oval that is shrunk to fit the frame,
+    // the start point of the stem is inside the frame of the noe
+    // is not the bounds of the frame but inside
     fileprivate let stemOffset = CGPoint(x: -7, y: 15)
     
-    //radians only!
+    // Note heads are rotated ovals
+    // This describes the rotation of the oval.
+    // Whole notes should not be rotated
+    // radians only!
     fileprivate let rotationAngle = CGFloat(-30 * Double.pi / 180.0)
     
+    // frame of the note head
     var noteFrame = CGRect.zero {
         didSet {
             updateNoteFrame()
         }
     }
+    
+    // The NoteView extends its own frame to accommodate the extra height of
+    // the stem, which can be changed by the parent.
+    // This constant describes the y position the NoteView extends itself to.
+    // It should be in the coordinate frame of the parent.
     var stemEndY = CGFloat(0) {
         didSet {
             updateNoteFrame()
         }
     }
+    
+    // This is the note head frame in the NoteView coordinate frame.
+    // We need this to draw the note head inside the rectangle
+    // that contains the note head and stem
     fileprivate var noteHeadFrame = CGRect.zero
     
     let note: NoteViewModel
@@ -35,6 +60,7 @@ class NoteView: UIView {
     init(note: NoteViewModel) {
         self.note = note
         super.init(frame: .zero)
+        // makes it transparent so we see the lines behind
         isOpaque = false
     }
     
@@ -42,6 +68,9 @@ class NoteView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // Since both noteframe and stemEndY are needed to
+    // compute the final frame size yet are set independently
+    // this method makes sure the two generate a coherent frame
     func updateNoteFrame() {
         let offset = noteFrame.origin.y - stemEndY
         frame = CGRect(
@@ -60,10 +89,16 @@ class NoteView: UIView {
             y: rect.origin.y + rect.size.height / 2
         )
         
+        // First we draw an oval and then cut out the oval inside.
         let path = UIBezierPath(ovalIn: rect)
         path.append(UIBezierPath(ovalIn: rect.insetBy(dx: noteInset.x, dy: noteInset.y)))
+        // This makes sure the cutout is a different color based on the winding
         path.usesEvenOddFillRule = true
         
+        // Rotates the note head.
+        // We need to translate it by the center point
+        // since the rotation is around the origin 
+        // yet the center point is not.
         let rotation = CGAffineTransform.identity
             .translatedBy(x: center.x, y: center.y)
             .rotated(by: rotationAngle)
@@ -71,6 +106,9 @@ class NoteView: UIView {
         path.apply(rotation)
         
         
+        // After rotating the note head the note head can be outside the bounds of the
+        // note frame. We shrink it to make sure the note head is always inside the
+        // bounds of the original frame for the note head.
         let pathBounds = path.cgPath.boundingBox
         
         let sw     = rect.size.width / pathBounds.width
@@ -87,9 +125,18 @@ class NoteView: UIView {
     }
     
     func getStemPath(notePath: UIBezierPath, drawRect: CGRect) -> UIBezierPath {
+        // The stem path is a just a rectangle, but we need to make sure it 
+        // connects smoothly with the note head
         let bounds = notePath.cgPath.boundingBox
+        
+        // We start with the top right corner of the bounding box for the note
+        // head path
         let upStart = CGPoint(x: bounds.origin.x + bounds.size.width,
                                   y: bounds.origin.y)
+        
+        // Since the note head is an oval, we need to add an offset to
+        // ensure a smooth merge between the head and stem. 
+        // this is the bottom left corner of the final stem rectangle
         let stemStart = CGPoint(x: upStart.x + stemOffset.x, y: upStart.y + stemOffset.y)
         
         let stemOrigin = CGPoint(x: stemStart.x,
