@@ -145,6 +145,11 @@ class allegroTests: XCTestCase {
         XCTAssert(bflatMinor.getName() == "b♭m", "minor key naming in circle of fifths")
     }
     
+    func testMocks() {
+        let twinkle = mockPart(name: "twinkle")
+        XCTAssert(twinkle.measureCount == 1)
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure {
