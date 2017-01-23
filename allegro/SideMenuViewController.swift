@@ -11,7 +11,9 @@
 import UIKit
 
 class SideMenuViewController: UIViewController {
-    
+
+    private let store: PartStore
+
     private let MenuOptions: UIView = {
         let v = UILabel()
         v.text = "Placeholder menu"
@@ -38,6 +40,15 @@ class SideMenuViewController: UIViewController {
         v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
         return v
     }()
+
+    init(store: PartStore) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
