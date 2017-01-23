@@ -33,7 +33,7 @@ class NoteView: UIView {
     // radians only!
     fileprivate let rotationAngle = CGFloat(-30 * Double.pi / 180.0)
     
-    // frame of the note head
+    // frame of the note head in the parent coordinate frame
     var noteFrame = CGRect.zero {
         didSet {
             updateNoteFrame()
@@ -48,6 +48,10 @@ class NoteView: UIView {
         didSet {
             updateNoteFrame()
         }
+    }
+    
+    fileprivate var flipped: Bool {
+        return stemEndY > noteFrame.origin.y + noteFrame.size.height
     }
     
     // This is the note head frame in the NoteView coordinate frame.
@@ -72,15 +76,30 @@ class NoteView: UIView {
     // compute the final frame size yet are set independently
     // this method makes sure the two generate a coherent frame
     func updateNoteFrame() {
-        let offset = noteFrame.origin.y - stemEndY
-        frame = CGRect(
-            x: noteFrame.origin.x,
-            y: stemEndY,
-            width: noteFrame.size.width,
-            height: noteFrame.size.height + offset)
-        noteHeadFrame = CGRect(origin: CGPoint(x: 0, y: offset), size: noteFrame.size)
+        var offset = noteFrame.origin.y - stemEndY
+        if (flipped) {
+            offset = stemEndY - noteFrame.origin.y - noteFrame.size.height
+        }
+        
+        let frameSize = CGSize(width: noteFrame.size.width,
+                               height: noteFrame.size.height + offset)
+        
+        if (!flipped) {
+            frame = CGRect(
+                origin: CGPoint(x: noteFrame.origin.x, y: stemEndY),
+                size: frameSize)
+            noteHeadFrame = CGRect(origin: CGPoint(x: 0, y: offset), size: noteFrame.size)
+        } else {
+            frame = CGRect (
+                origin: noteFrame.origin,
+                size: frameSize
+            )
+            noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
+        }
     }
     
+    // drawRect is the rectangle we are drawing inside.
+    // It should be correctly sized.
     func getNoteHeadPath(drawRect: CGRect) -> UIBezierPath {
         let rect = noteHeadFrame.offsetBy(dx: drawRect.origin.x, dy: drawRect.origin.y)
         
@@ -137,11 +156,20 @@ class NoteView: UIView {
         // Since the note head is an oval, we need to add an offset to
         // ensure a smooth merge between the head and stem. 
         // this is the bottom left corner of the final stem rectangle
-        let stemStart = CGPoint(x: upStart.x + stemOffset.x, y: upStart.y + stemOffset.y)
-        
-        let stemOrigin = CGPoint(x: stemStart.x,
+        var stemStart = CGPoint(x: upStart.x + stemOffset.x, y: upStart.y + stemOffset.y)
+        var stemOrigin = CGPoint(x: stemStart.x,
                                  y: drawRect.origin.y)
-        let stemSize = CGSize(width: stemThickness, height: stemStart.y)
+        
+        var stemSize = CGSize(width: stemThickness, height: stemStart.y)
+
+        
+        // flipped means we go the bottom left
+        if (flipped) {
+            let downStart = CGPoint(x: bounds.origin.x, y: bounds.origin.y + bounds.size.height)
+            stemStart = CGPoint(x: downStart.x - stemOffset.x, y: downStart.y - stemOffset.y)
+            stemOrigin = CGPoint(x: stemStart.x - stemThickness, y: stemStart.y)
+            stemSize = CGSize(width: stemThickness, height: stemEndY - stemOrigin.y)
+        }
         
         let stemRect = CGRect(
             origin: stemOrigin,

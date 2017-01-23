@@ -101,9 +101,9 @@ class MeasureView: UIView {
 
         for (i, noteView) in noteViews.enumerated() {
             let x = CGFloat(100 * (i + 1))
-            let y = staffDrawStart + staffHeight / 2 + staffHeight / 2 * CGFloat(noteView.note.pitch) - noteHeight / 2
+            let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(noteView.note.pitch) - noteHeight / 2
             noteView.noteFrame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
-            noteView.stemEndY = CGFloat(y - 100)
+            noteView.stemEndY = CGFloat(y + noteHeight + 100)
         }
     }
 
