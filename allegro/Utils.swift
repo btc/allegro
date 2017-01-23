@@ -26,6 +26,7 @@ let DEFAULT_FONT_BOLD = "HelveticaNeue-Bold"
 
 extension UIColor {
     static let allegroBlue = UIColor(red:0.68, green:0.92, blue:1.0, alpha:1.0)
+    static let allegroPurple = UIColor(red:0.87, green:0.32, blue:0.63, alpha:1.0)
 }
 
 // TODO(btc): Handle localization

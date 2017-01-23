@@ -53,7 +53,7 @@ class SideMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .gray
+        view.backgroundColor = UIColor.allegroPurple
         view.addSubview(MenuOptions)
         view.addSubview(Home)
         view.addSubview(Export)
