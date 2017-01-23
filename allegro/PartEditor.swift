@@ -20,8 +20,8 @@ class PartEditor: UICollectionView {
 
         store.observers.append(Weak<PartStoreObserver>(self))
 
-        panGestureRecognizer.minimumNumberOfTouches = 3
-        panGestureRecognizer.maximumNumberOfTouches = 3
+        panGestureRecognizer.minimumNumberOfTouches = 2
+        panGestureRecognizer.maximumNumberOfTouches = 2
         isPagingEnabled = true
         register(PartEditorCell.self, forCellWithReuseIdentifier: PartEditorCell.reuseID)
         dataSource = self
