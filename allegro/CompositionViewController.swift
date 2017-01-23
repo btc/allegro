@@ -42,8 +42,8 @@ class CompositionViewController: UIViewController {
 
         super.init(nibName: nil, bundle: nil)
 
-        store.selectedNoteDuration = noteSelectorMenu.selectedNoteDuration // first
-        noteSelectorMenu.selectorDelegate = self // second
+        noteSelectorMenu.selectorDelegate = self
+        store.selectedNoteDuration = noteSelectorMenu.selectedNoteDuration
     }
     
     required init?(coder aDecoder: NSCoder) {
