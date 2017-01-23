@@ -8,6 +8,7 @@
 
 import UIKit
 import Rational
+import SlideMenuControllerSwift
 
 class CompositionViewController: UIViewController {
 
@@ -21,8 +22,16 @@ class CompositionViewController: UIViewController {
 
     fileprivate var editor: PartEditor
 
-    init(part: Part) {
-        store = PartStore(part: part)
+    static func create(part: Part) -> UIViewController {
+        let store = PartStore(part: part)
+        let vc = CompositionViewController(store: store)
+        let sideMenuVC = SideMenuViewController()
+        let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
+        return container
+    }
+
+    private init(store: PartStore) {
+        self.store = store
         editor = PartEditor(store: store)
 
         super.init(nibName: nil, bundle: nil)

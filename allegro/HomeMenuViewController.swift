@@ -77,7 +77,7 @@ class HomeMenuViewController: UIViewController {
     
     func newCompositionTapped() {
         let p = Part()
-        let vc = CompositionViewController(part: p)
+        let vc = CompositionViewController.create(part: p)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

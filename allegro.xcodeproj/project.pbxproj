@@ -15,6 +15,7 @@
 		6B096E5A1E31D0E300615723 /* Rational.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B096E5C1E342B0100615723 /* PartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E5B1E342B0100615723 /* PartViewModel.swift */; };
 		6B096E5F1E342D6300615723 /* PartStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E5E1E342D6300615723 /* PartStore.swift */; };
+		6B096E641E368E5D00615723 /* SlideMenuControllerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B096E631E368E5D00615723 /* SlideMenuControllerSwift.framework */; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B0B26801E2F3DFB00F1870A /* PartEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
@@ -85,6 +86,7 @@
 		6B096E551E313B7200615723 /* NoteViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteViewModel.swift; sourceTree = "<group>"; };
 		6B096E5B1E342B0100615723 /* PartViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartViewModel.swift; sourceTree = "<group>"; };
 		6B096E5E1E342D6300615723 /* PartStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartStore.swift; sourceTree = "<group>"; };
+		6B096E631E368E5D00615723 /* SlideMenuControllerSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlideMenuControllerSwift.framework; path = Carthage/Build/iOS/SlideMenuControllerSwift.framework; sourceTree = SOURCE_ROOT; };
 		6B0B267D1E2F2E5F00F1870A /* Rational.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rational.framework; path = Carthage/Build/iOS/Rational.framework; sourceTree = SOURCE_ROOT; };
 		6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartEditor.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */,
 				89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */,
 				6B6E271D1E28979100F9CF66 /* CleanroomLogger.framework in Frameworks */,
+				6B096E641E368E5D00615723 /* SlideMenuControllerSwift.framework in Frameworks */,
 				6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,6 +291,7 @@
 				6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */,
 				6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */,
 				6B0B267D1E2F2E5F00F1870A /* Rational.framework */,
+				6B096E631E368E5D00615723 /* SlideMenuControllerSwift.framework */,
 				6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */,
 			);
 			name = Frameworks;
@@ -471,6 +475,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/CleanroomLogger.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftTweaks.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Rational.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SlideMenuControllerSwift.framework",
 			);
 			outputPaths = (
 			);
