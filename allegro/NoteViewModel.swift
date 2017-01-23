@@ -51,14 +51,25 @@ struct NoteViewModel {
         }
         
         // inverse of the function to get pitch
-        let octaveDiff: Int = 7 * (octave - 5)
         var letter: Note.Letter
-        if let l: Note.Letter = Note.Letter(rawValue: (pitch + 1) / octaveDiff) {
-            letter = l
-        } else {
+        switch pitch {
+        case -20, -13, -6, 1, 8, 15:
+            letter = .C
+        case -19, -12, -5, 2, 9, 16:
+            letter = .D
+        case -18, -11, -4, 3, 10, 17:
+            letter = .E
+        case -17, -10, -3, 4, 11, 18:
+            letter = .F
+        case -16, -9, -2, 5, 12, 19:
+            letter = .G
+        case -15, -8, -1, 6, 13, 20:
+            letter = .A
+        case -21, -14, -7, 0, 7, 14:
+            letter = .B
+        default:
             letter = .C
         }
-        
         return (letter, octave)
     }
 
