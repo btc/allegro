@@ -50,10 +50,6 @@ class CompositionViewController: UIViewController {
 
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
-
-        let swipeLeft = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeLeft.edges = .right
-        self.view.addGestureRecognizer(swipeLeft)
     }
 
     override func viewDidLayoutSubviews() {
@@ -68,29 +64,6 @@ class CompositionViewController: UIViewController {
                                   y: 0,
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
-    }
-    
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-        
-        if let g = gesture as? UIScreenEdgePanGestureRecognizer {
-            
-            switch g.edges {
-            case UIRectEdge.right:
-                print("Swiped left")
-                if self.presentedViewController == nil {
-                    let vc = SideMenuViewController()
-                    vc.modalPresentationStyle = .overCurrentContext
-                    let transition = CATransition()
-                    transition.duration = 0.5
-                    transition.type = kCATransitionMoveIn
-                    transition.subtype = kCATransitionFromRight
-                    view.window!.layer.add(transition, forKey: kCATransition)
-                    navigationController?.present(vc, animated: false, completion: nil)
-                }
-            default:
-                break
-            }
-        }
     }
 }
 

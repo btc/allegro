@@ -46,11 +46,6 @@ class SideMenuViewController: UIViewController {
         view.addSubview(MenuOptions)
         view.addSubview(Home)
         view.addSubview(Export)
-        
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
-        swipeRight.direction = UISwipeGestureRecognizerDirection.right
-        self.view.addGestureRecognizer(swipeRight)
-
     }
     
     override func viewDidLayoutSubviews() {
@@ -80,27 +75,4 @@ class SideMenuViewController: UIViewController {
                             width: exportW,
                             height: exportH)
     }
-
-    func respondToSwipeGesture(gesture: UIGestureRecognizer) {
-        
-        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-            
-            switch swipeGesture.direction {
-            case UISwipeGestureRecognizerDirection.right:
-                print("Swiped Right")
-                let transition = CATransition()
-                super.modalPresentationStyle = .overCurrentContext
-                transition.duration = 0.5
-                transition.type = kCATransitionReveal
-                transition.subtype = kCATransitionFromLeft
-                view.window!.layer.add(transition, forKey: kCATransition)
-                self.dismiss(animated: false, completion: nil)
-            default:
-                break
-            }
-        }
-    }
-
-    
-
 }
