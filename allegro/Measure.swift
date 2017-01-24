@@ -143,10 +143,12 @@ struct Measure {
     }
     
     // removes whichever note is at the specified position
-    mutating func removeNote(at position: Rational) {
+    mutating func removeNote(at position: Rational) -> Bool {
+        var removed = false
         for i in 0..<notes.count {
             if notes[i].pos == position && !notes[i].isFree {
                 if let note = notes[i].note {
+                    removed = true
                     notes[i].note = nil
                     notes[i].durationOfFree = note.duration.rational
                 }
@@ -154,6 +156,7 @@ struct Measure {
         }
         // coalesce after loop bc it may delete entries that we are iterating over
         coalesce()
+        return removed
     }
     
     // coalesces free space NotePosition objects

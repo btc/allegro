@@ -38,6 +38,6 @@ class Part {
     func removeNote(fromMeasureIndex i: Int, at position: Rational) -> Bool {
         guard measures.indices.contains(i) else { return false }
         // TODO(btc): remove note
-        return true
+        return measures[i].removeNote(at: position)
     }
 }
