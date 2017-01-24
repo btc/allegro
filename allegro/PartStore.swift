@@ -38,6 +38,7 @@ class PartStore {
 
     func subscribe(_ observer: PartStoreObserver) {
         observers.append(Weak(observer))
+        // TODO(btc): should we notify the new observer immediately?
     }
 
     func unsubscribe(_ observer: PartStoreObserver) {
