@@ -86,7 +86,9 @@ class PartStore {
     }
 
     func removeNote(fromMeasureIndex i: Int, at position: Rational) {
-        part.removeNote(fromMeasureIndex: i, at: position)
+        if part.removeNote(fromMeasureIndex: i, at: position) {
+            notify()
+        }
     }
 
     func notes(atMeasureIndex i: Int) -> [(pos: Rational, note: Note)] {
