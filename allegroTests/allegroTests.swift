@@ -39,6 +39,7 @@ class allegroTests: XCTestCase {
     }
 
     func testMeasure() {
+        // test initialization
         var measure = Measure()
         let defaultKey = Key()
         XCTAssert(measure.key.mode == defaultKey.mode &&
@@ -46,6 +47,7 @@ class allegroTests: XCTestCase {
         
         XCTAssert(measure.timeSignature == 4/4, "New measure has a default of 4/4 time")
         
+        // test adding notes
         let A4quarter = Note(duration: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(duration: .quarter, letter: .B, octave: 4)
         let C5eighth = Note(duration: .eighth, letter: .C, octave: 5)
@@ -58,6 +60,7 @@ class allegroTests: XCTestCase {
         XCTAssert(measure.insert(note: D5quarter, at: 0) == false, "Notes can't be placed on another note")
         XCTAssert(measure.insert(note: D5quarter, at: 1/4) == false, "Notes can't be placed overlapping another note")
         
+        // test directly accessing notes
         if let n0 = measure.getNote(at: 0) {
             XCTAssert(n0 == A4quarter, "Note can be accessed directly")
         } else {
@@ -74,12 +77,22 @@ class allegroTests: XCTestCase {
             XCTFail("Note can be accessed directly")
         }
         
+        // test getting all notes
         let notes = measure.getAllNotes()
         XCTAssert(notes.count == 3, "There are exactly 3 notes")
         XCTAssert(notes[0].pos == 0 && notes[0].note == A4quarter, "Note can be accessed")
         XCTAssert(notes[1].pos == 3/8 && notes[1].note == C5eighth, "Note can be accessed")
         XCTAssert(notes[2].pos == 3/4 && notes[2].note == B4quarter, "Note can be accessed")
         
+        // test removing notes
+        measure.removeNote(at: 0)
+        XCTAssert(measure.noteCount == 2, "There are exactly 2 notes after removing one")
+        measure.removeNote(at: 0)
+        XCTAssert(measure.noteCount == 2, "Note cannot be removed twice")
+        measure.removeNote(at: 3/4)
+        XCTAssert(measure.noteCount == 1, "There is only 1 note left")
+        measure.removeNote(at: 3/8)
+        XCTAssert(measure.noteCount == 0, "There are no notes left")
     }
     
     func testNote() {
@@ -98,7 +111,6 @@ class allegroTests: XCTestCase {
         let A4 = NoteViewModel(note: Note(duration: .quarter, letter: .A, octave: 4))
         XCTAssert(A4.pitch == -1, "A4 is 1 note below centerline")
         (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: -1)
-        print("\(letter) \(octave)")
         XCTAssert(letter == Note.Letter.A && octave == 4, "A4 is 1 note below centerline")
         
         let B4 = NoteViewModel(note: Note(duration: .quarter, letter: .B, octave: 4))

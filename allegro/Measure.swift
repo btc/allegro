@@ -8,8 +8,9 @@
 
 import Rational
 
-// TODO(btc): make note and durationOfFree optional types
-
+// holds information about this specific note in the measure
+// the position is measured in relation to the time signature as a simplified rational
+// eg. in 3/4 time, a quarter note on beat 2 has position 1/2, and there is no space for another note after it.
 private struct NotePosition {
     var pos: Rational
     var isFree: Bool
@@ -24,15 +25,17 @@ struct Measure {
     // the key signature eg. G Major or d minor
     let key: Key
     
+    // used in simplified form, eg. 2/2 and 4/4 are treated the same
     let timeSignature: Rational
 
+    var noteCount = 0
     private var notes: [NotePosition]
 
     init(time: Rational = Measure.defaultTimeSignature, key: Key = Key()) {
         self.timeSignature = time
         self.key = key
 
-        // notes starts with a single free note that takes up the whole measure
+        // notes starts with a single free NotePosition that takes up the whole measure
         let np = NotePosition(pos: 0, isFree: true, note: nil, durationOfFree: time)
         self.notes = [np]
     }
@@ -57,6 +60,7 @@ struct Measure {
 
             if (startOK && endOK) {
 
+                noteCount += 1
                 let diff = durationOfFree - note.duration.rational
 
                 // add Note and change free space
@@ -134,23 +138,43 @@ struct Measure {
         return ret
     }
     
-    // TODO removeAt(Rational)
-    
-    // coalesces free space
-    private mutating func coalesce() {
-        for i in 0..<notes.count - 1 {
-            let curr = notes[i]
-            if curr.isFree, let durationOfFree = curr.durationOfFree {
-                let next = notes[i+1]
-                
-                if next.isFree, let nextDurationOfFree = next.durationOfFree {
-                    // coalesce i+1 into i
-                    notes[i].durationOfFree = durationOfFree + nextDurationOfFree
-                    notes.remove(at: i+1)
+    // removes whichever note is at the specified position
+    mutating func removeNote(at position: Rational) {
+        for i in 0..<notes.count {
+            if notes[i].pos == position && !notes[i].isFree {
+                if let note = notes[i].note {
+                    noteCount -= 1
+                    notes[i].isFree = true
+                    notes[i].durationOfFree = note.duration.rational
                 }
+            }
+        }
+        // coalesce after loop bc it may delete entries that we are iterating over
+        coalesce()
+    }
+    
+    // coalesces free space NotePosition objects
+    private mutating func coalesce() {
+        // loop twice bc array bounds change as we modify it
+        while true {
+            var didChange = false
+            for i in 0..<notes.count - 1 {
+                let curr = notes[i]
+                if curr.isFree, let durationOfFree = curr.durationOfFree {
+                    let next = notes[i+1]
+                    if next.isFree, let nextDurationOfFree = next.durationOfFree {
+                        // coalesce i+1 into i
+                        notes[i].durationOfFree = durationOfFree + nextDurationOfFree
+                        notes.remove(at: i+1)
+                        didChange = true
+                        break
+                    }
+                }
+            }
+            if !didChange {
+                break
             }
         }
     }
     
-    // TODO duration checking (see #37)
 }
