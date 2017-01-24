@@ -12,19 +12,15 @@ import Rational
     func partStoreChanged()
 }
 
+enum CompositionMode {
+    case edit, erase
+}
+
 class PartStore {
 
-    private let part: Part
-
-    var selectedNoteDuration: Note.Duration = .whole {
+    var mode: CompositionMode {
         didSet {
             notify()
-        }
-    }
-
-    private var observers: [Weak<PartStoreObserver>] = [Weak<PartStoreObserver>]() {
-        didSet {
-            Log.info?.message("part store has \(observers.count) observers")
         }
     }
 
@@ -32,8 +28,23 @@ class PartStore {
         return part.measures.count
     }
 
-    init(part: Part) {
+    var selectedNoteDuration: Note.Duration = .whole {
+        didSet {
+            notify()
+        }
+    }
+
+    private let part: Part
+
+    private var observers: [Weak<PartStoreObserver>] = [Weak<PartStoreObserver>]() {
+        didSet {
+            Log.info?.message("part store has \(observers.count) observers")
+        }
+    }
+
+    init(part: Part, mode: CompositionMode = .edit) {
         self.part = part
+        self.mode = mode
     }
 
     func subscribe(_ observer: PartStoreObserver) {
@@ -52,7 +63,7 @@ class PartStore {
         observers.forEach { $0.value?.partStoreChanged() }
     }
 
-    func extendIfNecessary(toAccessMeasureAtIndex i: Int) {
+    private func extendIfNecessary(toAccessMeasureAtIndex i: Int) {
         var extended = false
         while part.measures.count <= i + 1 {
             part.extend()
