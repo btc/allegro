@@ -29,14 +29,7 @@ class PartStore {
     }
 
     var measureCount: Int {
-        return part.measureCount + virtualMeasureCount
-    }
-
-    // the new, blank measures that haven't been created yet, but exists in UI. initialize with 1
-    private var virtualMeasureCount = 1 {
-        didSet {
-            notify()
-        }
+        return part.measures.count
     }
 
     init(part: Part) {
@@ -58,10 +51,19 @@ class PartStore {
         observers.forEach { $0.value?.partStoreChanged() }
     }
 
-    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
-        while part.measureCount <= i {
-            part.extend() // allows caller to insert into a measure that doesn't exist until _now_.
+    func extendIfNecessary(toAccessMeasureAtIndex i: Int) {
+        var extended = false
+        while part.measures.count <= i + 1 {
+            part.extend()
+            extended = true
         }
+        if extended {
+            notify()
+        }
+    }
+
+    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
+        extendIfNecessary(toAccessMeasureAtIndex: i)
         Log.info?.message("insert \(note.duration.description) into measure \(i) at \(position)")
         let succeeded = part.insert(note: note, intoMeasureIndex: i, at: position)
 
@@ -71,27 +73,13 @@ class PartStore {
         return succeeded
     }
 
-    func getNotes(measureIndex i: Int) -> [(pos: Rational, note: Note)] {
-        guard part.measures.indices.contains(i) else { return [] } // allows caller to create measures lazily
+    func notes(atMeasureIndex i: Int) -> [(pos: Rational, note: Note)] {
+        extendIfNecessary(toAccessMeasureAtIndex: i)
         return part.measures[i].getAllNotes()
     }
 
     func measure(at index: Int) -> Measure {
-
-        if part.measures.indices.contains(index) {
-            return part.measures[index]
-        }
-
-        // access is out of bounds. generate a new virtual measure
-
-        // TODO(btc): recompute virtual measure count
-
-        // else return a new measure with same time signature as previous
-        if let last = part.measures.last {
-            return Measure(time: last.timeSignature)
-        }
-
-        // else return a new measure
-        return Measure()
+        extendIfNecessary(toAccessMeasureAtIndex: index)
+        return part.measures[index]
     }
 }

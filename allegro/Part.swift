@@ -17,10 +17,6 @@ class Part {
     var title: String = ""
     var comment: String = ""
 
-    var measureCount: Int {
-        return measures.count
-    }
-
     // ordered list of measures in the piece
     private(set) var measures: [Measure] = [Measure]()
     

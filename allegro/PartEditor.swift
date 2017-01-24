@@ -11,11 +11,27 @@ import UIKit
 class PartEditor: UICollectionView {
 
     let store: PartStore
+
+    // it's necessary to track the measure count because we need to know when the value increases. when the value
+    // increases, we add new measures to the view
+    fileprivate var measureCount: Int {
+        didSet {
+            if oldValue < measureCount {
+                var new = [IndexPath]()
+                for i in oldValue ..< measureCount {
+                    new.append(IndexPath(row: i, section: 0))
+                }
+                insertItems(at: new)
+            }
+
+        }
+    }
     
     init(store: PartStore) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         self.store = store
+        measureCount = store.measureCount
         super.init(frame: .zero, collectionViewLayout: layout)
 
         store.subscribe(self)
@@ -51,7 +67,7 @@ extension PartEditor: UICollectionViewDelegateFlowLayout {
 extension PartEditor: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return store.measureCount
+        return measureCount
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -68,6 +84,6 @@ extension PartEditor: UICollectionViewDataSource {
 
 extension PartEditor: PartStoreObserver {
     func partStoreChanged() {
-        // TODO(btc): update collection view to reflect any changes in number of measures
+        measureCount = store.measureCount
     }
 }

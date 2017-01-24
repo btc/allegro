@@ -24,12 +24,14 @@ class MeasureView: UIView {
     }
 
     var store: PartStore? {
+        willSet {
+            if let store = store {
+                store.unsubscribe(self)
+            }
+        }
         didSet {
             if let store = store {
                 store.subscribe(self)
-            }
-            if let oldValue = oldValue {
-                oldValue.unsubscribe(self)
             }
         }
     }
@@ -78,6 +80,10 @@ class MeasureView: UIView {
         let mvaGR = MeasureActionGestureRecognizer(view: self)
         mvaGR.actionDelegate = self
     }
+
+    deinit {
+        store?.unsubscribe(self)
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -106,7 +112,7 @@ class MeasureView: UIView {
 
         guard let store = store, let index = index else { return }
 
-        let notes = store.getNotes(measureIndex: index)
+        let notes = store.notes(atMeasureIndex: index)
         let noteViewModels = notes.map { NoteViewModel(note: $0.note) }
         let noteViews = noteViewModels.map { NoteView(note: $0) }
 
