@@ -13,7 +13,11 @@ import Rational
 // eg. in 3/4 time, a quarter note on beat 2 has position 1/2, and there is no space for another note after it.
 private struct NotePosition {
     var pos: Rational
-    var isFree: Bool
+    var isFree: Bool {
+        get {
+            return (note == nil)
+        }
+    }
     var note: Note?
     var durationOfFree: Rational?
 }
@@ -35,7 +39,7 @@ struct Measure {
         self.key = key
 
         // notes starts with a single free NotePosition that takes up the whole measure
-        let np = NotePosition(pos: 0, isFree: true, note: nil, durationOfFree: time)
+        let np = NotePosition(pos: 0, note: nil, durationOfFree: time)
         self.notes = [np]
     }
 
@@ -65,10 +69,11 @@ struct Measure {
 
                 if currPos == position {
                     // need to put the free space after the new note if the start is the same
-                    notes.insert(NotePosition(pos: position, isFree: false, note: note, durationOfFree: nil), at: i)
+                    notes.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
 
                     if diff == 0 {
                         // remove this free space
+                        notes[i+1].note = nil
                         notes.remove(at: i+1)
 
                     } else {
@@ -82,10 +87,11 @@ struct Measure {
                 } else if currEnd == noteEnd {
                     // need to put the free space before the new note if the end is the same
 
-                    notes.insert(NotePosition(pos: position, isFree: false, note: note, durationOfFree: nil), at: i+1)
+                    notes.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
 
                     if diff == 0 {
                         // remove this free space
+                        notes[i].note = nil
                         notes.remove(at: i)
 
                     } else {
@@ -98,13 +104,13 @@ struct Measure {
                 } else {
                     // need to put the note in the middle of the free space and cut it up
 
-                    notes.insert(NotePosition(pos: position, isFree: false, note: note, durationOfFree: nil), at: i+1)
+                    notes.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
 
                     // resize free space before the note
                     notes[i].durationOfFree = position - currPos
 
                     // add leftovers in new free space after new note
-                    let np = NotePosition(pos: noteEnd, isFree: true, note: nil, durationOfFree: currEnd - noteEnd)
+                    let np = NotePosition(pos: noteEnd, note: nil, durationOfFree: currEnd - noteEnd)
                     self.notes.insert(np, at: i+2)
 
                     return true
@@ -142,7 +148,6 @@ struct Measure {
             if notes[i].pos == position && !notes[i].isFree {
                 if let note = notes[i].note {
                     notes[i].note = nil
-                    notes[i].isFree = true
                     notes[i].durationOfFree = note.duration.rational
                 }
             }
