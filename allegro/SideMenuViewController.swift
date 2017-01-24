@@ -52,14 +52,16 @@ class SideMenuViewController: UIViewController {
 
     private let editButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = UIColor.allegroPurple
+        v.backgroundColor = .lightGray
         v.setTitle("Edit", for: .normal)
+        v.titleLabel?.textColor = .black
         return v
     }()
 
     private let eraseButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = UIColor.allegroPurple
+        v.backgroundColor = .lightGray
+        v.titleLabel?.textAlignment = .center
         v.setTitle("Erase", for: .normal)
         return v
     }()
@@ -108,20 +110,16 @@ class SideMenuViewController: UIViewController {
                             y: DEFAULT_MARGIN_PTS,
                             width: titleW,
                             height: titleH)
-        
-        let homeH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let homeW = homeH * THE_GOLDEN_RATIO
-        Home.frame = CGRect(x: centerX - homeW / 2,
-                                   y: centerY - 3 * DEFAULT_MARGIN_PTS,
-                                   width: homeW,
-                                   height: homeH)
-        
-        let eraseH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let eraseW = eraseH * THE_GOLDEN_RATIO
-        eraseButton.frame = CGRect(x: centerX - homeW / 2,
+
+        editButton.frame = CGRect(x: 0,
+                                   y: centerY,
+                                   width: parent.width / 2,
+                                   height: DEFAULT_TAP_TARGET_SIZE)
+
+        eraseButton.frame = CGRect(x: parent.width / 2,
                             y: centerY,
-                            width: eraseW,
-                            height: eraseH)
+                            width: parent.width / 2,
+                            height: DEFAULT_TAP_TARGET_SIZE)
     }
     
     func eraseButtonTapped() {
