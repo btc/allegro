@@ -1,5 +1,5 @@
 //
-//  MeasureViewActionGestureRecognizer.swift
+//  MeasureActionGestureRecognizer.swift
 //  allegro
 //
 //  Created by Brian Tiger Chow on 1/23/17.
