@@ -67,9 +67,9 @@ class Note {
 
     let letter: Letter
     let octave: Int
-    let accidental: Accidental
+    var accidental: Accidental
     let duration: Duration
-    let rest: Bool // true if the Note is a rest
+    var rest: Bool // true if the Note is a rest
 
 
 

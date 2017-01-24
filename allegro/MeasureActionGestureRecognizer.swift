@@ -1,14 +1,15 @@
 //
-//  AllegroGestureRecognizer.swift
+//  MeasureViewActionGestureRecognizer.swift
 //  allegro
 //
-//  Created by Brian Tiger Chow on 1/12/17.
+//  Created by Brian Tiger Chow on 1/23/17.
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
 import UIKit
+import UIKit.UIGestureRecognizerSubclass
 
-enum ActionGesture: String {
+enum MeasureAction: String {
     case note // tap
     case flat
     case sharp
@@ -16,44 +17,37 @@ enum ActionGesture: String {
     case rest
     case dot // TODO(btc): double tap?
     case doubleDot // TODO(btc): triple tap?
-    case chord // TODO(btc): should we include this at all?
 }
 
-protocol ActionGestureDelegate: class {
-    func actionGestureRecognized(gesture: ActionGesture, at location: CGPoint)
+protocol MeasureActionDelegate: class {
+    func actionRecognized(gesture: MeasureAction, at location: CGPoint)
 }
 
-// TODO(btc): I suspect this is not idiomatic.
-
-// TODO(btc): Note that one obvious improvement is to subclass UIGestureRecognizer. That makes it so that clients don't
-// have to delegate their touches(Began|Moved|Ended) methods to this class. Instead, with the subclass, the UIKit framework
-// will be responsible for calling our methods and managing our state. However, this alternative limits us when it comes
-// time to report which action was recognized. The addTarget method on the subclass doesn't allow us to communicate which
-// action was recognized (as our ActionGestureDelegate protocol does). For this reason, I'm not convinced it's worth the
-// rewrite at this time. However, if this class introduces problems, let this note be a guide towards an alternative design
-// with slightly different constraints and benefits.
-class ActionGestureRecognizer {
+class MeasureActionGestureRecognizer: UIGestureRecognizer {
 
     var delta: Double = 22
     var costMax = 1
 
+    weak var actionDelegate: MeasureActionDelegate?
+
+    private var tapGestureRecognizers = [UITapGestureRecognizer]()
     private let swipeGestureRecognizer: DBPathRecognizer?
-    private var rawPoints: [Int] = [Int]()
+    private var rawPoints = [Int]()
 
-    weak var view: UIView?
-    weak var delegate: ActionGestureDelegate?
-
-    // TODO we should probably make it explicit that this class will add gesture recognizers to the view.
+    // installs gesture recognizers on the view
+    // this object does NOT hold a reference to the view
+    // clienst must NOT call view.addGestureRecognizer(thisObject)
     init(view: UIView) {
-        self.view = view
         swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8,
-                         deltaMove: delta,
-                         costMax: costMax)
-        setupTapGestures()
+                                                  deltaMove: delta,
+                                                  costMax: costMax)
+        super.init(target: nil, action: nil)
+        view.addGestureRecognizer(self)
         setupSwipeGestures()
+        setupTapGestures(view)
     }
 
-    private func setupTapGestures() {
+    private func setupTapGestures(_ view: UIView) {
         let doubleDot = UITapGestureRecognizer(target: self, action: #selector(tapped))
         doubleDot.numberOfTapsRequired = 3
         let dot = UITapGestureRecognizer(target: self, action: #selector(tapped))
@@ -64,12 +58,12 @@ class ActionGestureRecognizer {
         note.require(toFail: dot)
 
         for gr in [doubleDot, dot, note] {
-            view?.addGestureRecognizer(gr)
+            view.addGestureRecognizer(gr)
         }
     }
 
     private func setupSwipeGestures() {
-        let map: [ActionGesture : [Int]] = [
+        let map: [MeasureAction : [Int]] = [
             .flat: [0,2],
             .sharp: [0,6],
             .natural: [0],
@@ -82,20 +76,24 @@ class ActionGestureRecognizer {
         }
     }
 
-    func reset() {
+    override func reset() {
+        super.reset()
         rawPoints = []
     }
 
-    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesBegan(touches, with: event)
+
         if let t = touches.first, let view = view {
-            reset()
             let location = t.location(in: view)
             rawPoints.append(Int(location.x))
             rawPoints.append(Int(location.y))
         }
     }
 
-    func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesMoved(touches, with: event)
+
         if let t = touches.first, let view = view, rawPoints.count >= 2 {
             let location = t.location(in: view)
             let xIsDifferent = rawPoints[rawPoints.count-2] != Int(location.x)
@@ -107,27 +105,30 @@ class ActionGestureRecognizer {
         }
     }
 
-    func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesEnded(touches, with: event)
+        defer { reset() }
+
         var path = Path()
         path.addPointFromRaw(rawPoints)
         if let gesture = swipeGestureRecognizer?.recognizePath(path),
-            let type = gesture.datas as? ActionGesture,
+            let type = gesture.datas as? MeasureAction,
             rawPoints.count > 2 {
             let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
-            delegate?.actionGestureRecognized(gesture: type, at: point)
+            actionDelegate?.actionRecognized(gesture: type, at: point)
         }
     }
 
     @objc private func tapped(sender: UITapGestureRecognizer) {
-        guard let view = view else { return }
+        guard let view = sender.view else { return }
         let point = sender.location(in: view)
         switch sender.numberOfTapsRequired {
         case 1:
-            delegate?.actionGestureRecognized(gesture: .note, at: point)
+            actionDelegate?.actionRecognized(gesture: .note, at: point)
         case 2:
-            delegate?.actionGestureRecognized(gesture: .dot, at: point)
+            actionDelegate?.actionRecognized(gesture: .dot, at: point)
         case 3:
-            delegate?.actionGestureRecognized(gesture: .doubleDot, at: point)
+            actionDelegate?.actionRecognized(gesture: .doubleDot, at: point)
         default: break
         }
     }
