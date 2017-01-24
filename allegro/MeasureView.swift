@@ -69,6 +69,13 @@ class MeasureView: UIView {
     fileprivate let noteWidth = CGFloat(100)
     fileprivate var noteHeight: CGFloat { return staffHeight }
 
+    fileprivate let eraseGR: UIPanGestureRecognizer = {
+        let gr = UIPanGestureRecognizer()
+        gr.minimumNumberOfTouches = 1
+        gr.maximumNumberOfTouches = 1
+        return gr
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         // iOS expects draw(rect:) to completely fill
@@ -80,9 +87,7 @@ class MeasureView: UIView {
         let mvaGR = MeasureActionGestureRecognizer(view: self)
         mvaGR.actionDelegate = self
 
-        let eraseGR = UIPanGestureRecognizer(target: self, action: #selector(erase))
-        eraseGR.minimumNumberOfTouches = 1
-        eraseGR.maximumNumberOfTouches = 1
+        eraseGR.addTarget(self, action: #selector(erase))
         addGestureRecognizer(eraseGR)
     }
 
@@ -231,6 +236,7 @@ extension MeasureView: MeasureActionDelegate {
 
 extension MeasureView: PartStoreObserver {
     func partStoreChanged() {
+        eraseGR.isEnabled = store?.mode == .erase
         setNeedsLayout() // TODO(btc): needs to be redrawn also/instead?
     }
 }
