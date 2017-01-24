@@ -79,6 +79,11 @@ class MeasureView: UIView {
 
         let mvaGR = MeasureActionGestureRecognizer(view: self)
         mvaGR.actionDelegate = self
+
+        let eraseGR = UIPanGestureRecognizer(target: self, action: #selector(erase))
+        eraseGR.minimumNumberOfTouches = 1
+        eraseGR.maximumNumberOfTouches = 1
+        addGestureRecognizer(eraseGR)
     }
 
     deinit {
@@ -113,7 +118,7 @@ class MeasureView: UIView {
         guard let store = store, let index = index else { return }
 
         let notes = store.notes(atMeasureIndex: index)
-        let noteViewModels = notes.map { NoteViewModel(note: $0.note) }
+        let noteViewModels = notes.map { NoteViewModel(note: $0.note, position: $0.pos) }
         let noteViews = noteViewModels.map { NoteView(note: $0) }
 
         // TODO(btc): size the notes based on noteHeight
@@ -137,11 +142,31 @@ class MeasureView: UIView {
             noteView.stemEndY = CGFloat(end)
         }
     }
+
+    @objc private func erase(sender: UIPanGestureRecognizer) {
+        guard store?.mode == .erase else { return }
+
+        let location = sender.location(in: self)
+
+        // TODO(btc): if we wind up with lots of subviews, as an optimization, hold explicit references to the note views.
+
+        let noteViews = subviews.map { $0 as? NoteView }
+        for v in noteViews {
+
+            let locationInSubview = nv.convert(location, from: self)
+            if nv.point(inside: locationInSubview, with: nil) {
+                guard let store = store, let index = index else { return }
+
+                store.removeNote(fromMeasureIndex: index, at: nv.note.position)
+            }
+        }
+    }
 }
 
 extension MeasureView: MeasureActionDelegate {
 
     func actionRecognized(gesture: MeasureAction, at location: CGPoint) {
+        guard store?.mode == .edit else { return }
         Log.info?.value(gesture.rawValue)
 
         guard let store = store, let index = index else { return }

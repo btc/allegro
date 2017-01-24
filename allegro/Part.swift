@@ -35,8 +35,9 @@ class Part {
         return measures[i].insert(note: note, at: position)
     }
 
-    func removeNote(fromMeasureIndex i: Int, at position: Rational) {
-        guard measures.indices.contains(i) else { return }
+    func removeNote(fromMeasureIndex i: Int, at position: Rational) -> Bool {
+        guard measures.indices.contains(i) else { return false }
         // TODO(btc): remove note
+        return true
     }
 }
