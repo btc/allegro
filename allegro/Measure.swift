@@ -141,6 +141,7 @@ struct Measure {
         for i in 0..<notes.count {
             if notes[i].pos == position && !notes[i].isFree {
                 if let note = notes[i].note {
+                    notes[i].note = nil
                     notes[i].isFree = true
                     notes[i].durationOfFree = note.duration.rational
                 }
@@ -152,25 +153,22 @@ struct Measure {
     
     // coalesces free space NotePosition objects
     private mutating func coalesce() {
-        // loop twice bc array bounds change as we modify it
-        while true {
-            var didChange = false
-            for i in 0..<notes.count - 1 {
-                let curr = notes[i]
-                if curr.isFree, let durationOfFree = curr.durationOfFree {
-                    let next = notes[i+1]
-                    if next.isFree, let nextDurationOfFree = next.durationOfFree {
-                        // coalesce i+1 into i
-                        notes[i].durationOfFree = durationOfFree + nextDurationOfFree
-                        notes.remove(at: i+1)
-                        didChange = true
-                        break
-                    }
-                }
-            }
-            if !didChange {
+        var i = 0
+        while(true) {
+            if (i == notes.count - 1) {
                 break
             }
+            let curr = notes[i]
+            if curr.isFree, let durationOfFree = curr.durationOfFree {
+                let next = notes[i+1]
+                if next.isFree, let nextDurationOfFree = next.durationOfFree {
+                    // coalesce i+1 into i
+                    notes[i].durationOfFree = durationOfFree + nextDurationOfFree
+                    notes.remove(at: i+1)
+                    continue
+                }
+            }
+            i += 1
         }
     }
     
