@@ -132,13 +132,16 @@ class MeasureView: UIView {
 
         // determine position
         let measure = store.measure(at: index)
-        guard let rational = pointToPositionInTime(p, timeSignature: measure.timeSignature, noteDuration: duration) else { return }
+        guard let rational = pointToPositionInTime(p, timeSignature: measure.timeSignature, noteDuration: duration) else {
+            Log.error?.message("failed to convert user's touch into a position in time")
+            return
+        }
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
         let note = Note(duration: duration, letter: letter, octave: octave)
 
-        // attempt to inert
+        // attempt to insert
         let succeeded = store.insert(note: note, intoMeasureIndex: index, at: rational)
 
         if !succeeded {
@@ -158,7 +161,8 @@ class MeasureView: UIView {
 
     private func pointToPositionInTime(_ point: CGPoint, timeSignature: Rational, noteDuration: Note.Duration) -> Rational? {
         let numPositionsInTime = timeSignature.numerator // TODO(btc): take into consideration the selected note's duration
-        let positionInTime = Int(floor(point.x / bounds.width * CGFloat(numPositionsInTime)))
+        let ratioOfScreenWidth = point.x / bounds.width
+        let positionInTime = Int(floor(ratioOfScreenWidth * CGFloat(numPositionsInTime)))
         return Rational(positionInTime, numPositionsInTime)
     }
 }
