@@ -52,7 +52,6 @@ class PartEditorCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        Log.warning?.trace()
         subviews.forEach { $0.removeFromSuperview() }
         measureViewContainer = MeasureViewContainer()
         addSubview(measureViewContainer)
