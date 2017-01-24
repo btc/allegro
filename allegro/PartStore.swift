@@ -74,6 +74,10 @@ class PartStore {
         return succeeded
     }
 
+    func removeNote(fromMeasureIndex i: Int, at position: Rational) {
+        part.removeNote(fromMeasureIndex: i, at: position)
+    }
+
     func notes(atMeasureIndex i: Int) -> [(pos: Rational, note: Note)] {
         extendIfNecessary(toAccessMeasureAtIndex: i)
         return part.measures[i].getAllNotes()
