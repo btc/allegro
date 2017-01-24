@@ -16,16 +16,46 @@ class PartStore {
 
     private let part: Part
 
-    var selectedNoteDuration: Note.Duration = .whole
+    var selectedNoteDuration: Note.Duration = .whole {
+        didSet {
+            notify()
+        }
+    }
 
-    var observers: [Weak<PartStoreObserver>] = [Weak<PartStoreObserver>]()
+    private var observers: [Weak<PartStoreObserver>] = [Weak<PartStoreObserver>]() {
+        didSet {
+            Log.info?.message("part store has \(observers.count) observers")
+        }
+    }
 
     var measureCount: Int {
-        return part.measureCount + 1 // + 1 for the new measure that hasn't been created yet, but exists in UI
+        return part.measureCount + virtualMeasureCount
+    }
+
+    // the new, blank measures that haven't been created yet, but exists in UI. initialize with 1
+    private var virtualMeasureCount = 1 {
+        didSet {
+            notify()
+        }
     }
 
     init(part: Part) {
         self.part = part
+    }
+
+    func subscribe(_ observer: PartStoreObserver) {
+        observers.append(Weak(observer))
+    }
+
+    func unsubscribe(_ observer: PartStoreObserver) {
+        observers = observers.filter {
+            guard let value = $0.value else { return false } // prune released objects
+            return value !== observer
+        }
+    }
+
+    private func notify() {
+        observers.forEach { $0.value?.partStoreChanged() }
     }
 
     func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
@@ -36,7 +66,7 @@ class PartStore {
         let succeeded = part.insert(note: note, intoMeasureIndex: i, at: position)
 
         if succeeded {
-            observers.forEach { $0.value?.partStoreChanged() }
+            notify()
         }
         return succeeded
     }
@@ -47,9 +77,14 @@ class PartStore {
     }
 
     func measure(at index: Int) -> Measure {
+
         if part.measures.indices.contains(index) {
             return part.measures[index]
         }
+
+        // access is out of bounds. generate a new virtual measure
+
+        // TODO(btc): recompute virtual measure count
 
         // else return a new measure with same time signature as previous
         if let last = part.measures.last {
