@@ -72,11 +72,12 @@ if __FILE__ == $0
     puts "\n"
 
     msgs = git.log.author(email).since(from).until(to).map do |commit|
-      if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
+      line1 = if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
+      { sha: commit.sha, message: line1 }
     end
 
-    msgs.sort.each do |m|
-      puts "* #{m}"
+    msgs.sort_by { |h| h[:message] }.each do |h|
+      puts "#{h[:sha][0..6]} - #{h[:message]}"
     end
 
     file_changes = get_file_changes(repo: git, email: email, from: from, until: to)
