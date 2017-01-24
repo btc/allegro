@@ -76,7 +76,7 @@ struct NoteViewModel {
         return (letter, octave)
     }
 
-    init(note: Note, position: Rational) {
+    init(note: Note, position: Rational = 0) {
         self.note = note
         self.position = position
     }
