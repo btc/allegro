@@ -28,25 +28,25 @@ class MeasureViewContainer: UIScrollView {
         }
     }
 
-    fileprivate struct State {
-        let rect: CGRect
-        let scale: CGFloat
-    }
-
     let measureView: MeasureView = {
         let v = MeasureView()
         v.staffLineThickness = 2
         return v
     }()
 
+    override var frame: CGRect {
+        didSet {
+            // once we know our size, we have enough information to determine the size of the measure view and scroll 
+            // to the center. So, we scroll to the center as soon as the frame is set.
+            scrollToCenterOfStaffLines()
+        }
+    }
+
     init() {
         super.init(frame: .zero)
         backgroundColor = .white
         panGestureRecognizer.minimumNumberOfTouches = 2
-        delegate = self
         isDirectionalLockEnabled = true
-
-        // TODO(btc): add support for toggling edit and view modes with minimumZoomScale = 0.5
 
         addSubview(measureView)
     }
@@ -61,19 +61,9 @@ class MeasureViewContainer: UIScrollView {
         measureView.sizeOfParentsVisibleArea = bounds.size
         contentSize = measureView.bounds.size
     }
-}
 
-extension MeasureViewContainer: UIScrollViewDelegate {
-
-    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
-    }
-
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-    }
-    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
-    }
-
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return measureView
+    func scrollToCenterOfStaffLines() {
+        let point = CGPoint(x: 0, y: MeasureView.totalHeight(visibleHeight: bounds.height) / 2 - bounds.height / 2)
+        setContentOffset(point, animated: false)
     }
 }
