@@ -16,6 +16,7 @@
 		6B096E5C1E342B0100615723 /* PartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E5B1E342B0100615723 /* PartViewModel.swift */; };
 		6B096E5F1E342D6300615723 /* PartStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E5E1E342D6300615723 /* PartStore.swift */; };
 		6B096E641E368E5D00615723 /* SlideMenuControllerSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B096E631E368E5D00615723 /* SlideMenuControllerSwift.framework */; };
+		6B096E671E37381E00615723 /* MeasureActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E661E37381E00615723 /* MeasureActionGestureRecognizer.swift */; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B0B26801E2F3DFB00F1870A /* PartEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
@@ -35,7 +36,6 @@
 		6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27231E289DE000F9CF66 /* RootNavigationViewController.swift */; };
 		6B6E27271E28B05100F9CF66 /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27261E28B05100F9CF66 /* CompositionViewController.swift */; };
 		6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */; };
-		6B6E272B1E28B77900F9CF66 /* ActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E272A1E28B77900F9CF66 /* ActionGestureRecognizer.swift */; };
 		6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */; };
 		6B92BE631E308A6A00CE2C9F /* PartEditorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE621E308A6A00CE2C9F /* PartEditorCell.swift */; };
 		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
@@ -87,6 +87,7 @@
 		6B096E5B1E342B0100615723 /* PartViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartViewModel.swift; sourceTree = "<group>"; };
 		6B096E5E1E342D6300615723 /* PartStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartStore.swift; sourceTree = "<group>"; };
 		6B096E631E368E5D00615723 /* SlideMenuControllerSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SlideMenuControllerSwift.framework; path = Carthage/Build/iOS/SlideMenuControllerSwift.framework; sourceTree = SOURCE_ROOT; };
+		6B096E661E37381E00615723 /* MeasureActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureActionGestureRecognizer.swift; sourceTree = "<group>"; };
 		6B0B267D1E2F2E5F00F1870A /* Rational.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rational.framework; path = Carthage/Build/iOS/Rational.framework; sourceTree = SOURCE_ROOT; };
 		6B0B267F1E2F3DFB00F1870A /* PartEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartEditor.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
@@ -112,7 +113,6 @@
 		6B6E27231E289DE000F9CF66 /* RootNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootNavigationViewController.swift; sourceTree = "<group>"; };
 		6B6E27261E28B05100F9CF66 /* CompositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
 		6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DBPathRecognizer.swift; path = vendor/DBPathRecognizer.swift; sourceTree = SOURCE_ROOT; };
-		6B6E272A1E28B77900F9CF66 /* ActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionGestureRecognizer.swift; sourceTree = "<group>"; };
 		6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftTweaks.framework; path = Carthage/Build/iOS/SwiftTweaks.framework; sourceTree = SOURCE_ROOT; };
 		6B92BE621E308A6A00CE2C9F /* PartEditorCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartEditorCell.swift; sourceTree = "<group>"; };
 		6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewContainer.swift; sourceTree = "<group>"; };
@@ -199,6 +199,14 @@
 			name = Stores;
 			sourceTree = "<group>";
 		};
+		6B096E651E3737CF00615723 /* Recognizers */ = {
+			isa = PBXGroup;
+			children = (
+				6B096E661E37381E00615723 /* MeasureActionGestureRecognizer.swift */,
+			);
+			name = Recognizers;
+			sourceTree = "<group>";
+		};
 		6B6774A01E2D7FAA00399BDC /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,7 +265,7 @@
 				6B096E541E313B5B00615723 /* ViewModels */,
 				6B6E27251E289F5000F9CF66 /* Controllers */,
 				6B096E5D1E342D2000615723 /* Stores */,
-				6B6E272A1E28B77900F9CF66 /* ActionGestureRecognizer.swift */,
+				6B096E651E3737CF00615723 /* Recognizers */,
 				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
 				6B6E271F1E28985F00F9CF66 /* Utils.swift */,
 				6B6E26F41E288F8200F9CF66 /* Assets.xcassets */,
@@ -619,7 +627,6 @@
 				6B096E5F1E342D6300615723 /* PartStore.swift in Sources */,
 				6B096E5C1E342B0100615723 /* PartViewModel.swift in Sources */,
 				6B6BE38E1E2DE023007E0491 /* NoteSelectorCell.swift in Sources */,
-				6B6E272B1E28B77900F9CF66 /* ActionGestureRecognizer.swift in Sources */,
 				6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */,
 				6B6E27221E289D4600F9CF66 /* HomeMenuViewController.swift in Sources */,
 				6B096E561E313B7200615723 /* NoteViewModel.swift in Sources */,
@@ -634,6 +641,7 @@
 				6B6774A71E2D7FE600399BDC /* Part.swift in Sources */,
 				6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */,
 				6B0B26801E2F3DFB00F1870A /* PartEditor.swift in Sources */,
+				6B096E671E37381E00615723 /* MeasureActionGestureRecognizer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

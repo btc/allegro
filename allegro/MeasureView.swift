@@ -66,7 +66,8 @@ class MeasureView: UIView {
         self.isOpaque = false
         backgroundColor = .white
 
-        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapped)))
+        let mvaGR = MeasureActionGestureRecognizer(view: self)
+        mvaGR.actionDelegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -121,18 +122,22 @@ class MeasureView: UIView {
             noteView.stemEndY = CGFloat(end)
         }
     }
+}
 
-    @objc private func tapped(sender: UITapGestureRecognizer) {
-        let p = sender.location(in: self)
+extension MeasureView: MeasureActionDelegate {
+
+    func actionRecognized(gesture: MeasureAction, at location: CGPoint) {
+        Log.info?.value(gesture.rawValue)
+
         guard let store = store, let index = index else { return }
         let duration = store.selectedNoteDuration
 
         // determine pitch
-        let pitchRelativeToCenterLine = pointToPitch(p)
+        let pitchRelativeToCenterLine = pointToPitch(location)
 
         // determine position
         let measure = store.measure(at: index)
-        guard let rational = pointToPositionInTime(p, timeSignature: measure.timeSignature, noteDuration: duration) else {
+        guard let rational = pointToPositionInTime(location, timeSignature: measure.timeSignature, noteDuration: duration) else {
             Log.error?.message("failed to convert user's touch into a position in time")
             return
         }
@@ -141,16 +146,35 @@ class MeasureView: UIView {
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
         let note = Note(duration: duration, letter: letter, octave: octave)
 
+        // configure note
+        switch gesture {
+        case .dot: break // TODO(btc)
+        case .doubleDot: break // TODO(btc)
+        case .flat:
+            note.accidental = .flat
+        case .natural:
+            note.accidental = .natural
+        case .note: break // TODO(btc): remove dots
+            // TODO(btc): note.rest = false ?
+        case .rest:
+            note.rest = true
+        case .sharp:
+            note.accidental = .sharp
+        // TODO(btc): doubleSharp
+        // TODO(btc): doubleFlat
+        }
+
         // attempt to insert
         let succeeded = store.insert(note: note, intoMeasureIndex: index, at: rational)
 
-        if !succeeded {
+        if succeeded {
+            Log.info?.message("add note to measure: success!")
+        } else {
+            Log.info?.message("add note to measure: failure!")
             // TODO(btc): display helpful feedback to the user
         }
 
         setNeedsLayout()
-
-        Log.info?.value(succeeded)
     }
 
     private func pointToPitch(_ point: CGPoint) -> Int {
