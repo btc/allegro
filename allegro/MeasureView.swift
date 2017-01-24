@@ -99,9 +99,8 @@ class MeasureView: UIView {
             addSubview(v)
         }
 
-        let positions = [0, -3, 3]
         for (i, noteView) in noteViews.enumerated() {
-            let position = positions[min(i, 2)]
+            let position = noteView.note.pitch
             
             let x = CGFloat(100 * (i + 1))
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
