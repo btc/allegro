@@ -28,7 +28,6 @@ struct Measure {
     // used in simplified form, eg. 2/2 and 4/4 are treated the same
     let timeSignature: Rational
 
-    var noteCount = 0
     private var notes: [NotePosition]
 
     init(time: Rational = Measure.defaultTimeSignature, key: Key = Key()) {
@@ -60,7 +59,6 @@ struct Measure {
 
             if (startOK && endOK) {
 
-                noteCount += 1
                 let diff = durationOfFree - note.duration.rational
 
                 // add Note and change free space
@@ -143,7 +141,6 @@ struct Measure {
         for i in 0..<notes.count {
             if notes[i].pos == position && !notes[i].isFree {
                 if let note = notes[i].note {
-                    noteCount -= 1
                     notes[i].isFree = true
                     notes[i].durationOfFree = note.duration.rational
                 }
