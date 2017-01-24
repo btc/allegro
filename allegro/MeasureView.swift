@@ -150,8 +150,8 @@ class MeasureView: UIView {
 
         // TODO(btc): if we wind up with lots of subviews, as an optimization, hold explicit references to the note views.
 
-        let noteViews = subviews.map { $0 as? NoteView }
-        for v in noteViews {
+        for v in subviews {
+            guard let nv = v as? NoteView else { continue }
 
             let locationInSubview = nv.convert(location, from: self)
             if nv.point(inside: locationInSubview, with: nil) {
