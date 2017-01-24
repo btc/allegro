@@ -86,13 +86,13 @@ class allegroTests: XCTestCase {
         
         // test removing notes
         measure.removeNote(at: 0)
-        XCTAssert(measure.noteCount == 2, "There are exactly 2 notes after removing one")
+        XCTAssert(measure.getAllNotes().count == 2, "There are exactly 2 notes after removing one")
         measure.removeNote(at: 0)
-        XCTAssert(measure.noteCount == 2, "Note cannot be removed twice")
+        XCTAssert(measure.getAllNotes().count == 2, "Note cannot be removed twice")
         measure.removeNote(at: 3/4)
-        XCTAssert(measure.noteCount == 1, "There is only 1 note left")
+        XCTAssert(measure.getAllNotes().count == 1, "There is only 1 note left")
         measure.removeNote(at: 3/8)
-        XCTAssert(measure.noteCount == 0, "There are no notes left")
+        XCTAssert(measure.getAllNotes().count == 0, "There are no notes left")
     }
     
     func testNote() {
