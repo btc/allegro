@@ -18,7 +18,7 @@ class PartEditor: UICollectionView {
         self.store = store
         super.init(frame: .zero, collectionViewLayout: layout)
 
-        store.observers.append(Weak<PartStoreObserver>(self))
+        store.subscribe(self)
 
         panGestureRecognizer.minimumNumberOfTouches = 2
         panGestureRecognizer.maximumNumberOfTouches = 2

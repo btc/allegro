@@ -23,7 +23,16 @@ class MeasureView: UIView {
         return staffHeight(visibleHeight: visibleHeight) * numSpacesBetweenAllLines + 2 * DEFAULT_MARGIN_PTS
     }
 
-    var store: PartStore?
+    var store: PartStore? {
+        didSet {
+            if let store = store {
+                store.subscribe(self)
+            }
+            if let oldValue = oldValue {
+                oldValue.unsubscribe(self)
+            }
+        }
+    }
 
     var index: Int?
 
@@ -173,8 +182,6 @@ extension MeasureView: MeasureActionDelegate {
             Log.info?.message("add note to measure: failure!")
             // TODO(btc): display helpful feedback to the user
         }
-
-        setNeedsLayout()
     }
 
     private func pointToPitch(_ point: CGPoint) -> Int {
@@ -188,5 +195,11 @@ extension MeasureView: MeasureActionDelegate {
         let ratioOfScreenWidth = point.x / bounds.width
         let positionInTime = Int(floor(ratioOfScreenWidth * CGFloat(numPositionsInTime)))
         return Rational(positionInTime, numPositionsInTime)
+    }
+}
+
+extension MeasureView: PartStoreObserver {
+    func partStoreChanged() {
+        setNeedsLayout() // TODO(btc): needs to be redrawn also/instead?
     }
 }
