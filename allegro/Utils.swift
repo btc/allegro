@@ -9,6 +9,7 @@
 import CleanroomLogger
 import UIKit
 import SwiftTweaks
+import Rational
 
 #if DEBUG
     let DEBUG = true
@@ -51,5 +52,11 @@ public class Weak<T: AnyObject> {
 
     public init(_ value: T?) {
         self.value = value
+    }
+}
+
+extension Rational {
+    var cgFloat: CGFloat {
+        return CGFloat(Double(rational: self))
     }
 }
