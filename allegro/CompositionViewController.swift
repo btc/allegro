@@ -54,6 +54,11 @@ class CompositionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
+        // TODO(btc): remove me once we have erase mode in the menu
+        Tweaks.bind(Tweaks.editMode) { [weak self] isEdit in
+            self?.store.mode = isEdit ? .edit : .erase
+        }
+
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
     }
