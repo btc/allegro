@@ -41,9 +41,10 @@ struct Strings {
 struct Tweaks: TweakLibraryType {
     static let actionCost = Tweak<Int>("General", "Gestures", "Action Cost", defaultValue: 1, min: 0)
     static let actionDelta = Tweak<Double>("General", "Gestures", "Delta", defaultValue: 22, min: 0)
+    static let editMode = Tweak<Bool>("G", "M", "M", true)
     
     static let defaultStore: TweakStore = {
-        let allTweaks: [TweakClusterType] = [actionCost, actionDelta]
+        let allTweaks: [TweakClusterType] = [actionCost, actionDelta, editMode]
         
         return TweakStore(tweaks: allTweaks, enabled: DEBUG)
     }()
