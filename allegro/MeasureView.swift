@@ -12,6 +12,17 @@ import Rational
 
 class MeasureView: UIView {
 
+    fileprivate static func staffHeight(visibleHeight: CGFloat) -> CGFloat {
+        return (visibleHeight - 2 * DEFAULT_MARGIN_PTS) / CGFloat(staffCount + 1)
+    }
+
+    static func totalHeight(visibleHeight: CGFloat) -> CGFloat {
+        // - 1 because we're counting the spaces between ledger lines
+        // 2 * Margin because we leave a little space above the top and bottom ledger lines
+        let numSpacesBetweenAllLines: CGFloat = CGFloat(staffCount + numLedgerLinesAbove + numLedgerLinesBelow - 1)
+        return staffHeight(visibleHeight: visibleHeight) * numSpacesBetweenAllLines + 2 * DEFAULT_MARGIN_PTS
+    }
+
     var store: PartStore?
 
     var index: Int?
@@ -21,12 +32,13 @@ class MeasureView: UIView {
     var sizeOfParentsVisibleArea: CGSize? {
         didSet {
             guard let sizeOfParentsVisibleArea = sizeOfParentsVisibleArea else { return }
-            frame.size = CGSize(width: sizeOfParentsVisibleArea.width, height: totalHeight)
+            frame.size = CGSize(width: sizeOfParentsVisibleArea.width,
+                                height: MeasureView.totalHeight(visibleHeight: sizeOfParentsVisibleArea.height))
         }
     }
 
     fileprivate var staffHeight: CGFloat {
-        return (visibleHeight - 2 * DEFAULT_MARGIN_PTS) / CGFloat(staffCount + 1)
+        return MeasureView.staffHeight(visibleHeight: visibleHeight)
     }
 
     // there are two 'heights' that we care about: _visible_ height and _total_ height. Visible height is what is
@@ -35,22 +47,16 @@ class MeasureView: UIView {
         return sizeOfParentsVisibleArea?.height ?? 0
     }
 
-    fileprivate var totalHeight: CGFloat {
-        // - 1 because we're counting the spaces between ledger lines
-        // 2 * Margin because we leave a little space above the top and bottom ledger lines
-        let numSpacesBetweenAllLines: CGFloat = CGFloat(staffCount + numLedgerLinesAbove + numLedgerLinesBelow - 1)
-        return staffHeight * numSpacesBetweenAllLines + 2 * DEFAULT_MARGIN_PTS
+    fileprivate var staffDrawStart: CGFloat {
+        return DEFAULT_MARGIN_PTS + CGFloat(MeasureView.numLedgerLinesAbove) * staffHeight
     }
 
-    fileprivate var staffDrawStart: CGFloat {
-        return DEFAULT_MARGIN_PTS + CGFloat(numLedgerLinesAbove) * staffHeight
-    }
-    
-    fileprivate let staffCount = 5
+    fileprivate static let staffCount = 5
+    fileprivate static let numLedgerLinesAbove = 4
+    fileprivate static let numLedgerLinesBelow = 4
+
     fileprivate let noteWidth = CGFloat(100)
     fileprivate var noteHeight: CGFloat { return staffHeight }
-    fileprivate let numLedgerLinesAbove = 4
-    fileprivate let numLedgerLinesBelow = 4
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,7 +76,7 @@ class MeasureView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(_: rect)
 
-        for i in 0..<staffCount {
+        for i in 0..<MeasureView.staffCount {
             let path = UIBezierPath(rect: CGRect(
                 x: 0,
                 y: staffDrawStart + CGFloat(i) * staffHeight - staffLineThickness / 2,
@@ -145,7 +151,7 @@ class MeasureView: UIView {
     }
 
     private func pointToPitch(_ point: CGPoint) -> Int {
-        let numSpacesBetweenAllLines: CGFloat = CGFloat(staffCount + numLedgerLinesAbove + numLedgerLinesBelow - 1)
+        let numSpacesBetweenAllLines: CGFloat = CGFloat(MeasureView.staffCount + MeasureView.numLedgerLinesAbove + MeasureView.numLedgerLinesBelow - 1)
         let lengthOfSemitoneInPoints = staffHeight / 2
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / lengthOfSemitoneInPoints + numSpacesBetweenAllLines))
     }
