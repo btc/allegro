@@ -108,6 +108,6 @@ class SideMenuViewController: UIViewController {
     }
     
     func eraseButtonTapped() {
-        print("Erase mode")
+        store.mode = .erase
     }
 }
