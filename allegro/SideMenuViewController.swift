@@ -13,6 +13,15 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     private let store: PartStore
+    
+    private let NavigationLabel: UIView = {
+        let v = UILabel() // TODO: ppsekhar make this a button
+        v.text = "Navigation"
+        v.textAlignment = .left
+        v.textColor = .black
+        v.font = UIFont(name: DEFAULT_FONT, size: 20)
+        return v
+    }()
 
     private let MenuOptions: UIView = {
         let v = UILabel()
@@ -40,6 +49,13 @@ class SideMenuViewController: UIViewController {
         v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
         return v
     }()
+    
+    private let eraseButton: UIButton = {
+        let v = UIButton()
+        v.backgroundColor = UIColor.allegroPurple
+        v.setTitle("Erase", for: .normal)
+        return v
+    }()
 
     init(store: PartStore) {
         self.store = store
@@ -57,6 +73,10 @@ class SideMenuViewController: UIViewController {
         view.addSubview(MenuOptions)
         view.addSubview(Home)
         view.addSubview(Export)
+        view.addSubview(eraseButton)
+        
+        eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
+
     }
     
     override func viewDidLayoutSubviews() {
@@ -79,11 +99,15 @@ class SideMenuViewController: UIViewController {
                                    width: homeW,
                                    height: homeH)
         
-        let exportH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let exportW = exportH * THE_GOLDEN_RATIO
-        Export.frame = CGRect(x: centerX - homeW / 2,
+        let eraseH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
+        let eraseW = eraseH * THE_GOLDEN_RATIO
+        eraseButton.frame = CGRect(x: centerX - homeW / 2,
                             y: centerY,
-                            width: exportW,
-                            height: exportH)
+                            width: eraseW,
+                            height: eraseH)
+    }
+    
+    func eraseButtonTapped() {
+        print("Erase mode")
     }
 }
