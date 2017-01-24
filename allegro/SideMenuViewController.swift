@@ -12,7 +12,7 @@ import UIKit
 
 class SideMenuViewController: UIViewController {
 
-    private let store: PartStore
+    fileprivate let store: PartStore
     
     private let NavigationLabel: UIView = {
         let v = UILabel() // TODO: ppsekhar make this a button
@@ -49,7 +49,14 @@ class SideMenuViewController: UIViewController {
         v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
         return v
     }()
-    
+
+    private let editButton: UIButton = {
+        let v = UIButton()
+        v.backgroundColor = UIColor.allegroPurple
+        v.setTitle("Edit", for: .normal)
+        return v
+    }()
+
     private let eraseButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = UIColor.allegroPurple
@@ -74,11 +81,21 @@ class SideMenuViewController: UIViewController {
         view.addSubview(Home)
         view.addSubview(Export)
         view.addSubview(eraseButton)
+        view.addSubview(editButton)
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
 
     }
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        store.subscribe(self)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        store.unsubscribe(self)
+    }
+
     override func viewDidLayoutSubviews() {
         let parent = view.bounds
         let centerX = parent.width / 2
@@ -109,5 +126,17 @@ class SideMenuViewController: UIViewController {
     
     func eraseButtonTapped() {
         store.mode = .erase
+    }
+
+    func editButtonTapped() {
+        store.mode = .edit
+    }
+}
+
+extension SideMenuViewController: PartStoreObserver {
+    func partStoreChanged() {
+        // TODO: update the button states to reflect the selected mode
+        // NB: By convention, don't change the toggle view until updated state information is received from the source of truth.
+        // switch store.mode { ...
     }
 }
