@@ -69,7 +69,10 @@ class MeasureView: UIView {
     fileprivate let noteWidth = CGFloat(100)
     fileprivate var noteHeight: CGFloat { return staffHeight }
     
-    
+    // We draw the accidentals relate the the head of the note.
+    // The offset specifies a small delta since we need the flat
+    // to be slightly higher than the other accidentals to align with
+    // the measure line
     fileprivate let accidentalInfos = [
         Note.Accidental.natural: ("♮", CGPoint(x: -15, y: 0)),
         Note.Accidental.sharp: ("♯", CGPoint(x: -15, y: 0)),
@@ -125,7 +128,8 @@ class MeasureView: UIView {
     }
     
     func getAccidentalLabel(noteView: NoteView) -> UILabel {
-        let accidental = noteView.note.note.accidental
+        // We only draw flats for now until we know when to draw the accidental
+        let accidental = Note.Accidental.flat
         
         let center = CGPoint(
             x: noteView.noteFrame.origin.x,
@@ -170,8 +174,6 @@ class MeasureView: UIView {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let note = notes[i]
-
             let x = noteViewModels[i].position.cgFloat * bounds.width
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
             
