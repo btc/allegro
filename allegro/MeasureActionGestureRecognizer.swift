@@ -48,16 +48,9 @@ class MeasureActionGestureRecognizer: UIGestureRecognizer {
     }
 
     private func setupTapGestures(_ view: UIView) {
-        let doubleDot = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        doubleDot.numberOfTapsRequired = 3
-        let dot = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        dot.numberOfTapsRequired = 2
         let note = UITapGestureRecognizer(target: self, action: #selector(tapped))
 
-        dot.require(toFail: doubleDot)
-        note.require(toFail: dot)
-
-        for gr in [doubleDot, dot, note] {
+        for gr in [note] {
             view.addGestureRecognizer(gr)
         }
     }
