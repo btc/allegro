@@ -39,6 +39,7 @@ class PartEditor: UICollectionView {
         panGestureRecognizer.minimumNumberOfTouches = 2
         panGestureRecognizer.maximumNumberOfTouches = 2
         isPagingEnabled = true
+        backgroundColor = .lightGray
         register(PartEditorCell.self, forCellWithReuseIdentifier: PartEditorCell.reuseID)
         dataSource = self
         delegate = self
@@ -79,6 +80,19 @@ extension PartEditor: UICollectionViewDataSource {
             c.index = indexPath.row
         }
         return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let finalCellFrame = cell.frame
+        let translation: CGPoint = panGestureRecognizer.translation(in: superview)
+        if translation.x > 0 {
+            cell.frame = CGRect(x: finalCellFrame.origin.x - 1000, y: -500, width: 0, height: 0)
+        } else {
+            cell.frame = CGRect(x: finalCellFrame.origin.x + 1000, y: -500, width: 0, height: 0)
+        }
+        UIView.animate(withDuration: 0.5) {
+            cell.frame = finalCellFrame
+        }
     }
 }
 
