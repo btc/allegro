@@ -68,6 +68,13 @@ class MeasureView: UIView {
 
     fileprivate let noteWidth = CGFloat(100)
     fileprivate var noteHeight: CGFloat { return staffHeight }
+    
+    
+    fileprivate let accidentalInfos = [
+        Note.Accidental.natural: ("♮", CGPoint(x: -15, y: 0)),
+        Note.Accidental.sharp: ("♯", CGPoint(x: -15, y: 0)),
+        Note.Accidental.flat: ("♭", CGPoint(x: -15, y: -10)),
+        ]
 
     fileprivate let eraseGR: UIPanGestureRecognizer = {
         let gr = UIPanGestureRecognizer()
@@ -116,6 +123,31 @@ class MeasureView: UIView {
             path.fill()
         }
     }
+    
+    func getAccidentalLabel(noteView: NoteView) -> UILabel {
+        let accidental = noteView.note.note.accidental
+        
+        let center = CGPoint(
+            x: noteView.noteFrame.origin.x,
+            y: noteView.noteFrame.origin.y + noteView.noteFrame.size.height / 2)
+        guard let info = accidentalInfos[accidental] else {
+            return UILabel()
+        }
+        
+        let offset = info.1
+        
+        let size = CGSize(width: 50, height: 50)
+        let origin = CGPoint(
+            x: center.x - size.width / 2 + offset.x,
+            y: center.y - size.height / 2 + offset.y)
+        
+        let label = UILabel()
+        label.frame = CGRect(origin: origin, size: size)
+        label.text = info.0
+        label.font = UIFont(descriptor: label.font.fontDescriptor, size: 80)
+        label.textAlignment = .right
+        return label
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -138,14 +170,21 @@ class MeasureView: UIView {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
+            let note = notes[i]
 
+<<<<<<< Updated upstream
             let x = noteViewModels[i].position.cgFloat * bounds.width
+=======
+            let x = note.pos.cgFloat * bounds.width
+>>>>>>> Stashed changes
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
             
             let end = position > 0 ? y + noteHeight + 100 : y - 100
             
             noteView.noteFrame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
             noteView.stemEndY = CGFloat(end)
+            
+            addSubview(getAccidentalLabel(noteView: noteView))
         }
     }
 
