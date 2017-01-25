@@ -193,4 +193,11 @@ struct Measure {
         }
     }
     
+    /* Returns a note object if starting at the current note, there is a previous note somewhere
+        in the measure with the same letter.
+     */
+    func getPrevLetterMatch(currentNote: Note) -> Note? {
+        var match: Note? = nil
+        return match
+    }
 }

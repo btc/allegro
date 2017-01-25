@@ -68,5 +68,10 @@ struct Key {
             return "\(root)m"
         }
     }
+    
+    // Returns true if the current note's letter matches an accidental in the key signature
+    func keyHit(currentNoteLetter: Note.Letter) -> Bool {
+        return false
+    }
 }
 

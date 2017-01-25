@@ -15,7 +15,8 @@ struct NoteViewModel {
     var value: Note.Value {
         return note.value
     }
-
+    
+    var displayAccidental: Bool
     let position: Rational
 
     // 0 is the center of the bars (B4 in treble clef)
@@ -82,5 +83,6 @@ struct NoteViewModel {
     init(note: Note, position: Rational) {
         self.note = note
         self.position = position
+        self.displayAccidental = false
     }
 }
