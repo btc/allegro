@@ -30,7 +30,7 @@ class CompositionViewController: UIViewController {
         // NB(btc): The way the library provides customization (static options) makes it so that it's only feasible to have
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
         // and move the options to the instance of the SideMenuViewController.
-        SlideMenuOptions.animationDuration = 0.15 // seconds
+        SlideMenuOptions.animationDuration = 0.07 // seconds
 
         let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
         return container
