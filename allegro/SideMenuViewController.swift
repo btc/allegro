@@ -60,9 +60,11 @@ class SideMenuViewController: UIViewController {
 
     private let eraseButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = .lightGray
+        v.backgroundColor = .clear
         v.titleLabel?.textAlignment = .center
         v.setTitle("Erase", for: .normal)
+        
+        v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
         return v
     }()
 
