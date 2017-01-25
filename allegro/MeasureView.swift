@@ -172,11 +172,7 @@ class MeasureView: UIView {
             // * there should be a minimum spacing between notes
             let note = notes[i]
 
-<<<<<<< Updated upstream
             let x = noteViewModels[i].position.cgFloat * bounds.width
-=======
-            let x = note.pos.cgFloat * bounds.width
->>>>>>> Stashed changes
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
             
             let end = position > 0 ? y + noteHeight + 100 : y - 100
