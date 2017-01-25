@@ -167,12 +167,6 @@ class allegroTests: XCTestCase {
     func testKey() {
         let cMajor = Key()
         XCTAssert(cMajor.fifths == 0 && cMajor.mode == Key.Mode.major, "Key default initialization to C Major")
-        
-        let fsharpMajor = Key(mode: Key.Mode.major, fifths: 5)
-        XCTAssert(fsharpMajor.getName() == "F♯M", "Major Key naming in circle of fifths")
-        
-        let bflatMinor = Key(mode: Key.Mode.minor, fifths: -5)
-        XCTAssert(bflatMinor.getName() == "b♭m", "minor key naming in circle of fifths")
     }
     
     func testMocks() {
