@@ -14,7 +14,7 @@ struct NoteViewModel {
     let note: Note
 
     let position: Rational
-    
+
     // 0 is the center of the bars (B4 in treble clef)
     // Every increment by 1 moves up half staff height
     // -1 moves it down
@@ -76,7 +76,7 @@ struct NoteViewModel {
         return (letter, octave)
     }
 
-    init(note: Note, position: Rational = 0) {
+    init(note: Note, position: Rational) {
         self.note = note
         self.position = position
     }

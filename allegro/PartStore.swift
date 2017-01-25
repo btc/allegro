@@ -91,13 +91,8 @@ class PartStore {
         }
     }
 
-    func notes(atMeasureIndex i: Int) -> [(pos: Rational, note: Note)] {
-        extendIfNecessary(toAccessMeasureAtIndex: i)
-        return part.measures[i].getAllNotes()
-    }
-
-    func measure(at index: Int) -> Measure {
+    func measure(at index: Int) -> MeasureViewModel {
         extendIfNecessary(toAccessMeasureAtIndex: index)
-        return part.measures[index]
+        return MeasureViewModel(part.measures[index])
     }
 }

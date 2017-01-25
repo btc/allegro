@@ -123,8 +123,8 @@ class MeasureView: UIView {
 
         guard let store = store, let index = index else { return }
 
-        let notes = store.notes(atMeasureIndex: index)
-        let noteViewModels = notes.map { NoteViewModel(note: $0.note, position: $0.pos) }
+        let measureVM = store.measure(at: index)
+        let noteViewModels = measureVM.notes
         let noteViews = noteViewModels.map { NoteView(note: $0) }
 
         // TODO(btc): size the notes based on noteHeight
@@ -139,7 +139,7 @@ class MeasureView: UIView {
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
 
-            let x = notes[i].pos.cgFloat * bounds.width
+            let x = noteViewModels[i].position.cgFloat * bounds.width
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
             
             let end = position > 0 ? y + noteHeight + 100 : y - 100
