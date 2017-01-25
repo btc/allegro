@@ -28,7 +28,7 @@ class SideMenuViewController: UIViewController {
         v.text = "Placeholder menu"
         v.textAlignment = .center
         v.textColor = .white
-        v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
+        v.font = UIFont(name: DEFAULT_FONT, size: 20)
         return v
     }()
     
@@ -52,9 +52,9 @@ class SideMenuViewController: UIViewController {
 
     private let editButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = .lightGray
+        v.backgroundColor = .clear
         v.setTitle("Edit", for: .normal)
-        v.titleLabel?.textColor = .black
+        v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
         return v
     }()
 
@@ -63,10 +63,10 @@ class SideMenuViewController: UIViewController {
         v.backgroundColor = .clear
         v.titleLabel?.textAlignment = .center
         v.setTitle("Erase", for: .normal)
-        
         v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
         return v
     }()
+    
 
     init(store: PartStore) {
         self.store = store
@@ -108,20 +108,25 @@ class SideMenuViewController: UIViewController {
         let titleH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
         let titleW = titleH * THE_GOLDEN_RATIO
         
+        let buttonSize = parent.width / 4
+        let firstButtonX = buttonSize/2
+        let secondButtonX = firstButtonX + buttonSize
+        
+        
         MenuOptions.frame = CGRect(x: centerX - titleW / 2,
                             y: DEFAULT_MARGIN_PTS,
                             width: titleW,
                             height: titleH)
 
-        editButton.frame = CGRect(x: 0,
+        editButton.frame = CGRect(x: firstButtonX,
                                    y: centerY,
-                                   width: parent.width / 2,
-                                   height: DEFAULT_TAP_TARGET_SIZE)
+                                   width: buttonSize,
+                                   height: buttonSize)
 
-        eraseButton.frame = CGRect(x: parent.width / 2,
+        eraseButton.frame = CGRect(x: secondButtonX,
                             y: centerY,
-                            width: parent.width / 2,
-                            height: DEFAULT_TAP_TARGET_SIZE)
+                            width: buttonSize,
+                            height: buttonSize)
     }
     
     func eraseButtonTapped() {
