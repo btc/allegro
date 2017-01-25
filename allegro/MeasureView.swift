@@ -73,6 +73,7 @@ class MeasureView: UIView {
         let gr = UIPanGestureRecognizer()
         gr.minimumNumberOfTouches = 1
         gr.maximumNumberOfTouches = 1
+        gr.cancelsTouchesInView = false
         return gr
     }()
 
