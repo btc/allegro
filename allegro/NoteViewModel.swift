@@ -11,7 +11,7 @@ import Rational
 
 struct NoteViewModel {
 
-    let note: Note
+    private let note: Note
 
     let position: Rational
 
