@@ -65,6 +65,22 @@ extension PartEditor: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension PartEditor: UICollectionViewDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let finalCellFrame = cell.frame
+        let translation: CGPoint = panGestureRecognizer.translation(in: superview)
+        if translation.x > 0 {
+            cell.frame = CGRect(x: finalCellFrame.origin.x - 1000, y: -500, width: 0, height: 0)
+        } else {
+            cell.frame = CGRect(x: finalCellFrame.origin.x + 1000, y: -500, width: 0, height: 0)
+        }
+        UIView.animate(withDuration: 0.5) {
+            cell.frame = finalCellFrame
+        }
+    }
+}
+
 extension PartEditor: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
@@ -80,19 +96,6 @@ extension PartEditor: UICollectionViewDataSource {
             c.index = indexPath.row
         }
         return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let finalCellFrame = cell.frame
-        let translation: CGPoint = panGestureRecognizer.translation(in: superview)
-        if translation.x > 0 {
-            cell.frame = CGRect(x: finalCellFrame.origin.x - 1000, y: -500, width: 0, height: 0)
-        } else {
-            cell.frame = CGRect(x: finalCellFrame.origin.x + 1000, y: -500, width: 0, height: 0)
-        }
-        UIView.animate(withDuration: 0.5) {
-            cell.frame = finalCellFrame
-        }
     }
 }
 
