@@ -228,10 +228,10 @@ extension MeasureView: MeasureActionDelegate {
     }
 
     private func pointToPositionInTime(_ point: CGPoint, timeSignature: Rational, noteDuration: Note.Duration) -> Rational? {
-        let numPositionsInTime = timeSignature.numerator // TODO(btc): take into consideration the selected note's duration
+        let numPositionsInTime = timeSignature / noteDuration.rational
         let ratioOfScreenWidth = point.x / bounds.width
-        let positionInTime = Int(floor(ratioOfScreenWidth * CGFloat(numPositionsInTime)))
-        return Rational(positionInTime, numPositionsInTime)
+        let positionInTime = Rational(Int(floor(ratioOfScreenWidth * numPositionsInTime.cgFloat)))
+        return positionInTime / numPositionsInTime
     }
 }
 
