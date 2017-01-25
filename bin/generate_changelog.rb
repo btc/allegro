@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'logger'
 require 'optparse'
 require 'git'
 
+NUM_COMMITS_BACK = 100000000
 
 def get_file_changes(h)
   email = h[:email]
@@ -11,7 +11,7 @@ def get_file_changes(h)
   to = h[:to]
   git = h[:repo]
   file_changes = {}
-  git.log.author(email).since(from).until(to).each do |commit|
+  git.log(NUM_COMMITS_BACK).author(email).since(from).until(to).each do |commit|
     commit.diff_parent.stats[:files].each do |file_name, changes|
       existing_changes = file_changes[file_name]
       if existing_changes.nil?
@@ -42,11 +42,11 @@ if __FILE__ == $0
   end.parse!
 
   from = if options[:from].nil? then "7 days" else options[:from] end
-  to = if options[:to].nil? then "today" else options[:to] end
+  to = if options[:to].nil? then "now" else options[:to] end
 
   git = Git.open(".")
 
-  committers = git.log.since(from).until(to)
+  committers = git.log(NUM_COMMITS_BACK).since(from).until(to)
     .map { |commit| commit.author }
     .reduce([]) do |acc, author|
 
@@ -71,7 +71,8 @@ if __FILE__ == $0
     puts "=" * (name.length + " <>".length + email.length)
     puts "\n"
 
-    msgs = git.log.author(email).since(from).until(to).map do |commit|
+    msgs = git.log(NUM_COMMITS_BACK).author(email).since(from).until(to).map do |commit|
+      puts commit.date
       line1 = if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
       { sha: commit.sha, message: line1 }
     end
