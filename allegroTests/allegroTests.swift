@@ -146,8 +146,8 @@ class allegroTests: XCTestCase {
     }
     
     func testMocks() {
-        let twinkle = mockPart(name: "twinkle")
-        XCTAssert(twinkle.measureCount == 1)
+        _ = mockPart(name: "CMajor")
+        _ = mockPart(name: "DMajor")
     }
     
     func testPerformanceExample() {
