@@ -22,7 +22,7 @@ class NoteSelectorMenu: UICollectionView {
 
     weak var selectorDelegate: NoteSelectorDelegate?
 
-    fileprivate var selectedNote = 0 {
+    fileprivate var selectedNote = 2 { // quarter is default selection
         didSet {
             selectorDelegate?.didChangeSelection(duration: selectedNoteDuration)
         }
