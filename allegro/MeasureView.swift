@@ -113,9 +113,11 @@ class MeasureView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(_: rect)
 
-        drawGridlines(rect: rect)
+        drawVerticalGridlines(rect: rect)
 
         drawStaffs(rect: rect)
+
+        // TODO(btc): draw ledger guides
 
     }
     
@@ -160,7 +162,7 @@ class MeasureView: UIView {
         }
     }
 
-    private func drawGridlines(rect: CGRect) {
+    private func drawVerticalGridlines(rect: CGRect) {
         guard let store = store, let index = index else { return }
 
         let measure = store.measure(at: index)
@@ -213,7 +215,7 @@ class MeasureView: UIView {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = noteViewModels[i].position.cgFloat * bounds.width
+            let x = noteViewModels[i].position.cgFloat / measureVM.timeSignature.cgFloat * bounds.width
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
             
             let end = position > 0 ? y + noteHeight + 100 : y - 100
