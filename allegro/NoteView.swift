@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Rational
 
 class NoteView: UIView {
     // The NoteView draws the note as two separate UIBezierPaths.
@@ -76,6 +77,14 @@ class NoteView: UIView {
     // compute the final frame size yet are set independently
     // this method makes sure the two generate a coherent frame
     func updateNoteFrame() {
+        // don't extend the frame at all for whole notes since
+        // they never have a stem
+        if (note.duration == Note.Duration.whole) {
+            frame = noteFrame
+            noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
+            return
+        }
+        
         var offset = noteFrame.origin.y - stemEndY
         if (flipped) {
             offset = stemEndY - noteFrame.origin.y - noteFrame.size.height
@@ -110,20 +119,25 @@ class NoteView: UIView {
         
         // First we draw an oval and then cut out the oval inside.
         let path = UIBezierPath(ovalIn: rect)
-        path.append(UIBezierPath(ovalIn: rect.insetBy(dx: noteInset.x, dy: noteInset.y)))
-        // This makes sure the cutout is a different color based on the winding
-        path.usesEvenOddFillRule = true
+        
+        if (note.duration == Note.Duration.whole ||
+            note.duration == Note.Duration.half) {
+            path.append(UIBezierPath(ovalIn: rect.insetBy(dx: noteInset.x, dy: noteInset.y)))
+            // This makes sure the cutout is a different color based on the winding
+            path.usesEvenOddFillRule = true
+        }
         
         // Rotates the note head.
         // We need to translate it by the center point
         // since the rotation is around the origin 
         // yet the center point is not.
-        let rotation = CGAffineTransform.identity
-            .translatedBy(x: center.x, y: center.y)
-            .rotated(by: rotationAngle)
-            .translatedBy(x: -center.x, y: -center.y)
-        path.apply(rotation)
-        
+        if (note.duration != Note.Duration.whole) {
+            let rotation = CGAffineTransform.identity
+                .translatedBy(x: center.x, y: center.y)
+                .rotated(by: rotationAngle)
+                .translatedBy(x: -center.x, y: -center.y)
+            path.apply(rotation)
+        }
         
         // After rotating the note head the note head can be outside the bounds of the
         // note frame. We shrink it to make sure the note head is always inside the
@@ -180,11 +194,14 @@ class NoteView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(_: rect)
         
-        let notePath = getNoteHeadPath(drawRect: rect)
-        let stemPath = getStemPath(notePath: notePath, drawRect: rect)
-
         UIColor.black.set()
+        
+        let notePath = getNoteHeadPath(drawRect: rect)
         notePath.fill()
-        stemPath.fill()
+        
+        if (note.duration != Note.Duration.whole) {
+            let stemPath = getStemPath(notePath: notePath, drawRect: rect)
+            stemPath.fill()
+        }
     }
 }
