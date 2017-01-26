@@ -43,7 +43,7 @@ struct Measure {
         self.notes = [np]
     }
 
-    // inserts a Note at the given position in the measure
+    // inserts a Note at the given position in the measure in O(n)
     // returns whether the operation succeeded
     mutating func insert(note: Note, at position: Rational) -> Bool {
         
@@ -121,7 +121,7 @@ struct Measure {
         return false
     }
 
-    // gets a Note at a specific position in the measure
+    // gets a Note at a specific position in the measure in O(n)
     func getNote(at position: Rational) -> Note? {
         for notePosition in notes {
             if notePosition.pos == position && !notePosition.isFree {
@@ -131,7 +131,7 @@ struct Measure {
         return nil
     }
     
-    // returns all notes and their positions
+    // returns all notes and their positions in O(n)
     func getAllNotes() -> [(pos: Rational, note: Note)] {
         var ret = [(Rational,Note)]()
         for notePosition in notes {
@@ -142,7 +142,20 @@ struct Measure {
         return ret
     }
     
+    // returns all of the free space in the measure in O(n)
+    func getFree() -> [(pos: Rational, duration: Rational)] {
+        var ret = [(Rational,Rational)]()
+        for notePosition in notes {
+            if notePosition.isFree, let duration = notePosition.durationOfFree {
+                ret.append((notePosition.pos, duration))
+            }
+        }
+        return ret
+    }
+    
     // removes whichever note is at the specified position
+    // returns whether the operation was successful
+    // worst case O(n^2) to remove and coalesce
     mutating func removeNote(at position: Rational) -> Bool {
         var removed = false
         for i in 0..<notes.count {
@@ -159,7 +172,7 @@ struct Measure {
         return removed
     }
     
-    // coalesces free space NotePosition objects
+    // coalesces free space NotePosition objects in O(n)
     private mutating func coalesce() {
         var i = 0
         while(true) {
