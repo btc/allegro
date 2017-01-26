@@ -23,55 +23,58 @@ struct Key {
     // positive numbers represent number of sharps
     var fifths: Int
     
-    let MajorCoF = [-6: "G♭",
-                    -5: "D♭",
-                    -4: "A♭",
-                    -3: "E♭",
-                    -2: "B♭",
-                    -1: "F",
-                    0: "C",
-                    1: "G",
-                    2: "D",
-                    3: "A",
-                    4: "E",
-                    5: "F♯",
-                    6: "C♯"]
+    /* List of letters that have accidentals in this key */
+    var lettersWithAccidentals: [String]
     
-    let MinorCoF = [-6: "e♭",
-                    -5: "b♭",
-                    -4: "f",
-                    -3: "c",
-                    -2: "g",
-                    -1: "d",
-                    0: "a",
-                    1: "e",
-                    2: "b",
-                    3: "f♯",
-                    4: "c♯",
-                    5: "g♯",
-                    6: "d♯"]
+    /* The "number" of each letter's associated accidental for all major keys 
+        i.e. B is always the first flat
+        F is always the first sharp
+        D is flatted 4th
+        C is sharped 5th, etc. etc.
+     */
+    let KeyNumbers = [
+        -7: "F",
+        -6: "C",
+        -5: "G",
+        -4: "D",
+        -3: "A",
+        -2: "E",
+        -1: "B",
+         0: "C",
+         1: "F",
+         2: "A",
+         3: "D",
+         4: "G",
+         5: "C",
+         6: "F",
+         7: "B"
+    ]
     
     // default key is C Major, which has no sharps or flats
     init(mode: Key.Mode = .major, fifths: Int = 0) {
         self.mode = mode
         self.fifths = fifths
-    }
-    
-    // lookup the name of the key in the circle of fifths
-    func getName() -> String {
-        switch mode {
-        case .major:
-            guard let root = MajorCoF[fifths] else { return "" }
-            return "\(root)M"
-        case .minor:
-            guard let root = MinorCoF[fifths] else { return "" }
-            return "\(root)m"
+        lettersWithAccidentals = []
+        // add sharped letters to lettersWithAccidentals
+        if fifths > 0 {
+            for index in stride(from: fifths, through: 1, by: -1) {
+                lettersWithAccidentals.append(KeyNumbers[index] ?? "C")
+            }
+        }
+        // add flatted letters to lettersWithAccidentals
+        if fifths < 0 {
+            for index in stride(from: fifths, through: 1, by: 1) {
+                lettersWithAccidentals.append(KeyNumbers[index] ?? "C")
+            }
         }
     }
     
     // Returns true if the current note's letter matches an accidental in the key signature
-    func keyHit(currentNoteLetter: Note.Letter) -> Bool {
-        return false
+    func keyHit(currentNoteLetter: Note.Letter) -> Note.Accidental? {
+        if lettersWithAccidentals.contains(currentNoteLetter.description) {
+            return (fifths > 0) ? Note.Accidental.sharp : Note.Accidental.flat
+        }
+        return nil
     }
 }
 
