@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 324C87A51E3972AF006F974D /* DejaVuSans.ttf */; };
+		324C87A71E3972AF006F974D /* DejaVuSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 324C87A51E3972AF006F974D /* DejaVuSans.ttf */; };
 		32B8678A1E2D79F80029F946 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B867891E2D79F80029F946 /* MeasureView.swift */; };
 		32B8678C1E3062C60029F946 /* NoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B8678B1E3062C60029F946 /* NoteView.swift */; };
 		647E7D6823A9CE544AF81ACD /* Pods_allegroUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */; };
@@ -80,6 +82,7 @@
 /* Begin PBXFileReference section */
 		29F82434DECE1C4DB0338477 /* Pods-allegroUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.release.xcconfig"; sourceTree = "<group>"; };
 		2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegro.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		324C87A51E3972AF006F974D /* DejaVuSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DejaVuSans.ttf; sourceTree = "<group>"; };
 		32B867891E2D79F80029F946 /* MeasureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureView.swift; sourceTree = "<group>"; };
 		32B8678B1E3062C60029F946 /* NoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteView.swift; sourceTree = "<group>"; };
 		39A4678C79D645D3D0474C30 /* Pods_allegroUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegroUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +177,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		324C87A41E3972A2006F974D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				324C87A51E3972AF006F974D /* DejaVuSans.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		3EEFE93C8BB82DBAAA4FCB9E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +272,7 @@
 		6B6E26EC1E288F8200F9CF66 /* allegro */ = {
 			isa = PBXGroup;
 			children = (
+				324C87A41E3972A2006F974D /* Fonts */,
 				6B6E271B1E28978100F9CF66 /* Frameworks */,
 				6B6774A01E2D7FAA00399BDC /* Models */,
 				6B6774A11E2D7FAE00399BDC /* Views */,
@@ -442,6 +454,7 @@
 			files = (
 				6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */,
 				6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */,
+				324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,6 +469,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				324C87A71E3972AF006F974D /* DejaVuSans.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

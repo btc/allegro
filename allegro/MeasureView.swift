@@ -66,7 +66,7 @@ class MeasureView: UIView {
     fileprivate static let numLedgerLinesAbove = 4
     fileprivate static let numLedgerLinesBelow = 4
 
-    fileprivate let noteWidth = CGFloat(100)
+    fileprivate let noteWidth = CGFloat(70)
     fileprivate var noteHeight: CGFloat { return staffHeight }
     
     // We draw the accidentals relate the the head of the note.
@@ -74,9 +74,9 @@ class MeasureView: UIView {
     // to be slightly higher than the other accidentals to align with
     // the measure line
     fileprivate let accidentalInfos = [
-        Note.Accidental.natural: ("♮", CGPoint(x: -15, y: 0)),
-        Note.Accidental.sharp: ("♯", CGPoint(x: -15, y: 0)),
-        Note.Accidental.flat: ("♭", CGPoint(x: -15, y: -10)),
+        Note.Accidental.natural: ("♮", CGPoint(x: -20, y: 0)),
+        Note.Accidental.sharp: ("♯", CGPoint(x: -20, y: 0)),
+        Note.Accidental.flat: ("♭", CGPoint(x: -20, y: -12)),
         ]
 
     fileprivate let eraseGR: UIPanGestureRecognizer = {
@@ -140,7 +140,7 @@ class MeasureView: UIView {
         
         let offset = info.1
         
-        let size = CGSize(width: 50, height: 50)
+        let size = CGSize(width: 50, height: 60)
         let origin = CGPoint(
             x: center.x - size.width / 2 + offset.x,
             y: center.y - size.height / 2 + offset.y)
@@ -148,13 +148,14 @@ class MeasureView: UIView {
         let label = UILabel()
         label.frame = CGRect(origin: origin, size: size)
         label.text = info.0
-        label.font = UIFont(descriptor: label.font.fontDescriptor, size: 80)
+        label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right
         return label
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         subviews.forEach { $0.removeFromSuperview() }
 
         guard let store = store, let index = index else { return }

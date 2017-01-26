@@ -17,21 +17,21 @@ class NoteView: UIView {
     // and an inner one that cuts out the white inner region.
     // This offset describes the offset to shrink the outer rectangle
     // into the inner rectangle
-    fileprivate let noteInset = CGPoint(x: 5, y: 15)
+    fileprivate let noteInset = CGPoint(x: 3, y: 3)
     
     // thickness in the x direction of the stem
-    fileprivate let stemThickness: CGFloat = 3.5
+    fileprivate let stemThickness: CGFloat = 3
     
     // since the note head is a rotated oval that is shrunk to fit the frame,
     // the start point of the stem is inside the frame of the noe
     // is not the bounds of the frame but inside
-    fileprivate let stemOffset = CGPoint(x: -7, y: 15)
+    fileprivate let stemOffset = CGPoint(x: -5, y: 24)
     
     // Note heads are rotated ovals
     // This describes the rotation of the oval.
     // Whole notes should not be rotated
     // radians only!
-    fileprivate let rotationAngle = CGFloat(-30 * Double.pi / 180.0)
+    fileprivate let rotationAngle = CGFloat(-10 * Double.pi / 180.0)
     
     // frame of the note head in the parent coordinate frame
     var noteFrame = CGRect.zero {
