@@ -14,7 +14,8 @@ class Note {
     // Octave is a # indicating where the note lies on a piano or a staff
     // Accidentals are semitone modifiers that do not affect the vertical placement of the note on the staff
     // See #42 for more information
-    enum Letter : Int {
+    // Updated Letter to include String backing for cases when processing requires using a String
+    enum Letter : Int, CustomStringConvertible {
         case C = 0
         case D = 1
         case E = 2
@@ -22,6 +23,18 @@ class Note {
         case G = 4
         case A = 5
         case B = 6
+        
+        var description: String {
+            switch self {
+            case .C: return "C"
+            case .D: return "D"
+            case .E: return "E"
+            case .F: return "F"
+            case .G: return "G"
+            case .A: return "A"
+            case .B: return "B"
+            }
+        }
     }
 
     enum Accidental {
