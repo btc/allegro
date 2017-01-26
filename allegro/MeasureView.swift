@@ -113,18 +113,10 @@ class MeasureView: UIView {
     override func draw(_ rect: CGRect) {
         super.draw(_: rect)
 
-        for i in 0..<MeasureView.staffCount {
-            let path = UIBezierPath(rect: CGRect(
-                x: 0,
-                y: staffDrawStart + CGFloat(i) * staffHeight - staffLineThickness / 2,
-                width: rect.width,
-                height: staffLineThickness
-                )
-            )
+        drawGridlines(rect: rect)
 
-            UIColor.black.setFill()
-            path.fill()
-        }
+        drawStaffs(rect: rect)
+
     }
     
     func getAccidentalLabel(noteView: NoteView) -> UILabel {
@@ -151,6 +143,52 @@ class MeasureView: UIView {
         label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right
         return label
+    }
+
+    private func drawStaffs(rect: CGRect) {
+        for i in 0..<MeasureView.staffCount {
+            let path = UIBezierPath(rect: CGRect(
+                x: 0,
+                y: staffDrawStart + CGFloat(i) * staffHeight - staffLineThickness / 2,
+                width: rect.width,
+                height: staffLineThickness
+                )
+            )
+
+            UIColor.black.setFill()
+            path.fill()
+        }
+    }
+
+    private func drawGridlines(rect: CGRect) {
+        guard let store = store, let index = index else { return }
+
+        let measure = store.measure(at: index)
+
+        guard store.selectedNoteDuration.rational >= Note.Duration.eighth.rational else { return }
+
+        let numGridSlots = measure.timeSignature / store.selectedNoteDuration.rational
+        let numGridlines: Int = numGridSlots.intApprox - 1 // fence post
+        let gridlineOffset = rect.width / numGridSlots.cgFloat
+
+        for i in 0..<numGridlines {
+
+            let path = UIBezierPath()
+
+            let x = gridlineOffset * CGFloat(i + 1)
+            let start = CGPoint(x: x, y: 0)
+            let end = CGPoint(x: x, y: rect.height)
+            path.move(to: start)
+            path.addLine(to: end)
+
+            path.lineCapStyle = .round
+            let dashes: [CGFloat] = [1, 10]
+            path.setLineDash(dashes, count: dashes.count, phase: 0)
+
+            UIColor.lightGray.setStroke()
+            path.stroke()
+        }
+
     }
 
     override func layoutSubviews() {
@@ -276,6 +314,7 @@ extension MeasureView: MeasureActionDelegate {
 extension MeasureView: PartStoreObserver {
     func partStoreChanged() {
         eraseGR.isEnabled = store?.mode == .erase
-        setNeedsLayout() // TODO(btc): needs to be redrawn also/instead?
+        setNeedsDisplay()
+        setNeedsLayout()
     }
 }

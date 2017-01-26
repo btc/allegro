@@ -62,4 +62,8 @@ extension Rational {
     var cgFloat: CGFloat {
         return CGFloat(Double(rational: self))
     }
+
+    var intApprox: Int {
+        return Int(Double(self.numerator)/Double(self.denominator))
+    }
 }
