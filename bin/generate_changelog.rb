@@ -72,7 +72,6 @@ if __FILE__ == $0
     puts "\n"
 
     msgs = git.log(NUM_COMMITS_BACK).author(email).since(from).until(to).map do |commit|
-      puts commit.date
       line1 = if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
       { sha: commit.sha, message: line1 }
     end
