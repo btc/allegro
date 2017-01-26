@@ -60,6 +60,12 @@ class allegroTests: XCTestCase {
         XCTAssert(measure.insert(note: D5quarter, at: 0) == false, "Notes can't be placed on another note")
         XCTAssert(measure.insert(note: D5quarter, at: 1/4) == false, "Notes can't be placed overlapping another note")
         
+        // test for correct freespace
+        var freeSpace = measure.getFree()
+        XCTAssert(freeSpace.count == 2, "Two freespaces")
+        XCTAssert(freeSpace[0].pos == 1/4 && freeSpace[0].duration == 1/8, "Check first freespace")
+        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Check second freespace")
+        
         // test directly accessing notes
         if let n0 = measure.getNote(at: 0) {
             XCTAssert(n0 == A4quarter, "Note can be accessed directly")
@@ -85,14 +91,32 @@ class allegroTests: XCTestCase {
         XCTAssert(notes[2].pos == 3/4 && notes[2].note == B4quarter, "Note can be accessed")
         
         // test removing notes
-        _ = measure.removeNote(at: 0)
+        XCTAssert(measure.removeNote(at: 0) == true, "Remove note at 0")
         XCTAssert(measure.getAllNotes().count == 2, "There are exactly 2 notes after removing one")
-        _ = measure.removeNote(at: 0)
+        freeSpace = measure.getFree()
+        XCTAssert(freeSpace.count == 2, "Two freespaces")
+        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is bigger")
+        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Check second freespace")
+        
+        XCTAssert(measure.removeNote(at: 0) == false, "Not allowed to remove note twice")
         XCTAssert(measure.getAllNotes().count == 2, "Note cannot be removed twice")
-        _ = measure.removeNote(at: 3/4)
+        freeSpace = measure.getFree()
+        XCTAssert(freeSpace.count == 2, "Two freespaces")
+        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is same")
+        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Second freespace is same")
+        
+        XCTAssert(measure.removeNote(at: 3/4) == true, "Remove at 3/4")
         XCTAssert(measure.getAllNotes().count == 1, "There is only 1 note left")
-        _ = measure.removeNote(at: 3/8)
+        freeSpace = measure.getFree()
+        XCTAssert(freeSpace.count == 2, "Two freespaces")
+        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is same")
+        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/2, "Second freespace is bigger")
+        
+        XCTAssert(measure.removeNote(at: 3/8) == true, "Remove at 3/8")
         XCTAssert(measure.getAllNotes().count == 0, "There are no notes left")
+        freeSpace = measure.getFree()
+        XCTAssert(freeSpace.count == 1, "One freespace")
+        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 1, "First freespace takes the whole measure")
     }
     
     func testNote() {
