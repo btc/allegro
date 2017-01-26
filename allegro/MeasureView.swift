@@ -261,7 +261,10 @@ extension MeasureView: MeasureActionDelegate {
 
         // determine position
         let measure = store.measure(at: index)
-        guard let rational = pointToPositionInTime(location, timeSignature: measure.timeSignature, noteDuration: duration) else {
+        guard let rational = MeasureView.pointToPositionInTime(x: location.x,
+                                                               width: bounds.width,
+                                                               timeSignature: measure.timeSignature,
+                                                               noteDuration: duration) else {
             Log.error?.message("failed to convert user's touch into a position in time")
             return
         }
@@ -305,9 +308,13 @@ extension MeasureView: MeasureActionDelegate {
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / lengthOfSemitoneInPoints + numSpacesBetweenAllLines))
     }
 
-    private func pointToPositionInTime(_ point: CGPoint, timeSignature: Rational, noteDuration: Note.Duration) -> Rational? {
+    static func pointToPositionInTime(x: CGFloat,
+                                      width: CGFloat,
+                                      timeSignature: Rational,
+                                      noteDuration: Note.Duration) -> Rational? {
+
         let numPositionsInTime = timeSignature / noteDuration.rational
-        let ratioOfScreenWidth = point.x / bounds.width
+        let ratioOfScreenWidth = x / width
         let positionInTime = Rational(Int(floor(ratioOfScreenWidth * numPositionsInTime.cgFloat)))
         return positionInTime / numPositionsInTime
     }
