@@ -22,8 +22,8 @@ typealias Log = CleanroomLogger.Log // to avoid importing CleanroomLogger in eve
 let THE_GOLDEN_RATIO: CGFloat = 1.61803398875
 let DEFAULT_MARGIN_PTS: CGFloat = 22
 let DEFAULT_TAP_TARGET_SIZE: CGFloat = 60
-let DEFAULT_FONT_BOLD = "HelveticaNeue-Bold"
-let DEFAULT_FONT = "HelveticaNeue"
+let DEFAULT_FONT_BOLD = "Montserrat-Bold"
+let DEFAULT_FONT = "Montserrat-Regular"
 
 extension UIColor {
     static let allegroBlue = UIColor(red:0.68, green:0.92, blue:1.0, alpha:1.0)
