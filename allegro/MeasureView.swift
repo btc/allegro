@@ -302,12 +302,14 @@ extension MeasureView: MeasureActionDelegate {
         }
     }
 
+    // TODO(btc): move to MeasureViewModel
     private func pointToPitch(_ point: CGPoint) -> Int {
         let numSpacesBetweenAllLines: CGFloat = CGFloat(MeasureView.staffCount + MeasureView.numLedgerLinesAbove + MeasureView.numLedgerLinesBelow - 1)
         let lengthOfSemitoneInPoints = staffHeight / 2
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / lengthOfSemitoneInPoints + numSpacesBetweenAllLines))
     }
 
+    // TODO(btc): move to MeasureViewModel
     static func pointToPositionInTime(x: CGFloat,
                                       width: CGFloat,
                                       timeSignature: Rational,
@@ -315,8 +317,8 @@ extension MeasureView: MeasureActionDelegate {
 
         let numPositionsInTime = timeSignature / noteDuration.rational
         let ratioOfScreenWidth = x / width
-        let positionInTime = Rational(Int(floor(ratioOfScreenWidth * numPositionsInTime.cgFloat)))
-        return positionInTime / numPositionsInTime
+        let positionInTime = Int(ratioOfScreenWidth * numPositionsInTime.cgFloat)
+        return Rational(positionInTime) / numPositionsInTime * timeSignature
     }
 }
 

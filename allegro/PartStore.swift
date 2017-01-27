@@ -76,7 +76,7 @@ class PartStore {
 
     func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
         extendIfNecessary(toAccessMeasureAtIndex: i)
-        Log.info?.message("insert \(note.duration.description) into measure \(i) at \(position)")
+        Log.info?.message("insert \(note.duration.description) into measure \(i) at \(position.lowestTerms)")
         let succeeded = part.insert(note: note, intoMeasureIndex: i, at: position)
 
         if succeeded {
@@ -88,6 +88,7 @@ class PartStore {
     func removeNote(fromMeasureIndex i: Int, at position: Rational) {
         if part.removeNote(fromMeasureIndex: i, at: position) {
             notify()
+            Log.info?.message("removed note at \(position.lowestTerms)")
         }
     }
 
