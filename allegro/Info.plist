@@ -31,6 +31,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>DejaVuSans.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
