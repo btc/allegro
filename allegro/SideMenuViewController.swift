@@ -106,7 +106,8 @@ class SideMenuViewController: UIViewController {
         view.addSubview(instructionsButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
-        
+
+        // TODO(btc): configure these in their respective closure-initializers
         eraseButton.showsTouchWhenHighlighted = true
         editButton.showsTouchWhenHighlighted = true
         
