@@ -18,7 +18,7 @@ class PartEditor: UICollectionView {
         didSet {
             if oldValue < measureCount {
                 var new = [IndexPath]()
-                for i in oldValue ..< measureCount {
+                for i in stride(from: oldValue, to: measureCount, by: 1) {
                     new.append(IndexPath(row: i, section: 0))
                 }
                 insertItems(at: new)

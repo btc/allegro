@@ -173,7 +173,7 @@ class MeasureView: UIView {
         let numGridlines: Int = numGridSlots.intApprox - 1 // fence post
         let gridlineOffset = rect.width / numGridSlots.cgFloat
 
-        for i in 0..<numGridlines {
+        for i in stride(from: 0, to: numGridlines, by: 1) {
 
             let path = UIBezierPath()
 
