@@ -51,6 +51,16 @@ class NoteView: UIView {
         }
     }
     
+    // Since the flag points down, we
+    let flagOffset = CGFloat(5)
+    
+    fileprivate var flagStartPoint: CGPoint {
+        return CGPoint(
+            x: noteFrame.origin.x + noteFrame.size.width + stemOffset.x,
+            y: stemEndY
+        )
+    }
+    
     fileprivate var flipped: Bool {
         return stemEndY > noteFrame.origin.y + noteFrame.size.height
     }
