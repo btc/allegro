@@ -331,7 +331,7 @@ extension MeasureView: MeasureActionDelegate {
             Log.info?.message("add note to measure: success!")
         } else {
             Log.info?.message("add note to measure: failure!")
-            // TODO(btc): display helpful feedback to the user
+            Snackbar(message: "No space for note", duration: .short).show()
         }
     }
 
