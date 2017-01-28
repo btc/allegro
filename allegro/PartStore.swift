@@ -8,8 +8,27 @@
 
 import Rational
 
-@objc protocol PartStoreObserver: AnyObject {
+
+protocol PartStoreObserver: class {
     func partStoreChanged()
+    func noteAdded(in measure: Int, at position: Rational)
+}
+
+extension PartStoreObserver {
+    func partStoreChanged() {
+        // default impl
+    }
+    func noteAdded(in measure: Int, at position: Rational) {
+        // default impl
+    }
+}
+
+class Weak {
+    private(set) weak var value: PartStoreObserver?
+
+    init(_ value: PartStoreObserver?) {
+        self.value = value
+    }
 }
 
 enum CompositionMode {
@@ -34,9 +53,9 @@ class PartStore {
         }
     }
 
-    private let part: Part
+    let part: Part
 
-    private var observers: [Weak<PartStoreObserver>] = [Weak<PartStoreObserver>]() {
+    private var observers: [Weak] = [Weak]() {
         didSet {
             Log.info?.message("part store has \(observers.count) observers")
         }
@@ -81,6 +100,7 @@ class PartStore {
 
         if succeeded {
             notify()
+            observers.forEach { $0.value?.noteAdded(in: i, at: position) }
         }
         return succeeded
     }
