@@ -225,10 +225,12 @@ class SideMenuViewController: UIViewController {
     
     func eraseButtonTapped() {
         store.mode = .erase
+        slideMenuController()?.closeRight()
     }
 
     func editButtonTapped() {
         store.mode = .edit
+        slideMenuController()?.closeRight()
     }
 }
 
