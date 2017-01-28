@@ -35,33 +35,60 @@ class Note {
     enum Duration: CustomStringConvertible {
         case whole, half, quarter, eighth, sixteenth, thirtysecond, sixtyfourth, onetwentyeighth, twofiftysixth
 
-        // TODO: reformat into 1/1 1/2 format
         var description: String {
             switch self {
             case .whole: return "1"
-            case .half: return "2"
-            case .quarter: return "4"
-            case .eighth: return "8"
-            case .sixteenth: return "16"
-            case .thirtysecond: return "32"
-            case .sixtyfourth: return "64"
-            case .onetwentyeighth: return "128"
-            case .twofiftysixth: return "256"
+            case .half: return "1/2"
+            case .quarter: return "1/4"
+            case .eighth: return "1/8"
+            case .sixteenth: return "1/16"
+            case .thirtysecond: return "1/32"
+            case .sixtyfourth: return "1/64"
+            case .onetwentyeighth: return "1/128"
+            case .twofiftysixth: return "1/256"
             }
         }
-
-        var rational: Rational {
-            switch self {
-            case .whole: return 1
-            case .half: return 1/2
-            case .quarter: return 1/4
-            case .eighth: return 1/8
-            case .sixteenth: return 1/16
-            case .thirtysecond: return 1/32
-            case .sixtyfourth: return 1/64
-            case .onetwentyeighth: return 1/128
-            case .twofiftysixth: return 1/256
+    }
+    
+    var durationRational: Rational {
+        get {
+            switch duration {
+            case .whole: return 1 * dotModifier
+            case .half: return 1/2 * dotModifier
+            case .quarter: return 1/4 * dotModifier
+            case .eighth: return 1/8 * dotModifier
+            case .sixteenth: return 1/16 * dotModifier
+            case .thirtysecond: return 1/32 * dotModifier
+            case .sixtyfourth: return 1/64 * dotModifier
+            case .onetwentyeighth: return 1/128 * dotModifier
+            case .twofiftysixth: return 1/256 * dotModifier
             }
+        }
+    }
+    
+    enum Dot {
+        case none, single, double
+    }
+    
+    private var dotModifier: Rational = 1
+    // TODO (niklele) there will be a triplet modifier as well
+    
+    var dot: Dot {
+        set(newDot) {
+            switch newDot {
+            case .none:
+                dotModifier = 1
+                self.dot = newDot
+            case .single:
+                dotModifier = 3/2
+                self.dot = newDot
+            case .double:
+                dotModifier = 7/4
+                self.dot = newDot
+            }
+        }
+        get {
+            return self.dot
         }
     }
 
@@ -70,8 +97,6 @@ class Note {
     var accidental: Accidental
     let duration: Duration
     var rest: Bool // true if the Note is a rest
-
-
 
     init(duration: Duration, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
         self.duration = duration

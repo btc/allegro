@@ -47,7 +47,7 @@ struct Measure {
     // returns whether the operation succeeded
     mutating func insert(note: Note, at position: Rational) -> Bool {
         
-        let noteEnd = position + note.duration.rational
+        let noteEnd = position + note.durationRational
         
         for (i, notePosition) in notes.enumerated() {
 
@@ -63,7 +63,7 @@ struct Measure {
 
             if (startOK && endOK) {
 
-                let diff = durationOfFree - note.duration.rational
+                let diff = durationOfFree - note.durationRational
 
                 // add Note and change free space
 
@@ -79,7 +79,7 @@ struct Measure {
                     } else {
                         // resize and reposition free space
                         notes[i+1].durationOfFree = diff
-                        notes[i+1].pos = notes[i].pos + note.duration.rational
+                        notes[i+1].pos = notes[i].pos + note.durationRational
                     }
 
                     return true
@@ -163,7 +163,7 @@ struct Measure {
                 if let note = notes[i].note {
                     removed = true
                     notes[i].note = nil
-                    notes[i].durationOfFree = note.duration.rational
+                    notes[i].durationOfFree = note.durationRational
                 }
             }
         }

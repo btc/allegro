@@ -166,7 +166,7 @@ class MeasureView: UIView {
         guard let store = store, let index = index else { return }
 
         let measure = store.measure(at: index)
-
+        
         guard store.selectedNoteDuration.rational >= Note.Duration.eighth.rational else { return }
 
         let numGridSlots = measure.timeSignature / store.selectedNoteDuration.rational
