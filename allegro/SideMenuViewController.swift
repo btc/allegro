@@ -23,6 +23,25 @@ class SideMenuViewController: UIViewController {
         v.font = UIFont(name: DEFAULT_FONT, size: 20)
         return v
     }()
+    
+    private let modeLabel: UIView = {
+        let v = UILabel()
+        v.text = "Mode"
+        v.textAlignment = .left
+        v.textColor = .black
+        v.font = UIFont(name: DEFAULT_FONT, size: 20)
+        return v
+    }()
+    
+    private let signaturesLabel: UIView = {
+        let v = UILabel()
+        v.text = "Signatures"
+        v.textAlignment = .left
+        v.textColor = .black
+        v.font = UIFont(name: DEFAULT_FONT, size: 20)
+        return v
+    }()
+
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -73,6 +92,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
+        v.imageView?.layer.minificationFilter = kCAFilterTrilinear
         return v
     }()
 
@@ -104,8 +124,11 @@ class SideMenuViewController: UIViewController {
         view.addSubview(editButton)
         view.addSubview(saveButton)
         view.addSubview(instructionsButton)
-        view.addSubview(timeSignature)
-        view.addSubview(keySignature)
+        //Hiding subviews until behavior is defined: ppsekhar
+        //view.addSubview(timeSignature)
+        //view.addSubview(keySignature)
+        view.addSubview(modeLabel)
+        view.addSubview(signaturesLabel)
 
         // TODO(btc): configure these in their respective closure-initializers
         eraseButton.showsTouchWhenHighlighted = true
@@ -126,31 +149,43 @@ class SideMenuViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         let parent = view.bounds
+        let centerX = parent.width/2
         let centerY = parent.height/2
         
         let titleH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
         let titleW = titleH * THE_GOLDEN_RATIO
         
         //Button size chosed based on screen size
-        let buttonSize = parent.width / 4
+        let buttonSize = parent.width / 6
         
-        //TODO: ppsekhar fix sizing
-        let labelX = parent.width / 6
+        //TODO: ppsekhar fix sizing, looks off on iphone 7
+        let labelX = DEFAULT_MARGIN_PTS/2
 
         /* firstButtonX is the X location of the first menu item. This setup assumes 3 buttons per row and 3 rows. The buttons are centered with a slight margin of size buttonSize/2 between edges
         */
-        let firstButtonX = buttonSize/2
-        let secondButtonX = firstButtonX + buttonSize
-        let thirdButtonX = secondButtonX + buttonSize
+        let firstButtonX = centerX - buttonSize*2
+        let secondButtonX = firstButtonX + 1.5*buttonSize
+        let thirdButtonX = secondButtonX + 1.5*buttonSize
         
-        let firstButtonY = centerY - 1.1*buttonSize
-        let thirdButtonY = centerY + 1.1*buttonSize
+        let firstButtonY = 1.5*buttonSize
+        let secondButtonY = centerY + 0.25*buttonSize
+        let thirdButtonY = centerY + 2.25*buttonSize
         
         
         NavigationLabel.frame = CGRect(x: labelX,
-                            y: 0,
+                            y: -50,
                             width: titleW,
                             height: titleH)
+        
+        modeLabel.frame = CGRect(x: labelX,
+                                 y: secondButtonY - 2*buttonSize,
+                                 width: titleW,
+                                 height: titleH)
+        
+        signaturesLabel.frame = CGRect(x: labelX,
+                                 y: thirdButtonY - 1.75*buttonSize,
+                                 width: titleW,
+                                 height: titleH)
 
         NewButton.frame = CGRect(x: firstButtonX,
                                 y: firstButtonY,
@@ -158,12 +193,12 @@ class SideMenuViewController: UIViewController {
                                 height: buttonSize)
         
         editButton.frame = CGRect(x: firstButtonX,
-                                   y: centerY,
+                                   y: secondButtonY,
                                    width: buttonSize,
                                    height: buttonSize)
 
         eraseButton.frame = CGRect(x: secondButtonX,
-                            y: centerY,
+                            y: secondButtonY,
                             width: buttonSize,
                             height: buttonSize)
         
