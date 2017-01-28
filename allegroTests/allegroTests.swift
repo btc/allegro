@@ -124,6 +124,12 @@ class allegroTests: XCTestCase {
         XCTAssert(G4quarter.accidental == .natural, "Notes are natural by default")
         XCTAssert(G4quarter.rest == false, "Notes are not rest by default")
         XCTAssert(G4quarter.duration == 1/4, "Quarter note == 1/4")
+        G4quarter.dot = .single
+        XCTAssert(G4quarter.duration == (1/4 * 3/2), "Quarter note with 1 dot")
+        G4quarter.dot = .double
+        XCTAssert(G4quarter.duration == (1/4 * 7/4), "Quarter note with 2 dots")
+        G4quarter.dot = .none
+        XCTAssert(G4quarter.duration == 1/4, "Quarter note with no dots")
     }
     
     func testNoteView() {
