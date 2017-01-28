@@ -43,7 +43,7 @@ class CompositionViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         noteSelectorMenu.selectorDelegate = self
-        store.selectedNoteDuration = noteSelectorMenu.selectedNoteDuration
+        store.selectedNoteValue = noteSelectorMenu.selectedNoteValue
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -75,8 +75,8 @@ class CompositionViewController: UIViewController {
 
 
 extension CompositionViewController: NoteSelectorDelegate {
-    func didChangeSelection(duration: Note.Duration) {
-        store.selectedNoteDuration = duration
-        Log.info?.message("user selected \(duration) duration")
+    func didChangeSelection(value: Note.Value) {
+        store.selectedNoteValue = value
+        Log.info?.message("user selected \(value) value")
     }
 }

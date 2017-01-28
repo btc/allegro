@@ -28,7 +28,7 @@ class PartStore {
         return part.measures.count
     }
 
-    var selectedNoteDuration: Note.Duration = .whole {
+    var selectedNoteValue: Note.Value = .whole {
         didSet {
             notify()
         }
