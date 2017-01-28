@@ -49,14 +49,6 @@ struct Tweaks: TweakLibraryType {
     }()
 }
 
-public class Weak<T: AnyObject> {
-    public private(set) weak var value: T?
-
-    public init(_ value: T?) {
-        self.value = value
-    }
-}
-
 extension Rational {
     var cgFloat: CGFloat {
         return CGFloat(Double(rational: self))
