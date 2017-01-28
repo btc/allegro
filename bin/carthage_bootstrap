@@ -1,4 +1,4 @@
 #!/bin/sh
 
-carthage bootstrap --no-use-binaries
+carthage bootstrap
 cp Cartfile.resolved Carthage
