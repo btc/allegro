@@ -18,9 +18,11 @@ class CompositionViewController: UIViewController {
         return v
     }()
 
-    fileprivate var store: PartStore
+    fileprivate let store: PartStore
 
     fileprivate var editor: MeasureViewCollection
+
+    fileprivate let audio: Audio
 
     static func create(part: Part) -> UIViewController {
         let store = PartStore(part: part)
@@ -39,6 +41,7 @@ class CompositionViewController: UIViewController {
     private init(store: PartStore) {
         self.store = store
         editor = MeasureViewCollection(store: store)
+        audio = Audio(store: store)
 
         super.init(nibName: nil, bundle: nil)
 
@@ -56,6 +59,15 @@ class CompositionViewController: UIViewController {
 
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        audio.start()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        audio.stop()
     }
 
     override func viewDidLayoutSubviews() {

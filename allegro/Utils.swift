@@ -57,4 +57,8 @@ extension Rational {
     var intApprox: Int {
         return Int(Double(self.numerator)/Double(self.denominator))
     }
+
+    var double: Double {
+        return Double(rational: self)
+    }
 }
