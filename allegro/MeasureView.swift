@@ -117,6 +117,8 @@ class MeasureView: UIView {
 
         drawStaffs(rect: rect)
 
+        drawLedgerLineGuides(rect: rect)
+
         // TODO(btc): draw ledger guides
 
     }
@@ -159,6 +161,37 @@ class MeasureView: UIView {
 
             UIColor.black.setFill()
             path.fill()
+        }
+    }
+
+    private func drawLedgerLineGuides(rect: CGRect) {
+
+        let drawLine = { (y: CGFloat) -> Void in
+            let path = UIBezierPath()
+
+            let start = CGPoint(x: 0, y: y)
+            let end = CGPoint(x: rect.width, y: y)
+
+            path.move(to: start)
+            path.addLine(to: end)
+
+            path.lineCapStyle = .round
+            let dashes: [CGFloat] = [1, 10]
+            path.setLineDash(dashes, count: dashes.count, phase: 0)
+
+            UIColor.lightGray.setStroke()
+            path.stroke()
+        }
+
+        for i in stride(from: 0, to: MeasureView.numLedgerLinesAbove, by: 1) {
+            let y = DEFAULT_MARGIN_PTS + staffHeight * CGFloat(i)
+            drawLine(y)
+
+        }
+
+        for i in stride(from: 0, to: MeasureView.numLedgerLinesBelow, by: 1) {
+            let y = DEFAULT_MARGIN_PTS + CGFloat(MeasureView.numLedgerLinesAbove + MeasureView.staffCount) * staffHeight + staffHeight * CGFloat(i)
+            drawLine(y)
         }
     }
 
