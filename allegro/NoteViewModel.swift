@@ -12,8 +12,8 @@ import Rational
 struct NoteViewModel {
 
     private let note: Note
-    var duration: Note.Duration {
-        return note.duration
+    var value: Note.Value {
+        return note.value
     }
 
     let position: Rational
