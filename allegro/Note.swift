@@ -66,37 +66,31 @@ class Note {
         }
     }
     
+    // Gives the true duration of the note after modifiers
     var duration: Rational {
-        return self.value.nominalDuration * dotModifier
+        return self.value.nominalDuration * self.dot.modifier
+        // TODO (niklele) there will be a triplet modifier as well
     }
-    // TODO (niklele) there will be a triplet modifier as well
     
     // number of dots on the right of the note that extend the duration
     // See: https://en.wikipedia.org/wiki/Note_value#Modifiers
     enum Dot {
-        case none, single, double
-    }
-    private var dotModifier: Rational = 1
-    var dot: Dot {
-        set(newDot) {
-            switch newDot {
-            case .none:
-                dotModifier = 1
-                self.dot = newDot
-            case .single:
-                dotModifier = 3/2
-                self.dot = newDot
-            case .double:
-                dotModifier = 7/4
-                self.dot = newDot
+        case none
+        case single
+        case double
+        
+        // factor that is multiplied by the duration
+        var modifier: Rational {
+            switch self {
+            case .none: return 1
+            case .single: return 3/2
+            case .double: return 7/4
             }
-        }
-        get {
-            return self.dot
         }
     }
 
     let value: Value
+    var dot: Dot
     let letter: Letter
     let octave: Int
     var accidental: Accidental
@@ -108,6 +102,7 @@ class Note {
         self.octave = octave
         self.accidental = accidental
         self.rest = rest
+        self.dot = .none
     }
     
     static func == (lhs: Note, rhs: Note) -> Bool {
