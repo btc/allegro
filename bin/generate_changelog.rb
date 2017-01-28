@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'chronic'
-require 'dotenv/load'
+require 'dotenv'
 require 'git'
 require 'octokit'
 require 'optparse'
@@ -36,6 +36,7 @@ end
 
 
 if __FILE__ == $0
+  Dotenv.load
   options = {}
   OptionParser.new do |opts|
     opts.banner = "Usage: ./generate_changelog.rb [options]"
