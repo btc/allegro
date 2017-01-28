@@ -9,12 +9,12 @@
 import UIKit
 
 protocol NoteSelectorDelegate: class {
-    func didChangeSelection(duration: Note.Duration)
+    func didChangeSelection(value: Note.Value)
 }
 
 class NoteSelectorMenu: UICollectionView {
 
-    var selectedNoteDuration: Note.Duration {
+    var selectedNoteValue: Note.Value {
         get {
             return notes[selectedNote]
         }
@@ -24,13 +24,13 @@ class NoteSelectorMenu: UICollectionView {
 
     fileprivate var selectedNote = 2 { // quarter is default selection
         didSet {
-            selectorDelegate?.didChangeSelection(duration: selectedNoteDuration)
+            selectorDelegate?.didChangeSelection(value: selectedNoteValue)
         }
     }
 
     fileprivate let numNotesVisibleAtOnce: CGFloat = 5
 
-    fileprivate let notes: [Note.Duration] = [.whole, .half, .quarter, .eighth, .sixteenth,
+    fileprivate let notes: [Note.Value] = [.whole, .half, .quarter, .eighth, .sixteenth,
                                            .thirtysecond, .sixtyfourth, .onetwentyeighth, .twofiftysixth]
 
     private let layout = UICollectionViewFlowLayout()

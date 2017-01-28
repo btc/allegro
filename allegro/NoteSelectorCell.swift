@@ -46,7 +46,7 @@ class NoteSelectorCell: UICollectionViewCell {
     }()
 
     // TODO(btc): replace with Note model
-    var note: Note.Duration? = nil {
+    var note: Note.Value? = nil {
         didSet {
             label.text = note?.description
         }

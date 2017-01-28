@@ -32,7 +32,10 @@ class Note {
         case doubleFlat     // unicode ♭♭
     }
 
-    enum Duration: CustomStringConvertible {
+    // Value represents the glyph that is drawn on screen, not the true duration of the note.
+    // The true duration may be modified by dots or triplets, but the glyph is the same.
+    // See https://en.wikipedia.org/wiki/Note_value
+    enum Value: CustomStringConvertible {
         case whole, half, quarter, eighth, sixteenth, thirtysecond, sixtyfourth, onetwentyeighth, twofiftysixth
 
         var description: String {
@@ -48,31 +51,32 @@ class Note {
             case .twofiftysixth: return "1/256"
             }
         }
-    }
-    
-    var durationRational: Rational {
-        get {
-            switch duration {
-            case .whole: return 1 * dotModifier
-            case .half: return 1/2 * dotModifier
-            case .quarter: return 1/4 * dotModifier
-            case .eighth: return 1/8 * dotModifier
-            case .sixteenth: return 1/16 * dotModifier
-            case .thirtysecond: return 1/32 * dotModifier
-            case .sixtyfourth: return 1/64 * dotModifier
-            case .onetwentyeighth: return 1/128 * dotModifier
-            case .twofiftysixth: return 1/256 * dotModifier
+        var nominalDuration: Rational {
+            switch self {
+            case .whole: return 1
+            case .half: return 1/2
+            case .quarter: return 1/4
+            case .eighth: return 1/8
+            case .sixteenth: return 1/16
+            case .thirtysecond: return 1/32
+            case .sixtyfourth: return 1/64
+            case .onetwentyeighth: return 1/128
+            case .twofiftysixth: return 1/256
             }
         }
     }
     
+    var duration: Rational {
+        return self.value.nominalDuration * dotModifier
+    }
+    // TODO (niklele) there will be a triplet modifier as well
+    
+    // number of dots on the right of the note that extend the duration
+    // See: https://en.wikipedia.org/wiki/Note_value#Modifiers
     enum Dot {
         case none, single, double
     }
-    
     private var dotModifier: Rational = 1
-    // TODO (niklele) there will be a triplet modifier as well
-    
     var dot: Dot {
         set(newDot) {
             switch newDot {
@@ -92,22 +96,18 @@ class Note {
         }
     }
 
+    let value: Value
     let letter: Letter
     let octave: Int
     var accidental: Accidental
-    let duration: Duration
     var rest: Bool // true if the Note is a rest
 
-    init(duration: Duration, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
-        self.duration = duration
+    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
+        self.value = value
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
         self.rest = rest
-    }
-
-    static func range(from startLetter: Letter, _ startOctave: Int, to endLetter: Letter, _ endOctave: Int) -> [Note] {
-        return [] // TODO
     }
     
     static func == (lhs: Note, rhs: Note) -> Bool {

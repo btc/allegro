@@ -167,9 +167,9 @@ class MeasureView: UIView {
 
         let measure = store.measure(at: index)
         
-        guard store.selectedNoteDuration.rational >= Note.Duration.eighth.rational else { return }
+        guard store.selectedNoteValue.nominalDuration >= Note.Value.eighth.nominalDuration else { return }
 
-        let numGridSlots = measure.timeSignature / store.selectedNoteDuration.rational
+        let numGridSlots = measure.timeSignature / store.selectedNoteValue.nominalDuration
         let numGridlines: Int = numGridSlots.intApprox - 1 // fence post
         let gridlineOffset = rect.width / numGridSlots.cgFloat
 
@@ -254,7 +254,7 @@ extension MeasureView: MeasureActionDelegate {
         Log.info?.value(gesture.rawValue)
 
         guard let store = store, let index = index else { return }
-        let duration = store.selectedNoteDuration
+        let value = store.selectedNoteValue
 
         // determine pitch
         let pitchRelativeToCenterLine = pointToPitch(location)
@@ -264,14 +264,14 @@ extension MeasureView: MeasureActionDelegate {
         guard let rational = MeasureView.pointToPositionInTime(x: location.x,
                                                                width: bounds.width,
                                                                timeSignature: measure.timeSignature,
-                                                               noteDuration: duration) else {
+                                                               noteDuration: value.nominalDuration) else {
             Log.error?.message("failed to convert user's touch into a position in time")
             return
         }
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
-        let note = Note(duration: duration, letter: letter, octave: octave)
+        let note = Note(value: value, letter: letter, octave: octave)
 
         // configure note
         switch gesture {
@@ -313,9 +313,9 @@ extension MeasureView: MeasureActionDelegate {
     static func pointToPositionInTime(x: CGFloat,
                                       width: CGFloat,
                                       timeSignature: Rational,
-                                      noteDuration: Note.Duration) -> Rational? {
+                                      noteDuration: Rational) -> Rational? {
 
-        let numPositionsInTime = timeSignature / noteDuration.rational
+        let numPositionsInTime = timeSignature / noteDuration
         let ratioOfScreenWidth = x / width
         let positionInTime = Int(ratioOfScreenWidth * numPositionsInTime.cgFloat)
         return Rational(positionInTime) / numPositionsInTime * timeSignature
