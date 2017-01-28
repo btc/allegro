@@ -8,8 +8,8 @@
 
 import UIKit
 
-class PartEditorCell: UICollectionViewCell {
-    static let reuseID = "PartEditorCell"
+class MeasureViewCollectionCell: UICollectionViewCell {
+    static let reuseID = "MeasureViewCollectionCell"
 
     var store: PartStore? {
         set {

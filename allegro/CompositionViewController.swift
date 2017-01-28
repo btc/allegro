@@ -20,7 +20,7 @@ class CompositionViewController: UIViewController {
 
     fileprivate var store: PartStore
 
-    fileprivate var editor: PartEditor
+    fileprivate var editor: MeasureViewCollection
 
     static func create(part: Part) -> UIViewController {
         let store = PartStore(part: part)
@@ -38,7 +38,7 @@ class CompositionViewController: UIViewController {
 
     private init(store: PartStore) {
         self.store = store
-        editor = PartEditor(store: store)
+        editor = MeasureViewCollection(store: store)
 
         super.init(nibName: nil, bundle: nil)
 

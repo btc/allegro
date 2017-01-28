@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PartEditor: UICollectionView {
+class MeasureViewCollection: UICollectionView {
 
     let store: PartStore
 
@@ -40,7 +40,7 @@ class PartEditor: UICollectionView {
         panGestureRecognizer.maximumNumberOfTouches = 2
         isPagingEnabled = true
         backgroundColor = .lightGray
-        register(PartEditorCell.self, forCellWithReuseIdentifier: PartEditorCell.reuseID)
+        register(MeasureViewCollectionCell.self, forCellWithReuseIdentifier: MeasureViewCollectionCell.reuseID)
         dataSource = self
         delegate = self
     }
@@ -50,7 +50,7 @@ class PartEditor: UICollectionView {
     }
 }
 
-extension PartEditor: UICollectionViewDelegateFlowLayout {
+extension MeasureViewCollection: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -65,7 +65,7 @@ extension PartEditor: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension PartEditor: UICollectionViewDelegate {
+extension MeasureViewCollection: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let finalCellFrame = cell.frame
@@ -81,7 +81,7 @@ extension PartEditor: UICollectionViewDelegate {
     }
 }
 
-extension PartEditor: UICollectionViewDataSource {
+extension MeasureViewCollection: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return measureCount
@@ -89,9 +89,9 @@ extension PartEditor: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PartEditorCell.reuseID,
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MeasureViewCollectionCell.reuseID,
                                                       for: indexPath)
-        if let c = cell as? PartEditorCell {
+        if let c = cell as? MeasureViewCollectionCell {
             c.store = store
             c.index = indexPath.row
         }
@@ -99,7 +99,7 @@ extension PartEditor: UICollectionViewDataSource {
     }
 }
 
-extension PartEditor: PartStoreObserver {
+extension MeasureViewCollection: PartStoreObserver {
     func partStoreChanged() {
         measureCount = store.measureCount
     }
