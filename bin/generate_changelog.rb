@@ -74,8 +74,11 @@ if __FILE__ == $0
 
   prs = gh.pulls "TeamAllegro/allegro", state: 'closed'
   prs = prs.keep_if { |pr| pr.created_at > Chronic.parse(from) }
+  prs = prs.sort_by do |pr|
+    [pr.user.login, 0 - pr.number.to_i]
+  end
 
-  prs.map { |pr| "#{pr.user.login}\t - ##{pr.number}\t - #{pr.title}" }.sort.each { |m| puts m }
+  prs.map { |pr| "#{pr.user.login}\t - ##{pr.number}\t - #{pr.title}" }.each { |m| puts m }
   puts "\n"
 
   committers.each do |author|
