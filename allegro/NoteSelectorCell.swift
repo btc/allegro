@@ -10,7 +10,8 @@ import UIKit
 
 class NoteSelectorCell: UICollectionViewCell {
     static let reuseID = "NoteSelectorCell"
-    static let unselectedCellColor = UIColor.gray
+    static let unselectedCellColor = UIColor.white
+    static let unselectedTextColor = UIColor.black
 
     override var isHighlighted: Bool {
         didSet {
@@ -19,7 +20,7 @@ class NoteSelectorCell: UICollectionViewCell {
                 label.backgroundColor = .white
             } else {
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
-                label.textColor = .white
+                label.textColor = NoteSelectorCell.unselectedTextColor
             }
         }
     }
@@ -27,11 +28,11 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                label.textColor = .white
-                label.backgroundColor = .lightGray
+                label.textColor = .black
+                label.backgroundColor = .allegroBlue
             } else {
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
-                label.textColor = .white
+                label.textColor = NoteSelectorCell.unselectedTextColor
             }
         }
     }
@@ -39,7 +40,7 @@ class NoteSelectorCell: UICollectionViewCell {
     private let label: UILabel = {
         let v = UILabel()
         v.backgroundColor = NoteSelectorCell.unselectedCellColor
-        v.textColor = .white
+        v.textColor = NoteSelectorCell.unselectedTextColor
         v.textAlignment = .center
         return v
     }()
