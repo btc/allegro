@@ -44,6 +44,7 @@
 		6B92BE631E308A6A00CE2C9F /* MeasureViewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */; };
 		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
 		6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */; };
+		6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */; };
 		82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */; };
 		89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */; };
 		A38CFF6CB5898986752C58AB /* Pods_allegroTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */; };
@@ -128,6 +129,7 @@
 		6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewCollectionCell.swift; sourceTree = "<group>"; };
 		6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewContainer.swift; sourceTree = "<group>"; };
 		6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteSelectorMenu.swift; sourceTree = "<group>"; };
+		6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = SOURCE_ROOT; };
 		82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		9EA11674E74CCF5EDB06D551 /* Pods-allegroTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.release.xcconfig"; sourceTree = "<group>"; };
 		A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegroTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -147,6 +149,7 @@
 				6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */,
 				6B3290F71E3D4F9700AE693B /* TTGSnackbar.framework in Frameworks */,
 				89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */,
+				6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */,
 				6B6E271D1E28979100F9CF66 /* CleanroomLogger.framework in Frameworks */,
 				6B096E641E368E5D00615723 /* SlideMenuControllerSwift.framework in Frameworks */,
 				6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */,
@@ -284,7 +287,6 @@
 		6B6E26EC1E288F8200F9CF66 /* allegro */ = {
 			isa = PBXGroup;
 			children = (
-				B96BCCC41E3D5FE50006A047 /* Import/Export */,
 				324C87A41E3972A2006F974D /* Fonts */,
 				6B6E271B1E28978100F9CF66 /* Frameworks */,
 				6B6774A01E2D7FAA00399BDC /* Models */,
@@ -293,6 +295,7 @@
 				6B6E27251E289F5000F9CF66 /* Controllers */,
 				6B096E5D1E342D2000615723 /* Stores */,
 				6B096E651E3737CF00615723 /* Recognizers */,
+				B96BCCC41E3D5FE50006A047 /* IO */,
 				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
 				6B6E271F1E28985F00F9CF66 /* Utils.swift */,
 				B90F77961E3680C1009F0CA3 /* Mocks.swift */,
@@ -324,6 +327,7 @@
 		6B6E271B1E28978100F9CF66 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */,
 				6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */,
 				6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */,
 				6B0B267D1E2F2E5F00F1870A /* Rational.framework */,
@@ -345,12 +349,12 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
-		B96BCCC41E3D5FE50006A047 /* Import/Export */ = {
+		B96BCCC41E3D5FE50006A047 /* IO */ = {
 			isa = PBXGroup;
 			children = (
 				B96BCCC51E3D60650006A047 /* MusicXML.swift */,
 			);
-			name = Import/Export;
+			name = IO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -524,6 +528,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Rational.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SlideMenuControllerSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TTGSnackbar.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/AEXML.framework",
 			);
 			outputPaths = (
 			);

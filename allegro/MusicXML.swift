@@ -10,7 +10,7 @@
 // Traverses the music model to generate a MusicXML document
 // See: http://usermanuals.musicxml.com/MusicXML/MusicXML.htm
 
-// TODO import the XML library
+import AEXML
 
 class MusicXMLParser {
     var store: PartStore? {
