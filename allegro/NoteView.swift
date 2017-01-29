@@ -51,6 +51,23 @@ class NoteView: UIView {
         }
     }
     
+    // Since the flag points down, we need to decrease the stem height
+    // to prevent the stem from poking above the flag
+    let flagOffset = CGFloat(3)
+    
+    // Since the note is rotated slightly, we need to add an offset
+    // to the flag start to position it at the right point
+    let flagStartOffset = CGFloat(-1.5)
+    let flagEndOffset = CGPoint(x: 30, y: 30)
+    
+    fileprivate let flagLayer: CAShapeLayer
+    fileprivate var shouldDrawFlag: Bool {
+        return note.duration.rational < Note.Duration.quarter.rational
+    }
+    
+    fileprivate let flagThickness = CGFloat(4)
+    
+    
     fileprivate var flipped: Bool {
         return stemEndY > noteFrame.origin.y + noteFrame.size.height
     }
@@ -64,9 +81,11 @@ class NoteView: UIView {
 
     init(note: NoteViewModel) {
         self.note = note
+        flagLayer = CAShapeLayer()
         super.init(frame: .zero)
         // makes it transparent so we see the lines behind
         isOpaque = false
+        layer.addSublayer(flagLayer)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -104,6 +123,11 @@ class NoteView: UIView {
                 size: frameSize
             )
             noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
+        }
+        
+        if (note.duration.rational < Note.Duration.quarter.rational) {
+            flagLayer.path = getFlagPath().cgPath
+            flagLayer.fillColor = UIColor.black.cgColor
         }
     }
     
@@ -172,7 +196,7 @@ class NoteView: UIView {
         // this is the bottom left corner of the final stem rectangle
         var stemStart = CGPoint(x: upStart.x + stemOffset.x, y: upStart.y + stemOffset.y)
         var stemOrigin = CGPoint(x: stemStart.x,
-                                 y: drawRect.origin.y)
+                                 y: drawRect.origin.y + flagOffset)
         
         var stemSize = CGSize(width: stemThickness, height: stemStart.y)
 
@@ -189,6 +213,25 @@ class NoteView: UIView {
             origin: stemOrigin,
             size: stemSize)
         return UIBezierPath(rect: stemRect)
+    }
+    
+    func getFlagPath() -> UIBezierPath {
+        let path = UIBezierPath()
+        var next = CGPoint(x: noteFrame.size.width + stemOffset.x + flagStartOffset, y: 0)
+        path.move(to: next)
+        next = CGPoint(x: next.x + flagEndOffset.x,
+                           y: next.y + flagEndOffset.y)
+        path.addLine(to: next)
+        next = CGPoint(
+            x: next.x,
+            y: next.y + flagThickness)
+        path.addLine(to: next)
+        next = CGPoint(
+            x: next.x - flagEndOffset.x,
+            y: next.y - flagEndOffset.y)
+        path.addLine(to: next)
+        path.close()
+        return path
     }
 
     override func draw(_ rect: CGRect) {
