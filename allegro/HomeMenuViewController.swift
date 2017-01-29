@@ -42,8 +42,12 @@ class HomeMenuViewController: UIViewController {
         view.addSubview(instructionsButton)
         
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
+
+        let p = Part()
+        let vc = CompositionViewController.create(part: p)
+        navigationController?.pushViewController(vc, animated: false)
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
 
