@@ -62,7 +62,7 @@ class NoteView: UIView {
     
     fileprivate let flagLayer: CAShapeLayer
     fileprivate var shouldDrawFlag: Bool {
-        return note.duration.rational < Note.Duration.quarter.rational
+        return note.value.nominalDuration < Note.Value.quarter.nominalDuration
     }
     
     fileprivate let flagThickness = CGFloat(4)
@@ -125,7 +125,7 @@ class NoteView: UIView {
             noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
         }
         
-        if (note.duration.rational < Note.Duration.quarter.rational) {
+        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration) {
             flagLayer.path = getFlagPath().cgPath
             flagLayer.fillColor = UIColor.black.cgColor
         }
