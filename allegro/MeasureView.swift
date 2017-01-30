@@ -246,7 +246,8 @@ class MeasureView: UIView {
             let x = noteViewModels[i].position.cgFloat / measureVM.timeSignature.cgFloat * bounds.width
             let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
             
-            let end = position > 0 ? y + noteHeight + 100 : y - 100
+            let stemLength = 2 * staffHeight
+            let end = position > 0 ? y + noteHeight + stemLength : y - stemLength
             
             noteView.noteFrame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
             noteView.stemEndY = CGFloat(end)
