@@ -117,6 +117,26 @@ class allegroTests: XCTestCase {
         freeSpace = measure.getFree()
         XCTAssert(freeSpace.count == 1, "One freespace")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 1, "First freespace takes the whole measure")
+        
+        // test for previous note with same letter
+        _ = measure.insert(note: A4quarter, at: 0)
+        _ = measure.insert(note: A4quarter, at: 1/4)
+        _ = measure.insert(note: B4quarter, at: 1/2)
+        _ = measure.insert(note: A4quarter, at: 3/4)
+        
+        XCTAssert(measure.getPrevLetterMatch(note: A4quarter, position: 0) == nil, "No same letter note before first note")
+        if let match = measure.getPrevLetterMatch(note: A4quarter, position: 1/4) {
+            XCTAssert(match == A4quarter, "Finds the correct prev note")
+        } else {
+            XCTFail("Finds the correct prev note")
+        }
+        XCTAssert(measure.getPrevLetterMatch(note: B4quarter, position: 1/2) == nil, "No same letter note")
+        if let match = measure.getPrevLetterMatch(note: A4quarter, position: 3/4) {
+            XCTAssert(match == A4quarter, "Finds the correct prev note")
+        } else {
+            XCTFail("Finds the correct prev note")
+        }
+
     }
     
     func testNote() {
