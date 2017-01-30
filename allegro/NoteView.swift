@@ -66,6 +66,7 @@ class NoteView: UIView {
     }
     
     fileprivate let flagThickness = CGFloat(4)
+    fileprivate let flagIterOffset = CGFloat(10)
     
     
     fileprivate var flipped: Bool {
@@ -223,31 +224,47 @@ class NoteView: UIView {
     func getFlagPath() -> UIBezierPath {
         let path = UIBezierPath()
         var sign = CGFloat(1)
-        var next = CGPoint(
+        var start = CGPoint(
             x: noteFrame.size.width + sign * stemOffset.x + sign * flagStartOffset,
             y: 0)
         
         if (flipped) {
             sign = CGFloat(-1)
-            next = CGPoint(
+            start = CGPoint(
                 x: sign * stemOffset.x + sign * flagStartOffset - stemThickness,
                 y: frame.size.height)
         }
-
-        path.move(to: next)
-        next = CGPoint(
-            x: next.x + flagEndOffset.x,
-            y: next.y + sign * flagEndOffset.y)
-        path.addLine(to: next)
-        next = CGPoint(
-            x: next.x,
-            y: next.y + sign * flagThickness)
-        path.addLine(to: next)
-        next = CGPoint(
-            x: next.x - flagEndOffset.x,
-            y: next.y - sign * flagEndOffset.y)
-        path.addLine(to: next)
-        path.close()
+        
+        func drawSingleFlag(path: UIBezierPath, start: CGPoint) {
+            var point = start
+            path.move(to: point)
+            point = CGPoint(
+                x: point.x + flagEndOffset.x,
+                y: point.y + sign * flagEndOffset.y)
+            path.addLine(to: point)
+            point = CGPoint(
+                x: point.x,
+                y: point.y + sign * flagThickness)
+            path.addLine(to: point)
+            point = CGPoint(
+                x: point.x - flagEndOffset.x,
+                y: point.y - sign * flagEndOffset.y)
+            path.addLine(to: point)
+            path.close()
+        }
+        
+        var iterDuration = Note.Value.eighth.nominalDuration
+        while (true) {
+            if note.value.nominalDuration > iterDuration {
+                break
+            }
+            
+            drawSingleFlag(path: path, start: start)
+            
+            start = CGPoint(x: start.x, y: start.y + sign * flagIterOffset)
+            iterDuration = iterDuration / 2
+        }
+        
         return path
     }
 
