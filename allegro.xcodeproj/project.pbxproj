@@ -20,11 +20,11 @@
 		6B096E671E37381E00615723 /* MeasureActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E661E37381E00615723 /* MeasureActionGestureRecognizer.swift */; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B0B26801E2F3DFB00F1870A /* MeasureViewCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0B267F1E2F3DFB00F1870A /* MeasureViewCollection.swift */; };
-		6B3290F71E3D4F9700AE693B /* TTGSnackbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */; };
-		6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F81E3D4FEB00AE693B /* Snackbar.swift */; };
 		6B3290F11E3C49B200AE693B /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F01E3C49B200AE693B /* Audio.swift */; };
 		6B3290F31E3C4DD900AE693B /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F21E3C4DD900AE693B /* AudioKit.framework */; };
 		6B3290F51E3C5BFB00AE693B /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F41E3C5BFA00AE693B /* MusicKit.framework */; };
+		6B3290F71E3D4F9700AE693B /* TTGSnackbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */; };
+		6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F81E3D4FEB00AE693B /* Snackbar.swift */; };
 		6B40EC091E3885CA004C7194 /* MeasureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B40EC081E3885CA004C7194 /* MeasureViewModel.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A41E2D7FD600399BDC /* Measure.swift */; };
@@ -102,11 +102,11 @@
 		6B0B267F1E2F3DFB00F1870A /* MeasureViewCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewCollection.swift; sourceTree = "<group>"; };
 		6B3290ED1E3AF51A00AE693B /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Regular.ttf"; path = "fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		6B3290EE1E3AF55700AE693B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Bold.ttf"; path = "fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
-		6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TTGSnackbar.framework; path = Carthage/Build/iOS/TTGSnackbar.framework; sourceTree = SOURCE_ROOT; };
-		6B3290F81E3D4FEB00AE693B /* Snackbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		6B3290F01E3C49B200AE693B /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
 		6B3290F21E3C4DD900AE693B /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKit.framework; path = Carthage/Build/iOS/AudioKit.framework; sourceTree = SOURCE_ROOT; };
 		6B3290F41E3C5BFA00AE693B /* MusicKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicKit.framework; path = Carthage/Build/iOS/MusicKit.framework; sourceTree = SOURCE_ROOT; };
+		6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TTGSnackbar.framework; path = Carthage/Build/iOS/TTGSnackbar.framework; sourceTree = SOURCE_ROOT; };
+		6B3290F81E3D4FEB00AE693B /* Snackbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		6B40EC081E3885CA004C7194 /* MeasureViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewModel.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A41E2D7FD600399BDC /* Measure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
