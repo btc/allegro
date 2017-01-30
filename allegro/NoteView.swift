@@ -191,12 +191,17 @@ class NoteView: UIView {
         let upStart = CGPoint(x: bounds.origin.x + bounds.size.width,
                                   y: bounds.origin.y)
         
+        var stemEndOffset = CGFloat(0)
+        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration) {
+            stemEndOffset = flagOffset
+        }
+        
         // Since the note head is an oval, we need to add an offset to
         // ensure a smooth merge between the head and stem. 
         // this is the bottom left corner of the final stem rectangle
         var stemStart = CGPoint(x: upStart.x + stemOffset.x, y: upStart.y + stemOffset.y)
         var stemOrigin = CGPoint(x: stemStart.x,
-                                 y: drawRect.origin.y + flagOffset)
+                                 y: drawRect.origin.y + stemEndOffset)
         
         var stemSize = CGSize(width: stemThickness, height: stemStart.y)
 
@@ -206,7 +211,7 @@ class NoteView: UIView {
             let downStart = CGPoint(x: bounds.origin.x, y: bounds.origin.y + bounds.size.height)
             stemStart = CGPoint(x: downStart.x - stemOffset.x, y: downStart.y - stemOffset.y)
             stemOrigin = CGPoint(x: stemStart.x - stemThickness, y: stemStart.y)
-            stemSize = CGSize(width: stemThickness, height: stemEndY - stemOrigin.y)
+            stemSize = CGSize(width: stemThickness, height: drawRect.size.height - stemOrigin.y - stemEndOffset)
         }
         
         let stemRect = CGRect(
@@ -217,18 +222,30 @@ class NoteView: UIView {
     
     func getFlagPath() -> UIBezierPath {
         let path = UIBezierPath()
-        var next = CGPoint(x: noteFrame.size.width + stemOffset.x + flagStartOffset, y: 0)
+        var sign = CGFloat(1)
+        var next = CGPoint(
+            x: noteFrame.size.width + sign * stemOffset.x + sign * flagStartOffset,
+            y: 0)
+        
+        if (flipped) {
+            sign = CGFloat(-1)
+            next = CGPoint(
+                x: sign * stemOffset.x + sign * flagStartOffset - stemThickness,
+                y: frame.size.height)
+        }
+
         path.move(to: next)
-        next = CGPoint(x: next.x + flagEndOffset.x,
-                           y: next.y + flagEndOffset.y)
+        next = CGPoint(
+            x: next.x + flagEndOffset.x,
+            y: next.y + sign * flagEndOffset.y)
         path.addLine(to: next)
         next = CGPoint(
             x: next.x,
-            y: next.y + flagThickness)
+            y: next.y + sign * flagThickness)
         path.addLine(to: next)
         next = CGPoint(
             x: next.x - flagEndOffset.x,
-            y: next.y - flagEndOffset.y)
+            y: next.y - sign * flagEndOffset.y)
         path.addLine(to: next)
         path.close()
         return path
