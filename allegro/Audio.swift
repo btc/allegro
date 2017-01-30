@@ -56,7 +56,7 @@ extension Audio: PartStoreObserver {
 
         // let akpos = AKDuration(beats: Double(m.timeSignature.numerator) * position.double)
         let akpos = AKDuration(beats: 0)
-        let akdur = AKDuration(beats: note.duration.rational.double)
+        let akdur = AKDuration(beats: note.duration.double)
 
         let pitch = midiPitch(for: note)
 
