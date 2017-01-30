@@ -18,9 +18,14 @@ struct Key {
     }
     let mode: Key.Mode
     
-    // represents the number of accidentals in the key following the circle of fifths
-    // negative numbers represent number of flats
-    // positive numbers represent number of sharps
+    /* 
+        Represents the number of accidentals in the key (according to the circle of fifths starting with 0 => C Major
+        (-) => number of flats
+        (+) => number of sharps
+        e.g. fifths == 1 -> 1 sharp => key of G Major
+             fifths == 2 -> 2 sharps => key of D Major
+             fifths == -3 -> 3 flats => key of E flat Major
+     */
     var fifths: Int
     
     /* List of letters that have accidentals in this key */
@@ -42,11 +47,11 @@ struct Key {
         -1: "B",
          0: "C",
          1: "F",
-         2: "A",
-         3: "D",
-         4: "G",
-         5: "C",
-         6: "F",
+         2: "C",
+         3: "G",
+         4: "D",
+         5: "A",
+         6: "E",
          7: "B"
     ]
     

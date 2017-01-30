@@ -185,8 +185,45 @@ class allegroTests: XCTestCase {
     }
     
     func testKey() {
-        let cMajor = Key()
+        let cMajor = Key() //default to C major
+        let dMajor = Key(mode: .major, fifths: 2) //D major => 2 sharps
+        let fMajor = Key(mode: .major, fifths: -1) //F major => 1 flat
+        let cFlatMajor = Key(mode: .major, fifths: -7) //C flat major => 7 flats
+        let cSharpMajor = Key(mode: .major, fifths: 7) //C sharp major => 7 sharps
+        
         XCTAssert(cMajor.fifths == 0 && cMajor.mode == Key.Mode.major, "Key default initialization to C Major")
+        
+        let A = Note(value: .quarter, letter: .A, octave: 5)
+        let B = Note(value: .quarter, letter: .B, octave: 5)
+        let C = Note(value: .quarter, letter: .C, octave :5)
+        let D = Note(value: .quarter, letter: .D, octave: 5)
+        let E = Note(value: .quarter, letter: .E, octave: 5)
+        let F = Note(value: .quarter, letter: .F, octave: 5)
+        let G = Note(value: .quarter, letter: .G, octave: 5)
+        
+        XCTAssert(cMajor.keyHit(currentNoteLetter: C.letter) == nil) // check C major for no key hits
+        XCTAssert(cMajor.keyHit(currentNoteLetter: A.letter) == nil) // check C major for no key hits
+        
+        XCTAssert(dMajor.keyHit(currentNoteLetter: F.letter) == Note.Accidental.sharp) // D major => F sharp key hit
+        XCTAssert(dMajor.keyHit(currentNoteLetter: C.letter) == Note.Accidental.sharp) // D major => C sharp key hit
+        
+        XCTAssert(fMajor.keyHit(currentNoteLetter: B.letter) == Note.Accidental.flat) // F major => B flat key hit
+        
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: A.letter) == Note.Accidental.flat) // C flat major => A flat key hit
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: B.letter) == Note.Accidental.flat) // C flat major => B flat key hit
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: C.letter) == Note.Accidental.flat) // C flat major => C flat key hit
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: D.letter) == Note.Accidental.flat) // C flat major => D flat key hit
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: E.letter) == Note.Accidental.flat) // C flat major => E flat key hit
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: F.letter) == Note.Accidental.flat) // C flat major => F flat key hit
+        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: G.letter) == Note.Accidental.flat) // C flat major => G flat key hit
+        
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: A.letter) == Note.Accidental.sharp) // C sharp major => A sharp key hit
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: B.letter) == Note.Accidental.sharp) // C sharp major => B sharp key hit
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: C.letter) == Note.Accidental.sharp) // C sharp major => C sharp key hit
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: D.letter) == Note.Accidental.sharp) // C sharp major => D sharp key hit
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: E.letter) == Note.Accidental.sharp) // C sharp major => E sharp key hit
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: F.letter) == Note.Accidental.sharp) // C sharp major => F sharp key hit
+        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: G.letter) == Note.Accidental.sharp) // C sharp major => G sharp key hit
     }
     
     func testMocks() {
