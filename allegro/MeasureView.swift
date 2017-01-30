@@ -283,7 +283,10 @@ class MeasureView: UIView {
 extension MeasureView: MeasureActionDelegate {
 
     func actionRecognized(gesture: MeasureAction, at location: CGPoint) {
-        guard store?.mode == .edit else { return }
+        guard store?.mode == .edit else {
+            Snackbar(message: "you're in erase mode", duration: .short).show()
+            return
+        }
         Log.info?.value(gesture.rawValue)
 
         guard let store = store, let index = index else { return }
