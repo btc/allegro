@@ -16,6 +16,14 @@ struct NoteViewModel {
         return note.value
     }
     
+    var letter: Note.Letter {
+        return note.letter
+    }
+    
+    var accidental: Note.Accidental {
+        return note.accidental
+    }
+    
     var displayAccidental: Bool
     let position: Rational
 
