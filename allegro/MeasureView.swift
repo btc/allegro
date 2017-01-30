@@ -114,13 +114,8 @@ class MeasureView: UIView {
         super.draw(_: rect)
 
         drawVerticalGridlines(rect: rect)
-
         drawStaffs(rect: rect)
-
         drawLedgerLineGuides(rect: rect)
-
-        // TODO(btc): draw ledger guides
-
     }
     
     func getAccidentalLabel(noteView: NoteView) -> UILabel {
