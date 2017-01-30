@@ -244,12 +244,12 @@
 			name = Recognizers;
 			sourceTree = "<group>";
 		};
-		6B3290EF1E3C463200AE693B /* X */ = {
+		6B3290EF1E3C463200AE693B /* Audio */ = {
 			isa = PBXGroup;
 			children = (
 				6B3290F01E3C49B200AE693B /* Audio.swift */,
 			);
-			name = X;
+			name = Audio;
 			sourceTree = "<group>";
 		};
 		6B6774A01E2D7FAA00399BDC /* Models */ = {
@@ -315,7 +315,7 @@
 				6B096E5D1E342D2000615723 /* Stores */,
 				6B096E651E3737CF00615723 /* Recognizers */,
 				B96BCCC41E3D5FE50006A047 /* IO */,
-				6B3290EF1E3C463200AE693B /* X */,
+				6B3290EF1E3C463200AE693B /* Audio */,
 				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
 				6B6E271F1E28985F00F9CF66 /* Utils.swift */,
 				B90F77961E3680C1009F0CA3 /* Mocks.swift */,
