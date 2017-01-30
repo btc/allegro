@@ -31,7 +31,7 @@ class NoteSelectorMenu: UICollectionView {
     fileprivate let numNotesVisibleAtOnce: CGFloat = 5
 
     fileprivate let notes: [Note.Value] = [.whole, .half, .quarter, .eighth, .sixteenth,
-                                           .thirtysecond, .sixtyfourth, .onetwentyeighth, .twofiftysixth]
+                                           .thirtysecond, .sixtyfourth]
 
     private let layout = UICollectionViewFlowLayout()
 
