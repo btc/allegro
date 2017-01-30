@@ -53,20 +53,20 @@ class NoteView: UIView {
     
     // Since the flag points down, we need to decrease the stem height
     // to prevent the stem from poking above the flag
-    let flagOffset = CGFloat(3)
+    var flagOffset = CGFloat(5)
     
     // Since the note is rotated slightly, we need to add an offset
     // to the flag start to position it at the right point
     let flagStartOffset = CGFloat(-1.5)
-    let flagEndOffset = CGPoint(x: 30, y: 30)
+    var flagEndOffset = CGPoint(x: 40, y: 70)
     
     fileprivate let flagLayer: CAShapeLayer
     fileprivate var shouldDrawFlag: Bool {
         return note.value.nominalDuration < Note.Value.quarter.nominalDuration
     }
     
-    fileprivate let flagThickness = CGFloat(4)
-    fileprivate let flagIterOffset = CGFloat(10)
+    fileprivate var flagThickness = CGFloat(5)
+    fileprivate var flagIterOffset = CGFloat(10)
     
     
     fileprivate var flipped: Bool {
@@ -87,6 +87,20 @@ class NoteView: UIView {
         // makes it transparent so we see the lines behind
         isOpaque = false
         layer.addSublayer(flagLayer)
+        
+        let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
+        Tweaks.bindMultiple(tweaksToWatch) {
+            self.flagIterOffset = Tweaks.assign(Tweaks.flagIterOffset)
+            self.flagOffset = Tweaks.assign(Tweaks.flagOffset)
+            self.flagThickness = Tweaks.assign(Tweaks.flagThickness)
+            self.flagEndOffset = CGPoint(
+                x: Tweaks.assign(Tweaks.flagEndOffsetX),
+                y: Tweaks.assign(Tweaks.flagEndOffsetY)
+            )
+            
+            self.setNeedsLayout()
+            updateNoteFrame()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
