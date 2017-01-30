@@ -193,11 +193,27 @@ struct Measure {
         }
     }
     
-    /* Returns a note object if starting at the current note, there is a previous note somewhere
-        in the measure with the same letter.
-     */
-    func getPrevLetterMatch(currentNote: Note) -> Note? {
+    // Finds the nearest previous note with the same letter if it exists
+    func getPrevLetterMatch(note: Note, position: Rational) -> Note? {
         var match: Note? = nil
+        var foundOrig = false
+        for notePosition in notes.reversed() {
+            if let curr = notePosition.note {
+            
+                // find original note
+                if notePosition.pos == position {
+                    foundOrig = true
+                    continue
+                }
+            
+                // find previous note with same letter
+                if foundOrig && curr.letter == note.letter {
+                    match = notePosition.note
+                    break
+                }
+            }
+        }
+        
         return match
     }
 }
