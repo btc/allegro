@@ -93,6 +93,7 @@ class SideMenuViewController: UIViewController {
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
         v.imageView?.layer.minificationFilter = kCAFilterTrilinear
+        v.showsTouchWhenHighlighted = true
         return v
     }()
 
@@ -100,6 +101,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
+        v.showsTouchWhenHighlighted = true
         return v
     }()
     
@@ -129,10 +131,6 @@ class SideMenuViewController: UIViewController {
         //view.addSubview(keySignature)
         view.addSubview(modeLabel)
         view.addSubview(signaturesLabel)
-
-        // TODO(btc): configure these in their respective closure-initializers
-        eraseButton.showsTouchWhenHighlighted = true
-        editButton.showsTouchWhenHighlighted = true
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
