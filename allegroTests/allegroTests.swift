@@ -124,14 +124,14 @@ class allegroTests: XCTestCase {
         _ = measure.insert(note: B4quarter, at: 1/2)
         _ = measure.insert(note: A4quarter, at: 3/4)
         
-        XCTAssert(measure.getPrevLetterMatch(note: A4quarter, position: 0) == nil, "No same letter note before first note")
-        if let match = measure.getPrevLetterMatch(note: A4quarter, position: 1/4) {
+        XCTAssert(measure.getPrevLetterMatch(noteLetter: .A, position: 0) == nil, "No same letter note before first note")
+        if let match = measure.getPrevLetterMatch(noteLetter: .A, position: 1/4) {
             XCTAssert(match == A4quarter, "Finds the correct prev note")
         } else {
             XCTFail("Finds the correct prev note")
         }
-        XCTAssert(measure.getPrevLetterMatch(note: B4quarter, position: 1/2) == nil, "No same letter note")
-        if let match = measure.getPrevLetterMatch(note: A4quarter, position: 3/4) {
+        XCTAssert(measure.getPrevLetterMatch(noteLetter: .B, position: 1/2) == nil, "No same letter note")
+        if let match = measure.getPrevLetterMatch(noteLetter: .A, position: 3/4) {
             XCTAssert(match == A4quarter, "Finds the correct prev note")
         } else {
             XCTFail("Finds the correct prev note")
