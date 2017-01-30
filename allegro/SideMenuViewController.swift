@@ -146,18 +146,23 @@ class SideMenuViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
+        //refernece values
         let parent = view.bounds
         let centerX = parent.width/2
         let centerY = parent.height/2
         
+        //Button size chosen based on screen size
+        let buttonSize = parent.width / 6
+        
+        //Label sizing
         let titleH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
         let titleW = titleH * THE_GOLDEN_RATIO
         
-        //Button size chosed based on screen size
-        let buttonSize = parent.width / 6
-        
-        //TODO: ppsekhar fix sizing, looks off on iphone 7
-        let labelX = DEFAULT_MARGIN_PTS/2
+        //Label coordinates
+        let labelX = DEFAULT_MARGIN_PTS
+        let labelY = -parent.height/10
+        let labelY2 = labelY + 2*buttonSize + DEFAULT_MARGIN_PTS/2
+        let labelY3 = labelY2 + 2*buttonSize + DEFAULT_MARGIN_PTS/2
 
         /* firstButtonX is the X location of the first menu item. This setup assumes 3 buttons per row and 3 rows. The buttons are centered with a slight margin of size buttonSize/2 between edges
         */
@@ -165,23 +170,23 @@ class SideMenuViewController: UIViewController {
         let secondButtonX = firstButtonX + 1.5*buttonSize
         let thirdButtonX = secondButtonX + 1.5*buttonSize
         
-        let firstButtonY = 1.5*buttonSize
-        let secondButtonY = centerY + 0.25*buttonSize
+        let firstButtonY = parent.height/6
+        let secondButtonY = parent.height/6 + 2*buttonSize + DEFAULT_MARGIN_PTS/3
         let thirdButtonY = centerY + 2.25*buttonSize
         
         
         NavigationLabel.frame = CGRect(x: labelX,
-                            y: -50,
+                            y: labelY,
                             width: titleW,
                             height: titleH)
         
         modeLabel.frame = CGRect(x: labelX,
-                                 y: secondButtonY - 2*buttonSize,
+                                 y: labelY2,
                                  width: titleW,
                                  height: titleH)
         
         signaturesLabel.frame = CGRect(x: labelX,
-                                 y: thirdButtonY - 1.75*buttonSize,
+                                 y: labelY3,
                                  width: titleW,
                                  height: titleH)
 
