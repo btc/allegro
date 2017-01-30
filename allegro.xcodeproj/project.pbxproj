@@ -43,6 +43,7 @@
 		6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */; };
 		6B92BE631E308A6A00CE2C9F /* MeasureViewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */; };
 		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
+		6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */; };
 		6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */; };
 		6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */; };
 		82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */; };
@@ -128,6 +129,7 @@
 		6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftTweaks.framework; path = Carthage/Build/iOS/SwiftTweaks.framework; sourceTree = SOURCE_ROOT; };
 		6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewCollectionCell.swift; sourceTree = "<group>"; };
 		6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewContainer.swift; sourceTree = "<group>"; };
+		6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
 		6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteSelectorMenu.swift; sourceTree = "<group>"; };
 		6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = SOURCE_ROOT; };
 		82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -257,6 +259,7 @@
 				6B6BE38D1E2DE023007E0491 /* NoteSelectorCell.swift */,
 				6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */,
 				32B8678B1E3062C60029F946 /* NoteView.swift */,
+				6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */,
 				6B3290F81E3D4FEB00AE693B /* Snackbar.swift */,
 			);
 			name = Views;
@@ -665,6 +668,7 @@
 			files = (
 				6B6774AB1E2D7FF700399BDC /* Triplet.swift in Sources */,
 				6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */,
+				6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */,
 				6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */,
 				6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */,
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
