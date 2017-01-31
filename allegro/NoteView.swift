@@ -107,7 +107,7 @@ class NoteView: MeasureActionView {
             x: noteFrame.size.width + stemOffset.x + flagStartOffset,
             y: 0)
         
-        if (flipped) {
+        if (note.flipped) {
             start = CGPoint(
                 x: -stemOffset.x - flagStartOffset - stemThickness,
                 y: frame.size.height)
@@ -116,10 +116,6 @@ class NoteView: MeasureActionView {
         return start
     }
     
-    
-    fileprivate var flipped: Bool {
-        return stemEndY > noteFrame.origin.y + noteFrame.size.height
-    }
     
     // This is the note head frame in the NoteView coordinate frame.
     // We need this to draw the note head inside the rectangle
@@ -173,14 +169,14 @@ class NoteView: MeasureActionView {
         }
         
         var offset = noteFrame.origin.y - stemEndY
-        if (flipped) {
+        if (note.flipped) {
             offset = stemEndY - noteFrame.origin.y - noteFrame.size.height
         }
         
         let frameSize = CGSize(width: noteFrame.size.width,
                                height: noteFrame.size.height + offset)
         
-        if (!flipped) {
+        if (!note.flipped) {
             frame = CGRect(
                 origin: CGPoint(x: noteFrame.origin.x, y: stemEndY),
                 size: frameSize)
@@ -275,7 +271,7 @@ class NoteView: MeasureActionView {
 
         
         // flipped means we go the bottom left
-        if (flipped) {
+        if (note.flipped) {
             let downStart = CGPoint(x: bounds.origin.x, y: bounds.origin.y + bounds.size.height)
             stemStart = CGPoint(x: downStart.x - stemOffset.x, y: downStart.y - stemOffset.y)
             stemOrigin = CGPoint(x: stemStart.x - stemThickness, y: stemStart.y)
@@ -292,7 +288,7 @@ class NoteView: MeasureActionView {
         let path = UIBezierPath()
         
         var start = flagStart
-        var sign = flipped ? CGFloat(-1) : CGFloat(1)
+        var sign = note.flipped ? CGFloat(-1) : CGFloat(1)
         
         func drawSingleFlag(path: UIBezierPath, start: CGPoint) {
             var point = start

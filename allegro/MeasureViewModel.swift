@@ -85,23 +85,28 @@ struct MeasureViewModel {
         self.measure = measure
         for (position, note) in measure.getAllNotes() {
             var newNoteViewModel = NoteViewModel(note: note, position: position)
+            
+            // TODO (kevin) fix bug: displays all accidentals right now
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(currentNote: newNoteViewModel)
+            
+            // TODO more comprehensive rule that takes beams into account
+            if newNoteViewModel.pitch > 0 {
+                newNoteViewModel.flipped = true
+            }
             noteViewModels.append(newNoteViewModel)
             
             // beams v1: consecutive, same-direction, same-type
             var currBeam: Beam? = nil
             var currValue: Note.Value? = nil
-            var currDirection: Bool? = nil // true for above centerline, false for below
+            var currFlipped: Bool? = nil
             if newNoteViewModel.hasFlag {
                 if currBeam == nil {
                     currBeam = Beam()
                     currValue = note.value
-                    
-                    // TODO this is different than NoteView flipped, so they must be reconciled
-                    currDirection = (newNoteViewModel.pitch >= 0)
+                    currFlipped = newNoteViewModel.flipped
                 }
                 // same-direction and same-type
-                if (newNoteViewModel.pitch >= 0) == currDirection && currValue == note.value {
+                if newNoteViewModel.flipped == currFlipped && currValue == note.value {
                     currBeam?.append(newNoteViewModel)
                 }
                 

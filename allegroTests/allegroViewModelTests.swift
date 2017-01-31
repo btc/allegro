@@ -33,7 +33,16 @@ class allegroViewModelTests: XCTestCase {
     func testMeasureViewModel() {
         // TODO test checkAccidentalDisplay
         
+    }
+    func testBeam() {
         // TODO test beam v1
+        let part = mockPart("beams")
+        let m0 = MeasureViewModel(part.measures[0])
+        let m1 = MeasureViewModel(part.measures[1])
+
+        XCTAssert(m0.beams.count == 4, "4 beams in v1")
+
+        XCTAssert(m1.beams.count == 4, "4 beams")
     }
     
     func testPerformanceExample() {
