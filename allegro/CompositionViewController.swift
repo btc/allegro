@@ -22,7 +22,7 @@ class CompositionViewController: UIViewController {
 
     fileprivate var editor: MeasureViewCollection
 
-    fileprivate let audio: Audio
+    fileprivate let audio: Audio?
 
     static func create(part: Part) -> UIViewController {
         let store = PartStore(part: part)
@@ -41,7 +41,7 @@ class CompositionViewController: UIViewController {
     private init(store: PartStore) {
         self.store = store
         editor = MeasureViewCollection(store: store)
-        audio = Audio(store: store)
+        audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
 
         super.init(nibName: nil, bundle: nil)
 
@@ -63,11 +63,11 @@ class CompositionViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        audio.start()
+        audio?.start()
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        audio.stop()
+        audio?.stop()
     }
 
     override func viewDidLayoutSubviews() {
