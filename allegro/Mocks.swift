@@ -8,6 +8,8 @@
 
 import Rational
 
+let mocks: [Part] = []
+
 func mockPart(name: String) -> Part {
     let part = Part()
     

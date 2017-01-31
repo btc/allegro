@@ -49,9 +49,12 @@ struct Tweaks: TweakLibraryType {
     static let flagEndOffsetX = Tweak<CGFloat>("UI", "Flags", "Flag length X", defaultValue: 40, min: 1)
     static let flagEndOffsetY = Tweak<CGFloat>("UI", "Flags", "Flag length Y", defaultValue: 70, min: 1)
 
+    // -1 disables the tweak
+    static let mockPartTweak = Tweak<Int>("Data", "Mocks", "Mock Index", defaultValue: -1, min: -1, max: mocks.count - 1, stepSize: 1)
+
 
     static let defaultStore: TweakStore = {
-        let allTweaks: [TweakClusterType] = [actionCost, actionDelta, flagThickness, flagOffset, flagIterOffset, flagEndOffsetX, flagEndOffsetY]
+        let allTweaks: [TweakClusterType] = [actionCost, actionDelta, flagThickness, flagOffset, flagIterOffset, flagEndOffsetX, flagEndOffsetY, mockPartTweak]
         
         return TweakStore(tweaks: allTweaks, enabled: DEBUG)
     }()

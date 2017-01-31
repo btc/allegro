@@ -43,7 +43,7 @@ class HomeMenuViewController: UIViewController {
         
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        let p = Part()
+        let p = newPart()
         let vc = CompositionViewController.create(part: p)
         navigationController?.pushViewController(vc, animated: false)
     }
@@ -80,8 +80,16 @@ class HomeMenuViewController: UIViewController {
     }
     
     func newCompositionTapped() {
-        let p = Part()
+        let p = newPart()
         let vc = CompositionViewController.create(part: p)
         navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func newPart() -> Part {
+        let i = Tweaks.assign(Tweaks.mockPartTweak)
+        if mocks.indices.contains(i) {
+            return mocks[i]
+        }
+        return Part()
     }
 }
