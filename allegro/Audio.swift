@@ -68,23 +68,64 @@ extension Audio: PartStoreObserver {
     }
 
     private func midiPitch(for note: Note) -> Int {
-        var chroma: Chroma
-        switch note.letter {
-        case .A:
-            chroma = note.accidental == .sharp ? .as : .a
-        case .B:
-            chroma = .b
-        case .C:
-            chroma = note.accidental == .sharp ? .cs : .c
-        case .D:
-            chroma = note.accidental == .sharp ? .ds : .d
-        case .E:
-            chroma = .e
-        case .F:
-            chroma = note.accidental == .sharp ? .fs : .f
-        case .G:
-            chroma = note.accidental == .sharp ? .gs : .g
+        var chroma: Chroma = .c
+        switch note.accidental {
+        case .sharp:
+            switch note.letter {
+            case .A:
+                chroma = .as
+            case .B:
+                chroma = .c
+            case .C:
+                chroma = .cs
+            case .D:
+                chroma = .ds
+            case .E:
+                chroma = .f
+            case .F:
+                chroma = .fs
+            case .G:
+                chroma = .gs
+            }
+
+        case .flat:
+            switch note.letter {
+            case .A:
+                chroma = .gs
+            case .B:
+                chroma = .as
+            case .C:
+                chroma = .b
+            case .D:
+                chroma = .cs
+            case .E:
+                chroma = .ds
+            case .F:
+                chroma = .e
+            case .G:
+                chroma = .fs
+            }
+
+        case .natural:
+            switch note.letter {
+            case .A:
+                chroma = .a
+            case .B:
+                chroma = .b
+            case .C:
+                chroma = .c
+            case .D:
+                chroma = .d
+            case .E:
+                chroma = .e
+            case .F:
+                chroma = .f
+            case .G:
+                chroma = .g
+            }
+        default: break // doubles
         }
+
         return Int(Pitch(chroma: chroma, octave: UInt(note.octave)).midi)
     }
 }
