@@ -9,7 +9,7 @@
 import Rational
 
 
-let mocks: [Part] = [parsePart(CMajor), parsePart(DMajor)]
+let mocks: [Part] = [parsePart(CMajor), parsePart(DMajor), parsePart(beams)]
 
 private let CMajor = [
     "4 C 4 n",
@@ -47,6 +47,30 @@ private let DMajor = [
     "8 B 4 n",
     "8 C 5 s",
     "8 D 5 n"
+]
+
+private let beams = [
+    "8 E 4 n", // beam 0
+    "8 F 4 n", // beam 0
+    "8 E 5 n", // beam 1
+    "8 D 5 n", // beam 1
+    "8 A 4 n", // beam 2
+    "8 A 4 n", // beam 2
+    "8 B 4 n", // beam 2
+    "8 C 5 n", // v1 beam 3, but it should be beam 2
+    
+    "16 G 4 n", // beam 0
+    "16 G 4 n", // beam 0
+    "16 G 4 n", // beam 0
+    "16 G 4 n", // beam 0
+    "8 G 4 n", // beam 1
+    "8 G 4 n", // beam 1
+    "16 E 5 n", // beam 2
+    "16 E 5 n", // beam 2
+    "16 E 5 n", // beam 2
+    "16 E 5 n", // beam 2
+    "8 E 5 n", // beam 3
+    "8 E 5 n" // beam 3
 ]
 
 // 4 C 4 n -> quarternote, C, octave 4, natural
@@ -107,15 +131,13 @@ private func parsePart(_ partArray: [String]) -> Part {
 func mockPart(_ name: String) -> Part {
     
     switch name {
-    case "CMajor":
-        return parsePart(CMajor)
-        
-    case "DMajor":
-        return parsePart(DMajor)
+    case "CMajor": return parsePart(CMajor)
+    case "DMajor": return parsePart(DMajor)
+    case "beams": return parsePart(beams)
         
     default:
         let part = Part()
-        _ = part.insert(note: Note(value: .whole, letter: .C, octave: 4), intoMeasureIndex: 0, at: 0)
+        part.appendNote(note: parse("1 B 4 n"))
         return part
     }
 }

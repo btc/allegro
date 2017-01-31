@@ -34,6 +34,11 @@ struct NoteViewModel {
         }
     }
     var displayAccidental: Bool = false
+    
+    // false for notes drawn with stem on the right of the head
+    // will be set by MeasureViewModel
+    var flipped: Bool = false
+    
     let position: Rational
 
     // 0 is the center of the bars (B4 in treble clef)
