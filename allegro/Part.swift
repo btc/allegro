@@ -40,4 +40,31 @@ class Part {
         // TODO(btc): remove note
         return measures[i].removeNote(at: position)
     }
+    
+    // Adds the note to first freespace of any measure available.
+    // If it doesn't fit, the next free space is tried, then a new measure is created
+    // If the note's duration is longer than the time signature, the note is not added
+    func appendNote(note: Note) {
+        var i = 0 // measure index
+        while true {
+            let m = measures[i]
+            if note.duration > m.timeSignature {
+                return
+            }
+            
+            for (pos, duration) in m.getFree() {
+                if note.duration <= duration {
+                    // add note
+                    if insert(note: note, intoMeasureIndex: i, at: pos) == true {
+                        return
+                    } else {
+                        continue
+                    }
+                }
+            }
+            // no free space found in this measure
+            extend()
+            i += 1
+        }
+    }
 }
