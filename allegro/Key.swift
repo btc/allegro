@@ -29,7 +29,7 @@ struct Key {
     var fifths: Int
     
     /* List of letters that have accidentals in this key */
-    var lettersWithAccidentals: [String]
+    var lettersWithAccidentals: Set<String>
     
     /* The "number" of each letter's associated accidental for all major keys 
         i.e. B is always the first flat
@@ -63,13 +63,13 @@ struct Key {
         // add sharped letters to lettersWithAccidentals
         if fifths > 0 {
             for index in stride(from: fifths, through: 1, by: -1) {
-                lettersWithAccidentals.append(KeyNumbers[index] ?? "C")
+                lettersWithAccidentals.insert(KeyNumbers[index] ?? "C")
             }
         }
         // add flatted letters to lettersWithAccidentals
         if fifths < 0 {
             for index in stride(from: fifths, through: 1, by: 1) {
-                lettersWithAccidentals.append(KeyNumbers[index] ?? "C")
+                lettersWithAccidentals.insert(KeyNumbers[index] ?? "C")
             }
         }
     }
@@ -77,7 +77,7 @@ struct Key {
     // Returns true if the current note's letter matches an accidental in the key signature
     func keyHit(currentNoteLetter: Note.Letter) -> Note.Accidental? {
         if lettersWithAccidentals.contains(currentNoteLetter.description) {
-            return (fifths > 0) ? Note.Accidental.sharp : Note.Accidental.flat
+            return (fifths > 0) ? .sharp : .flat
         }
         return nil
     }
