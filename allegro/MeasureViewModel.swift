@@ -34,10 +34,10 @@ struct MeasureViewModel {
      */
     private func checkAccidentalDisplay(currentNote: NoteViewModel) -> Bool {
         // get previous matching note from the measure. getPrevLetterMatch(currentNote) can return nil
-        let previous = self.measure.getPrevLetterMatch(noteLetter: currentNote.letter, position: currentNote.position)
+        let previous = measure.getPrevLetterMatch(noteLetter: currentNote.letter, position: currentNote.position)
         
         // get key signature hit from the measure (returns accidental if the current note is in the key signature or nil if not)
-        let keyHit = self.measure.key.keyHit(currentNoteLetter: currentNote.letter)
+        let keyHit = measure.key.keyHit(currentNoteLetter: currentNote.letter)
         
         // no key sig hit
         if(keyHit == nil) {
@@ -48,7 +48,7 @@ struct MeasureViewModel {
             // prev note
             else {
                 // same accidental as prev -> no display
-                if(currentNote.accidental.hashValue == previous?.accidental.hashValue) {
+                if(currentNote.accidental == previous?.accidental) {
                     return false
                 }
                 // different accidental from prev -> default
@@ -62,7 +62,7 @@ struct MeasureViewModel {
             // no prev
             if(previous == nil) {
                 // same accidental as key sig hit -> no display
-                if(currentNote.accidental.hashValue == keyHit?.hashValue) {
+                if(currentNote.accidental == keyHit) {
                     return false
                 }
                 // different accidental from key sig hit -> default
@@ -73,7 +73,7 @@ struct MeasureViewModel {
             // prev note
             else {
                 // same accidental as prev -> no display
-                if(currentNote.accidental.hashValue == previous?.accidental.hashValue) {
+                if(currentNote.accidental == previous?.accidental) {
                     return false
                 }
                 // different accidental from prev -> default
