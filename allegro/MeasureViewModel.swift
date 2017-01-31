@@ -9,12 +9,18 @@
 import Rational
 
 struct MeasureViewModel {
+
+    typealias Beam = [NoteViewModel]
     
     private(set) var noteViewModels = [NoteViewModel]()
 
     var timeSignature: Rational {
         return measure.timeSignature
     }
+
+    // |beams| returns a list of beams. Each beam is a list of notes which must be beamed together.
+    // TODO(btc): Is it more convenient to be provided with a list of positions (Rational) instead?
+    var beams: [Beam] = [] // TODO: implement
 
     var notes: [NoteViewModel] {
         return measure.getAllNotes().map { NoteViewModel(note: $0.note, position: $0.pos) }
