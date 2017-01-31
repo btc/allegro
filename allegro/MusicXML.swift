@@ -26,8 +26,25 @@ class MusicXMLParser {
         }
     }
     
+    let part: Part
+    
     fileprivate func parse() {
-        // TODO
+        let partDoc = AEXMLDocument()
+        // TODO doctype
+        let score_partwise = partDoc.addChild(name: "score-partwise", attributes: ["version": "3.0"])
+        let part_list = score_partwise.addChild(name: "part-list")
+        
+        // TODO part name properly
+        let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
+        let part_name = score_part.addChild(name: "part-name", value: "\(store)")
+        
+        let part = score_partwise.addChild(name: "part", attributes: ["id:": "P1"])
+        
+        // TODO iterate through measures
+    }
+    
+    init(part: Part) {
+        self.part = part
     }
 }
 
