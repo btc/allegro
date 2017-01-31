@@ -10,17 +10,18 @@ import Rational
 
 struct MeasureViewModel {
 
+    private let measure: Measure
+    private(set) var noteViewModels = [NoteViewModel]()
+    
+    // Beams are the lines that connect groups of eighth notes, sixteenth notes, etc
+    // We just store a collection of notes that should be beamed together by MeasureView
     typealias Beam = [NoteViewModel]
     
-    private(set) var noteViewModels = [NoteViewModel]()
+    private(set) var beams: [Beam] = []
 
     var timeSignature: Rational {
         return measure.timeSignature
     }
-
-    // |beams| returns a list of beams. Each beam is a list of notes which must be beamed together.
-    // TODO(btc): Is it more convenient to be provided with a list of positions (Rational) instead?
-    var beams: [Beam] = [] // TODO: implement
 
     /*
         For the current NoteViewModel, determines if accidental should be displayed or not
@@ -80,14 +81,39 @@ struct MeasureViewModel {
         }
     }
 
-    private let measure: Measure
-
     init(_ measure: Measure) {
         self.measure = measure
         for (position, note) in measure.getAllNotes() {
             var newNoteViewModel = NoteViewModel(note: note, position: position)
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(currentNote: newNoteViewModel)
             noteViewModels.append(newNoteViewModel)
+            
+            // beams v1: consecutive, same-direction, same-type
+            var currBeam: Beam? = nil
+            var currValue: Note.Value? = nil
+            var currDirection: Bool? = nil // true for above centerline, false for below
+            if newNoteViewModel.hasFlag {
+                if currBeam == nil {
+                    currBeam = Beam()
+                    currValue = note.value
+                    
+                    // TODO this is different than NoteView flipped, so they must be reconciled
+                    currDirection = (newNoteViewModel.pitch >= 0)
+                }
+                // same-direction and same-type
+                if (newNoteViewModel.pitch >= 0) == currDirection && currValue == note.value {
+                    currBeam?.append(newNoteViewModel)
+                }
+                
+            } else if let beam = currBeam {
+                // this run is over
+                beams.append(beam)
+                currBeam = nil
+                currValue = nil
+            }
+            // do nothing if there is no curr beam and note shouldn't be beamed
         }
     }
+    
+    
 }

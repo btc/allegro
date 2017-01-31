@@ -24,7 +24,16 @@ struct NoteViewModel {
         return note.accidental
     }
     
-    var displayAccidental: Bool = true // TODO(btc): change to false when check accidental is complete
+    // true for notes smaller than eighth notes that should be drawn with a flag or beamed
+    var hasFlag: Bool {
+        switch note.value {
+        case .whole, .half, .quarter:
+            return false
+        default:
+            return true
+        }
+    }
+    var displayAccidental: Bool = false
     let position: Rational
 
     // 0 is the center of the bars (B4 in treble clef)
