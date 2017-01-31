@@ -99,7 +99,7 @@ class NoteView: UIView {
             )
             
             self.setNeedsLayout()
-            updateNoteFrame()
+            self.updateNoteFrame()
         }
     }
     
