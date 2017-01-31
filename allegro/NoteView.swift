@@ -193,8 +193,7 @@ class NoteView: MeasureActionView {
             noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
         }
         
-        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration
-            && shouldDrawFlag) {
+        if (note.hasFlag && shouldDrawFlag) {
             flagLayer.path = getFlagPath().cgPath
             flagLayer.fillColor = UIColor.black.cgColor
         }

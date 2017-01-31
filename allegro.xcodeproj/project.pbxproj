@@ -63,6 +63,7 @@
 		B90F77971E3680C1009F0CA3 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F77961E3680C1009F0CA3 /* Mocks.swift */; };
 		B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96BCCC51E3D60650006A047 /* MusicXML.swift */; };
 		B9ADCB821E2ED1F5001D72AE /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ADCB811E2ED1F5001D72AE /* Key.swift */; };
+		B9AEF2811E40564900B0910E /* allegroViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +160,7 @@
 		B90F77961E3680C1009F0CA3 /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		B96BCCC51E3D60650006A047 /* MusicXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXML.swift; sourceTree = "<group>"; };
 		B9ADCB811E2ED1F5001D72AE /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
+		B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = allegroViewModelTests.swift; sourceTree = "<group>"; };
 		BEA53266E630B8937E68457C /* Pods-allegroUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		DACD8BC72E26DC8A51C2E082 /* Pods-allegroTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -348,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				6B6E27021E288F8200F9CF66 /* allegroTests.swift */,
+				B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */,
 				6B6E27041E288F8200F9CF66 /* Info.plist */,
 			);
 			path = allegroTests;
@@ -752,6 +755,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B6E27031E288F8200F9CF66 /* allegroTests.swift in Sources */,
+				B9AEF2811E40564900B0910E /* allegroViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
