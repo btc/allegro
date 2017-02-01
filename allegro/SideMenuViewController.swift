@@ -92,8 +92,9 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
+        v.setImage(#imageLiteral(resourceName: "note mode negative"), for: UIControlState.selected)
         v.imageView?.layer.minificationFilter = kCAFilterTrilinear
-        v.showsTouchWhenHighlighted = true
+        v.isSelected = true
         return v
     }()
 
@@ -101,6 +102,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
+        v.imageView?.layer.minificationFilter = kCAFilterTrilinear
         v.showsTouchWhenHighlighted = true
         return v
     }()
