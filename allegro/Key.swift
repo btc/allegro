@@ -68,13 +68,14 @@ struct Key {
         }
         // add flatted letters to lettersWithAccidentals
         if fifths < 0 {
-            for index in stride(from: fifths, through: 1, by: 1) {
+            for index in stride(from: fifths, through: -1, by: 1) {
                 lettersWithAccidentals.insert(KeyNumbers[index] ?? "C")
             }
         }
     }
     
     // Returns true if the current note's letter matches an accidental in the key signature
+    // TESTING: DONE
     func keyHit(currentNoteLetter: Note.Letter) -> Note.Accidental? {
         if lettersWithAccidentals.contains(currentNoteLetter.description) {
             return (fifths > 0) ? .sharp : .flat

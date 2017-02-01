@@ -200,35 +200,70 @@ class allegroTests: XCTestCase {
         let E = Note(value: .quarter, letter: .E, octave: 5)
         let F = Note(value: .quarter, letter: .F, octave: 5)
         let G = Note(value: .quarter, letter: .G, octave: 5)
+        var allNotes = [Note]()
+        allNotes.append(A)
+        allNotes.append(B)
+        allNotes.append(C)
+        allNotes.append(D)
+        allNotes.append(E)
+        allNotes.append(F)
+        allNotes.append(G)
         
-        XCTAssert(cMajor.keyHit(currentNoteLetter: C.letter) == nil) // check C major for no key hits
-        XCTAssert(cMajor.keyHit(currentNoteLetter: A.letter) == nil) // check C major for no key hits
+        // check C major for no key hits
+        for note in allNotes {
+            XCTAssert(cMajor.keyHit(currentNoteLetter: note.letter) == nil, "Improper key hit on cMajor. Letter: " + note.letter.description)
+        }
         
-        XCTAssert(dMajor.keyHit(currentNoteLetter: F.letter) == Note.Accidental.sharp) // D major => F sharp key hit
-        XCTAssert(dMajor.keyHit(currentNoteLetter: C.letter) == Note.Accidental.sharp) // D major => C sharp key hit
+        // check D major for key hits
+        for note in allNotes {
+            // should have keyHits for F and C (and they should return sharps) for D Major
+            if(note == F || note == C) {
+                XCTAssert(dMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.sharp,
+                          "Improper keyHit returned for D Major. Letter: " + note.letter.description + " returned: "
+                           + dMajor.keyHit(currentNoteLetter: note.letter).debugDescription) // D major => F sharp key hit
+            }
+            // make sure keyHit returning nil for all other letters for D Major
+            else {
+                XCTAssert(dMajor.keyHit(currentNoteLetter: note.letter) == nil,
+                          "Improper keyHit returned for D Major. Letter: " + note.letter.description + " returned: "
+                           + dMajor.keyHit(currentNoteLetter: note.letter).debugDescription)
+            }
+        }
         
-        XCTAssert(fMajor.keyHit(currentNoteLetter: B.letter) == Note.Accidental.flat) // F major => B flat key hit
+        // check F major for key hits
+        for note in allNotes {
+            // F major => B flat key hit
+            if(note == B) {
+                XCTAssert(fMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.flat,
+                          "Improper keyHit returned for F major. Letter: " + note.letter.description + " returned"
+                          + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription) // F major => B flat key hit
+            }
+            // make sure keyHit returning nil for all other letters for F Major
+            else {
+                XCTAssert(fMajor.keyHit(currentNoteLetter: note.letter) == nil,
+                          "Improper keyHit returned for F major. Letter: " + note.letter.description + " returned"
+                            + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription) // F major => B flat key hit)
+            }
+        }
         
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: A.letter) == Note.Accidental.flat) // C flat major => A flat key hit
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: B.letter) == Note.Accidental.flat) // C flat major => B flat key hit
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: C.letter) == Note.Accidental.flat) // C flat major => C flat key hit
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: D.letter) == Note.Accidental.flat) // C flat major => D flat key hit
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: E.letter) == Note.Accidental.flat) // C flat major => E flat key hit
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: F.letter) == Note.Accidental.flat) // C flat major => F flat key hit
-        XCTAssert(cFlatMajor.keyHit(currentNoteLetter: G.letter) == Note.Accidental.flat) // C flat major => G flat key hit
-        
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: A.letter) == Note.Accidental.sharp) // C sharp major => A sharp key hit
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: B.letter) == Note.Accidental.sharp) // C sharp major => B sharp key hit
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: C.letter) == Note.Accidental.sharp) // C sharp major => C sharp key hit
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: D.letter) == Note.Accidental.sharp) // C sharp major => D sharp key hit
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: E.letter) == Note.Accidental.sharp) // C sharp major => E sharp key hit
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: F.letter) == Note.Accidental.sharp) // C sharp major => F sharp key hit
-        XCTAssert(cSharpMajor.keyHit(currentNoteLetter: G.letter) == Note.Accidental.sharp) // C sharp major => G sharp key hit
+        // check C flat major for key hits
+        for note in allNotes {
+            XCTAssert(cFlatMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.flat,
+                      "Improper keyHit returned for C flat major. Letter: " + note.letter.description + " returned"
+                        + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription)
+        }
+
+        // check C sharp major for key hits
+        for note in allNotes {
+            XCTAssert(cSharpMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.sharp,
+                      "Improper keyHit returned for C sharp major. Letter: " + note.letter.description + " returned"
+                        + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription)
+        }
     }
     
     func testMocks() {
-        _ = mockPart("CMajor")
-        _ = mockPart("DMajor")
+        //_ = mockPart("CMajor")
+        //_ = mockPart("DMajor")
     }
     
     func testPerformanceExample() {
