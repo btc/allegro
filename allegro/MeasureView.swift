@@ -249,7 +249,8 @@ class MeasureView: UIView {
             let stemLength = 2 * staffHeight
             let end = position > 0 ? y + noteHeight + stemLength : y - stemLength
             
-            noteView.noteFrame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
+            noteView.staffHeight = staffHeight
+            noteView.noteOrigin = CGPoint(x: x, y: y)
             noteView.stemEndY = CGFloat(end)
 
             if let a = getAccidentalLabel(noteView: noteView) {
