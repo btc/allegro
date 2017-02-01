@@ -28,7 +28,7 @@ class NoteSelectorMenu: UICollectionView {
         }
     }
 
-    fileprivate let numNotesVisibleAtOnce: CGFloat = 5
+    fileprivate let numNotesVisibleAtOnce: CGFloat = 4
 
     fileprivate let notes: [Note.Value] = [.whole, .half, .quarter, .eighth, .sixteenth,
                                            .thirtysecond, .sixtyfourth]
