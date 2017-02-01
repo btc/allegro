@@ -49,6 +49,8 @@
 		6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */; };
 		6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */; };
 		6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */; };
+		8280ADAD1E4295AB00DFE061 /* TimeSignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */; };
+		8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */; };
 		82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */; };
 		89A94F7BCE6590EED84BE2E2 /* Pods_allegro.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */; };
 		A38CFF6CB5898986752C58AB /* Pods_allegroTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */; };
@@ -138,6 +140,8 @@
 		6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
 		6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteSelectorMenu.swift; sourceTree = "<group>"; };
 		6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = SOURCE_ROOT; };
+		8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSignatureViewController.swift; sourceTree = "<group>"; };
+		8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySignatureViewController.swift; sourceTree = "<group>"; };
 		82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		9EA11674E74CCF5EDB06D551 /* Pods-allegroTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.release.xcconfig"; sourceTree = "<group>"; };
 		A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegroTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -367,6 +371,8 @@
 				6B6E27211E289D4600F9CF66 /* HomeMenuViewController.swift */,
 				6B6E27231E289DE000F9CF66 /* RootNavigationViewController.swift */,
 				82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */,
+				8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */,
+				8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -713,6 +719,8 @@
 				6B6774A71E2D7FE600399BDC /* Part.swift in Sources */,
 				B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */,
 				6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */,
+				8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */,
+				8280ADAD1E4295AB00DFE061 /* TimeSignatureViewController.swift in Sources */,
 				6B0B26801E2F3DFB00F1870A /* MeasureViewCollection.swift in Sources */,
 				6B096E671E37381E00615723 /* MeasureActionGestureRecognizer.swift in Sources */,
 				6B40EC091E3885CA004C7194 /* MeasureViewModel.swift in Sources */,

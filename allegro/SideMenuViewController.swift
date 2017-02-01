@@ -64,14 +64,16 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    private let timeSignature: UIView = {
+    //Change to dynamically set time Signature based on user selection: ppsekhar
+    private let timeSignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "timesig34"), for: UIControlState.normal)
         return v
     }()
     
-    private let keySignature: UIView = {
+    //Change to dynamically set key signature based on user selection: ppsekhar
+    private let keySignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "C# major"), for: UIControlState.normal)
@@ -92,9 +94,8 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
-        v.setImage(#imageLiteral(resourceName: "note mode negative"), for: UIControlState.selected)
         v.imageView?.layer.minificationFilter = kCAFilterTrilinear
-        v.isSelected = true
+        v.showsTouchWhenHighlighted = true
         return v
     }()
 
@@ -102,7 +103,6 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
-        v.imageView?.layer.minificationFilter = kCAFilterTrilinear
         v.showsTouchWhenHighlighted = true
         return v
     }()
@@ -128,14 +128,15 @@ class SideMenuViewController: UIViewController {
         view.addSubview(editButton)
         view.addSubview(saveButton)
         view.addSubview(instructionsButton)
-        //Hiding subviews until behavior is defined: ppsekhar
-        //view.addSubview(timeSignature)
-        //view.addSubview(keySignature)
+        view.addSubview(timeSignature)
+        view.addSubview(keySignature)
         view.addSubview(modeLabel)
         view.addSubview(signaturesLabel)
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        timeSignature.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
+        keySignature.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
 
     }
 
@@ -217,6 +218,7 @@ class SideMenuViewController: UIViewController {
                                           width: buttonSize,
                                           height: buttonSize)
         
+        //TODO: Fix spacing adn sizing of these two
         timeSignature.frame = CGRect(x:firstButtonX,
                                    y: thirdButtonY,
                                    width: buttonSize,
@@ -236,6 +238,16 @@ class SideMenuViewController: UIViewController {
     func editButtonTapped() {
         store.mode = .edit
         slideMenuController()?.closeRight()
+    }
+    
+    func timeSignaturesTapped() {
+        let vc = TimeSignatureViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func keySignaturesTapped() {
+        let vc = KeySignatureViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
