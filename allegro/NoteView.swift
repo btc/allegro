@@ -11,6 +11,9 @@ import UIKit
 import Rational
 
 class NoteView: UIView {
+    // since everything was designed for iPhone 7, we stretch/squash the note
+    // to fit other screen sizes
+    // The default note size is (70, 55.16665)
     var staffHeight = CGFloat(0)
     
     fileprivate let defaultNoteWidth = CGFloat(70)
@@ -303,12 +306,6 @@ class NoteView: UIView {
         }
         
         return path
-    }
-    
-    func scalePath(path: UIBezierPath) {
-        // since everything was designed for iPhone 7, we stretch/squash the note
-        // to fit other screen sizes
-        // The default note size is (70, 165.49995)
     }
 
     override func draw(_ rect: CGRect) {
