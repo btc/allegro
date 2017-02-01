@@ -52,7 +52,7 @@ struct Tweaks: TweakLibraryType {
     // -1 disables the tweak
     static let mockPartTweak = Tweak<Int>("Data", "Mocks", "Mock Index", defaultValue: -1, min: -1, max: mocks.count - 1, stepSize: 1)
 
-    static let audio = Tweak<Bool>("General", "Audio", "Enabled", false)
+    static let audio = Tweak<Bool>("General", "Audio", "Audio Enabled", false)
 
     static let defaultStore: TweakStore = {
         let allTweaks: [TweakClusterType] = [actionCost, actionDelta, flagThickness, flagOffset, flagIterOffset, flagEndOffsetX, flagEndOffsetY, mockPartTweak, audio]
