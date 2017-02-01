@@ -22,16 +22,16 @@ struct MeasureViewModel {
     var timeSignature: Rational {
         return measure.timeSignature
     }
-
+    
     /*
         For the current NoteViewModel, determines if accidental should be displayed or not
         return true: accidental should be displayed (default)
         return false: accidental should not be displayed
         Add big O runtime to comments
      */
-    private func checkAccidentalDisplay(currentNote: NoteViewModel) -> Bool {
+    private func checkAccidentalDisplay(note currentNote: Note, position: Rational) -> Bool {
         // get previous matching note from the measure. getPrevLetterMatch(currentNote) can return nil
-        let previous = measure.getPrevLetterMatch(noteLetter: currentNote.letter, position: currentNote.position)
+        let previous = measure.getPrevLetterMatch(noteLetter: currentNote.letter, position: position)
         
         // get key signature hit from the measure (returns accidental if the current note is in the key signature or nil if not)
         let keyHit = measure.key.keyHit(currentNoteLetter: currentNote.letter)
@@ -80,44 +80,83 @@ struct MeasureViewModel {
             }
         }
     }
-
-    init(_ measure: Measure) {
-        self.measure = measure
+    
+    // determines beams and creates NoteViewModels
+    private mutating func noteLayout() {
+        
+        var currBeam: Beam? = nil
+        var currValue: Note.Value? = nil
+        var currFlipped: Bool? = nil
+        
         for (position, note) in measure.getAllNotes() {
             var newNoteViewModel = NoteViewModel(note: note, position: position)
             
             // TODO (kevin) fix bug: displays all accidentals right now
-            newNoteViewModel.displayAccidental = checkAccidentalDisplay(currentNote: newNoteViewModel)
-            
+            newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
+
             // TODO more comprehensive rule that takes beams into account
             if newNoteViewModel.pitch > 0 {
                 newNoteViewModel.flipped = true
             }
-            noteViewModels.append(newNoteViewModel)
+            self.noteViewModels.append(newNoteViewModel)
             
             // beams v1: consecutive, same-direction, same-type
-            var currBeam: Beam? = nil
-            var currValue: Note.Value? = nil
-            var currFlipped: Bool? = nil
+            
             if newNoteViewModel.hasFlag {
                 if currBeam == nil {
                     currBeam = Beam()
                     currValue = note.value
                     currFlipped = newNoteViewModel.flipped
                 }
+                
                 // same-direction and same-type
                 if newNoteViewModel.flipped == currFlipped && currValue == note.value {
                     currBeam?.append(newNoteViewModel)
                 }
                 
-            } else if let beam = currBeam {
-                // this run is over
-                beams.append(beam)
-                currBeam = nil
-                currValue = nil
+                else {
+                    
+                    if let beam = currBeam {
+                        // this run is over
+                        beams.append(beam)
+                        currBeam = nil
+                        currValue = nil
+                        currFlipped = nil
+                    }
+                }
+
+            } else {
+                if let beam = currBeam {
+                    // this run is over
+                    beams.append(beam)
+                    currBeam = nil
+                    currValue = nil
+                    currFlipped = nil
+                }
             }
             // do nothing if there is no curr beam and note shouldn't be beamed
         }
+        
+        // append currBeam at the end of the measure
+        if let beam = currBeam {
+            beams.append(beam)
+        }
+        
+        // remove beams with only 1 element
+        var i = 0
+        while i < beams.count {
+            if beams[i].count <= 1 {
+                beams.remove(at: i)
+                i += 1
+            }
+            i += 1
+        }
+
+    }
+
+    init(_ measure: Measure) {
+        self.measure = measure
+        noteLayout()
     }
     
     
