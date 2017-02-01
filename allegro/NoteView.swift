@@ -10,7 +10,12 @@ import Foundation
 import UIKit
 import Rational
 
-class NoteView: UIView {
+class NoteView: MeasureActionView {
+
+    override var tapTargetFrame: CGRect {
+        return noteHeadFrame
+    }
+
     // since everything was designed for iPhone 7, we stretch/squash the note
     // to fit other screen sizes
     // The default note size is (70, 55.16665)

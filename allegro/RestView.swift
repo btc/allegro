@@ -8,5 +8,8 @@
 
 import UIKit
 
-class RestView: UIView {
+class RestView: MeasureActionView {
+    override var tapTargetFrame: CGRect {
+        return .zero
+    }
 }
