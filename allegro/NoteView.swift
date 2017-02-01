@@ -87,12 +87,32 @@ class NoteView: UIView {
     }
     
     fileprivate let flagLayer: CAShapeLayer
-    fileprivate var shouldDrawFlag: Bool {
-        return note.value.nominalDuration < Note.Value.quarter.nominalDuration
+    var shouldDrawFlag: Bool {
+        set(newShouldDraw) {
+            flagLayer.isHidden = shouldDrawFlag
+        }
+        
+        get {
+            return flagLayer.isHidden
+        }
     }
-    
-    fileprivate var flagThickness = CGFloat(5)
+
+    fileprivate var flagThickness = CGFloat(10)
     fileprivate var flagIterOffset = CGFloat(10)
+    
+    var flagStart: CGPoint {
+        var start = CGPoint(
+            x: noteFrame.size.width + stemOffset.x + flagStartOffset,
+            y: 0)
+        
+        if (flipped) {
+            start = CGPoint(
+                x: -stemOffset.x - flagStartOffset - stemThickness,
+                y: frame.size.height)
+        }
+        
+        return start
+    }
     
     
     fileprivate var flipped: Bool {
@@ -166,7 +186,8 @@ class NoteView: UIView {
             noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
         }
         
-        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration) {
+        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration
+            && shouldDrawFlag) {
             flagLayer.path = getFlagPath().cgPath
             flagLayer.fillColor = UIColor.black.cgColor
         }
@@ -263,17 +284,9 @@ class NoteView: UIView {
     
     func getFlagPath() -> UIBezierPath {
         let path = UIBezierPath()
-        var sign = CGFloat(1)
-        var start = CGPoint(
-            x: noteFrame.size.width + sign * stemOffset.x + sign * flagStartOffset,
-            y: 0)
         
-        if (flipped) {
-            sign = CGFloat(-1)
-            start = CGPoint(
-                x: sign * stemOffset.x + sign * flagStartOffset - stemThickness,
-                y: frame.size.height)
-        }
+        var start = flagStart
+        var sign = flipped ? CGFloat(-1) : CGFloat(1)
         
         func drawSingleFlag(path: UIBezierPath, start: CGPoint) {
             var point = start

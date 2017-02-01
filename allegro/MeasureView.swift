@@ -69,6 +69,9 @@ class MeasureView: UIView {
     fileprivate let noteWidth = CGFloat(70)
     fileprivate var noteHeight: CGFloat { return staffHeight }
     
+    fileprivate let barThickness = CGFloat(5)
+    fileprivate let barLayer: CAShapeLayer
+    
     // We draw the accidentals relate the the head of the note.
     // The offset specifies a small delta since we need the flat
     // to be slightly higher than the other accidentals to align with
@@ -88,7 +91,10 @@ class MeasureView: UIView {
     }()
 
     override init(frame: CGRect) {
+        barLayer = CAShapeLayer()
         super.init(frame: frame)
+        
+        self.layer.addSublayer(barLayer)
         // iOS expects draw(rect:) to completely fill
         // the view region with opaque content. This causes
         // the view background to be black unless we disable this.
@@ -236,7 +242,12 @@ class MeasureView: UIView {
         for v in noteViews {
             addSubview(v)
         }
+        
+        let barPath = UIBezierPath()
+        var barStart = CGPoint.zero
+        var barEnd = CGPoint.zero
 
+        // we're barring all the notes for now
         for (i, noteView) in noteViews.enumerated() {
             let position = noteView.note.pitch
 
@@ -252,11 +263,41 @@ class MeasureView: UIView {
             noteView.staffHeight = staffHeight
             noteView.noteOrigin = CGPoint(x: x, y: y)
             noteView.stemEndY = CGFloat(end)
+            noteView.shouldDrawFlag = false
+            
+            let noteViewOrigin = noteView.frame.origin
+            
+            if (i == 0) {
+                barStart = CGPoint(
+                    x: noteViewOrigin.x + noteView.flagStart.x,
+                    y: noteViewOrigin.y + noteView.flagStart.y
+                )
+            }
+            
+            if (i == noteViews.count - 1) {
+                barEnd = CGPoint(
+                    x: noteViewOrigin.x + noteView.flagStart.x + noteView.stemThickness,
+                    y: noteViewOrigin.y + noteView.flagStart.y
+                )
+                var next = barStart
+                
+                barPath.move(to: next)
+                next = barEnd
+                barPath.addLine(to: next)
+                next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
+                barPath.addLine(to: next)
+                next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
+                barPath.addLine(to: next)
+                barPath.close()
+            }
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
             }
         }
+        
+        barLayer.path = barPath.cgPath
+        barLayer.fillColor = UIColor.black.cgColor
     }
 
     @objc private func erase(sender: UIPanGestureRecognizer) {
