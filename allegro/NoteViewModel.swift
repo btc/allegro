@@ -24,7 +24,7 @@ struct NoteViewModel {
         return note.accidental
     }
     
-    var displayAccidental: Bool
+    var displayAccidental: Bool = true // TODO(btc): change to false when check accidental is complete
     let position: Rational
 
     // 0 is the center of the bars (B4 in treble clef)
@@ -91,6 +91,5 @@ struct NoteViewModel {
     init(note: Note, position: Rational) {
         self.note = note
         self.position = position
-        self.displayAccidental = false
     }
 }
