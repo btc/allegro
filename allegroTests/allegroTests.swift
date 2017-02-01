@@ -195,7 +195,7 @@ class allegroTests: XCTestCase {
         
         let A = Note(value: .quarter, letter: .A, octave: 5)
         let B = Note(value: .quarter, letter: .B, octave: 5)
-        let C = Note(value: .quarter, letter: .C, octave :5)
+        let C = Note(value: .quarter, letter: .C, octave: 5)
         let D = Note(value: .quarter, letter: .D, octave: 5)
         let E = Note(value: .quarter, letter: .E, octave: 5)
         let F = Note(value: .quarter, letter: .F, octave: 5)

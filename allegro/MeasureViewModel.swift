@@ -85,71 +85,12 @@ struct MeasureViewModel {
     private mutating func noteLayout() {
         
         var currBeam: Beam? = nil
-        var currValue: Note.Value? = nil
-        var currFlipped: Bool? = nil
         
         for (position, note) in measure.getAllNotes() {
-            var newNoteViewModel = NoteViewModel(note: note, position: position)
-            
-            // TODO (kevin) fix bug: displays all accidentals right now
-            newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
-
-            // TODO more comprehensive rule that takes beams into account
-            if newNoteViewModel.pitch > 0 {
-                newNoteViewModel.flipped = true
-            }
-            self.noteViewModels.append(newNoteViewModel)
-            
-            // beams v1: consecutive, same-direction, same-type
-            
-            if newNoteViewModel.hasFlag {
-                if currBeam == nil {
-                    currBeam = Beam()
-                    currValue = note.value
-                    currFlipped = newNoteViewModel.flipped
-                }
-                
-                // same-direction and same-type
-                if newNoteViewModel.flipped == currFlipped && currValue == note.value {
-                    currBeam?.append(newNoteViewModel)
-                }
-                
-                else {
-                    
-                    if let beam = currBeam {
-                        // this run is over
-                        beams.append(beam)
-                        currBeam = nil
-                        currValue = nil
-                        currFlipped = nil
-                    }
-                }
-
-            } else {
-                if let beam = currBeam {
-                    // this run is over
-                    beams.append(beam)
-                    currBeam = nil
-                    currValue = nil
-                    currFlipped = nil
-                }
-            }
-            // do nothing if there is no curr beam and note shouldn't be beamed
-        }
-        
-        // append currBeam at the end of the measure
-        if let beam = currBeam {
-            beams.append(beam)
-        }
-        
-        // remove beams with only 1 element
-        var i = 0
-        while i < beams.count {
-            if beams[i].count <= 1 {
-                beams.remove(at: i)
-                i += 1
-            }
-            i += 1
+            // check for two eighth notes
+            // first eighth lands on beat, second lands off beat
+            // check for flipping
+            //
         }
 
     }
