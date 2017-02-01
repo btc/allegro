@@ -11,6 +11,15 @@ import UIKit
 import Rational
 
 class NoteView: UIView {
+    var staffHeight = CGFloat(0)
+    
+    fileprivate let defaultNoteWidth = CGFloat(70)
+    fileprivate let defaultNoteHeight = CGFloat(55.16665)
+    
+    var scale: CGFloat {
+        return staffHeight / defaultNoteHeight
+    }
+    
     // The NoteView draws the note as two separate UIBezierPaths.
     // One for the note head and one for the stem
     
@@ -18,15 +27,21 @@ class NoteView: UIView {
     // and an inner one that cuts out the white inner region.
     // This offset describes the offset to shrink the outer rectangle
     // into the inner rectangle
-    fileprivate let noteInset = CGPoint(x: 3, y: 3)
+    fileprivate var noteInset: CGPoint {
+        return CGPoint(x: 3 * scale, y: 3 * scale)
+    }
     
     // thickness in the x direction of the stem
-    fileprivate let stemThickness: CGFloat = 3
+    fileprivate var stemThickness: CGFloat {
+        return 3 * scale
+    }
     
     // since the note head is a rotated oval that is shrunk to fit the frame,
     // the start point of the stem is inside the frame of the noe
     // is not the bounds of the frame but inside
-    fileprivate let stemOffset = CGPoint(x: -5, y: 24)
+    fileprivate var stemOffset: CGPoint {
+        return CGPoint(x: -5 * scale, y: 24 * scale)
+    }
     
     // Note heads are rotated ovals
     // This describes the rotation of the oval.
@@ -35,10 +50,13 @@ class NoteView: UIView {
     fileprivate let rotationAngle = CGFloat(-10 * Double.pi / 180.0)
     
     // frame of the note head in the parent coordinate frame
-    var noteFrame = CGRect.zero {
-        didSet {
-            updateNoteFrame()
-        }
+    var noteOrigin = CGPoint.zero
+
+    var noteFrame: CGRect {
+        return CGRect(
+            origin: noteOrigin,
+            size: CGSize(width: defaultNoteWidth * scale, height: defaultNoteHeight * scale)
+        )
     }
     
     // The NoteView extends its own frame to accommodate the extra height of
@@ -57,8 +75,13 @@ class NoteView: UIView {
     
     // Since the note is rotated slightly, we need to add an offset
     // to the flag start to position it at the right point
-    let flagStartOffset = CGFloat(-1.5)
-    var flagEndOffset = CGPoint(x: 40, y: 70)
+    var flagStartOffset: CGFloat {
+        return CGFloat(-1.5 * scale)
+    }
+    var _flagEndOffset = CGPoint(x: 40, y: 70)
+    var flagEndOffset: CGPoint {
+        return CGPoint(x: _flagEndOffset.x * scale, y: _flagEndOffset.y * scale)
+    }
     
     fileprivate let flagLayer: CAShapeLayer
     fileprivate var shouldDrawFlag: Bool {
@@ -93,7 +116,7 @@ class NoteView: UIView {
             self.flagIterOffset = Tweaks.assign(Tweaks.flagIterOffset)
             self.flagOffset = Tweaks.assign(Tweaks.flagOffset)
             self.flagThickness = Tweaks.assign(Tweaks.flagThickness)
-            self.flagEndOffset = CGPoint(
+            self._flagEndOffset = CGPoint(
                 x: Tweaks.assign(Tweaks.flagEndOffsetX),
                 y: Tweaks.assign(Tweaks.flagEndOffsetY)
             )
@@ -280,6 +303,12 @@ class NoteView: UIView {
         }
         
         return path
+    }
+    
+    func scalePath(path: UIBezierPath) {
+        // since everything was designed for iPhone 7, we stretch/squash the note
+        // to fit other screen sizes
+        // The default note size is (70, 165.49995)
     }
 
     override func draw(_ rect: CGRect) {
