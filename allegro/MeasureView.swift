@@ -118,9 +118,9 @@ class MeasureView: UIView {
         drawLedgerLineGuides(rect: rect)
     }
     
-    func getAccidentalLabel(noteView: NoteView) -> UILabel {
-        // We only draw flats for now until we know when to draw the accidental
-        let accidental = Note.Accidental.flat
+    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
+        guard noteView.note.displayAccidental else { return nil }
+        let accidental = noteView.note.accidental
         
         let center = CGPoint(
             x: noteView.noteFrame.origin.x,
@@ -251,8 +251,10 @@ class MeasureView: UIView {
             
             noteView.noteFrame = CGRect(x: x, y: y, width: noteWidth, height: noteHeight)
             noteView.stemEndY = CGFloat(end)
-            
-            addSubview(getAccidentalLabel(noteView: noteView))
+
+            if let a = getAccidentalLabel(noteView: noteView) {
+                addSubview(a)
+            }
         }
     }
 
