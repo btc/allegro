@@ -37,7 +37,7 @@ private let DMajor = [
     "4 G 4 n",
     "4 A 4 n",
     "4 B 4 n",
-    "4 C 5 n",
+    "4 C 5 s",
     "4 D 5 n",
     "8 D 4 n",
     "8 E 4 n",
@@ -45,7 +45,7 @@ private let DMajor = [
     "8 G 4 n",
     "8 A 4 n",
     "8 B 4 n",
-    "8 C 5 n",
+    "8 C 5 s",
     "8 D 5 n"
 ]
 

@@ -262,8 +262,8 @@ class allegroTests: XCTestCase {
     }
     
     func testMocks() {
-        //_ = mockPart("CMajor")
-        //_ = mockPart("DMajor")
+        _ = mockPart("CMajor")
+        _ = mockPart("DMajor")
     }
     
     func testPerformanceExample() {
