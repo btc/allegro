@@ -66,7 +66,6 @@ class MeasureView: UIView {
     fileprivate static let numLedgerLinesAbove = 4
     fileprivate static let numLedgerLinesBelow = 4
 
-    fileprivate let noteWidth = CGFloat(70)
     fileprivate var noteHeight: CGFloat { return staffHeight }
     
     fileprivate let barThickness = CGFloat(5)
