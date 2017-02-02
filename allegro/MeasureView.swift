@@ -151,7 +151,7 @@ class MeasureView: UIView {
         let measure = store.measure(at: index)
 
         let lines = geometry.verticalGridlines(timeSignature: measure.timeSignature,
-                                               noteDuration: store.selectedNoteValue.nominalDuration)
+                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         for (start, end) in lines {
 
             let path = UIBezierPath()
