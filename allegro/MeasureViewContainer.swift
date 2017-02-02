@@ -38,6 +38,7 @@ class MeasureViewContainer: UIScrollView {
             // once we know our size, we have enough information to determine the size of the measure view and scroll
             // to the center. So, we scroll to the center as soon as the frame is set.
             // perhaps this should be done in bounds.didSet
+
             scrollToCenterOfStaffLines()
         }
     }

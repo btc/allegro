@@ -34,6 +34,7 @@ class MeasureView: UIView {
     var index: Int?
 
     fileprivate let staffLineThickness: CGFloat = 2
+
     fileprivate let barThickness = CGFloat(5)
     fileprivate let barLayer: CAShapeLayer
     
@@ -120,6 +121,7 @@ class MeasureView: UIView {
             let path = UIBezierPath()
             path.move(to: start)
             path.addLine(to: end)
+
 
             path.lineWidth = staffLineThickness
             UIColor.black.setStroke()
