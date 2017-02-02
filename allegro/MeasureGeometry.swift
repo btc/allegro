@@ -126,7 +126,7 @@ struct MeasureGeometry {
     }
 
     func noteX(position: Rational, timeSignature: Rational) -> CGFloat {
-        return position.cgFloat / timeSignature.cgFloat * visibleSize.width
+        return position.cgFloat / timeSignature.cgFloat * totalWidth
     }
 
     func noteStemEnd(pitch: Int, originY y: CGFloat) -> CGFloat {
