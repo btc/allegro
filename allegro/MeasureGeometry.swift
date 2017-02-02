@@ -23,7 +23,6 @@ struct MeasureGeometry {
     let staffCount = 5
     let numLedgerLinesAbove = 4
     let numLedgerLinesBelow = 4
-    let staffLineThickness: CGFloat = 2
 
     var frameSize: CGSize {
         return CGSize(width: visibleSize.width, height: totalHeight)
@@ -67,7 +66,7 @@ struct MeasureGeometry {
     var staffLines: [Line] {
         var lines = [Line]()
         for i in stride(from: 0, to: staffCount, by: 1) {
-            let y = staffDrawStart + CGFloat(i) * staffHeight - staffLineThickness / 2 // TODO(btc): don't subtract thickness
+            let y = staffDrawStart + CGFloat(i) * staffHeight
             let start = CGPoint(x: 0, y: y)
             let end = CGPoint(x: totalWidth, y: y)
             lines.append(Line(start, end))
