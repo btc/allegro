@@ -10,8 +10,10 @@ import UIKit
 
 class MeasureActionView: UIView {
 
-    var tapTargetFrame: CGRect {
-        return .zero
+    var measureActionFrame: CGRect = .zero {
+        didSet {
+            // TODO(btc): configure the gesture recognizer
+        }
     }
 
     override init(frame: CGRect) {

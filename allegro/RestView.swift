@@ -9,7 +9,11 @@
 import UIKit
 
 class RestView: MeasureActionView {
-    override var tapTargetFrame: CGRect {
-        return .zero
+
+    override var frame: CGRect {
+        didSet {
+            measureActionFrame = frame
+        }
     }
+
 }

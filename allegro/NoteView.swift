@@ -11,11 +11,6 @@ import UIKit
 import Rational
 
 class NoteView: MeasureActionView {
-
-    override var tapTargetFrame: CGRect {
-        return noteHeadFrame
-    }
-
     // since everything was designed for iPhone 7, we stretch/squash the note
     // to fit other screen sizes
     // The default note size is (70, 55.16665)
@@ -40,7 +35,7 @@ class NoteView: MeasureActionView {
     }
     
     // thickness in the x direction of the stem
-    fileprivate var stemThickness: CGFloat {
+    private var stemThickness: CGFloat {
         return 3 * scale
     }
     
@@ -127,8 +122,12 @@ class NoteView: MeasureActionView {
     // This is the note head frame in the NoteView coordinate frame.
     // We need this to draw the note head inside the rectangle
     // that contains the note head and stem
-    fileprivate var noteHeadFrame = CGRect.zero
-    
+    fileprivate var noteHeadFrame = CGRect.zero {
+        didSet {
+            measureActionFrame = noteHeadFrame
+        }
+    }
+
     let note: NoteViewModel
 
     init(note: NoteViewModel) {
