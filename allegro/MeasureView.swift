@@ -176,7 +176,8 @@ class MeasureView: UIView {
 
         let measureVM = store.measure(at: index)
         let noteViewModels = measureVM.noteViewModels
-        let noteViews = noteViewModels.map { NoteView(note: $0) }
+        let g = geometry.noteGeometry
+        let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g) }
 
         // TODO(btc): size the notes based on noteHeight
         for v in noteViews {
@@ -196,9 +197,6 @@ class MeasureView: UIView {
                                    timeSignature: measureVM.timeSignature)
             let y = geometry.noteY(pitch: noteView.note.pitch)
 
-            // TODO(btc): perhaps just set noteView.geometry = geometry
-            // and let everything else be a computed property
-            noteView.staffHeight = geometry.staffHeight
             noteView.noteOrigin = CGPoint(x: x, y: y)
             noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = false

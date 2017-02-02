@@ -20,6 +20,7 @@
 		6B096E671E37381E00615723 /* MeasureActionGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B096E661E37381E00615723 /* MeasureActionGestureRecognizer.swift */; };
 		6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B0B267D1E2F2E5F00F1870A /* Rational.framework */; };
 		6B0B26801E2F3DFB00F1870A /* MeasureViewCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0B267F1E2F3DFB00F1870A /* MeasureViewCollection.swift */; };
+		6B2CA8BF1E43815A009BA7FC /* NoteGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2CA8BE1E43815A009BA7FC /* NoteGeometry.swift */; };
 		6B3290F11E3C49B200AE693B /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F01E3C49B200AE693B /* Audio.swift */; };
 		6B3290F31E3C4DD900AE693B /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F21E3C4DD900AE693B /* AudioKit.framework */; };
 		6B3290F51E3C5BFB00AE693B /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F41E3C5BFA00AE693B /* MusicKit.framework */; };
@@ -105,6 +106,7 @@
 		6B096E661E37381E00615723 /* MeasureActionGestureRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureActionGestureRecognizer.swift; sourceTree = "<group>"; };
 		6B0B267D1E2F2E5F00F1870A /* Rational.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Rational.framework; path = Carthage/Build/iOS/Rational.framework; sourceTree = SOURCE_ROOT; };
 		6B0B267F1E2F3DFB00F1870A /* MeasureViewCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewCollection.swift; sourceTree = "<group>"; };
+		6B2CA8BE1E43815A009BA7FC /* NoteGeometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteGeometry.swift; sourceTree = "<group>"; };
 		6B3290ED1E3AF51A00AE693B /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Regular.ttf"; path = "fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		6B3290EE1E3AF55700AE693B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Bold.ttf"; path = "fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		6B3290F01E3C49B200AE693B /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				6B0B267F1E2F3DFB00F1870A /* MeasureViewCollection.swift */,
 				6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */,
 				6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */,
+				6B2CA8BE1E43815A009BA7FC /* NoteGeometry.swift */,
 				6B6BE38D1E2DE023007E0491 /* NoteSelectorCell.swift */,
 				6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */,
 				32B8678B1E3062C60029F946 /* NoteView.swift */,
@@ -720,6 +723,7 @@
 				6B92BE631E308A6A00CE2C9F /* MeasureViewCollectionCell.swift in Sources */,
 				B90F77971E3680C1009F0CA3 /* Mocks.swift in Sources */,
 				6B6E27201E28985F00F9CF66 /* Utils.swift in Sources */,
+				6B2CA8BF1E43815A009BA7FC /* NoteGeometry.swift in Sources */,
 				B9ADCB821E2ED1F5001D72AE /* Key.swift in Sources */,
 				6B3797FB1E42A8DF001F9246 /* MeasureActionView.swift in Sources */,
 				6B3290F11E3C49B200AE693B /* Audio.swift in Sources */,

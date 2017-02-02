@@ -11,16 +11,18 @@ import UIKit
 import Rational
 
 class NoteView: MeasureActionView {
+
+    let geometry: NoteGeometry
+
     // since everything was designed for iPhone 7, we stretch/squash the note
     // to fit other screen sizes
     // The default note size is (70, 55.16665)
-    var staffHeight = CGFloat(0)
-    
+
     fileprivate let defaultNoteWidth = CGFloat(70)
     fileprivate let defaultNoteHeight = CGFloat(55.16665)
     
     var scale: CGFloat {
-        return staffHeight / defaultNoteHeight
+        return geometry.staffHeight / defaultNoteHeight
     }
     
     // The NoteView draws the note as two separate UIBezierPaths.
@@ -130,8 +132,9 @@ class NoteView: MeasureActionView {
 
     let note: NoteViewModel
 
-    init(note: NoteViewModel) {
+    init(note: NoteViewModel, geometry: NoteGeometry) {
         self.note = note
+        self.geometry = geometry
         flagLayer = CAShapeLayer()
         super.init(frame: .zero)
         // makes it transparent so we see the lines behind
