@@ -9,9 +9,9 @@
 import Rational
 import UIKit
 
-// We are surrounded by space. 
+// We are surrounded by space.
 // And that space contains lots of things. 
-// And these things have shapes. 
+// And these things have shapes.
 // In MeasureGeometry, we are concerned with the nature of these things.
 
 struct MeasureGeometry {
