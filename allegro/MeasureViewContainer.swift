@@ -58,13 +58,19 @@ class MeasureViewContainer: UIScrollView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        measureView.geometry = MeasureGeometry(visibleSize: bounds.size)
+        guard let store = store else { return }
+        let s = MeasureGeometry.State(visibleSize: bounds.size,
+                                      selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+        measureView.geometry = MeasureGeometry(state: s)
         contentSize = measureView.bounds.size // is computed when geometry is set
     }
 
     func scrollToCenterOfStaffLines() {
-        let g = MeasureGeometry(visibleSize: bounds.size) // because measureView doesn't have a geometry until layoutSubviews
-        let point = CGPoint(x: 0, y: g.totalHeight / 2 - g.visibleSize.height / 2)
+        guard let store = store else { return }
+        let s = MeasureGeometry.State(visibleSize: bounds.size,
+                                      selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+        let g = MeasureGeometry(state: s) // because measureView doesn't have a geometry until layoutSubviews
+        let point = CGPoint(x: 0, y: g.totalHeight / 2 - g.state.visibleSize.height / 2)
         setContentOffset(point, animated: false)
     }
 }

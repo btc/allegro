@@ -148,7 +148,6 @@ class MeasureView: UIView {
 
     private func drawVerticalGridlines(rect: CGRect) {
         guard let store = store, let index = index else { return }
-        guard store.selectedNoteValue.nominalDuration >= Note.Value.eighth.nominalDuration else { return }
 
         let measure = store.measure(at: index)
 
@@ -319,7 +318,11 @@ extension MeasureView: MeasureActionDelegate {
 
 extension MeasureView: PartStoreObserver {
     func partStoreChanged() {
-        eraseGR.isEnabled = store?.mode == .erase
+        guard let store = store else { return }
+        eraseGR.isEnabled = store.mode == .erase
+        let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
+                                          selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+        geometry = MeasureGeometry(state: state)
         setNeedsDisplay()
         setNeedsLayout()
     }

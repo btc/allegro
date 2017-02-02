@@ -15,29 +15,49 @@ import UIKit
 // In MeasureGeometry, we are concerned with the nature of these things.
 
 struct MeasureGeometry {
+
     typealias Line = (start: CGPoint, end: CGPoint)
 
-    static let zero = MeasureGeometry(visibleSize: .zero)
+    struct State {
 
-    let visibleSize: CGSize // the only value that must be provided by client!
+        let visibleSize: CGSize
+        let selectedNoteDuration: Rational
+
+        init(visibleSize: CGSize, selectedNoteDuration: Rational) {
+            self.visibleSize = visibleSize
+            self.selectedNoteDuration = selectedNoteDuration
+        }
+    }
+
+    static let zero = MeasureGeometry(state: State(visibleSize: .zero, selectedNoteDuration: 1))
+
+    let state: State
+
     let staffCount = 5
     let numLedgerLinesAbove = 4
     let numLedgerLinesBelow = 4
+
+    var minNoteWidth: CGFloat {
+        return 2 * staffHeight
+    }
 
     var staffDrawStart: CGFloat {
         return DEFAULT_MARGIN_PTS + CGFloat(numLedgerLinesAbove) * staffHeight
     }
 
     var staffHeight: CGFloat {
-        return (visibleSize.height - 2 * DEFAULT_MARGIN_PTS) / CGFloat(staffCount + 1)
+        return (state.visibleSize.height - 2 * DEFAULT_MARGIN_PTS) / CGFloat(staffCount + 1)
     }
 
     // it's a lot easier to compute width than height, so they are provided independently to allow clients to minimize
     // arithmetic operations
 
     var totalWidth: CGFloat {
-        return visibleSize.width // TODO(btc): handle warping/stretching of space in the x-axis
-
+        let minNoteWidth = Rational(Int(self.minNoteWidth))
+        let numNotesPerMeasure = 1 / state.selectedNoteDuration
+        let visibleWidth = state.visibleSize.width
+        let reservedWidth = (minNoteWidth * numNotesPerMeasure).cgFloat
+        return max(reservedWidth, visibleWidth)
     }
 
     // as an optimization, this could be defined as a lazy let getter
@@ -48,6 +68,7 @@ struct MeasureGeometry {
         return staffHeight * numSpacesBetweenAllLines + 2 * DEFAULT_MARGIN_PTS
     }
 
+    // deprecated. TODO remove in favor of frameSize
     var totalSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
     }
