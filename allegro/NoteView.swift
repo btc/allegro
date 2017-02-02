@@ -35,7 +35,7 @@ class NoteView: MeasureActionView {
     }
     
     // thickness in the x direction of the stem
-    private var stemThickness: CGFloat {
+    var stemThickness: CGFloat {
         return 3 * scale
     }
     
