@@ -20,8 +20,8 @@ struct MeasureGeometry {
 
     let visibleSize: CGSize // the only value that must be provided by client!
     let staffCount = 5
-    let numLedgerLinesAbove = 2
-    let numLedgerLinesBelow = 2
+    let numLedgerLinesAbove = 4
+    let numLedgerLinesBelow = 4
     let staffLineThickness: CGFloat = 2
 
     var frameSize: CGSize {
