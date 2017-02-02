@@ -219,7 +219,7 @@ class MeasureView: UIView {
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
             let x = geometry.noteX(position: noteView.note.position,
-                                      timeSignature: measureVM.timeSignature)
+                                   timeSignature: measureVM.timeSignature)
             let y = geometry.noteY(pitch: noteView.note.pitch)
 
             // TODO(btc): perhaps just set noteView.geometry = geometry

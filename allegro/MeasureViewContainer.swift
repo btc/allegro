@@ -37,8 +37,7 @@ class MeasureViewContainer: UIScrollView {
         didSet {
             // once we know our size, we have enough information to determine the size of the measure view and scroll
             // to the center. So, we scroll to the center as soon as the frame is set.
-            measureView.geometry = MeasureGeometry(visibleSize: bounds.size)
-            contentSize = measureView.bounds.size
+            // perhaps this should be done in bounds.didSet
             scrollToCenterOfStaffLines()
         }
     }
@@ -56,8 +55,14 @@ class MeasureViewContainer: UIScrollView {
         fatalError("init(coder:) not supported")
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        measureView.geometry = MeasureGeometry(visibleSize: bounds.size)
+        contentSize = measureView.bounds.size // is computed when geometry is set
+    }
+
     func scrollToCenterOfStaffLines() {
-        let g = measureView.geometry
+        let g = MeasureGeometry(visibleSize: bounds.size) // because measureView doesn't have a geometry until layoutSubviews
         let point = CGPoint(x: 0, y: g.totalHeight / 2 - g.visibleSize.height / 2)
         setContentOffset(point, animated: false)
     }
