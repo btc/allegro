@@ -93,11 +93,11 @@ struct MeasureGeometry {
         return arr
     }
 
-    func verticalGridlines(timeSignature: Rational, noteDuration: Rational) -> [Line] {
+    func verticalGridlines(timeSignature: Rational, selectedNoteDuration: Rational) -> [Line] {
 
         var arr = [Line]()
 
-        let numGridSlots = timeSignature / noteDuration // spaces between fence posts
+        let numGridSlots = timeSignature / selectedNoteDuration // spaces between fence posts
         let numGridlines: Int = numGridSlots.intApprox - 1 // number of fence posts. we ignore the two end posts.
 
         // right now, grid lines are evenly-spaced. this will no longer be true once we expand the grid slots to
