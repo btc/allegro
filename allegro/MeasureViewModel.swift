@@ -81,18 +81,77 @@ struct MeasureViewModel {
         }
     }
     
+    private mutating func setFlipped(beamIndex: Int, flipped: Bool) {
+        for i in 0..<beams[beamIndex].count {
+            beams[beamIndex][i].flipped = flipped
+        }
+    }
+    
     // determines beams and creates NoteViewModels
     private mutating func noteLayout() {
         
-        var currBeam: Beam? = nil
+        // recursive formulation
         
-        for (position, note) in measure.getAllNotes() {
-            // check for two eighth notes
-            // first eighth lands on beat, second lands off beat
-            // check for flipping
-            //
+        var startBeam = Beam()
+        for (pos, note) in measure.getAllNotes() {
+            startBeam.append(NoteViewModel(note: note, position: pos))
         }
-
+        processBeam(beam: startBeam)
+        
+        // cleanup beams
+        
+        // align flipped for all notes in each beam
+        for (beamIndex, beam) in beams.enumerated() {
+            var flippedCount = 0
+            for note in beam {
+                if note.flipped {
+                    flippedCount += 1
+                }
+            }
+            // more than half are flipped
+            if flippedCount * 2 > beam.count {
+                setFlipped(beamIndex: beamIndex, flipped: true)
+            } else {
+                setFlipped(beamIndex: beamIndex, flipped: false)
+            }
+        }
+    }
+    
+    private mutating func processBeam(beam: Beam) {
+        let splitIndex = splitBeam(beam: beam)
+        
+        // no split
+        if splitIndex == 0 {
+            beams.append(beam)
+            return
+        }
+        
+        let lhs = Beam(beam[0..<splitIndex])
+        let rhs = Beam(beam[splitIndex..<beam.count])
+        
+        processBeam(beam: lhs)
+        processBeam(beam: rhs)
+    }
+    
+    // returns index of first element of second part of split
+    // eg. beam should be split as beam[0..<i] and beam[i...end]
+    private func splitBeam(beam: Beam) -> Int {
+        // do not split if there is nothing to split
+        if beam.count <= 1 {
+            return 0
+        }
+        
+        // split after the first run
+        // v1 run = same value
+        let value = beam[0].value
+        for (index, note) in beam.enumerated() {
+            if note.value != value {
+                // split here because this is the first note that doesn't match
+                return index
+            }
+        }
+        // no split if everything is in the run
+        return 0
     }
 
     init(_ measure: Measure) {
