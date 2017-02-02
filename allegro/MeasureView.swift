@@ -12,15 +12,10 @@ import Rational
 
 class MeasureView: UIView {
 
-    fileprivate static func staffHeight(visibleHeight: CGFloat) -> CGFloat {
-        return (visibleHeight - 2 * DEFAULT_MARGIN_PTS) / CGFloat(staffCount + 1)
-    }
-
-    static func totalHeight(visibleHeight: CGFloat) -> CGFloat {
-        // - 1 because we're counting the spaces between ledger lines
-        // 2 * Margin because we leave a little space above the top and bottom ledger lines
-        let numSpacesBetweenAllLines: CGFloat = CGFloat(staffCount + numLedgerLinesAbove + numLedgerLinesBelow - 1)
-        return staffHeight(visibleHeight: visibleHeight) * numSpacesBetweenAllLines + 2 * DEFAULT_MARGIN_PTS
+    var geometry: MeasureGeometry = .zero {
+        didSet {
+            frame.size = geometry.frameSize
+        }
     }
 
     var store: PartStore? {
@@ -38,36 +33,6 @@ class MeasureView: UIView {
 
     var index: Int?
 
-    var staffLineThickness: CGFloat = 0
-
-    var sizeOfParentsVisibleArea: CGSize? {
-        didSet {
-            guard let sizeOfParentsVisibleArea = sizeOfParentsVisibleArea else { return }
-            frame.size = CGSize(width: sizeOfParentsVisibleArea.width,
-                                height: MeasureView.totalHeight(visibleHeight: sizeOfParentsVisibleArea.height))
-        }
-    }
-
-    fileprivate var staffHeight: CGFloat {
-        return MeasureView.staffHeight(visibleHeight: visibleHeight)
-    }
-
-    // there are two 'heights' that we care about: _visible_ height and _total_ height. Visible height is what is
-    // visible in edit mode. Total height is what is visible in view mode.
-    fileprivate var visibleHeight: CGFloat {
-        return sizeOfParentsVisibleArea?.height ?? 0
-    }
-
-    fileprivate var staffDrawStart: CGFloat {
-        return DEFAULT_MARGIN_PTS + CGFloat(MeasureView.numLedgerLinesAbove) * staffHeight
-    }
-
-    fileprivate static let staffCount = 5
-    fileprivate static let numLedgerLinesAbove = 4
-    fileprivate static let numLedgerLinesBelow = 4
-
-    fileprivate var noteHeight: CGFloat { return staffHeight }
-    
     fileprivate let barThickness = CGFloat(5)
     fileprivate let barLayer: CAShapeLayer
     
@@ -150,14 +115,13 @@ class MeasureView: UIView {
     }
 
     private func drawStaffs(rect: CGRect) {
-        for i in 0..<MeasureView.staffCount {
-            let path = UIBezierPath(rect: CGRect(
-                x: 0,
-                y: staffDrawStart + CGFloat(i) * staffHeight - staffLineThickness / 2,
-                width: rect.width,
-                height: staffLineThickness
-                )
-            )
+        for i in 0..<geometry.staffCount {
+            // TODO(btc): replace rect with bezierPath.move, start, end, etc.
+            let r = CGRect(x: 0,
+                           y: geometry.staffDrawStart + CGFloat(i) * geometry.staffHeight - geometry.staffLineThickness / 2,
+                           width: rect.width,
+                           height: geometry.staffLineThickness)
+            let path = UIBezierPath(rect: r)
 
             UIColor.black.setFill()
             path.fill()
@@ -183,14 +147,17 @@ class MeasureView: UIView {
             path.stroke()
         }
 
-        for i in stride(from: 0, to: MeasureView.numLedgerLinesAbove, by: 1) {
-            let y = DEFAULT_MARGIN_PTS + staffHeight * CGFloat(i)
+        for i in stride(from: 0, to: geometry.numLedgerLinesAbove, by: 1) {
+            let y = DEFAULT_MARGIN_PTS + geometry.staffHeight * CGFloat(i)
             drawLine(y)
 
         }
 
-        for i in stride(from: 0, to: MeasureView.numLedgerLinesBelow, by: 1) {
-            let y = DEFAULT_MARGIN_PTS + CGFloat(MeasureView.numLedgerLinesAbove + MeasureView.staffCount) * staffHeight + staffHeight * CGFloat(i)
+        for i in stride(from: 0, to: geometry.numLedgerLinesBelow, by: 1) {
+            let m = DEFAULT_MARGIN_PTS
+            let numLinesAbovePlusNumStaffs = CGFloat(geometry.numLedgerLinesAbove + geometry.staffCount)
+            let staffHeight = geometry.staffHeight
+            let y = m + numLinesAbovePlusNumStaffs * staffHeight + staffHeight * CGFloat(i)
             drawLine(y)
         }
     }
@@ -248,20 +215,18 @@ class MeasureView: UIView {
 
         // we're barring all the notes for now
         for (i, noteView) in noteViews.enumerated() {
-            let position = noteView.note.pitch
-
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = noteViewModels[i].position.cgFloat / measureVM.timeSignature.cgFloat * bounds.width
-            let y = staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(position) - noteHeight / 2
-            
-            let stemLength = 2 * staffHeight
-            let end = position > 0 ? y + noteHeight + stemLength : y - stemLength
-            
-            noteView.staffHeight = staffHeight
+            let x = geometry.noteX(position: noteView.note.position,
+                                      timeSignature: measureVM.timeSignature)
+            let y = geometry.noteY(pitch: noteView.note.pitch)
+
+            // TODO(btc): perhaps just set noteView.geometry = geometry
+            // and let everything else be a computed property
+            noteView.staffHeight = geometry.staffHeight
             noteView.noteOrigin = CGPoint(x: x, y: y)
-            noteView.stemEndY = CGFloat(end)
+            noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = false
             
             let noteViewOrigin = noteView.frame.origin
@@ -332,14 +297,13 @@ extension MeasureView: MeasureActionDelegate {
         let value = store.selectedNoteValue
 
         // determine pitch
-        let pitchRelativeToCenterLine = pointToPitch(location)
+        let pitchRelativeToCenterLine = geometry.pointToPitch(location)
 
         // determine position
         let measure = store.measure(at: index)
-        guard let rational = MeasureView.pointToPositionInTime(x: location.x,
-                                                               width: bounds.width,
-                                                               timeSignature: measure.timeSignature,
-                                                               noteDuration: value.nominalDuration) else {
+        guard let rational = geometry.pointToPositionInTime(x: location.x,
+                                                            timeSignature: measure.timeSignature,
+                                                            noteDuration: value.nominalDuration) else {
             Log.error?.message("failed to convert user's touch into a position in time")
             return
         }
@@ -377,24 +341,6 @@ extension MeasureView: MeasureActionDelegate {
         }
     }
 
-    // TODO(btc): move to MeasureViewModel
-    private func pointToPitch(_ point: CGPoint) -> Int {
-        let numSpacesBetweenAllLines: CGFloat = CGFloat(MeasureView.staffCount + MeasureView.numLedgerLinesAbove + MeasureView.numLedgerLinesBelow - 1)
-        let lengthOfSemitoneInPoints = staffHeight / 2
-        return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / lengthOfSemitoneInPoints + numSpacesBetweenAllLines))
-    }
-
-    // TODO(btc): move to MeasureViewModel
-    static func pointToPositionInTime(x: CGFloat,
-                                      width: CGFloat,
-                                      timeSignature: Rational,
-                                      noteDuration: Rational) -> Rational? {
-
-        let numPositionsInTime = timeSignature / noteDuration
-        let ratioOfScreenWidth = x / width
-        let positionInTime = Int(ratioOfScreenWidth * numPositionsInTime.cgFloat)
-        return Rational(positionInTime) / numPositionsInTime * timeSignature
-    }
 }
 
 extension MeasureView: PartStoreObserver {
