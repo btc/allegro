@@ -32,11 +32,6 @@ window?.rootViewController = RootNavigationViewController(rootViewController: Ho
 
 [Install Fastlane](https://github.com/fastlane/fastlane#installation)
 
-Installation on Hard Mode: Cocoapods and Fastlane are both made with Ruby. If you are familiar with Ruby,
-you can install the two gems using the provided Gemfile. To do so, run `bundle
-install`. Afterward, instead of running `pod install`, you run `bundle exec pod
-install`. The same goes for Fastlane. Prefix your command with `bundle exec`.
-
 [Awesome iOS](https://github.com/vsouza/awesome-ios)
 
 [List of Musical Symbols](https://en.wikipedia.org/wiki/List_of_musical_symbols)
