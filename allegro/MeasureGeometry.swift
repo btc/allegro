@@ -44,6 +44,7 @@ struct MeasureGeometry {
 
     }
 
+    // as an optimization, this could be defined as a lazy let getter
     var totalHeight: CGFloat {
         // - 1 because we're counting the spaces between ledger lines
         // 2 * Margin because we leave a little space above the top and bottom ledger lines
