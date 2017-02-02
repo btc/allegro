@@ -115,27 +115,22 @@ class MeasureView: UIView {
     }
 
     private func drawStaffs(rect: CGRect) {
-        for i in 0..<geometry.staffCount {
-            // TODO(btc): replace rect with bezierPath.move, start, end, etc.
-            let r = CGRect(x: 0,
-                           y: geometry.staffDrawStart + CGFloat(i) * geometry.staffHeight - geometry.staffLineThickness / 2,
-                           width: rect.width,
-                           height: geometry.staffLineThickness)
-            let path = UIBezierPath(rect: r)
+        for (start, end) in geometry.staffLines {
+            let path = UIBezierPath()
+            path.move(to: start)
+            path.addLine(to: end)
 
-            UIColor.black.setFill()
-            path.fill()
+            path.lineWidth = geometry.staffLineThickness
+            UIColor.black.setStroke()
+            path.stroke()
         }
     }
 
     private func drawLedgerLineGuides(rect: CGRect) {
 
-        let drawLine = { (y: CGFloat) -> Void in
+        for (start, end) in geometry.ledgerLineGuides {
+
             let path = UIBezierPath()
-
-            let start = CGPoint(x: 0, y: y)
-            let end = CGPoint(x: rect.width, y: y)
-
             path.move(to: start)
             path.addLine(to: end)
 
@@ -145,41 +140,20 @@ class MeasureView: UIView {
 
             UIColor.lightGray.setStroke()
             path.stroke()
-        }
-
-        for i in stride(from: 0, to: geometry.numLedgerLinesAbove, by: 1) {
-            let y = DEFAULT_MARGIN_PTS + geometry.staffHeight * CGFloat(i)
-            drawLine(y)
-
-        }
-
-        for i in stride(from: 0, to: geometry.numLedgerLinesBelow, by: 1) {
-            let m = DEFAULT_MARGIN_PTS
-            let numLinesAbovePlusNumStaffs = CGFloat(geometry.numLedgerLinesAbove + geometry.staffCount)
-            let staffHeight = geometry.staffHeight
-            let y = m + numLinesAbovePlusNumStaffs * staffHeight + staffHeight * CGFloat(i)
-            drawLine(y)
         }
     }
 
     private func drawVerticalGridlines(rect: CGRect) {
         guard let store = store, let index = index else { return }
-
-        let measure = store.measure(at: index)
-        
         guard store.selectedNoteValue.nominalDuration >= Note.Value.eighth.nominalDuration else { return }
 
-        let numGridSlots = measure.timeSignature / store.selectedNoteValue.nominalDuration
-        let numGridlines: Int = numGridSlots.intApprox - 1 // fence post
-        let gridlineOffset = rect.width / numGridSlots.cgFloat
+        let measure = store.measure(at: index)
 
-        for i in stride(from: 0, to: numGridlines, by: 1) {
+        let lines = geometry.verticalGridlines(timeSignature: measure.timeSignature,
+                                               noteDuration: store.selectedNoteValue.nominalDuration)
+        for (start, end) in lines {
 
             let path = UIBezierPath()
-
-            let x = gridlineOffset * CGFloat(i + 1)
-            let start = CGPoint(x: x, y: 0)
-            let end = CGPoint(x: x, y: rect.height)
             path.move(to: start)
             path.addLine(to: end)
 
@@ -190,7 +164,6 @@ class MeasureView: UIView {
             UIColor.lightGray.setStroke()
             path.stroke()
         }
-
     }
 
     override func layoutSubviews() {
