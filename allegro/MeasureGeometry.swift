@@ -24,10 +24,6 @@ struct MeasureGeometry {
     let numLedgerLinesAbove = 4
     let numLedgerLinesBelow = 4
 
-    var frameSize: CGSize {
-        return CGSize(width: visibleSize.width, height: totalHeight)
-    }
-
     var staffDrawStart: CGFloat {
         return DEFAULT_MARGIN_PTS + CGFloat(numLedgerLinesAbove) * staffHeight
     }
@@ -54,6 +50,10 @@ struct MeasureGeometry {
 
     var totalSize: CGSize {
         return CGSize(width: totalWidth, height: totalHeight)
+    }
+
+    var frameSize: CGSize {
+        return totalSize
     }
 
     var stemLength: CGFloat {
@@ -144,7 +144,7 @@ struct MeasureGeometry {
                                noteDuration: Rational) -> Rational? {
 
         let numPositionsInTime = timeSignature / noteDuration
-        let ratioOfScreenWidth = x / visibleSize.width
+        let ratioOfScreenWidth = x / totalWidth
         let positionInTime = Int(ratioOfScreenWidth * numPositionsInTime.cgFloat)
         return Rational(positionInTime) / numPositionsInTime * timeSignature
     }
