@@ -26,6 +26,7 @@
 		6B3290F71E3D4F9700AE693B /* TTGSnackbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */; };
 		6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F81E3D4FEB00AE693B /* Snackbar.swift */; };
 		6B3797FB1E42A8DF001F9246 /* MeasureActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3797FA1E42A8DF001F9246 /* MeasureActionView.swift */; };
+		6B3797FE1E42EC3A001F9246 /* MeasureGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3797FD1E42EC3A001F9246 /* MeasureGeometry.swift */; };
 		6B40EC091E3885CA004C7194 /* MeasureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B40EC081E3885CA004C7194 /* MeasureViewModel.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A51E2D7FD600399BDC /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A41E2D7FD600399BDC /* Measure.swift */; };
@@ -112,6 +113,7 @@
 		6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TTGSnackbar.framework; path = Carthage/Build/iOS/TTGSnackbar.framework; sourceTree = SOURCE_ROOT; };
 		6B3290F81E3D4FEB00AE693B /* Snackbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		6B3797FA1E42A8DF001F9246 /* MeasureActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureActionView.swift; sourceTree = "<group>"; };
+		6B3797FD1E42EC3A001F9246 /* MeasureGeometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureGeometry.swift; sourceTree = "<group>"; };
 		6B40EC081E3885CA004C7194 /* MeasureViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewModel.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A41E2D7FD600399BDC /* Measure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
@@ -275,10 +277,11 @@
 			isa = PBXGroup;
 			children = (
 				6B3797FA1E42A8DF001F9246 /* MeasureActionView.swift */,
+				6B3797FD1E42EC3A001F9246 /* MeasureGeometry.swift */,
 				32B867891E2D79F80029F946 /* MeasureView.swift */,
-				6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */,
 				6B0B267F1E2F3DFB00F1870A /* MeasureViewCollection.swift */,
 				6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */,
+				6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */,
 				6B6BE38D1E2DE023007E0491 /* NoteSelectorCell.swift */,
 				6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */,
 				32B8678B1E3062C60029F946 /* NoteView.swift */,
@@ -724,6 +727,7 @@
 				B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */,
 				6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */,
 				8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */,
+				6B3797FE1E42EC3A001F9246 /* MeasureGeometry.swift in Sources */,
 				8280ADAD1E4295AB00DFE061 /* TimeSignatureViewController.swift in Sources */,
 				6B0B26801E2F3DFB00F1870A /* MeasureViewCollection.swift in Sources */,
 				6B096E671E37381E00615723 /* MeasureActionGestureRecognizer.swift in Sources */,
