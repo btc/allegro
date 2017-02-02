@@ -235,7 +235,7 @@ class MeasureView: UIView {
         guard let store = store, let index = index else { return }
 
         let measureVM = store.measure(at: index)
-        let noteViewModels = measureVM.notes
+        let noteViewModels = measureVM.noteViewModels
         let noteViews = noteViewModels.map { NoteView(note: $0) }
 
         // TODO(btc): size the notes based on noteHeight

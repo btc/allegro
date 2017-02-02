@@ -22,10 +22,6 @@ struct MeasureViewModel {
     // TODO(btc): Is it more convenient to be provided with a list of positions (Rational) instead?
     var beams: [Beam] = [] // TODO: implement
 
-    var notes: [NoteViewModel] {
-        return measure.getAllNotes().map { NoteViewModel(note: $0.note, position: $0.pos) }
-    }
-    
     /*
         For the current NoteViewModel, determines if accidental should be displayed or not
         return true: accidental should be displayed (default)
