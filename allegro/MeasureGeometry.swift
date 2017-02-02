@@ -64,6 +64,10 @@ struct MeasureGeometry {
         return staffHeight
     }
 
+    var noteGeometry: NoteGeometry {
+        return NoteGeometry(staffHeight: staffHeight)
+    }
+
     var staffLines: [Line] {
         var lines = [Line]()
         for i in stride(from: 0, to: staffCount, by: 1) {
