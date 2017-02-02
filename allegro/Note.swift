@@ -77,6 +77,15 @@ class Note {
             case .twofiftysixth: return 1/256
             }
         }
+        
+        var hasFlag: Bool {
+            switch self {
+            case .whole, .half, .quarter:
+                return false
+            default:
+                return true
+            }
+        }
     }
     
     // Gives the true duration of the note after modifiers

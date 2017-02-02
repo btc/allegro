@@ -49,6 +49,7 @@ private let DMajor = [
     "8 D 5 n"
 ]
 
+// comments are for ideal beam
 private let beams = [
     "8 E 4 n", // beam 0
     "8 F 4 n", // beam 0
@@ -57,7 +58,7 @@ private let beams = [
     "8 A 4 n", // beam 2
     "8 A 4 n", // beam 2
     "8 B 4 n", // beam 2
-    "8 C 5 n", // v1 beam 3, but it should be beam 2
+    "8 C 5 n", // beam 2
     
     "16 G 4 n", // beam 0
     "16 G 4 n", // beam 0
@@ -70,7 +71,14 @@ private let beams = [
     "16 E 5 n", // beam 2
     "16 E 5 n", // beam 2
     "8 E 5 n", // beam 3
-    "8 E 5 n" // beam 3
+    "8 E 5 n", // beam 3
+    
+    "4 F 4 n", // no beam
+    "8 G 4 n", // beam 0
+    "8 A 4 n", // beam 0
+    "4 B 4 n", // no beam
+    "8 C 4 n", // beam 1
+    "8 C 4 n" // beam 1
 ]
 
 // 4 C 4 n -> quarternote, C, octave 4, natural
