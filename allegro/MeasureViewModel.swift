@@ -118,7 +118,7 @@ struct MeasureViewModel {
     }
     
     private mutating func processBeam(beam: Beam) {
-        let splitIndex = splitBeam(beam: beam)
+        let (splitIndex, discard) = splitBeam(beam: beam)
         
         // no split
         if splitIndex == 0 {
@@ -126,19 +126,23 @@ struct MeasureViewModel {
             return
         }
         
-        let lhs = Beam(beam[0..<splitIndex])
-        let rhs = Beam(beam[splitIndex..<beam.count])
+        if !discard {
+            let lhs = Beam(beam[0..<splitIndex])
+            processBeam(beam: lhs)
+        }
         
-        processBeam(beam: lhs)
+        let rhs = Beam(beam[splitIndex..<beam.count])
         processBeam(beam: rhs)
     }
     
     // returns index of first element of second part of split
     // eg. beam should be split as beam[0..<i] and beam[i...end]
-    private func splitBeam(beam: Beam) -> Int {
+    // also return whether the first portion should be discarded
+    private func splitBeam(beam: Beam) -> (splitIndex: Int, discard: Bool) {
         // do not split if there is nothing to split
         if beam.count <= 1 {
-            return 0
+            // discard so that we don't have 1 element beams
+            return (0, true)
         }
         
         // split after the first run
@@ -147,11 +151,22 @@ struct MeasureViewModel {
         for (index, note) in beam.enumerated() {
             if note.value != value {
                 // split here because this is the first note that doesn't match
-                return index
+                if value.hasFlag {
+                    return (index, false)
+                } else {
+                    // discard if this run has no flag
+                    return (index, true)
+                }
             }
         }
         // no split if everything is in the run
-        return 0
+        if value.hasFlag {
+            return (0, false)
+        } else {
+            // but this run has no flag so we discard it
+            return (0, true)
+        }
+        
     }
 
     init(_ measure: Measure) {

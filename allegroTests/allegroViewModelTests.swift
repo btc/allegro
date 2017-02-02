@@ -39,11 +39,11 @@ class allegroViewModelTests: XCTestCase {
         let part = mockPart("beams")
         let m0 = MeasureViewModel(part.measures[0])
         let m1 = MeasureViewModel(part.measures[1])
+        let m2 = MeasureViewModel(part.measures[2])
 
-//        XCTAssert(m0.beams.count == 4, "4 beams in v1")
         XCTAssert(m0.beams.count == 1)
-
-        XCTAssert(m1.beams.count == 4, "4 beams")
+        XCTAssert(m1.beams.count == 4)
+        XCTAssert(m2.beams.count == 2)
     }
     
     func testPerformanceExample() {

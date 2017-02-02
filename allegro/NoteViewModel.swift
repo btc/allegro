@@ -26,12 +26,7 @@ struct NoteViewModel {
     
     // true for notes smaller than eighth notes that should be drawn with a flag or beamed
     var hasFlag: Bool {
-        switch note.value {
-        case .whole, .half, .quarter:
-            return false
-        default:
-            return true
-        }
+        return note.value.hasFlag
     }
     var displayAccidental: Bool = false
     
