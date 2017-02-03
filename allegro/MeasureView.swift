@@ -117,33 +117,30 @@ class MeasureView: UIView {
     }
 
     private func drawStaffs(rect: CGRect) {
+        let path = UIBezierPath()
         for (start, end) in geometry.staffLines {
-            let path = UIBezierPath()
             path.move(to: start)
             path.addLine(to: end)
-
-
-            path.lineWidth = staffLineThickness
-            UIColor.black.setStroke()
-            path.stroke()
         }
+        path.lineWidth = staffLineThickness
+        UIColor.black.setStroke()
+        path.stroke()
     }
 
     private func drawLedgerLineGuides(rect: CGRect) {
-
+        let path = UIBezierPath()
         for (start, end) in geometry.ledgerLineGuides {
 
-            let path = UIBezierPath()
             path.move(to: start)
             path.addLine(to: end)
-
-            path.lineCapStyle = .round
-            let dashes: [CGFloat] = [1, 10]
-            path.setLineDash(dashes, count: dashes.count, phase: 0)
-
-            UIColor.lightGray.setStroke()
-            path.stroke()
         }
+
+        path.lineCapStyle = .round
+        let dashes: [CGFloat] = [1, 10]
+        path.setLineDash(dashes, count: dashes.count, phase: 0)
+
+        UIColor.lightGray.setStroke()
+        path.stroke()
     }
 
     private func drawVerticalGridlines(rect: CGRect) {
@@ -153,19 +150,19 @@ class MeasureView: UIView {
 
         let lines = geometry.verticalGridlines(timeSignature: measure.timeSignature,
                                                selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+        let path = UIBezierPath()
+
         for (start, end) in lines {
 
-            let path = UIBezierPath()
             path.move(to: start)
             path.addLine(to: end)
-
-            path.lineCapStyle = .round
-            let dashes: [CGFloat] = [1, 10]
-            path.setLineDash(dashes, count: dashes.count, phase: 0)
-
-            UIColor.lightGray.setStroke()
-            path.stroke()
         }
+        path.lineCapStyle = .round
+        let dashes: [CGFloat] = [1, 10]
+        path.setLineDash(dashes, count: dashes.count, phase: 0)
+
+        UIColor.lightGray.setStroke()
+        path.stroke()
     }
 
     override func layoutSubviews() {
@@ -323,7 +320,7 @@ extension MeasureView: PartStoreObserver {
         let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
                                           selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         geometry = MeasureGeometry(state: state)
-        setNeedsDisplay()
+        setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
     }
 }
