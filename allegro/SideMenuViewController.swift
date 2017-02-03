@@ -13,35 +13,6 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
-    
-    //TODO: Fix button sizing to make each one consistent
-    private let NavigationLabel: UIView = {
-        let v = UILabel()
-        v.text = "Navigation"
-        v.textAlignment = .left
-        v.textColor = .black
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-    
-    private let modeLabel: UIView = {
-        let v = UILabel()
-        v.text = "Mode"
-        v.textAlignment = .left
-        v.textColor = .black
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-    
-    private let signaturesLabel: UIView = {
-        let v = UILabel()
-        v.text = "Signatures"
-        v.textAlignment = .left
-        v.textColor = .black
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -121,7 +92,6 @@ class SideMenuViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.allegroPurple
-        view.addSubview(NavigationLabel)
         view.addSubview(NewButton)
         view.addSubview(Export)
         view.addSubview(eraseButton)
@@ -130,8 +100,6 @@ class SideMenuViewController: UIViewController {
         view.addSubview(instructionsButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
-        view.addSubview(modeLabel)
-        view.addSubview(signaturesLabel)
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
@@ -156,16 +124,6 @@ class SideMenuViewController: UIViewController {
         
         //Button size chosen based on screen size
         let buttonSize = parent.width / 6
-        
-        //Label sizing
-        let titleH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let titleW = titleH * THE_GOLDEN_RATIO
-        
-        //Label coordinates
-        let labelX = DEFAULT_MARGIN_PTS
-        let labelY = -parent.height/10
-        let labelY2 = labelY + 2*buttonSize + DEFAULT_MARGIN_PTS/2
-        let labelY3 = labelY2 + 2*buttonSize + DEFAULT_MARGIN_PTS/2
 
         /* firstButtonX is the X location of the first menu item. This setup assumes 3 buttons per row and 3 rows. The buttons are centered with a slight margin of size buttonSize/2 between edges
         */
@@ -176,22 +134,6 @@ class SideMenuViewController: UIViewController {
         let firstButtonY = parent.height/6
         let secondButtonY = parent.height/6 + 2*buttonSize + DEFAULT_MARGIN_PTS/3
         let thirdButtonY = centerY + 2.25*buttonSize
-        
-        
-        NavigationLabel.frame = CGRect(x: labelX,
-                            y: labelY,
-                            width: titleW,
-                            height: titleH)
-        
-        modeLabel.frame = CGRect(x: labelX,
-                                 y: labelY2,
-                                 width: titleW,
-                                 height: titleH)
-        
-        signaturesLabel.frame = CGRect(x: labelX,
-                                 y: labelY3,
-                                 width: titleW,
-                                 height: titleH)
 
         NewButton.frame = CGRect(x: firstButtonX,
                                 y: firstButtonY,
