@@ -21,13 +21,6 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    private let saveButton: UIView = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "save"), for: UIControlState.normal)
-        return v
-    }()
-    
     private let instructionsButton: UIView = {
         let v = UIButton()
         v.backgroundColor = .clear
@@ -94,10 +87,9 @@ class SideMenuViewController: UIViewController {
         view.backgroundColor = UIColor.allegroPurple
         view.addSubview(NewButton)
         view.addSubview(Export)
+        view.addSubview(instructionsButton)
         view.addSubview(eraseButton)
         view.addSubview(editButton)
-        view.addSubview(saveButton)
-        view.addSubview(instructionsButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
         
@@ -119,57 +111,34 @@ class SideMenuViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         //refernece values
         let parent = view.bounds
-        let centerX = parent.width/2
-        let centerY = parent.height/2
-        
-        //Button size chosen based on screen size
-        let buttonSize = parent.width / 6
 
-        /* firstButtonX is the X location of the first menu item. This setup assumes 3 buttons per row and 3 rows. The buttons are centered with a slight margin of size buttonSize/2 between edges
-        */
-        let firstButtonX = centerX - buttonSize*2
-        let secondButtonX = firstButtonX + 1.5*buttonSize
-        let thirdButtonX = secondButtonX + 1.5*buttonSize
-        
-        let firstButtonY = parent.height/6
-        let secondButtonY = parent.height/6 + 2*buttonSize + DEFAULT_MARGIN_PTS/3
-        let thirdButtonY = centerY + 2.25*buttonSize
+        let verticallyStackedButtons = [NewButton, Export, instructionsButton]
+        let modeButtonBlocks = [editButton, eraseButton]
+        let signatureButtonBlocks = [keySignature, timeSignature]
 
-        NewButton.frame = CGRect(x: firstButtonX,
-                                y: firstButtonY,
-                                width: buttonSize,
-                                height: buttonSize)
-        
-        editButton.frame = CGRect(x: firstButtonX,
-                                   y: secondButtonY,
-                                   width: buttonSize,
-                                   height: buttonSize)
+        for (i, b) in verticallyStackedButtons.enumerated() {
+            let heightOfVerticallyStacked: CGFloat = parent.height / 2 / CGFloat(verticallyStackedButtons.count)
+            b.frame = CGRect(x: 0,
+                             y: CGFloat(i) * heightOfVerticallyStacked,
+                             width: parent.width,
+                             height: heightOfVerticallyStacked)
+        }
+        guard let verticallyStackedMaxY = verticallyStackedButtons.last?.frame.maxY else { return }
 
-        eraseButton.frame = CGRect(x: secondButtonX,
-                            y: secondButtonY,
-                            width: buttonSize,
-                            height: buttonSize)
-        
-        saveButton.frame = CGRect(x: secondButtonX,
-                                  y: firstButtonY,
-                                  width: buttonSize,
-                                  height: buttonSize)
-        
-        instructionsButton.frame = CGRect(x:thirdButtonX,
-                                          y: firstButtonY,
-                                          width: buttonSize,
-                                          height: buttonSize)
-        
-        //TODO: Fix spacing adn sizing of these two
-        timeSignature.frame = CGRect(x:firstButtonX,
-                                   y: thirdButtonY,
-                                   width: buttonSize,
-                                   height: buttonSize)
-        
-        keySignature.frame = CGRect(x:secondButtonX,
-                                   y: thirdButtonY,
-                                   width: buttonSize,
-                                   height: buttonSize)
+        let buttonBlocksHeight = (parent.height - verticallyStackedMaxY) / 2
+        for (i, b) in modeButtonBlocks.enumerated() {
+            b.frame = CGRect(x: CGFloat(i) * parent.width / CGFloat(modeButtonBlocks.count),
+                             y: verticallyStackedMaxY,
+                             width: parent.width / CGFloat(modeButtonBlocks.count),
+                             height: buttonBlocksHeight)
+        }
+
+        for (i, b) in signatureButtonBlocks.enumerated() {
+            b.frame = CGRect(x: CGFloat(i) * parent.width / CGFloat(signatureButtonBlocks.count),
+                             y: verticallyStackedMaxY + buttonBlocksHeight,
+                             width: parent.width / CGFloat(signatureButtonBlocks.count),
+                             height: buttonBlocksHeight)
+        }
     }
     
     func eraseButtonTapped() {
