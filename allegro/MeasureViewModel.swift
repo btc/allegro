@@ -94,7 +94,9 @@ struct MeasureViewModel {
         
         var startBeam = Beam()
         for (pos, note) in measure.getAllNotes() {
-            startBeam.append(NoteViewModel(note: note, position: pos))
+            let nvm = NoteViewModel(note: note, position: pos)
+            startBeam.append(nvm)
+            noteViewModels.append(nvm)
         }
         processBeam(beam: startBeam)
         

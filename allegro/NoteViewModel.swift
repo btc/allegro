@@ -9,7 +9,7 @@
 import Foundation
 import Rational
 
-struct NoteViewModel {
+class NoteViewModel {
 
     private let note: Note
     var value: Note.Value {
