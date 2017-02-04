@@ -106,6 +106,7 @@ class SideMenuViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
+        updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -144,7 +145,11 @@ class SideMenuViewController: UIViewController {
                              height: buttonBlocksHeight)
         }
     }
-    
+
+    func updateUI() {
+        editButton.isSelected = store.mode == .edit
+        eraseButton.isSelected = store.mode == .erase
+    }
     func eraseButtonTapped() {
         store.mode = .erase
         slideMenuController()?.closeRight()
@@ -168,8 +173,6 @@ class SideMenuViewController: UIViewController {
 
 extension SideMenuViewController: PartStoreObserver {
     func partStoreChanged() {
-        // TODO: update the button states to reflect the selected mode
-        // NB: By convention, don't change the toggle view until updated state information is received from the source of truth.
-        // switch store.mode { ...
+        updateUI()
     }
 }
