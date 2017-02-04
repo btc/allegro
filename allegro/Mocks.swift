@@ -128,6 +128,12 @@ private func parse(_ input: String) -> Note {
     return Note(value: value, letter: letter, octave: octave, accidental: accidental, rest: false)
 }
 
+/*
+ v2: 
+ private func parsePart(_ partArray: [String], key: Key) -> Part {
+ mock parts should have keys for testing
+ */
+
 private func parsePart(_ partArray: [String]) -> Part {
     let part = Part()
     for noteString in partArray {

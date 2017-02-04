@@ -263,12 +263,24 @@ class allegroTests: XCTestCase {
     
     func testGetAccidentalDisplay() {
         let cMajorScale = mockPart("CMajor")
-        //let dMajorScale = mockPart("DMajor")
+        let dMajorScale = mockPart("DMajor")
         
         for measure in cMajorScale.measures {
             let mvm = MeasureViewModel(measure)
             for noteViewModel in mvm.noteViewModels {
                 XCTAssert(noteViewModel.displayAccidental == false)
+            }
+        }
+        
+        for measure in dMajorScale.measures {
+            let mvm = MeasureViewModel(measure)
+            for noteViewModel in mvm.noteViewModels {
+                if(noteViewModel.letter == Note.Letter.F || noteViewModel.letter == Note.Letter.C) {
+                    XCTAssert(noteViewModel.displayAccidental == true)
+                }
+                else {
+                    XCTAssert(noteViewModel.displayAccidental == false)
+                }
             }
         }
     }
