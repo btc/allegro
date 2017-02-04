@@ -1,5 +1,5 @@
 //
-//  SideMenuButtonView.swift
+//  SideMenuButton.swift
 //  allegro
 //
 //  Created by Brian Tiger Chow on 2/4/17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SideMenuButtonView: UIButton {
+class SideMenuButton: UIButton {
 
     let margin: CGFloat = 5
 
