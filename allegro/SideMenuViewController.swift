@@ -13,47 +13,12 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
-    
-    //TODO: Fix button sizing to make each one consistent
-    private let NavigationLabel: UIView = {
-        let v = UILabel()
-        v.text = "Navigation"
-        v.textAlignment = .left
-        v.textColor = .black
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-    
-    private let modeLabel: UIView = {
-        let v = UILabel()
-        v.text = "Mode"
-        v.textAlignment = .left
-        v.textColor = .black
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-    
-    private let signaturesLabel: UIView = {
-        let v = UILabel()
-        v.text = "Signatures"
-        v.textAlignment = .left
-        v.textColor = .black
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-
 
     private let NewButton: UIView = {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "new-page"), for: UIControlState.normal)
-        return v
-    }()
-    
-    private let saveButton: UIView = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "save"), for: UIControlState.normal)
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
     
@@ -61,6 +26,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "question"), for: UIControlState.normal)
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
     
@@ -96,6 +62,7 @@ class SideMenuViewController: UIViewController {
         v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
         v.imageView?.layer.minificationFilter = kCAFilterTrilinear
         v.showsTouchWhenHighlighted = true
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
 
@@ -104,6 +71,7 @@ class SideMenuViewController: UIViewController {
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
         v.showsTouchWhenHighlighted = true
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
     
@@ -121,17 +89,13 @@ class SideMenuViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.allegroPurple
-        view.addSubview(NavigationLabel)
         view.addSubview(NewButton)
         view.addSubview(Export)
+        view.addSubview(instructionsButton)
         view.addSubview(eraseButton)
         view.addSubview(editButton)
-        view.addSubview(saveButton)
-        view.addSubview(instructionsButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
-        view.addSubview(modeLabel)
-        view.addSubview(signaturesLabel)
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
@@ -142,6 +106,7 @@ class SideMenuViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
+        updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -151,85 +116,40 @@ class SideMenuViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         //refernece values
         let parent = view.bounds
-        let centerX = parent.width/2
-        let centerY = parent.height/2
-        
-        //Button size chosen based on screen size
-        let buttonSize = parent.width / 6
-        
-        //Label sizing
-        let titleH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let titleW = titleH * THE_GOLDEN_RATIO
-        
-        //Label coordinates
-        let labelX = DEFAULT_MARGIN_PTS
-        let labelY = -parent.height/10
-        let labelY2 = labelY + 2*buttonSize + DEFAULT_MARGIN_PTS/2
-        let labelY3 = labelY2 + 2*buttonSize + DEFAULT_MARGIN_PTS/2
 
-        /* firstButtonX is the X location of the first menu item. This setup assumes 3 buttons per row and 3 rows. The buttons are centered with a slight margin of size buttonSize/2 between edges
-        */
-        let firstButtonX = centerX - buttonSize*2
-        let secondButtonX = firstButtonX + 1.5*buttonSize
-        let thirdButtonX = secondButtonX + 1.5*buttonSize
-        
-        let firstButtonY = parent.height/6
-        let secondButtonY = parent.height/6 + 2*buttonSize + DEFAULT_MARGIN_PTS/3
-        let thirdButtonY = centerY + 2.25*buttonSize
-        
-        
-        NavigationLabel.frame = CGRect(x: labelX,
-                            y: labelY,
-                            width: titleW,
-                            height: titleH)
-        
-        modeLabel.frame = CGRect(x: labelX,
-                                 y: labelY2,
-                                 width: titleW,
-                                 height: titleH)
-        
-        signaturesLabel.frame = CGRect(x: labelX,
-                                 y: labelY3,
-                                 width: titleW,
-                                 height: titleH)
+        let verticallyStackedButtons = [NewButton, Export, instructionsButton]
+        let modeButtonBlocks = [editButton, eraseButton]
+        let signatureButtonBlocks = [keySignature, timeSignature]
 
-        NewButton.frame = CGRect(x: firstButtonX,
-                                y: firstButtonY,
-                                width: buttonSize,
-                                height: buttonSize)
-        
-        editButton.frame = CGRect(x: firstButtonX,
-                                   y: secondButtonY,
-                                   width: buttonSize,
-                                   height: buttonSize)
+        for (i, b) in verticallyStackedButtons.enumerated() {
+            let heightOfVerticallyStacked: CGFloat = parent.height / 2 / CGFloat(verticallyStackedButtons.count)
+            b.frame = CGRect(x: 0,
+                             y: CGFloat(i) * heightOfVerticallyStacked,
+                             width: parent.width,
+                             height: heightOfVerticallyStacked)
+        }
+        guard let verticallyStackedMaxY = verticallyStackedButtons.last?.frame.maxY else { return }
 
-        eraseButton.frame = CGRect(x: secondButtonX,
-                            y: secondButtonY,
-                            width: buttonSize,
-                            height: buttonSize)
-        
-        saveButton.frame = CGRect(x: secondButtonX,
-                                  y: firstButtonY,
-                                  width: buttonSize,
-                                  height: buttonSize)
-        
-        instructionsButton.frame = CGRect(x:thirdButtonX,
-                                          y: firstButtonY,
-                                          width: buttonSize,
-                                          height: buttonSize)
-        
-        //TODO: Fix spacing adn sizing of these two
-        timeSignature.frame = CGRect(x:firstButtonX,
-                                   y: thirdButtonY,
-                                   width: buttonSize,
-                                   height: buttonSize)
-        
-        keySignature.frame = CGRect(x:secondButtonX,
-                                   y: thirdButtonY,
-                                   width: buttonSize,
-                                   height: buttonSize)
+        let buttonBlocksHeight = (parent.height - verticallyStackedMaxY) / 2
+        for (i, b) in modeButtonBlocks.enumerated() {
+            b.frame = CGRect(x: CGFloat(i) * parent.width / CGFloat(modeButtonBlocks.count),
+                             y: verticallyStackedMaxY,
+                             width: parent.width / CGFloat(modeButtonBlocks.count),
+                             height: buttonBlocksHeight)
+        }
+
+        for (i, b) in signatureButtonBlocks.enumerated() {
+            b.frame = CGRect(x: CGFloat(i) * parent.width / CGFloat(signatureButtonBlocks.count),
+                             y: verticallyStackedMaxY + buttonBlocksHeight,
+                             width: parent.width / CGFloat(signatureButtonBlocks.count),
+                             height: buttonBlocksHeight)
+        }
     }
-    
+
+    func updateUI() {
+        editButton.isSelected = store.mode == .edit
+        eraseButton.isSelected = store.mode == .erase
+    }
     func eraseButtonTapped() {
         store.mode = .erase
         slideMenuController()?.closeRight()
@@ -253,8 +173,6 @@ class SideMenuViewController: UIViewController {
 
 extension SideMenuViewController: PartStoreObserver {
     func partStoreChanged() {
-        // TODO: update the button states to reflect the selected mode
-        // NB: By convention, don't change the toggle view until updated state information is received from the source of truth.
-        // switch store.mode { ...
+        updateUI()
     }
 }

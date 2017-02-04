@@ -26,8 +26,9 @@ let DEFAULT_FONT_BOLD = "Montserrat-Bold"
 let DEFAULT_FONT = "Montserrat-Regular"
 
 extension UIColor {
-    static let allegroBlue = UIColor(red:0.68, green:0.92, blue:1.0, alpha:1.0)
-    static let allegroPurple = UIColor(red:0.87, green:0.32, blue:0.63, alpha:1.0)
+    static let allegroBlue = UIColor(red:0.68, green:0.92, blue:1.0, alpha:1.0) // #AEEBFF
+    static let allegroGray = UIColor(red:0.35, green:0.35, blue:0.35, alpha:1.0) // #595959
+    static let allegroPurple = UIColor(red:0.87, green:0.32, blue:0.63, alpha:1.0) // #DD51A0
 }
 
 // TODO(btc): Handle localization

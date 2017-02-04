@@ -12,16 +12,6 @@
 1. Install Xcode 8 (for Swift 3)
 1. Open `allegro.xcworkspace` in Xcode. macOS may attempt to woo you into opening `allegro.xcodeproj`. Resist. Because we use Cocoapods, we *must* use `allegro.xcworkspace`.
 
-# Diving into the Code
-
-1. Have a look at [AppDelegate.swift](https://github.com/TeamAllegro/allegro/blob/master/allegro/AppDelegate.swift). That's the entrypoint of the application. That's where we hold references to the objects we keep in memory. That's where we manage application lifecycle.
-1. Notice the line below. `RootNavigationViewController` is a container that handles navigation. Into this, we inject the controller that handles the home screen.
-1. Follow `HomeMenuViewController`
-
-``` swift
-window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
-```
-
 # Resources
 
 [Install Bundler](http://bundler.io/)
@@ -31,11 +21,6 @@ window?.rootViewController = RootNavigationViewController(rootViewController: Ho
 [Install Carthage](https://github.com/Carthage/Carthage#installing-carthage)
 
 [Install Fastlane](https://github.com/fastlane/fastlane#installation)
-
-Installation on Hard Mode: Cocoapods and Fastlane are both made with Ruby. If you are familiar with Ruby,
-you can install the two gems using the provided Gemfile. To do so, run `bundle
-install`. Afterward, instead of running `pod install`, you run `bundle exec pod
-install`. The same goes for Fastlane. Prefix your command with `bundle exec`.
 
 [Awesome iOS](https://github.com/vsouza/awesome-ios)
 
