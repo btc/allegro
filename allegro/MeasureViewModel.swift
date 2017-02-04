@@ -37,24 +37,33 @@ struct MeasureViewModel {
         
         // no key sig hit
         if(keyHit == nil) {
+            print("no key sig hit")
             // no prev note -> default
             if(previous == nil) {
+                if(currentNote.accidental == Note.Accidental.natural) {
+                    print("no previous note, no key hit, natural. returning false (no display)")
+                    return false
+                }
+                print("no previous note, returning true (display)")
                 return true
             }
             // prev note
             else {
                 // same accidental as prev -> no display
                 if(currentNote.accidental == previous?.accidental) {
+                    print("previous note found, same accidental. returning false (no display)")
                     return false
                 }
                 // different accidental from prev -> default
                 else {
+                    print("prev found, diff accidental. returning true (display)")
                     return true
                 }
             }
         }
         // key sig hit
         else {
+            print("key sig hit")
             // no prev
             if(previous == nil) {
                 // same accidental as key sig hit -> no display
