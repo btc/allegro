@@ -82,7 +82,7 @@ struct MeasureViewModel {
     }
     
     // determines beams and creates NoteViewModels
-    private mutating func noteLayout() {
+    private mutating func computeBeams() {
         
         // recursive formulation
         
@@ -172,7 +172,7 @@ struct MeasureViewModel {
             noteViewModels.append(newNoteViewModel)
         }
 
-        noteLayout()
+        computeBeams()
     }
 
 }
