@@ -45,6 +45,8 @@
 		6B6E27271E28B05100F9CF66 /* CompositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27261E28B05100F9CF66 /* CompositionViewController.swift */; };
 		6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */; };
 		6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */; };
+		6B80D7E81E457CD8003996CF /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B3290EE1E3AF55700AE693B /* Montserrat-Bold.ttf */; };
+		6B80D7E91E457CD8003996CF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B3290ED1E3AF51A00AE693B /* Montserrat-Regular.ttf */; };
 		6B92BE631E308A6A00CE2C9F /* MeasureViewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */; };
 		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
 		6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */; };
@@ -512,6 +514,8 @@
 				6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */,
 				6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */,
 				324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */,
+				6B80D7E81E457CD8003996CF /* Montserrat-Bold.ttf in Resources */,
+				6B80D7E91E457CD8003996CF /* Montserrat-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
