@@ -81,12 +81,6 @@ struct MeasureViewModel {
         }
     }
     
-    private mutating func setFlipped(beamIndex: Int, flipped: Bool) {
-        for i in 0..<beams[beamIndex].count {
-            beams[beamIndex][i].flipped = flipped
-        }
-    }
-    
     // determines beams and creates NoteViewModels
     private mutating func noteLayout() {
         
@@ -101,18 +95,18 @@ struct MeasureViewModel {
         // cleanup beams
         
         // align flipped for all notes in each beam
-        for (beamIndex, beam) in beams.enumerated() {
+        for beam in beams {
+
             var flippedCount = 0
             for note in beam {
                 if note.flipped {
                     flippedCount += 1
                 }
             }
-            // more than half are flipped
-            if flippedCount * 2 > beam.count {
-                setFlipped(beamIndex: beamIndex, flipped: true)
-            } else {
-                setFlipped(beamIndex: beamIndex, flipped: false)
+
+            let flipped = flippedCount * 2 > beam.count // more than half are flipped
+            for i in 0..<beam.count {
+                beam[i].flipped = flipped
             }
         }
     }
