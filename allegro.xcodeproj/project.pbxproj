@@ -47,6 +47,7 @@
 		6B6E272D1E28C4E300F9CF66 /* SwiftTweaks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */; };
 		6B80D7E81E457CD8003996CF /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B3290EE1E3AF55700AE693B /* Montserrat-Bold.ttf */; };
 		6B80D7E91E457CD8003996CF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B3290ED1E3AF51A00AE693B /* Montserrat-Regular.ttf */; };
+		6B80D7EB1E466F30003996CF /* SideMenuButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80D7EA1E466F30003996CF /* SideMenuButtonView.swift */; };
 		6B92BE631E308A6A00CE2C9F /* MeasureViewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */; };
 		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
 		6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */; };
@@ -139,6 +140,7 @@
 		6B6E27261E28B05100F9CF66 /* CompositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositionViewController.swift; sourceTree = "<group>"; };
 		6B6E27281E28B17F00F9CF66 /* DBPathRecognizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DBPathRecognizer.swift; path = vendor/DBPathRecognizer.swift; sourceTree = SOURCE_ROOT; };
 		6B6E272C1E28C4E300F9CF66 /* SwiftTweaks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftTweaks.framework; path = Carthage/Build/iOS/SwiftTweaks.framework; sourceTree = SOURCE_ROOT; };
+		6B80D7EA1E466F30003996CF /* SideMenuButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuButtonView.swift; sourceTree = "<group>"; };
 		6B92BE621E308A6A00CE2C9F /* MeasureViewCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewCollectionCell.swift; sourceTree = "<group>"; };
 		6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewContainer.swift; sourceTree = "<group>"; };
 		6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 				32B8678B1E3062C60029F946 /* NoteView.swift */,
 				6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */,
 				6B3290F81E3D4FEB00AE693B /* Snackbar.swift */,
+				6B80D7EA1E466F30003996CF /* SideMenuButtonView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -704,6 +707,7 @@
 				6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */,
 				6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */,
 				6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */,
+				6B80D7EB1E466F30003996CF /* SideMenuButtonView.swift in Sources */,
 				6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */,
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
