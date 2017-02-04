@@ -90,7 +90,7 @@ struct MeasureViewModel {
         for nvm in noteViewModels {
             startBeam.append(nvm)
         }
-        processBeam(beam: startBeam)
+        beams = processBeam(beam: startBeam)
         
         // cleanup beams
         
@@ -111,22 +111,24 @@ struct MeasureViewModel {
         }
     }
     
-    private mutating func processBeam(beam: Beam) {
+    private func processBeam(beam: Beam) -> [Beam] {
         let (splitIndex, discard) = splitBeam(beam: beam)
         
         // no split
         if splitIndex == 0 {
-            beams.append(beam)
-            return
+            return [beam]
         }
-        
+
+        var beams = [Beam]()
         if !discard {
             let lhs = Beam(beam[0..<splitIndex])
-            processBeam(beam: lhs)
+            beams.append(contentsOf: processBeam(beam: lhs))
         }
         
         let rhs = Beam(beam[splitIndex..<beam.count])
-        processBeam(beam: rhs)
+        beams.append(contentsOf: processBeam(beam: rhs))
+
+        return beams
     }
     
     // returns index of first element of second part of split
