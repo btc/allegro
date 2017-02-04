@@ -38,7 +38,8 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         view.addSubview(timeSigPickerView)
         timeSigPickerView.delegate = self
         timeSigPickerView.dataSource = self
-        
+        timeSigPickerView.selectRow(2, inComponent: 0, animated: false)
+        timeSigPickerView.selectRow(2, inComponent: 1, animated: false)
         
         toolBar.barStyle = UIBarStyle.default
         toolBar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
