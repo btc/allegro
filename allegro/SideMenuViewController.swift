@@ -18,6 +18,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "new-page"), for: UIControlState.normal)
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
     
@@ -25,6 +26,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "question"), for: UIControlState.normal)
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
     
@@ -60,6 +62,7 @@ class SideMenuViewController: UIViewController {
         v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
         v.imageView?.layer.minificationFilter = kCAFilterTrilinear
         v.showsTouchWhenHighlighted = true
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
 
@@ -68,6 +71,7 @@ class SideMenuViewController: UIViewController {
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
         v.showsTouchWhenHighlighted = true
+        v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
     
