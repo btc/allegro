@@ -245,6 +245,7 @@ class MeasureView: UIView {
         
         let barPath = UIBezierPath()
         var barStart = CGPoint.zero
+        var barEndInterpolation = CGPoint.zero
         var barEnd = CGPoint.zero
 
         // we're barring all the notes for now
@@ -275,8 +276,13 @@ class MeasureView: UIView {
             }
             
             if (i == noteViews.count - 1) {
+                barEndInterpolation = CGPoint(
+                    x: noteViewOrigin.x + noteView.flagStart.x,
+                    y: noteViewOrigin.y + noteView.flagStart.y
+                )
+                
                 barEnd = CGPoint(
-                    x: noteViewOrigin.x + noteView.flagStart.x + noteView.stemThickness,
+                    x: barEndInterpolation.x + noteView.stemThickness,
                     y: noteViewOrigin.y + noteView.flagStart.y
                 )
                 var next = barStart
@@ -290,16 +296,24 @@ class MeasureView: UIView {
                 barPath.addLine(to: next)
                 barPath.close()
             }
-
+            
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
+            }
+        }
+        
+        if noteViews.count > 1 {
+            for note in noteViews {
+                let interpolatePercent = (note.stemEndX - barStart.x) / (barEndInterpolation.x - barStart.x)
+                let barDelta = barEndInterpolation.y - barStart.y
+                note.stemEndY = barStart.y + barDelta * interpolatePercent
             }
         }
         
         barLayer.path = barPath.cgPath
         barLayer.fillColor = UIColor.black.cgColor
     }
-
+    
     @objc private func erase(sender: UIPanGestureRecognizer) {
         guard store?.mode == .erase else { return }
 
