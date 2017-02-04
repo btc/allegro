@@ -15,7 +15,7 @@ struct MeasureViewModel {
     
     // Beams are the lines that connect groups of eighth notes, sixteenth notes, etc
     // We just store a collection of notes that should be beamed together by MeasureView
-    typealias Beam = [NoteViewModel]
+    typealias Beam = Array<NoteViewModel>
     
     private(set) var beams: [Beam] = []
 
@@ -119,13 +119,14 @@ struct MeasureViewModel {
             return [beam]
         }
 
+        let (lhs, rhs) = beam.partition(index: splitIndex)
+
         var beams = [Beam]()
+        
         if !discard {
-            let lhs = Beam(beam[0..<splitIndex])
             beams.append(contentsOf: processBeam(beam: lhs))
         }
         
-        let rhs = Beam(beam[splitIndex..<beam.count])
         beams.append(contentsOf: processBeam(beam: rhs))
 
         return beams
@@ -162,7 +163,6 @@ struct MeasureViewModel {
             // but this run has no flag so we discard it
             return (0, true)
         }
-        
     }
 
 
@@ -177,4 +177,12 @@ struct MeasureViewModel {
         computeBeams()
     }
 
+}
+
+extension Array {
+    func partition(index: Int) -> (left: Array, right: Array) {
+        let l = self[0..<index]
+        let r = self[index..<count]
+        return (left: Array(l), right: Array(r))
+    }
 }
