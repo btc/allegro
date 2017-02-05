@@ -69,7 +69,7 @@ class MeasureView: UIView {
     fileprivate let noteWidth = CGFloat(70)
     fileprivate var noteHeight: CGFloat { return staffHeight }
     
-    fileprivate let barThickness = CGFloat(5)
+    fileprivate let barThickness = CGFloat(10)
     fileprivate let barLayer: CAShapeLayer
     
     // We draw the accidentals relate the the head of the note.
@@ -237,7 +237,7 @@ class MeasureView: UIView {
         let measureVM = store.measure(at: index)
         let noteViewModels = measureVM.noteViewModels
         let noteViews = noteViewModels.map { NoteView(note: $0) }
-
+        
         // TODO(btc): size the notes based on noteHeight
         for v in noteViews {
             addSubview(v)
@@ -247,6 +247,19 @@ class MeasureView: UIView {
         var barStart = CGPoint.zero
         var barEndInterpolation = CGPoint.zero
         var barEnd = CGPoint.zero
+        
+        func getBarPoint(view: NoteView) -> CGPoint {
+            let barPoint = CGPoint(
+                x: view.frame.origin.x + view.flagStart.x,
+                y: view.frame.origin.y + view.flagStart.y
+            )
+            
+            if view.flipped {
+                return CGPoint(x: barPoint.x, y: barPoint.y - barThickness)
+            }
+            
+            return barPoint
+        }
 
         // we're barring all the notes for now
         for (i, noteView) in noteViews.enumerated() {
@@ -264,26 +277,18 @@ class MeasureView: UIView {
             noteView.staffHeight = staffHeight
             noteView.noteOrigin = CGPoint(x: x, y: y)
             noteView.stemEndY = CGFloat(end)
-            noteView.shouldDrawFlag = false
-            
-            let noteViewOrigin = noteView.frame.origin
+            //noteView.shouldDrawFlag = false
             
             if (i == 0) {
-                barStart = CGPoint(
-                    x: noteViewOrigin.x + noteView.flagStart.x,
-                    y: noteViewOrigin.y + noteView.flagStart.y
-                )
+                barStart = getBarPoint(view: noteView)
             }
             
             if (i == noteViews.count - 1) {
-                barEndInterpolation = CGPoint(
-                    x: noteViewOrigin.x + noteView.flagStart.x,
-                    y: noteViewOrigin.y + noteView.flagStart.y
-                )
+                barEndInterpolation = getBarPoint(view: noteView)
                 
                 barEnd = CGPoint(
                     x: barEndInterpolation.x + noteView.stemThickness,
-                    y: noteViewOrigin.y + noteView.flagStart.y
+                    y: barEndInterpolation.y
                 )
                 var next = barStart
                 
@@ -304,9 +309,12 @@ class MeasureView: UIView {
         
         if noteViews.count > 1 {
             for note in noteViews {
-                let interpolatePercent = (note.stemEndX - barStart.x) / (barEndInterpolation.x - barStart.x)
+                let stemEndX = getBarPoint(view: note).x
+                let interpolatePercent = (stemEndX - barStart.x) / (barEndInterpolation.x - barStart.x)
                 let barDelta = barEndInterpolation.y - barStart.y
-                note.stemEndY = barStart.y + barDelta * interpolatePercent
+                
+                let topOfBar = note.flipped ? CGFloat(1): CGFloat(0)
+                note.stemEndY = barStart.y + barDelta * interpolatePercent + topOfBar * barThickness
             }
         }
         

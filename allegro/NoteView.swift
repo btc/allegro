@@ -72,16 +72,6 @@ class NoteView: MeasureActionView {
         }
     }
     
-    // this is kind of confusing since stemEndY is something that can only be set
-    // to how long to make the stem while stemEndX is read only and is computed
-    var stemEndX: CGFloat {
-        if flipped {
-            return self.frame.origin.x - self.stemOffset.x + self.stemThickness
-        }
-        
-        return self.frame.origin.x + self.frame.size.width + self.stemOffset.x
-    }
-    
     // Since the flag points down, we need to decrease the stem height
     // to prevent the stem from poking above the flag
     var flagOffset = CGFloat(5)
@@ -111,21 +101,19 @@ class NoteView: MeasureActionView {
     fileprivate var flagIterOffset = CGFloat(10)
     
     var flagStart: CGPoint {
-        var start = CGPoint(
-            x: noteFrame.size.width + stemOffset.x + flagStartOffset,
-            y: 0)
-        
         if (flipped) {
-            start = CGPoint(
+            return CGPoint(
                 x: -stemOffset.x - flagStartOffset - stemThickness,
                 y: frame.size.height)
         }
         
-        return start
+        return CGPoint(
+            x: noteFrame.size.width + stemOffset.x + flagStartOffset,
+            y: 0)
     }
     
     
-    fileprivate var flipped: Bool {
+    var flipped: Bool {
         return stemEndY > noteFrame.origin.y + noteFrame.size.height
     }
     
