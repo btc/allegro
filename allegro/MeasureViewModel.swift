@@ -82,7 +82,7 @@ struct MeasureViewModel {
     }
     
     // determines beams and creates NoteViewModels
-    private mutating func computeBeams() {
+    private func computeBeams() -> [Beam] {
         
         // recursive formulation
         
@@ -90,7 +90,7 @@ struct MeasureViewModel {
         for nvm in noteViewModels {
             startBeam.append(nvm)
         }
-        beams = processBeam(beam: startBeam)
+        let beams = processBeam(beam: startBeam)
         
         // cleanup beams
         
@@ -109,6 +109,7 @@ struct MeasureViewModel {
                 beam[i].flipped = flipped
             }
         }
+        return beams
     }
     
     private func processBeam(beam: Beam) -> [Beam] {
@@ -174,7 +175,7 @@ struct MeasureViewModel {
             noteViewModels.append(newNoteViewModel)
         }
 
-        computeBeams()
+        beams = computeBeams()
     }
 
 }
