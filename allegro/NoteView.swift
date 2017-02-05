@@ -44,7 +44,7 @@ class NoteView: MeasureActionView {
     // since the note head is a rotated oval that is shrunk to fit the frame,
     // the start point of the stem is inside the frame of the noe
     // is not the bounds of the frame but inside
-    fileprivate var stemOffset: CGPoint {
+    var stemOffset: CGPoint {
         return CGPoint(x: -5 * scale, y: 24 * scale)
     }
     
@@ -72,6 +72,16 @@ class NoteView: MeasureActionView {
         didSet {
             updateNoteFrame()
         }
+    }
+    
+    // this is kind of confusing since stemEndY is something that can only be set
+    // to how long to make the stem while stemEndX is read only and is computed
+    var stemEndX: CGFloat {
+        if flipped {
+            return self.frame.origin.x - self.stemOffset.x + self.stemThickness
+        }
+        
+        return self.frame.origin.x + self.frame.size.width + self.stemOffset.x
     }
     
     // Since the flag points down, we need to decrease the stem height
