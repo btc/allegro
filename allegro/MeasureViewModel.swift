@@ -12,7 +12,7 @@ struct MeasureViewModel {
 
     private let measure: Measure
     private(set) var noteViewModels = [NoteViewModel]()
-    
+
     // Beams are the lines that connect groups of eighth notes, sixteenth notes, etc
     // We just store a collection of notes that should be beamed together by MeasureView
     typealias Beam = Array<NoteViewModel>
@@ -113,8 +113,8 @@ struct MeasureViewModel {
     }
     
     private func computeBeamsRecursive(beam: Beam) -> [Beam] {
-        let (splitIndex, discard) = splitBeam(beam: beam)
-        
+        let (splitIndex, discardLeft) = splitBeam(beam: beam)
+
         // no split
         if splitIndex == 0 {
             return [beam]
@@ -124,7 +124,7 @@ struct MeasureViewModel {
 
         var beams = [Beam]()
         
-        if !discard {
+        if !discardLeft {
             beams.append(contentsOf: computeBeamsRecursive(beam: lhs))
         }
         
@@ -142,7 +142,7 @@ struct MeasureViewModel {
             // discard so that we don't have 1 element beams
             return (0, true)
         }
-        
+
         // split after the first run
         // v1 run = same value
         let value = beam[0].value
