@@ -8,6 +8,21 @@
 
 struct Key {
     // Represents a musical key eg. G Major or d minor
+    static let cSharpMajor = Key(mode: .major, fifths: 7)
+    static let fSharpMajor = Key(mode: .major, fifths: 6)
+    static let bMajor = Key(mode: .major, fifths: 5)
+    static let eMAjor = Key(mode: .major, fifths: 4)
+    static let aMajor = Key(mode: .major, fifths: 3)
+    static let dMajor = Key(mode: .major, fifths: 2)
+    static let gMajor = Key(mode: .major, fifths: 1)
+    static let cMajor = Key(mode: .major, fifths: 0)
+    static let fMajor = Key(mode: .major, fifths: -1)
+    static let bFlatMajor = Key(mode: .major, fifths: -2)
+    static let eFlatMajor = Key(mode: .major, fifths: -3)
+    static let aFlatMajor = Key(mode: .major, fifths: -4)
+    static let dFlatMajor = Key(mode: .major, fifths: -5)
+    static let gFlatMajor = Key(mode: .major, fifths: -6)
+    static let cFlatMajor = Key(mode: .major, fifths: -7)
     
     // Useful unicode: ♯ sharp, ♭ flat, ♮ natural
     

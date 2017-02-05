@@ -9,7 +9,7 @@
 import Rational
 
 
-let mocks: [Part] = [parsePart(CMajor), parsePart(DMajor)]
+let mocks: [Part] = [parsePart(CMajor, key: Key.cMajor), parsePart(DMajor, key: Key.cMajor)]
 
 private let CMajor = [
     "4 C 4 n",
@@ -47,6 +47,25 @@ private let DMajor = [
     "8 B 4 n",
     "8 C 5 s",
     "8 D 5 n"
+]
+
+private let DMajorRun = [
+    "8 D 4 n", // 0
+    "8 E 4 n", // 1
+    "8 F 4 s", // 2 -> display
+    "8 G 4 n", // 3
+    "8 F 4 s", // 4 -> no display
+    "8 E 4 n", // 5
+    "8 A 4 n", // 6
+    "8 B 4 n", // 7
+    "8 C 5 s", // 8 -- new measure -> display
+    "8 D 5 n", // 9
+    "8 C 5 s", // 10 -> no display
+    "8 B 4 n", // 11
+    "8 A 4 n", // 12
+    "8 F 4 s", // 13 -> display
+    "8 E 4 n", // 14
+    "8 D 4 n" // 15
 ]
 
 // 4 C 4 n -> quarternote, C, octave 4, natural
@@ -102,7 +121,7 @@ private func parse(_ input: String) -> Note {
  mock parts should have keys for testing
  */
 
-private func parsePart(_ partArray: [String]) -> Part {
+private func parsePart(_ partArray: [String], key: Key) -> Part {
     let part = Part()
     for noteString in partArray {
         part.appendNote(note: parse(noteString))
@@ -114,10 +133,13 @@ func mockPart(_ name: String) -> Part {
     
     switch name {
     case "CMajor":
-        return parsePart(CMajor)
+        return parsePart(CMajor, key: Key.cMajor)
         
     case "DMajor":
-        return parsePart(DMajor)
+        return parsePart(DMajor, key: Key.cMajor)
+    
+    case "DMajorRun":
+        return parsePart(DMajorRun, key: Key.cMajor)
         
     default:
         let part = Part()
