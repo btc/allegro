@@ -37,13 +37,16 @@ class allegroViewModelTests: XCTestCase {
     func testBeam() {
         // TODO test beam v1
         let part = mockPart("beams")
-        let m0 = MeasureViewModel(part.measures[0])
-        let m1 = MeasureViewModel(part.measures[1])
-        let m2 = MeasureViewModel(part.measures[2])
+        let cases: [(measure: Int, beamCount: Int)] = [
+            (0, 1),
+            (1, 4),
+            (2, 2),
+            (3, 0),
+        ]
 
-        XCTAssert(m0.beams.count == 1)
-        XCTAssert(m1.beams.count == 4)
-        XCTAssert(m2.beams.count == 2)
+        for (measure, beamCount) in cases {
+            XCTAssert(MeasureViewModel(part.measures[measure]).beams.count == beamCount)
+        }
     }
     
     func testPerformanceExample() {
