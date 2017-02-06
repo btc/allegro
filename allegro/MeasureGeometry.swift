@@ -38,7 +38,7 @@ struct MeasureGeometry {
     let numLedgerLinesBelow = 4
 
     var minNoteWidth: CGFloat {
-        return 2 * staffHeight
+        return 1.5 * staffHeight
     }
 
     var staffDrawStart: CGFloat {
