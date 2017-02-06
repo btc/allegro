@@ -124,13 +124,6 @@ if __FILE__ == $0
     file_changes = get_file_changes(repo: git, email: email, from: from, until: to)
     sorted_file_changes = file_changes.sort_by { |k,v| k }
 
-    puts "\n"
-    sorted_file_changes.each do |pair|
-      file_name = pair[0]
-      changes = pair[1]
-      puts "+#{changes[:insertions]}\t -#{changes[:deletions]}\t #{file_name}"
-    end
-
     total_insertions = 0
     total_deletions = 0
     file_changes.each do |_, changes|
@@ -139,6 +132,13 @@ if __FILE__ == $0
     end
     puts "\n"
     puts "+#{total_insertions}\t -#{total_deletions}"
+
+    puts "\n"
+    sorted_file_changes.each do |pair|
+      file_name = pair[0]
+      changes = pair[1]
+      puts "+#{changes[:insertions]}\t -#{changes[:deletions]}\t #{file_name}"
+    end
 
     puts "\n"
     puts "\n"
