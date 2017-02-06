@@ -26,9 +26,28 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         return v
     }()
     
-    private var timeSigPickerView: UIPickerView = UIPickerView()
-    private let toolBar = UIToolbar()
-    private let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(backButtonTapped))
+    
+    private var timeSigPickerView: UIPickerView = {
+        var v = UIPickerView()
+        return v
+    } ()
+    
+    private let doneButton:UIBarButtonItem =  {
+        let b = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(backButtonTapped))
+        return b
+    }()
+    
+    private let toolBar:UIToolbar =  {
+        let tb = UIToolbar()
+        tb.barStyle = UIBarStyle.default
+        tb.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
+        tb.setShadowImage(UIImage(), forToolbarPosition: .any)
+        tb.tintColor = UIColor.allegroPurple
+        tb.sizeToFit()
+        tb.isUserInteractionEnabled = true
+        return tb
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +60,8 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         timeSigPickerView.selectRow(2, inComponent: 0, animated: false)
         timeSigPickerView.selectRow(2, inComponent: 1, animated: false)
         
-        toolBar.barStyle = UIBarStyle.default
-        toolBar.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        toolBar.setShadowImage(UIImage(), forToolbarPosition: .any)
-        toolBar.tintColor = UIColor.allegroPurple
-        toolBar.sizeToFit()
-        toolBar.setItems([doneButton], animated: false)
-        toolBar.isUserInteractionEnabled = true
         view.addSubview(toolBar)
+        toolBar.setItems([doneButton], animated: false)
         
     }
     
@@ -69,10 +82,10 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
                               width: buttonW,
                               height: buttonH)
         
-        timeSigPickerView.frame = CGRect(x:self.view.frame.size.width * 0.1,
-                                         y:self.view.frame.size.height * 0.1,
-                                         width: self.view.frame.size.width * 0.8,
-                                         height: self.view.frame.size.height * 0.8)
+        timeSigPickerView.frame = CGRect(x:parent.width * 0.1,
+                                         y:parent.height * 0.1,
+                                         width: parent.width * 0.8,
+                                         height: parent.height * 0.8)
 
     }
     

@@ -68,6 +68,7 @@ class Part {
         }
     }
     
+    //Setters for time signatures
     func setTimeSignature(timeSignature: Rational) {
         for i in 0..<measures.count {
             measures[i].timeSignature = timeSignature
