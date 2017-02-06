@@ -49,8 +49,12 @@ class NoteActionGestureRecognizer: UIGestureRecognizer {
 
     private func setupTapGestures(_ view: UIView) {
         let note = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        let dot = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        let doubleDot = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        dot.numberOfTapsRequired = 2
+        dot.numberOfTapsRequired = 3
 
-        for gr in [note] {
+        for gr in [note, dot, doubleDot] {
             view.addGestureRecognizer(gr)
         }
     }
