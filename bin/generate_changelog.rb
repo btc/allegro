@@ -114,13 +114,6 @@ if __FILE__ == $0
     puts "=" * (name.length + " <>".length + email.length)
     puts "\n"
 
-
-    table = TTY::Table.new header: ['sha', 'message', 'commited at']
-    msgs.sort_by { |h| h[:message] }.each do |h|
-      table << [h[:sha][0..6], h[:message], h[:date].localtime]
-    end
-    puts table.render(:unicode, padding: DEFAULT_PADDING)
-
     file_changes = get_file_changes(repo: git, email: email, from: from, until: to)
     sorted_file_changes = file_changes.sort_by { |k,v| k }
 
@@ -130,8 +123,14 @@ if __FILE__ == $0
       total_insertions += changes[:insertions]
       total_deletions += changes[:deletions]
     end
-    puts "\n"
     puts "+#{total_insertions}\t -#{total_deletions}"
+    puts "\n"
+
+    table = TTY::Table.new header: ['sha', 'message', 'commited at']
+    msgs.sort_by { |h| h[:message] }.each do |h|
+      table << [h[:sha][0..6], h[:message], h[:date].localtime]
+    end
+    puts table.render(:unicode, padding: DEFAULT_PADDING)
 
     puts "\n"
     sorted_file_changes.each do |pair|
