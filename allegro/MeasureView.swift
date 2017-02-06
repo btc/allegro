@@ -170,18 +170,23 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.noteViewModels
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g) }
+        let notesToNoteView = noteViewModels.enumerated()
+            .map{return ($1, noteViews[$0])}
+            .reduce([Int: NoteView]()) {
+                (dict: [Int:NoteView], kv: (NoteViewModel, NoteView)) -> [Int:NoteView]  in
+                var out = dict
+                out[ObjectIdentifier(kv.0).hashValue] = kv.1
+                return out
+            }
 
         // TODO(btc): size the notes based on noteHeight
         for v in noteViews {
             addSubview(v)
         }
         
-        let barPath = UIBezierPath()
-        var barStart = CGPoint.zero
-        var barEnd = CGPoint.zero
 
         // we're barring all the notes for now
-        for (i, noteView) in noteViews.enumerated() {
+        for noteView in noteViews {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
@@ -192,35 +197,49 @@ class MeasureView: UIView {
             noteView.noteOrigin = CGPoint(x: x, y: y)
             noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = false
-            
-            let noteViewOrigin = noteView.frame.origin
-            
-            if (i == 0) {
-                barStart = CGPoint(
-                    x: noteViewOrigin.x + noteView.flagStart.x,
-                    y: noteViewOrigin.y + noteView.flagStart.y
-                )
-            }
-            
-            if (i == noteViews.count - 1) {
-                barEnd = CGPoint(
-                    x: noteViewOrigin.x + noteView.flagStart.x + noteView.stemThickness,
-                    y: noteViewOrigin.y + noteView.flagStart.y
-                )
-                var next = barStart
-                
-                barPath.move(to: next)
-                next = barEnd
-                barPath.addLine(to: next)
-                next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
-                barPath.addLine(to: next)
-                next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
-                barPath.addLine(to: next)
-                barPath.close()
-            }
+
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
+            }
+        }
+        
+        let barPath = UIBezierPath()
+        
+        for beam in measureVM.beams {
+            var barStart = CGPoint.zero
+            var barEnd = CGPoint.zero
+            
+            for (i, noteViewModel) in beam.enumerated() {
+                guard let noteView = notesToNoteView[ObjectIdentifier(noteViewModel).hashValue] else {
+                    continue
+                }
+                
+                let noteViewOrigin = noteView.frame.origin
+                
+                if (i == 0) {
+                    barStart = CGPoint(
+                        x: noteViewOrigin.x + noteView.flagStart.x,
+                        y: noteViewOrigin.y + noteView.flagStart.y
+                    )
+                }
+                
+                if (i == beam.count - 1) {
+                    barEnd = CGPoint(
+                        x: noteViewOrigin.x + noteView.flagStart.x + noteView.stemThickness,
+                        y: noteViewOrigin.y + noteView.flagStart.y
+                    )
+                    var next = barStart
+                    
+                    barPath.move(to: next)
+                    next = barEnd
+                    barPath.addLine(to: next)
+                    next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
+                    barPath.addLine(to: next)
+                    next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
+                    barPath.addLine(to: next)
+                    barPath.close()
+                }
             }
         }
         
@@ -253,7 +272,7 @@ class MeasureView: UIView {
 
    func erase(sender: UIPanGestureRecognizer) {
         guard store?.mode == .erase else { return }
-
+        
         let location = sender.location(in: self)
 
         // TODO(btc): if we wind up with lots of subviews, as an optimization, hold explicit references to the note views.
