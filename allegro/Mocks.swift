@@ -8,6 +8,10 @@
 
 import Rational
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5394f0a4eb78c0a8a12a8cdda6fbaf9077a959bd
 let mocks: [Part] = [parsePart(CMajor, key: Key.cMajor), parsePart(DMajor, key: Key.cMajor)]
 
 private let CMajor = [
@@ -49,6 +53,7 @@ private let DMajor = [
 ]
 
 private let DMajorRun = [
+<<<<<<< HEAD
     "8 D 4 n", // 0 -> no display
     "8 E 4 n", // 1 -> no display
     "8 F 4 s", // 2 -> display
@@ -118,6 +123,24 @@ private let beams = [
     "4 B 4 n", // no beam
     "8 C 4 n", // beam 1
     "8 C 4 n" // beam 1
+=======
+    "8 D 4 n", // 0
+    "8 E 4 n", // 1
+    "8 F 4 s", // 2 -> display
+    "8 G 4 n", // 3
+    "8 F 4 s", // 4 -> no display
+    "8 E 4 n", // 5
+    "8 A 4 n", // 6
+    "8 B 4 n", // 7
+    "8 C 5 s", // 8 -- new measure -> display
+    "8 D 5 n", // 9
+    "8 C 5 s", // 10 -> no display
+    "8 B 4 n", // 11
+    "8 A 4 n", // 12
+    "8 F 4 s", // 13 -> display
+    "8 E 4 n", // 14
+    "8 D 4 n" // 15
+>>>>>>> 5394f0a4eb78c0a8a12a8cdda6fbaf9077a959bd
 ]
 
 // 4 C 4 n -> quarternote, C, octave 4, natural
