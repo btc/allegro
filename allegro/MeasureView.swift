@@ -37,7 +37,12 @@ class MeasureView: UIView {
         return CAShapeLayer()
     }()
 
-    fileprivate let editGR: UIPanGestureRecognizer = {
+    fileprivate let editTapGR: UITapGestureRecognizer = {
+        let gr = UITapGestureRecognizer()
+        return gr
+    }()
+
+    fileprivate let editPanGR: UIPanGestureRecognizer = {
         let gr = UIPanGestureRecognizer()
         gr.minimumNumberOfTouches = 1
         gr.maximumNumberOfTouches = 1
@@ -63,10 +68,15 @@ class MeasureView: UIView {
         self.isOpaque = false
         backgroundColor = .white
 
-        editGR.addTarget(self, action: #selector(edit))
-        eraseGR.addTarget(self, action: #selector(erase))
-        addGestureRecognizer(editGR)
-        addGestureRecognizer(eraseGR)
+        let grs: [(Selector, UIGestureRecognizer)] = [
+            (#selector(editTap), editTapGR),
+            (#selector(editPan), editPanGR),
+            (#selector(erase), eraseGR),
+        ]
+        for (sel, gr) in grs {
+            gr.addTarget(self, action: sel)
+            addGestureRecognizer(gr)
+        }
     }
 
     deinit {
@@ -245,19 +255,12 @@ class MeasureView: UIView {
         }
     }
 
-    func edit(sender: UIPanGestureRecognizer) {
-        guard store?.mode == .edit else { return }
-    }
-}
-
-extension MeasureView: MeasureActionDelegate {
-
-    func actionRecognized(gesture: MeasureAction, at location: CGPoint) {
+    func editTap(sender: UITapGestureRecognizer) {
         guard store?.mode == .edit else {
             Snackbar(message: "you're in erase mode", duration: .short).show()
             return
         }
-        Log.info?.value(gesture.rawValue)
+        let location = sender.location(in: self)
 
         guard let store = store, let index = index else { return }
         let value = store.selectedNoteValue
@@ -275,35 +278,17 @@ extension MeasureView: MeasureActionDelegate {
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
         let note = Note(value: value, letter: letter, octave: octave)
 
-        // configure note
-        switch gesture {
-        case .dot: break // TODO(btc)
-        case .doubleDot: break // TODO(btc)
-        case .flat:
-            note.accidental = .flat
-        case .natural:
-            note.accidental = .natural
-        case .note: break // TODO(btc): remove dots
-            // TODO(btc): note.rest = false ?
-        case .rest:
-            note.rest = true
-        case .sharp:
-            note.accidental = .sharp
-        // TODO(btc): doubleSharp
-        // TODO(btc): doubleFlat
-        }
-
         // attempt to insert
         let succeeded = store.insert(note: note, intoMeasureIndex: index, at: position)
 
-        if succeeded {
-            Log.info?.message("add note to measure: success!")
-        } else {
-            Log.info?.message("add note to measure: failure!")
-            Snackbar(message: "No space for note", duration: .short).show()
+        if !succeeded {
+            Snackbar(message: "no space for note", duration: .short).show()
         }
     }
 
+    func editPan(sender: UIPanGestureRecognizer) {
+        guard store?.mode == .edit else { return }
+    }
 }
 
 extension MeasureView: PartStoreObserver {
@@ -311,7 +296,7 @@ extension MeasureView: PartStoreObserver {
         guard let store = store else { return }
 
         eraseGR.isEnabled = store.mode == .erase
-        editGR.isEnabled = store.mode == .edit
+        editPanGR.isEnabled = store.mode == .edit
 
         let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
                                           selectedNoteDuration: store.selectedNoteValue.nominalDuration)
