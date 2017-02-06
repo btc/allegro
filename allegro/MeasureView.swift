@@ -271,12 +271,9 @@ extension MeasureView: MeasureActionDelegate {
 
         // determine position
         let measure = store.measure(at: index)
-        guard let rational = geometry.pointToPositionInTime(x: location.x,
-                                                            timeSignature: measure.timeSignature,
-                                                            noteDuration: value.nominalDuration) else {
-            Log.error?.message("failed to convert user's touch into a position in time")
-            return
-        }
+        let position = geometry.pointToPositionInTime(x: location.x,
+                                                      timeSignature: measure.timeSignature,
+                                                      noteDuration: value.nominalDuration)
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
@@ -301,7 +298,7 @@ extension MeasureView: MeasureActionDelegate {
         }
 
         // attempt to insert
-        let succeeded = store.insert(note: note, intoMeasureIndex: index, at: rational)
+        let succeeded = store.insert(note: note, intoMeasureIndex: index, at: position)
 
         if succeeded {
             Log.info?.message("add note to measure: success!")

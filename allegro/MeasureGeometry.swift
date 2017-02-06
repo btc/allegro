@@ -162,7 +162,7 @@ struct MeasureGeometry {
 
     func pointToPositionInTime(x: CGFloat,
                                timeSignature: Rational,
-                               noteDuration: Rational) -> Rational? {
+                               noteDuration: Rational) -> Rational {
 
         let numPositionsInTime = timeSignature / noteDuration
         let ratioOfScreenWidth = x / totalWidth
