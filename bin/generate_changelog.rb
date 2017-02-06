@@ -1,12 +1,17 @@
 #!/usr/bin/env ruby
 
-require 'chronic'
 require 'dotenv'
 require 'git'
 require 'octokit'
 require 'optparse'
+require 'tty-table'
 
+DEFAULT_PADDING = [0, 1]
 NUM_COMMITS_BACK = 100000000
+
+def truncate(string, max)
+  string.length > max ? "#{string[0...max]}..." : string
+end
 
 def get_file_changes(h)
   email = h[:email]
@@ -45,8 +50,12 @@ if __FILE__ == $0
     opts.on("-t", "--to DATE", "End Date (Inclusive)") { |v| options[:to] = v }
   end.parse!
 
-  from = if options[:from].nil? then "6 days ago" else options[:from] end
-  to = if options[:to].nil? then "now" else options[:to] end
+  default_end = Time.now
+  one_week = 7*24*60*60
+  default_start = default_end - one_week
+
+  to = if options[:to].nil? then default_end else options[:to] end
+  from = if options[:from].nil? then default_start else options[:from] end
 
   git = Git.open(".")
   gh = Octokit::Client.new(access_token: ENV.fetch("GC_GH_TOKEN"))
@@ -73,32 +82,44 @@ if __FILE__ == $0
   puts "\n"
 
   prs = gh.pulls "TeamAllegro/allegro", state: 'closed'
-  prs = prs.keep_if { |pr| pr.created_at > Chronic.parse(from) }
+  prs = prs.keep_if { |pr| pr.created_at > from }
   prs = prs.sort_by do |pr|
     [pr.user.login, 0 - pr.number.to_i]
   end
 
-  prs.map { |pr| "#{pr.user.login}\t - ##{pr.number}\t - #{pr.title}" }.each { |m| puts m }
+  table = TTY::Table.new header: ['user', '#', 'title', 'closed at']
+  prs.each { |pr| table << [pr.user.login, pr.number, pr.title, pr.closed_at.localtime] }
+  puts table.render(:unicode, padding: DEFAULT_PADDING)
   puts "\n"
+
+  from = from.to_s
+  to = to.to_s
 
   committers.each do |author|
 
     name = author.name
     email = author.email
 
+    msgs = git.log(NUM_COMMITS_BACK).author(email).since(from).until(to).map do |commit|
+      line1 = if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
+      { sha: commit.sha, message: truncate(line1, 80), date: commit.date }
+    end
+
+    if msgs.empty?
+      next
+    end
+
     puts "=" * (name.length + " <>".length + email.length)
     puts "#{name} <#{email}>"
     puts "=" * (name.length + " <>".length + email.length)
     puts "\n"
 
-    msgs = git.log(NUM_COMMITS_BACK).author(email).since(from).until(to).map do |commit|
-      line1 = if commit.message.include?("\n") then commit.message[/(.*)\n/, 0] else commit.message end
-      { sha: commit.sha, message: line1 }
-    end
 
+    table = TTY::Table.new header: ['sha', 'message', 'commited at']
     msgs.sort_by { |h| h[:message] }.each do |h|
-      puts "#{h[:sha][0..6]} - #{h[:message]}"
+      table << [h[:sha][0..6], h[:message], h[:date].localtime]
     end
+    puts table.render(:unicode, padding: DEFAULT_PADDING)
 
     file_changes = get_file_changes(repo: git, email: email, from: from, until: to)
     sorted_file_changes = file_changes.sort_by { |k,v| k }
@@ -123,3 +144,4 @@ if __FILE__ == $0
     puts "\n"
   end
 end
+
