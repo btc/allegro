@@ -64,10 +64,16 @@ class MeasureView: UIView {
         return gr
     }()
 
+    fileprivate let touchGuide: UIView = {
+        let v = MeasureTouchGuide()
+        return v
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        self.layer.addSublayer(barLayer)
+
+        layer.addSublayer(barLayer)
+
         // iOS expects draw(rect:) to completely fill
         // the view region with opaque content. This causes
         // the view background to be black unless we disable this.
@@ -156,6 +162,7 @@ class MeasureView: UIView {
         super.layoutSubviews()
         
         subviews.forEach { $0.removeFromSuperview() }
+        addSubview(touchGuide)
 
         guard let store = store, let index = index else { return }
 
@@ -296,28 +303,28 @@ class MeasureView: UIView {
 
     func editPan(sender: UIPanGestureRecognizer) {
         guard store?.mode == .edit else { return }
+
+        guard let store = store, let index = index else { return }
+        let ts = store.measure(at: index).timeSignature
+        let d = store.selectedNoteValue.nominalDuration
+
         if sender.state == .ended {
             let end = sender.location(in: self)
             let start = end - sender.translation(in: self)
-            if touchRemainedInPosition(start: start, end: end) {
+            if geometry.touchRemainedInPosition(start: start,
+                                                end: end,
+                                                timeSignature: ts,
+                                                noteDuration: d) {
                 editTap(sender: sender)
             }
-
+        } else if sender.state == .changed {
+            let rect = geometry.touchGuideRect(location: sender.location(in: self),
+                                               timeSignature: ts,
+                                               noteDuration: d)
+            touchGuide.frame = rect
         }
-    }
 
-    func touchRemainedInPosition(start: CGPoint, end: CGPoint) -> Bool {
-        guard let store = store, let index = index else { return false }
-        let measure = store.measure(at: index)
-        let duration = store.selectedNoteValue.nominalDuration
-        let startPos = geometry.pointToPositionInTime(x: start.x,
-                                                      timeSignature: measure.timeSignature,
-                                                      noteDuration: duration)
-        let endPos = geometry.pointToPositionInTime(x: end.x,
-                                                    timeSignature: measure.timeSignature,
-                                                    noteDuration: duration)
-        return startPos == endPos
-
+        touchGuide.isHidden = sender.state != .changed
     }
 }
 
