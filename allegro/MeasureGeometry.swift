@@ -49,6 +49,10 @@ struct MeasureGeometry {
         return (state.visibleSize.height - 2 * DEFAULT_MARGIN_PTS) / CGFloat(staffCount + 1)
     }
 
+    var heightOfSemitone: CGFloat {
+        return staffHeight / 2
+    }
+
     // it's a lot easier to compute width than height, so they are provided independently to allow clients to minimize
     // arithmetic operations
 
@@ -142,6 +146,36 @@ struct MeasureGeometry {
         return arr
     }
 
+    func touchGuideRect(location: CGPoint,
+                          timeSignature: Rational,
+                          noteDuration: Rational) -> CGRect {
+
+        let spacingBetweenGridlines = verticalGridlineSpacing(timeSignature: timeSignature, noteDuration: noteDuration)
+
+        let size = CGSize(width: spacingBetweenGridlines, height: staffHeight)
+
+        let originX = location.x - location.x.truncatingRemainder(dividingBy: spacingBetweenGridlines)
+        let originY = location.y - location.y.truncatingRemainder(dividingBy: heightOfSemitone) + DEFAULT_MARGIN_PTS  - size.height / 2
+
+        let origin = CGPoint(x: originX, y: originY)
+
+        return CGRect(origin: origin, size: size)
+    }
+
+    func touchRemainedInPosition(start: CGPoint,
+                                 end: CGPoint,
+                                 timeSignature: Rational,
+                                 noteDuration: Rational) -> Bool {
+
+        let startPos = pointToPositionInTime(x: start.x,
+                                             timeSignature: timeSignature,
+                                             noteDuration: noteDuration)
+        let endPos = pointToPositionInTime(x: end.x,
+                                           timeSignature: timeSignature,
+                                           noteDuration: noteDuration)
+        return startPos == endPos
+    }
+
     func noteY(pitch: Int) -> CGFloat {
         return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch) - noteHeight / 2
     }
@@ -156,8 +190,7 @@ struct MeasureGeometry {
 
     func pointToPitch(_ point: CGPoint) -> Int {
         let numSpacesBetweenAllLines: CGFloat = CGFloat(staffCount + numLedgerLinesAbove + numLedgerLinesBelow - 1)
-        let lengthOfSemitoneInPoints = staffHeight / 2
-        return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / lengthOfSemitoneInPoints + numSpacesBetweenAllLines))
+        return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / heightOfSemitone + numSpacesBetweenAllLines))
     }
 
     func pointToPositionInTime(x: CGFloat,
@@ -168,6 +201,11 @@ struct MeasureGeometry {
         let ratioOfScreenWidth = x / totalWidth
         let positionInTime = Int(ratioOfScreenWidth * numPositionsInTime.cgFloat)
         return Rational(positionInTime) / numPositionsInTime * timeSignature
+    }
+
+    private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
+        let numGridSlots = timeSignature / noteDuration
+        return totalWidth / numGridSlots.cgFloat
     }
 }
 
