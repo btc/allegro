@@ -27,10 +27,10 @@ struct Measure {
     static let defaultTimeSignature: Rational = 4/4
 
     // the key signature eg. G Major or d minor
-    let key: Key
+    var key: Key
     
     // used in simplified form, eg. 2/2 and 4/4 are treated the same
-    let timeSignature: Rational
+    var timeSignature: Rational
 
     private var notes: [NotePosition]
 

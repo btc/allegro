@@ -116,4 +116,15 @@ class PartStore {
         extendIfNecessary(toAccessMeasureAtIndex: index)
         return MeasureViewModel(part.measures[index])
     }
+    
+    func hasNotes() -> Bool {
+        for m in part.measures {
+            if m.getAllNotes().count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
+
 }
