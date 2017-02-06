@@ -38,15 +38,7 @@ class MeasureView: UIView {
     fileprivate let barThickness = CGFloat(5)
     fileprivate let barLayer: CAShapeLayer
     
-    // We draw the accidentals relate the the head of the note.
-    // The offset specifies a small delta since we need the flat
-    // to be slightly higher than the other accidentals to align with
-    // the measure line
-    fileprivate let accidentalInfos = [
-        Note.Accidental.natural: ("♮", CGPoint(x: -20, y: 0)),
-        Note.Accidental.sharp: ("♯", CGPoint(x: -20, y: 0)),
-        Note.Accidental.flat: ("♭", CGPoint(x: -20, y: -12)),
-        ]
+
 
     fileprivate let eraseGR: UIPanGestureRecognizer = {
         let gr = UIPanGestureRecognizer()
@@ -94,19 +86,16 @@ class MeasureView: UIView {
         guard noteView.note.displayAccidental else { return nil }
         let accidental = noteView.note.accidental
         
-        let center = CGPoint(
-            x: noteView.noteFrame.origin.x,
-            y: noteView.noteFrame.origin.y + noteView.noteFrame.size.height / 2)
-        guard let info = accidentalInfos[accidental] else {
-            return UILabel()
-        }
+        let center = CGPoint(x: noteView.noteFrame.origin.x,
+                             y: noteView.noteFrame.origin.y + noteView.noteFrame.size.height / 2)
+
+        let info = accidental.infos
         
         let offset = info.1
         
         let size = CGSize(width: 50, height: 60)
-        let origin = CGPoint(
-            x: center.x - size.width / 2 + offset.x,
-            y: center.y - size.height / 2 + offset.y)
+        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
+                             y: center.y - size.height / 2 + offset.y)
         
         let label = UILabel()
         label.frame = CGRect(origin: origin, size: size)
@@ -322,5 +311,20 @@ extension MeasureView: PartStoreObserver {
         geometry = MeasureGeometry(state: state)
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
+    }
+}
+
+extension Note.Accidental {
+    // We draw the accidentals relate the the head of the note.
+    // The offset specifies a small delta since we need the flat
+    // to be slightly higher than the other accidentals to align with
+    // the measure line
+    var infos: (String, CGPoint) {
+        switch self {
+        case .natural: return ("♮", CGPoint(x: -20, y: 0))
+        case .sharp: return ("♯", CGPoint(x: -20, y: 0))
+        case .flat: return ("♭", CGPoint(x: -20, y: -12))
+        default: return ("", .zero)
+        }
     }
 }
