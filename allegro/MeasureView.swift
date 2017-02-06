@@ -20,14 +20,10 @@ class MeasureView: UIView {
 
     var store: PartStore? {
         willSet {
-            if let store = store {
-                store.unsubscribe(self)
-            }
+            store?.unsubscribe(self)
         }
         didSet {
-            if let store = store {
-                store.subscribe(self)
-            }
+            store?.subscribe(self)
         }
     }
 
