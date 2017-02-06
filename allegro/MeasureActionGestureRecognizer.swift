@@ -10,11 +10,11 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 enum MeasureAction: String {
-    case note // tap
     case flat
     case sharp
     case natural
     case rest
+    case undot // tap
     case dot // TODO(btc): double tap?
     case doubleDot // TODO(btc): triple tap?
 }
@@ -117,7 +117,7 @@ class MeasureActionGestureRecognizer: UIGestureRecognizer {
         let point = sender.location(in: view)
         switch sender.numberOfTapsRequired {
         case 1:
-            actionDelegate?.actionRecognized(gesture: .note, at: point)
+            actionDelegate?.actionRecognized(gesture: .undot, at: point)
         case 2:
             actionDelegate?.actionRecognized(gesture: .dot, at: point)
         case 3:
