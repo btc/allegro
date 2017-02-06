@@ -58,15 +58,13 @@ class MeasureView: UIView {
         return gr
     }()
 
-    fileprivate let recognizers: [(Selector, UIGestureRecognizer)]
+    fileprivate let screenEdgeGR: UIScreenEdgePanGestureRecognizer = {
+        let gr = UIScreenEdgePanGestureRecognizer()
+        gr.edges = [.right]
+        return gr
+    }()
 
     override init(frame: CGRect) {
-        recognizers = [
-            (#selector(editTap), editTapGR),
-            (#selector(editPan), editPanGR),
-            (#selector(erase), eraseGR),
-        ]
-
         super.init(frame: frame)
         
         self.layer.addSublayer(barLayer)
@@ -76,11 +74,17 @@ class MeasureView: UIView {
         self.isOpaque = false
         backgroundColor = .white
 
-        for (sel, gr) in recognizers {
+        let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
+            (#selector(editTap), editTapGR),
+            (#selector(editPan), editPanGR),
+            (#selector(erase), eraseGR),
+            ]
+        for (sel, gr) in actionRecognizers {
             gr.addTarget(self, action: sel)
             addGestureRecognizer(gr)
-            gr.delegate = self
+            gr.require(toFail: screenEdgeGR)
         }
+        addGestureRecognizer(screenEdgeGR)
     }
 
     deinit {
@@ -295,14 +299,6 @@ class MeasureView: UIView {
         if sender.state == .ended {
             editTap(sender: sender)
         }
-    }
-}
-
-extension MeasureView: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                           shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        let otherIsOneOfOurs = recognizers.contains() { $0.1 == otherGestureRecognizer }
-        return !otherIsOneOfOurs // makes sure our gestures take lower priority
     }
 }
 
