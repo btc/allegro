@@ -37,8 +37,6 @@ class MeasureView: UIView {
 
     fileprivate let barThickness = CGFloat(5)
     fileprivate let barLayer: CAShapeLayer
-    
-
 
     fileprivate let eraseGR: UIPanGestureRecognizer = {
         let gr = UIPanGestureRecognizer()
@@ -80,29 +78,6 @@ class MeasureView: UIView {
         drawVerticalGridlines(rect: rect)
         drawStaffs(rect: rect)
         drawLedgerLineGuides(rect: rect)
-    }
-    
-    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
-        guard noteView.note.displayAccidental else { return nil }
-        let accidental = noteView.note.accidental
-        
-        let center = CGPoint(x: noteView.noteFrame.origin.x,
-                             y: noteView.noteFrame.origin.y + noteView.noteFrame.size.height / 2)
-
-        let info = accidental.infos
-        
-        let offset = info.1
-        
-        let size = CGSize(width: 50, height: 60)
-        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
-                             y: center.y - size.height / 2 + offset.y)
-        
-        let label = UILabel()
-        label.frame = CGRect(origin: origin, size: size)
-        label.text = info.0
-        label.font = UIFont(name: "DejaVu Sans", size: 70)
-        label.textAlignment = .right
-        return label
     }
 
     private func drawStaffs(rect: CGRect) {
@@ -221,6 +196,29 @@ class MeasureView: UIView {
         
         barLayer.path = barPath.cgPath
         barLayer.fillColor = UIColor.black.cgColor
+    }
+
+    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
+        guard noteView.note.displayAccidental else { return nil }
+        let accidental = noteView.note.accidental
+
+        let center = CGPoint(x: noteView.noteFrame.origin.x,
+                             y: noteView.noteFrame.origin.y + noteView.noteFrame.size.height / 2)
+
+        let info = accidental.infos
+
+        let offset = info.1
+
+        let size = CGSize(width: 50, height: 60)
+        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
+                             y: center.y - size.height / 2 + offset.y)
+
+        let label = UILabel()
+        label.frame = CGRect(origin: origin, size: size)
+        label.text = info.0
+        label.font = UIFont(name: "DejaVu Sans", size: 70)
+        label.textAlignment = .right
+        return label
     }
 
     @objc private func erase(sender: UIPanGestureRecognizer) {
