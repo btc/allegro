@@ -45,7 +45,7 @@ if __FILE__ == $0
     opts.on("-t", "--to DATE", "End Date (Inclusive)") { |v| options[:to] = v }
   end.parse!
 
-  from = if options[:from].nil? then "7 days ago" else options[:from] end
+  from = if options[:from].nil? then "6 days ago" else options[:from] end
   to = if options[:to].nil? then "now" else options[:to] end
 
   git = Git.open(".")
