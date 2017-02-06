@@ -35,8 +35,11 @@ class MeasureView: UIView {
 
     fileprivate let staffLineThickness: CGFloat = 2
 
-    fileprivate let barThickness = CGFloat(5)
-    fileprivate let barLayer: CAShapeLayer
+    fileprivate let barThickness: CGFloat = 5
+
+    fileprivate let barLayer: CAShapeLayer = {
+        return CAShapeLayer()
+    }()
 
     fileprivate let eraseGR: UIPanGestureRecognizer = {
         let gr = UIPanGestureRecognizer()
@@ -47,7 +50,6 @@ class MeasureView: UIView {
     }()
 
     override init(frame: CGRect) {
-        barLayer = CAShapeLayer()
         super.init(frame: frame)
         
         self.layer.addSublayer(barLayer)
