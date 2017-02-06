@@ -9,7 +9,7 @@
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
-enum MeasureAction: String {
+enum NoteAction: String {
     case flat
     case sharp
     case natural
@@ -19,16 +19,16 @@ enum MeasureAction: String {
     case doubleDot // TODO(btc): triple tap?
 }
 
-protocol MeasureActionDelegate: class {
-    func actionRecognized(gesture: MeasureAction, at location: CGPoint)
+protocol NoteActionDelegate: class {
+    func actionRecognized(gesture: NoteAction, at location: CGPoint)
 }
 
-class MeasureActionGestureRecognizer: UIGestureRecognizer {
+class NoteActionGestureRecognizer: UIGestureRecognizer {
 
     var delta: Double = 22
     var costMax = 1
 
-    weak var actionDelegate: MeasureActionDelegate?
+    weak var actionDelegate: NoteActionDelegate?
 
     private var tapGestureRecognizers = [UITapGestureRecognizer]()
     private let swipeGestureRecognizer: DBPathRecognizer?
@@ -56,7 +56,7 @@ class MeasureActionGestureRecognizer: UIGestureRecognizer {
     }
 
     private func setupSwipeGestures() {
-        let map: [MeasureAction : [Int]] = [
+        let map: [NoteAction : [Int]] = [
             .flat: [0,2],
             .sharp: [0,6],
             .natural: [0],
@@ -105,7 +105,7 @@ class MeasureActionGestureRecognizer: UIGestureRecognizer {
         var path = Path()
         path.addPointFromRaw(rawPoints)
         if let gesture = swipeGestureRecognizer?.recognizePath(path),
-            let type = gesture.datas as? MeasureAction,
+            let type = gesture.datas as? NoteAction,
             rawPoints.count > 2 {
             let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
             actionDelegate?.actionRecognized(gesture: type, at: point)
