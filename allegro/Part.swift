@@ -64,6 +64,7 @@ class Part {
             }
             // no free space found in this measure
             extend()
+            print("not enough free space, extend called in appendNote..")
             i += 1
         }
     }

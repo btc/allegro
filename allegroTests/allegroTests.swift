@@ -264,6 +264,8 @@ class allegroTests: XCTestCase {
     func testGetAccidentalDisplay() {
         let cMajorScale = mockPart("CMajor")
         let dMajorScale = mockPart("DMajor")
+        let dMajorRun = mockPart("DMajorRun")
+        let kDeyTest = mockPart("KDeyTest")
         
         for measure in cMajorScale.measures {
             let mvm = MeasureViewModel(measure)
@@ -283,11 +285,66 @@ class allegroTests: XCTestCase {
                 }
             }
         }
+        
+        for index in 0..<dMajorRun.measures.count {
+            print("measure: " + index.description)
+            let mvm = MeasureViewModel(dMajorRun.measures[index])
+            for noteIndex in 0..<mvm.noteViewModels.count {
+                // first measure
+                if(index == 0) {
+                    if(noteIndex == 2) {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                    }
+                    else {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false)
+                    }
+                }
+                // second measure
+                else {
+                    if(noteIndex == 0 || noteIndex == 5) {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                    }
+                    else {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false)
+                    }
+                }
+            }
+        }
+        
+        for index in 0..<kDeyTest.measures.count {
+            let mvm = MeasureViewModel(kDeyTest.measures[index])
+            for noteIndex in 0..<mvm.noteViewModels.count {
+                // first measure
+                if(index == 0) {
+                    if(noteIndex == 6) {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                    }
+                    else {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false)
+                    }
+                }
+                // second measure
+                else {
+                    if(noteIndex == 1 || noteIndex == 5 || noteIndex == 6) {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                    }
+                    else {
+                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false) 
+                    }
+                }
+            }
+        }
     }
     
     func testMocks() {
-        _ = mockPart("CMajor")
-        _ = mockPart("DMajor")
+        let cMajorScale = mockPart("CMajor")
+        XCTAssert(cMajorScale.measures.count == 3, "expected measure count: 3 actual: " + String(cMajorScale.measures.count))
+        //let dMajorScale = mockPart("DMajor")
+        //XCTAssert(dMajorScale.measures.count == 3, "expected measure count: 3 actual: " + String(dMajorScale.measures.count))
+        //let dMajorRun = mockPart("DMajorRun")
+        //XCTAssert(dMajorRun.measures.count == 4, "expected measure count: 4 actual: " + String(dMajorRun.measures.count))
+        //let KeyDTest = mockPart("KeyDTest")
+        //XCTAssert(KeyDTest.measures.count == 2)
     }
     
     func testPerformanceExample() {
