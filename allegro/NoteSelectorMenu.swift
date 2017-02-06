@@ -28,10 +28,9 @@ class NoteSelectorMenu: UICollectionView {
         }
     }
 
-    fileprivate let numNotesVisibleAtOnce: CGFloat = 4
+    fileprivate let numNotesVisibleAtOnce: CGFloat = 5
 
-    fileprivate let notes: [Note.Value] = [.whole, .half, .quarter, .eighth, .sixteenth,
-                                           .thirtysecond, .sixtyfourth]
+    fileprivate let notes: [Note.Value] = [.whole, .half, .quarter, .eighth, .sixteenth]
 
     private let layout = UICollectionViewFlowLayout()
 
@@ -41,6 +40,7 @@ class NoteSelectorMenu: UICollectionView {
         dataSource = self
         delegate = self // to get selected note callback
         isPagingEnabled = true // snaps the menu
+        alwaysBounceVertical = true
         selectItem(at: IndexPath(row: selectedNote, section: 0), animated: true, scrollPosition: .top)
         backgroundColor = NoteSelectorCell.unselectedCellColor // to match the unselected color of the cell
     }
