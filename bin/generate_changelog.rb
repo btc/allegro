@@ -87,7 +87,7 @@ if __FILE__ == $0
     [pr.user.login, 0 - pr.number.to_i]
   end
 
-  table = TTY::Table.new header: ['user', '#', 'title', 'closed at']
+  table = TTY::Table.new header: ['user', 'PR', 'title', 'closed at']
   prs.each { |pr| table << [pr.user.login, pr.number, pr.title, pr.closed_at.localtime] }
   puts table.render(:unicode, padding: DEFAULT_PADDING)
   puts "\n"
