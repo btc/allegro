@@ -41,6 +41,14 @@ class MeasureView: UIView {
         return CAShapeLayer()
     }()
 
+    fileprivate let editGR: UIPanGestureRecognizer = {
+        let gr = UIPanGestureRecognizer()
+        gr.minimumNumberOfTouches = 1
+        gr.maximumNumberOfTouches = 1
+        gr.cancelsTouchesInView = false // TODO: why?
+        return gr
+    }()
+
     fileprivate let eraseGR: UIPanGestureRecognizer = {
         let gr = UIPanGestureRecognizer()
         gr.minimumNumberOfTouches = 1
@@ -59,10 +67,9 @@ class MeasureView: UIView {
         self.isOpaque = false
         backgroundColor = .white
 
-        let mvaGR = MeasureActionGestureRecognizer(view: self)
-        mvaGR.actionDelegate = self
-
+        editGR.addTarget(self, action: #selector(edit))
         eraseGR.addTarget(self, action: #selector(erase))
+        addGestureRecognizer(editGR)
         addGestureRecognizer(eraseGR)
     }
 
@@ -241,6 +248,10 @@ class MeasureView: UIView {
             }
         }
     }
+
+    func edit(sender: UIPanGestureRecognizer) {
+        guard store?.mode == .edit else { return }
+    }
 }
 
 extension MeasureView: MeasureActionDelegate {
@@ -305,7 +316,10 @@ extension MeasureView: MeasureActionDelegate {
 extension MeasureView: PartStoreObserver {
     func partStoreChanged() {
         guard let store = store else { return }
+
         eraseGR.isEnabled = store.mode == .erase
+        editGR.isEnabled = store.mode == .edit
+
         let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
                                           selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         geometry = MeasureGeometry(state: state)
