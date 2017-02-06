@@ -8,11 +8,11 @@
 
 import UIKit
 
-class RestView: MeasureActionView {
+class RestView: NoteActionView {
 
     override var frame: CGRect {
         didSet {
-            measureActionFrame = frame
+            actionFrame = frame
         }
     }
 

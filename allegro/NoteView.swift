@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import Rational
 
-class NoteView: MeasureActionView {
+class NoteView: NoteActionView {
 
     let geometry: NoteGeometry
 
@@ -126,7 +126,7 @@ class NoteView: MeasureActionView {
     // that contains the note head and stem
     fileprivate var noteHeadFrame = CGRect.zero {
         didSet {
-            measureActionFrame = noteHeadFrame
+            actionFrame = noteHeadFrame
         }
     }
 

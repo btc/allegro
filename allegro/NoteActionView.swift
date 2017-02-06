@@ -8,9 +8,9 @@
 
 import UIKit
 
-class MeasureActionView: UIView {
+class NoteActionView: UIView {
 
-    var measureActionFrame: CGRect = .zero {
+    var actionFrame: CGRect = .zero {
         didSet {
             // TODO(btc): configure the gesture recognizer
         }
