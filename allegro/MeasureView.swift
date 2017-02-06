@@ -297,8 +297,27 @@ class MeasureView: UIView {
     func editPan(sender: UIPanGestureRecognizer) {
         guard store?.mode == .edit else { return }
         if sender.state == .ended {
-            editTap(sender: sender)
+            let end = sender.location(in: self)
+            let start = end - sender.translation(in: self)
+            if touchRemainedInPosition(start: start, end: end) {
+                editTap(sender: sender)
+            }
+
         }
+    }
+
+    func touchRemainedInPosition(start: CGPoint, end: CGPoint) -> Bool {
+        guard let store = store, let index = index else { return false }
+        let measure = store.measure(at: index)
+        let duration = store.selectedNoteValue.nominalDuration
+        let startPos = geometry.pointToPositionInTime(x: start.x,
+                                                      timeSignature: measure.timeSignature,
+                                                      noteDuration: duration)
+        let endPos = geometry.pointToPositionInTime(x: end.x,
+                                                    timeSignature: measure.timeSignature,
+                                                    noteDuration: duration)
+        return startPos == endPos
+
     }
 }
 
@@ -329,5 +348,11 @@ extension Note.Accidental {
         case .flat: return ("♭", CGPoint(x: -20, y: -12))
         default: return ("", .zero)
         }
+    }
+}
+
+extension CGPoint {
+    static func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+        return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
     }
 }
