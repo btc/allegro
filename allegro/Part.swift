@@ -67,4 +67,16 @@ class Part {
             i += 1
         }
     }
+    
+    func setTimeSignature(timeSignature: Rational) {
+        for i in 0..<measures.count {
+            measures[i].timeSignature = timeSignature
+        }
+    }
+    
+    func setKeySignature(keySignature: Key) {
+        for i in 0..<measures.count {
+            measures[i].key = keySignature
+        }
+    }
 }
