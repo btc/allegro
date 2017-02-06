@@ -223,7 +223,7 @@ class MeasureView: UIView {
         return label
     }
 
-    @objc private func erase(sender: UIPanGestureRecognizer) {
+   func erase(sender: UIPanGestureRecognizer) {
         guard store?.mode == .erase else { return }
 
         let location = sender.location(in: self)
