@@ -58,7 +58,15 @@ class MeasureView: UIView {
         return gr
     }()
 
+    fileprivate let recognizers: [(Selector, UIGestureRecognizer)]
+
     override init(frame: CGRect) {
+        recognizers = [
+            (#selector(editTap), editTapGR),
+            (#selector(editPan), editPanGR),
+            (#selector(erase), eraseGR),
+        ]
+
         super.init(frame: frame)
         
         self.layer.addSublayer(barLayer)
@@ -68,14 +76,10 @@ class MeasureView: UIView {
         self.isOpaque = false
         backgroundColor = .white
 
-        let grs: [(Selector, UIGestureRecognizer)] = [
-            (#selector(editTap), editTapGR),
-            (#selector(editPan), editPanGR),
-            (#selector(erase), eraseGR),
-        ]
-        for (sel, gr) in grs {
+        for (sel, gr) in recognizers {
             gr.addTarget(self, action: sel)
             addGestureRecognizer(gr)
+            gr.delegate = self
         }
     }
 
@@ -255,7 +259,7 @@ class MeasureView: UIView {
         }
     }
 
-    func editTap(sender: UITapGestureRecognizer) {
+    func editTap(sender: UIGestureRecognizer) {
         guard store?.mode == .edit else {
             Snackbar(message: "you're in erase mode", duration: .short).show()
             return
@@ -288,6 +292,17 @@ class MeasureView: UIView {
 
     func editPan(sender: UIPanGestureRecognizer) {
         guard store?.mode == .edit else { return }
+        if sender.state == .ended {
+            editTap(sender: sender)
+        }
+    }
+}
+
+extension MeasureView: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        let otherIsOneOfOurs = recognizers.contains() { $0.1 == otherGestureRecognizer }
+        return !otherIsOneOfOurs // makes sure our gestures take lower priority
     }
 }
 
