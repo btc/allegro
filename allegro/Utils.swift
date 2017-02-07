@@ -9,7 +9,6 @@
 import CleanroomLogger
 import UIKit
 import SwiftTweaks
-import Rational
 
 #if DEBUG
     let DEBUG = true
@@ -60,18 +59,4 @@ struct Tweaks: TweakLibraryType {
         
         return TweakStore(tweaks: allTweaks, enabled: DEBUG)
     }()
-}
-
-extension Rational {
-    var cgFloat: CGFloat {
-        return CGFloat(Double(rational: self))
-    }
-
-    var intApprox: Int {
-        return Int(Double(self.numerator)/Double(self.denominator))
-    }
-
-    var double: Double {
-        return Double(rational: self)
-    }
 }

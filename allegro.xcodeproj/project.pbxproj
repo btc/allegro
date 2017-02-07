@@ -57,6 +57,7 @@
 		6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */; };
 		6BED4ABA1E49695F00DD2E19 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4AB91E49695F00DD2E19 /* CGPoint.swift */; };
 		6BED4ABC1E49698100DD2E19 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4ABB1E49698100DD2E19 /* Array.swift */; };
+		6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4ABD1E496A7900DD2E19 /* Rational.swift */; };
 		6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */; };
 		8280ADAD1E4295AB00DFE061 /* TimeSignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */; };
 		8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */; };
@@ -156,6 +157,7 @@
 		6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteSelectorMenu.swift; sourceTree = "<group>"; };
 		6BED4AB91E49695F00DD2E19 /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		6BED4ABB1E49698100DD2E19 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		6BED4ABD1E496A7900DD2E19 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
 		6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = SOURCE_ROOT; };
 		8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSignatureViewController.swift; sourceTree = "<group>"; };
 		8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySignatureViewController.swift; sourceTree = "<group>"; };
@@ -407,6 +409,7 @@
 			children = (
 				6BED4ABB1E49698100DD2E19 /* Array.swift */,
 				6BED4AB91E49695F00DD2E19 /* CGPoint.swift */,
+				6BED4ABD1E496A7900DD2E19 /* Rational.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -734,6 +737,7 @@
 				6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */,
 				6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */,
 				6B80D7EB1E466F30003996CF /* SideMenuButton.swift in Sources */,
+				6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */,
 				6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */,
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
