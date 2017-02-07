@@ -32,17 +32,18 @@ class NoteView: NoteActionView {
     }
     
     // It should be in the coordinate frame of the parent.
-    var stemEndY = CGFloat(0)
+    var stemEndY: CGFloat? = nil
+    
     
     var flagStart: CGPoint {
         var start = CGPoint(
             x: frame.size.width + stemOffset.x + flagStartOffset,
-            y: stemEndY - frame.origin.y)
+            y: stemEndingY - frame.origin.y)
         
-        if (flipped) {
+        if (note.flipped) {
             start = CGPoint(
                 x: -stemOffset.x - flagStartOffset - stemThickness,
-                y: stemEndY - frame.origin.y)
+                y: stemEndingY - frame.origin.y)
         }
         
         return start
@@ -58,6 +59,19 @@ class NoteView: NoteActionView {
     
     fileprivate var scale: CGFloat {
         return geometry.staffHeight / defaultNoteHeight
+    }
+    
+    fileprivate let defaultStemHeightScale = CGFloat(2)
+    fileprivate var stemEndingY: CGFloat {
+        if let stemEndY = stemEndY {
+            return stemEndY
+        }
+        
+        if (note.flipped) {
+            return frame.origin.y + frame.size.height + geometry.staffHeight * defaultStemHeightScale
+        }
+        
+        return frame.origin.y - geometry.staffHeight * defaultStemHeightScale
     }
     
     // The NoteView draws the note as two separate UIBezierPaths.
@@ -102,10 +116,6 @@ class NoteView: NoteActionView {
     fileprivate var flagThickness = CGFloat(10)
     fileprivate var flagIterOffset = CGFloat(15)
     
-    var flipped: Bool {
-        return stemEndY > frame.origin.y + frame.size.height
-    }
-    
     let note: NoteViewModel
     
     let drawLayer: CAShapeLayer
@@ -131,7 +141,13 @@ class NoteView: NoteActionView {
             )
             
             self.setNeedsLayout()
-            self.computePaths()
+            
+            // tweaks calls this on initialization
+            // but the frame is sized to zero with causes all sorts of weird NaN errors
+            // so we have to skip
+            if self.frame.size.width != CGFloat(0) && self.frame.size.height != CGFloat(0) {
+                self.computePaths()
+            }
         }
     }
     
@@ -202,7 +218,7 @@ class NoteView: NoteActionView {
             stemEndOffset = flagOffset
         }
         
-        let stemEnd = stemEndY - frame.origin.y
+        let stemEnd = stemEndingY - frame.origin.y
         
         // Since the note head is an oval, we need to add an offset to
         // ensure a smooth merge between the head and stem. 
@@ -215,7 +231,7 @@ class NoteView: NoteActionView {
 
         
         // flipped means we go the bottom left
-        if (flipped) {
+        if (note.flipped) {
             let downStart = CGPoint(x: noteBounds.origin.x, y: noteBounds.origin.y + noteBounds.size.height)
             stemStart = CGPoint(x: downStart.x - stemOffset.x, y: downStart.y - stemOffset.y)
             stemOrigin = CGPoint(x: stemStart.x - stemThickness, y: stemStart.y)
@@ -232,7 +248,7 @@ class NoteView: NoteActionView {
         let path = UIBezierPath()
         
         var start = flagStart
-        var sign = flipped ? CGFloat(-1) : CGFloat(1)
+        var sign = note.flipped ? CGFloat(-1) : CGFloat(1)
         
         func drawSingleFlag(path: UIBezierPath, start: CGPoint) {
             var point = start
@@ -264,9 +280,9 @@ class NoteView: NoteActionView {
             iterDuration = iterDuration / 2
         }
         
-        if (flipped) {
+        if (note.flipped) {
             // not reversing the path causes the union to be incorrect
-            // when combining paths
+            // when combining paths. It has something to do with winding order
             return path.reversing()
         }
         

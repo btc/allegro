@@ -195,8 +195,9 @@ class MeasureView: UIView {
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
             noteView.noteOrigin = CGPoint(x: x, y: y)
-            noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
+            //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = true//false
+            noteView.note.flipped = true
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
