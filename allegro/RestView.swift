@@ -9,4 +9,11 @@
 import UIKit
 
 class RestView: NoteActionView {
+
+    override var frame: CGRect {
+        didSet {
+            actionFrame = frame
+        }
+    }
+
 }

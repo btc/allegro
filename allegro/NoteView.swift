@@ -124,7 +124,11 @@ class NoteView: NoteActionView {
     // This is the note head frame in the NoteView coordinate frame.
     // We need this to draw the note head inside the rectangle
     // that contains the note head and stem
-    fileprivate var noteHeadFrame = CGRect.zero
+    fileprivate var noteHeadFrame = CGRect.zero {
+        didSet {
+            actionFrame = noteHeadFrame
+        }
+    }
 
     let note: NoteViewModel
 
