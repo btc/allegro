@@ -165,7 +165,7 @@ struct MeasureViewModel {
 
     init(_ measure: Measure) {
         self.measure = measure
-        for (position, note) in measure.getAllNotes() {
+        for (position, note) in measure.notes {
             let newNoteViewModel = NoteViewModel(note: note, position: position)
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
             noteViewModels.append(newNoteViewModel)

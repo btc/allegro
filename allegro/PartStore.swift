@@ -119,7 +119,7 @@ class PartStore {
     
     func hasNotes() -> Bool {
         for m in part.measures {
-            if m.getAllNotes().count > 0 {
+            if m.notes.count > 0 {
                 return true
             }
         }

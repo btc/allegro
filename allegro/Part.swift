@@ -55,7 +55,7 @@ class Part {
                 return
             }
             
-            for (pos, duration) in m.getFree() {
+            for (pos, duration) in m.frees {
                 if note.duration <= duration {
                     // add note
                     if insert(note: note, intoMeasureIndex: i, at: pos) == true {

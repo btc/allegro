@@ -11,7 +11,7 @@ import Rational
 // holds information about this specific note in the measure
 // the position is measured in relation to the time signature as a simplified rational
 // eg. in 3/4 time, a quarter note on beat 2 has position 1/2, and there is no space for another note after it.
-private struct NotePosition {
+struct NotePosition {
     var pos: Rational
     var isFree: Bool {
         get {
@@ -32,7 +32,29 @@ struct Measure {
     // used in simplified form, eg. 2/2 and 4/4 are treated the same
     var timeSignature: Rational
 
-    private var notes: [NotePosition]
+    private(set) var positions: [NotePosition]
+
+    // returns all notes and their positions in O(n)
+    var notes: [(pos: Rational, note: Note)] {
+        var ret = [(Rational,Note)]()
+        for notePosition in positions {
+            if !notePosition.isFree, let note = notePosition.note {
+                ret.append((notePosition.pos, note))
+            }
+        }
+        return ret
+    }
+
+    // returns all of the free space in the measure in O(n)
+    var frees: [(pos: Rational, duration: Rational)] {
+        var ret = [(Rational,Rational)]()
+        for notePosition in positions {
+            if notePosition.isFree, let duration = notePosition.durationOfFree {
+                ret.append((notePosition.pos, duration))
+            }
+        }
+        return ret
+    }
 
     init(time: Rational = Measure.defaultTimeSignature, key: Key = Key()) {
         self.timeSignature = time
@@ -40,7 +62,7 @@ struct Measure {
 
         // notes starts with a single free NotePosition that takes up the whole measure
         let np = NotePosition(pos: 0, note: nil, durationOfFree: time)
-        self.notes = [np]
+        self.positions = [np]
     }
 
     // inserts a Note at the given position in the measure in O(n)
@@ -49,7 +71,7 @@ struct Measure {
         
         let noteEnd = position + note.duration
         
-        for (i, notePosition) in notes.enumerated() {
+        for (i, notePosition) in positions.enumerated() {
 
             guard notePosition.isFree, let durationOfFree = notePosition.durationOfFree else { continue }
 
@@ -69,17 +91,17 @@ struct Measure {
 
                 if currPos == position {
                     // need to put the free space after the new note if the start is the same
-                    notes.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
+                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
 
                     if diff == 0 {
                         // remove this free space
-                        notes[i+1].note = nil
-                        notes.remove(at: i+1)
+                        positions[i+1].note = nil
+                        positions.remove(at: i+1)
 
                     } else {
                         // resize and reposition free space
-                        notes[i+1].durationOfFree = diff
-                        notes[i+1].pos = notes[i].pos + note.duration
+                        positions[i+1].durationOfFree = diff
+                        positions[i+1].pos = positions[i].pos + note.duration
                     }
 
                     return true
@@ -87,16 +109,16 @@ struct Measure {
                 } else if currEnd == noteEnd {
                     // need to put the free space before the new note if the end is the same
 
-                    notes.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
+                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
 
                     if diff == 0 {
                         // remove this free space
-                        notes[i].note = nil
-                        notes.remove(at: i)
+                        positions[i].note = nil
+                        positions.remove(at: i)
 
                     } else {
                         // resize free space
-                        notes[i].durationOfFree = diff
+                        positions[i].durationOfFree = diff
                     }
 
                     return true
@@ -104,14 +126,14 @@ struct Measure {
                 } else {
                     // need to put the note in the middle of the free space and cut it up
 
-                    notes.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
+                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
 
                     // resize free space before the note
-                    notes[i].durationOfFree = position - currPos
+                    positions[i].durationOfFree = position - currPos
 
                     // add leftovers in new free space after new note
                     let np = NotePosition(pos: noteEnd, note: nil, durationOfFree: currEnd - noteEnd)
-                    self.notes.insert(np, at: i+2)
+                    self.positions.insert(np, at: i+2)
 
                     return true
                 }
@@ -122,8 +144,8 @@ struct Measure {
     }
 
     // gets a Note at a specific position in the measure in O(n)
-    func getNote(at position: Rational) -> Note? {
-        for notePosition in notes {
+    func note(at position: Rational) -> Note? {
+        for notePosition in positions {
             if notePosition.pos == position && !notePosition.isFree {
                 return notePosition.note
             }
@@ -131,39 +153,17 @@ struct Measure {
         return nil
     }
     
-    // returns all notes and their positions in O(n)
-    func getAllNotes() -> [(pos: Rational, note: Note)] {
-        var ret = [(Rational,Note)]()
-        for notePosition in notes {
-            if !notePosition.isFree, let note = notePosition.note {
-                ret.append((notePosition.pos, note))
-            }
-        }
-        return ret
-    }
-    
-    // returns all of the free space in the measure in O(n)
-    func getFree() -> [(pos: Rational, duration: Rational)] {
-        var ret = [(Rational,Rational)]()
-        for notePosition in notes {
-            if notePosition.isFree, let duration = notePosition.durationOfFree {
-                ret.append((notePosition.pos, duration))
-            }
-        }
-        return ret
-    }
-    
     // removes whichever note is at the specified position
     // returns whether the operation was successful
     // worst case O(n^2) to remove and coalesce
     mutating func removeNote(at position: Rational) -> Bool {
         var removed = false
-        for i in 0..<notes.count {
-            if notes[i].pos == position && !notes[i].isFree {
-                if let note = notes[i].note {
+        for i in 0..<positions.count {
+            if positions[i].pos == position && !positions[i].isFree {
+                if let note = positions[i].note {
                     removed = true
-                    notes[i].note = nil
-                    notes[i].durationOfFree = note.duration
+                    positions[i].note = nil
+                    positions[i].durationOfFree = note.duration
                 }
             }
         }
@@ -176,16 +176,16 @@ struct Measure {
     private mutating func coalesce() {
         var i = 0
         while(true) {
-            if (i == notes.count - 1) {
+            if (i == positions.count - 1) {
                 break
             }
-            let curr = notes[i]
+            let curr = positions[i]
             if curr.isFree, let durationOfFree = curr.durationOfFree {
-                let next = notes[i+1]
+                let next = positions[i+1]
                 if next.isFree, let nextDurationOfFree = next.durationOfFree {
                     // coalesce i+1 into i
-                    notes[i].durationOfFree = durationOfFree + nextDurationOfFree
-                    notes.remove(at: i+1)
+                    positions[i].durationOfFree = durationOfFree + nextDurationOfFree
+                    positions.remove(at: i+1)
                     continue
                 }
             }
@@ -197,7 +197,7 @@ struct Measure {
     func getPrevLetterMatch(noteLetter: Note.Letter, position: Rational) -> Note? {
         var match: Note? = nil
         var foundOrig = false
-        for notePosition in notes.reversed() {
+        for notePosition in positions.reversed() {
             if let curr = notePosition.note {
             
                 // find original note
