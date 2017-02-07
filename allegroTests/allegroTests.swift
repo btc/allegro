@@ -262,8 +262,13 @@ class allegroTests: XCTestCase {
     }
     
     func testMocks() {
-        _ = mockPart("CMajor")
-        _ = mockPart("DMajor")
+        let cmajor = mockPart("CMajor")
+        let dmajor = mockPart("DMajor")
+        let beams = mockPart("beams")
+
+        XCTAssert(cmajor.measures.count == 3)
+        XCTAssert(dmajor.measures.count == 3)
+        XCTAssert(beams.measures.count == 3)
     }
     
     func testPerformanceExample() {
