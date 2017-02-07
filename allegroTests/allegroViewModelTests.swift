@@ -41,7 +41,6 @@ class allegroViewModelTests: XCTestCase {
             (0, 1),
             (1, 4),
             (2, 2),
-            (3, 0),
         ]
 
         for (measure, beamCount) in cases {
