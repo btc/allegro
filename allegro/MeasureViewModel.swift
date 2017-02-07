@@ -179,11 +179,3 @@ struct MeasureViewModel {
     }
 
 }
-
-extension Array {
-    func partition(index: Int) -> (left: Array, right: Array) {
-        let l = self[0..<index]
-        let r = self[index..<count]
-        return (left: Array(l), right: Array(r))
-    }
-}
