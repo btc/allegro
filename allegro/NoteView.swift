@@ -130,7 +130,8 @@ class NoteView: NoteActionView {
         layer.addSublayer(drawLayer)
         
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
-        Tweaks.bindMultiple(tweaksToWatch) {
+        Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
+            guard let `self` = self else { return }
             self.flagIterOffset = Tweaks.assign(Tweaks.flagIterOffset)
             self.flagOffset = Tweaks.assign(Tweaks.flagOffset)
             self.flagThickness = Tweaks.assign(Tweaks.flagThickness)
