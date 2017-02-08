@@ -8,8 +8,7 @@
 
 import Rational
 
-
-let mocks: [Part] = [parsePart(CMajor), parsePart(DMajor), parsePart(beams)]
+let mocks: [Part] = [parsePart(CMajor, key: Key.cMajor), parsePart(DMajor, key: Key.cMajor)]
 
 private let CMajor = [
     "4 C 4 n",
@@ -33,24 +32,64 @@ private let CMajor = [
 private let DMajor = [
     "4 D 4 n",
     "4 E 4 n",
-    "4 F 4 s",
+    "4 F 4 s", // display
     "4 G 4 n",
     "4 A 4 n",
-    "4 B 4 n",
+    "4 B 4 n", // display
     "4 C 5 s",
     "4 D 5 n",
     "8 D 4 n",
-    "8 E 4 n",
+    "8 E 4 n", // display
     "8 F 4 s",
     "8 G 4 n",
     "8 A 4 n",
     "8 B 4 n",
-    "8 C 5 s",
+    "8 C 5 s", // display
     "8 D 5 n"
 ]
 
+private let DMajorRun = [
+    "8 D 4 n", // 0 -> no display
+    "8 E 4 n", // 1 -> no display
+    "8 F 4 s", // 2 -> display (no key hit, no prev, not natural)
+    "8 G 4 n", // 3 -> no display
+    "8 F 4 s", // 4 -> no display (no key hit, has prev, same acc as prev)
+    "8 E 4 n", // 5 -> no display
+    "8 A 4 n", // 6 -> no display
+    "8 B 4 n", // 7 -> no display
+    "8 C 5 s", // 0 -- new measure -> display
+    "8 D 5 n", // 1 -> no display
+    "8 C 5 s", // 2 -> no display (has prev)
+    "8 B 4 n", // 3 -> no display
+    "8 C 4 n", // 4 -> display (no key hit, has prev, diff acc than prev)
+    "8 F 4 s", // 5 -> display
+    "8 E 4 n", // 6 -> no display
+    "8 D 4 n"  // 7 -> no display
+]
+
+// KeyDTest will be put in the key of D
+private let KeyDTest = [
+    "8 D 8 n", // 0 -> no display
+    "8 E 8 n", // 1 -> no display
+    "8 F 8 s", // 2 -> no display (key hit, no prev, same acc as key)
+    "8 F 8 n", // 3 -> no display (key hit, prev, same acc as prev)
+    "8 A 8 n", // 4 -> no display
+    "8 G 8 n", // 5 -> no display
+    "8 F 8 n", // 6 -> display (diff than key hit)
+    "8 E 8 n", // 7 -> no display
+    // ##### new measure
+    "8 G 8 n", // 0 -> no display
+    "8 F 8 n", // 1 -> display (diff than key hit)
+    "8 G 8 n", // 2 -> no display
+    "8 F 8 n", // 3 -> no display (same as prev)
+    "8 G 8 n", // 4 -> no display
+    "8 F 8 s", // 5 -> display (key hit, prev, diff than prev)
+    "8 C 8 n", // 6 -> display (key hit, no prev, diff acc than key)
+    "8 C 8 n"  // 7 -> no display (same as prev)
+]
+
 // comments are for ideal beam
-private let beams = [
+private let BeamTest = [
     "8 E 4 n", // beam 0
     "8 F 4 n", // beam 0
     "8 E 5 n", // beam 1
@@ -78,7 +117,7 @@ private let beams = [
     "8 A 4 n", // beam 0
     "4 B 4 n", // no beam
     "8 C 4 n", // beam 1
-    "8 C 4 n" // beam 1
+    "8 C 4 n", // beam 1
 ]
 
 // 4 C 4 n -> quarternote, C, octave 4, natural
@@ -128,7 +167,13 @@ private func parse(_ input: String) -> Note {
     return Note(value: value, letter: letter, octave: octave, accidental: accidental, rest: false)
 }
 
-private func parsePart(_ partArray: [String]) -> Part {
+/*
+ v2: 
+ private func parsePart(_ partArray: [String], key: Key) -> Part {
+ mock parts should have keys for testing
+ */
+
+private func parsePart(_ partArray: [String], key: Key) -> Part {
     let part = Part()
     for noteString in partArray {
         part.appendNote(note: parse(noteString))
@@ -139,9 +184,20 @@ private func parsePart(_ partArray: [String]) -> Part {
 func mockPart(_ name: String) -> Part {
     
     switch name {
-    case "CMajor": return parsePart(CMajor)
-    case "DMajor": return parsePart(DMajor)
-    case "beams": return parsePart(beams)
+    case "CMajor":
+        return parsePart(CMajor, key: Key.cMajor)
+        
+    case "DMajor":
+        return parsePart(DMajor, key: Key.cMajor)
+    
+    case "DMajorRun":
+        return parsePart(DMajorRun, key: Key.cMajor)
+        
+    case "KeyDTest":
+        return parsePart(KeyDTest, key: Key.dMajor)
+        
+    case "BeamTest":
+        return parsePart(BeamTest, key: Key.cMajor)
         
     default:
         let part = Part()

@@ -65,7 +65,7 @@ class allegroViewModelTests: XCTestCase {
     }
     func testBeam() {
         // TODO test beam v1
-        let part = mockPart("beams")
+        let part = mockPart("BeamTest")
         let cases: [(measure: Int, beamCount: Int)] = [
             (0, 1),
             (1, 4),
