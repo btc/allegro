@@ -9,61 +9,41 @@
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
-enum NoteAction: String {
+enum NoteSwipeAction: String {
     case flat
     case sharp
     case natural
     case rest
-    case undot // tap
-    case dot // TODO(btc): double tap?
-    case doubleDot // TODO(btc): triple tap?
 }
 
-protocol NoteActionDelegate: class {
-    func actionRecognized(gesture: NoteAction, at location: CGPoint)
+protocol NoteSwipeActionDelegate: class {
+    func actionRecognized(gesture: NoteSwipeAction, at location: CGPoint)
 }
 
-class NoteActionGestureRecognizer: UIGestureRecognizer {
+class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
 
-    var delta: Double = 22
-    var costMax = 1
+    // TODO: allow tweaks
+    let delta: Double = 22
+    let costMax = 1
 
-    weak var actionDelegate: NoteActionDelegate?
+    weak var actionDelegate: NoteSwipeActionDelegate?
 
-    private var tapGestureRecognizers = [UITapGestureRecognizer]()
     private let swipeGestureRecognizer: DBPathRecognizer?
     private var rawPoints = [Int]()
 
     // installs gesture recognizers on the view
     // this object does NOT hold a reference to the view
     // clienst must NOT call view.addGestureRecognizer(thisObject)
-    init(view: UIView) {
+    init() {
         swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8,
                                                   deltaMove: delta,
                                                   costMax: costMax)
         super.init(target: nil, action: nil)
-        view.addGestureRecognizer(self)
         setupSwipeGestures()
-        setupTapGestures(view)
-    }
-
-    private func setupTapGestures(_ view: UIView) {
-        let undot = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        let dot = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        let doubleDot = UITapGestureRecognizer(target: self, action: #selector(tapped))
-        dot.numberOfTapsRequired = 2
-        doubleDot.numberOfTapsRequired = 3
-
-        undot.require(toFail: dot)
-        dot.require(toFail: doubleDot)
-
-        for gr in [undot, dot, doubleDot] {
-            view.addGestureRecognizer(gr)
-        }
     }
 
     private func setupSwipeGestures() {
-        let map: [NoteAction : [Int]] = [
+        let map: [NoteSwipeAction : [Int]] = [
             .flat: [0,2],
             .sharp: [0,6],
             .natural: [0],
@@ -112,24 +92,10 @@ class NoteActionGestureRecognizer: UIGestureRecognizer {
         var path = Path()
         path.addPointFromRaw(rawPoints)
         if let gesture = swipeGestureRecognizer?.recognizePath(path),
-            let type = gesture.datas as? NoteAction,
+            let type = gesture.datas as? NoteSwipeAction,
             rawPoints.count > 2 {
             let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
             actionDelegate?.actionRecognized(gesture: type, at: point)
-        }
-    }
-
-    @objc private func tapped(sender: UITapGestureRecognizer) {
-        guard let view = sender.view else { return }
-        let point = sender.location(in: view)
-        switch sender.numberOfTapsRequired {
-        case 1:
-            actionDelegate?.actionRecognized(gesture: .undot, at: point)
-        case 2:
-            actionDelegate?.actionRecognized(gesture: .dot, at: point)
-        case 3:
-            actionDelegate?.actionRecognized(gesture: .doubleDot, at: point)
-        default: break
         }
     }
 }
