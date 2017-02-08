@@ -118,12 +118,11 @@ class NoteView: NoteActionView {
     
     let note: NoteViewModel
     
-    let drawLayer: CAShapeLayer
+    let drawLayer: CAShapeLayer = CAShapeLayer()
 
     init(note: NoteViewModel, geometry: NoteGeometry) {
         self.note = note
         self.geometry = geometry
-        drawLayer = CAShapeLayer()
         super.init(frame: .zero)
         // makes it transparent so we see the lines behind
         isOpaque = false
@@ -145,7 +144,7 @@ class NoteView: NoteActionView {
             // tweaks calls this on initialization
             // but the frame is sized to zero with causes all sorts of weird NaN errors
             // so we have to skip
-            if self.frame.size.width != CGFloat(0) && self.frame.size.height != CGFloat(0) {
+            if self.frame.size != .zero {
                 self.computePaths()
             }
         }
