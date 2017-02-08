@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3217F85F1E4BD99E002A894C /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3217F85E1E4BD99E002A894C /* CGRect.swift */; };
 		324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 324C87A51E3972AF006F974D /* DejaVuSans.ttf */; };
 		324C87A71E3972AF006F974D /* DejaVuSans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 324C87A51E3972AF006F974D /* DejaVuSans.ttf */; };
 		32B8678A1E2D79F80029F946 /* MeasureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B867891E2D79F80029F946 /* MeasureView.swift */; };
@@ -105,6 +106,7 @@
 /* Begin PBXFileReference section */
 		29F82434DECE1C4DB0338477 /* Pods-allegroUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.release.xcconfig"; sourceTree = "<group>"; };
 		2A2AB4D1F4E9BE124F4C6E9D /* Pods_allegro.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_allegro.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3217F85E1E4BD99E002A894C /* CGRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
 		324C87A51E3972AF006F974D /* DejaVuSans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DejaVuSans.ttf; sourceTree = "<group>"; };
 		32B867891E2D79F80029F946 /* MeasureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureView.swift; sourceTree = "<group>"; };
 		32B8678B1E3062C60029F946 /* NoteView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteView.swift; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				6BED4ABB1E49698100DD2E19 /* Array.swift */,
 				6BED4AB91E49695F00DD2E19 /* CGPoint.swift */,
 				6BED4ABD1E496A7900DD2E19 /* Rational.swift */,
+				3217F85E1E4BD99E002A894C /* CGRect.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -746,6 +749,7 @@
 				6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */,
 				6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */,
 				6B4CFB5D1E4C241B0087CEA8 /* NoteAction.swift in Sources */,
+				3217F85F1E4BD99E002A894C /* CGRect.swift in Sources */,
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
 				32B8678A1E2D79F80029F946 /* MeasureView.swift in Sources */,
