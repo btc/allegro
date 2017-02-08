@@ -154,14 +154,14 @@ class allegroTests: XCTestCase {
         let _ = m.insert(note: eighthNote, at: 1/4)
 
         // resize both freespaces
-        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
         XCTAssert(m.frees[0].duration == 1/8, "Resizes 1st freespace")
         XCTAssert(m.frees[1].duration == 1/2, "Resizes 2nd freepace")
         _ = m.removeNote(at: 1/8)
 
         // remove 1st freespace and resize 2nd
         _ = m.insert(note: eighthNote, at: 0)
-        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
         XCTAssert(m.frees.count == 1, "Removes 1st freespace")
         XCTAssert(m.frees[0].duration == 1/2, "Resizes 2nd freespace")
         _ = m.removeNote(at: 0)
@@ -169,7 +169,7 @@ class allegroTests: XCTestCase {
 
         // resize 1st freespace and remove 2nd
         _ = m.insert(note: halfNote, at: 1/2)
-        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
         XCTAssert(m.frees[0].duration == 1/8, "Resizes 1st freespace")
         XCTAssert(m.frees.count == 1, "Removes 2nd freespace")
         _ = m.removeNote(at: 3/4)
@@ -178,12 +178,12 @@ class allegroTests: XCTestCase {
         // remove both freespaces
         _ = m.insert(note: eighthNote, at: 0)
         _ = m.insert(note: halfNote, at: 1/2)
-        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
         XCTAssert(m.frees.isEmpty, "Removes 1st and 2nd freespace")
         _ = m.removeNote(at: 1/8)
 
         // negative example
-        XCTAssert(m.insert(note: halfNote, at: 1/8) == false, "Not enough space for note")
+        XCTAssert(m.insertWithNudge(note: halfNote, at: 1/8) == false, "Not enough space for note")
     }
     
     func testNote() {
