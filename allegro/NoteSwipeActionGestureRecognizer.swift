@@ -22,6 +22,8 @@ protocol NoteSwipeActionDelegate: class {
 
 class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
 
+    var action: NoteSwipeAction?
+
     // TODO: allow tweaks
     let delta: Double = 22
     let costMax = 1
@@ -34,11 +36,12 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
     // installs gesture recognizers on the view
     // this object does NOT hold a reference to the view
     // clienst must NOT call view.addGestureRecognizer(thisObject)
-    init() {
+
+    override init(target: Any?, action: Selector?) {
         swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8,
                                                   deltaMove: delta,
                                                   costMax: costMax)
-        super.init(target: nil, action: nil)
+        super.init(target: target, action: action)
         setupSwipeGestures()
     }
 
@@ -59,16 +62,21 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
     override func reset() {
         super.reset()
         rawPoints = []
+        state = .possible
+        action = nil
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesBegan(touches, with: event)
 
-        if let t = touches.first, let view = view {
-            let location = t.location(in: view)
-            rawPoints.append(Int(location.x))
-            rawPoints.append(Int(location.y))
+        guard let t = touches.first, let view = view else {
+            state = .failed
+            return
         }
+        let location = t.location(in: view)
+        rawPoints.append(Int(location.x))
+        rawPoints.append(Int(location.y))
+        state = .began
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
@@ -87,15 +95,25 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesEnded(touches, with: event)
-        defer { reset() }
 
         var path = Path()
         path.addPointFromRaw(rawPoints)
-        if let gesture = swipeGestureRecognizer?.recognizePath(path),
+
+        guard let gesture = swipeGestureRecognizer?.recognizePath(path),
             let type = gesture.datas as? NoteSwipeAction,
-            rawPoints.count > 2 {
-            let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
-            actionDelegate?.actionRecognized(gesture: type, at: point)
+            rawPoints.count > 2 else {
+                state = .failed
+                return
         }
+
+        let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
+        actionDelegate?.actionRecognized(gesture: type, at: point)
+        action = type
+        state = .ended
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        super.touchesCancelled(touches, with: event)
+        state = .cancelled
     }
 }
