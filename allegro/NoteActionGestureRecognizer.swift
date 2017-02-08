@@ -48,13 +48,16 @@ class NoteActionGestureRecognizer: UIGestureRecognizer {
     }
 
     private func setupTapGestures(_ view: UIView) {
-        let note = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        let undot = UITapGestureRecognizer(target: self, action: #selector(tapped))
         let dot = UITapGestureRecognizer(target: self, action: #selector(tapped))
         let doubleDot = UITapGestureRecognizer(target: self, action: #selector(tapped))
         dot.numberOfTapsRequired = 2
-        dot.numberOfTapsRequired = 3
+        doubleDot.numberOfTapsRequired = 3
 
-        for gr in [note, dot, doubleDot] {
+        undot.require(toFail: dot)
+        dot.require(toFail: doubleDot)
+
+        for gr in [undot, dot, doubleDot] {
             view.addGestureRecognizer(gr)
         }
     }
