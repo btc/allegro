@@ -144,7 +144,7 @@ struct Measure {
                 // have to check that this is freespace
                 guard positions.indices.contains(i+2) else { continue }
                 let nextFreeNotePosition = positions[i+2]
-                guard nextFreeNotePosition.isFree, let nextDurationOfFree = nextNotePosition.durationOfFree else { continue }
+                guard nextFreeNotePosition.isFree, let nextDurationOfFree = nextFreeNotePosition.durationOfFree else { continue }
 
                 let nextDiff = (nextFreeNotePosition.durationOfFree)! - note.duration
 
@@ -155,7 +155,8 @@ struct Measure {
                 guard let nextNote = nextNotePosition.note else { continue }
 
                 // end of both notes matches the end of second freespace
-                let noteEndCombined = position + note.duration + nextNotePosition.pos + nextNote.duration
+                let noteEndCombined = position + note.duration + nextNote.duration
+
                 let nextFreeEnd = nextFreeNotePosition.pos + nextDurationOfFree
                 let endMatch = (noteEndCombined == nextFreeEnd)
 
@@ -200,6 +201,8 @@ struct Measure {
                         positions[i+3].durationOfFree = nextFreeEnd - noteEndCombined
                     }
                 }
+
+                return true
             }
 
         }

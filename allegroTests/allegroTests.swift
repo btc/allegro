@@ -11,10 +11,17 @@ import XCTest
 import Rational // TODO figure out how to import Rational here without linker error
 
 class allegroTests: XCTestCase {
-    
+
+    let sixteenthNote = Note(value: .sixteenth, letter: .A, octave: 4)
+    let eighthNote = Note(value: .eighth, letter: .A, octave: 4)
+    let quarterNote = Note(value: .quarter, letter: .A, octave: 4)
+    let halfNote = Note(value: .half, letter: .A, octave: 4)
+    let wholeNote = Note(value: .whole, letter: .A, octave: 4)
+
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        
     }
     
     override func tearDown() {
@@ -137,6 +144,46 @@ class allegroTests: XCTestCase {
             XCTFail("Finds the correct prev note")
         }
 
+    }
+
+    // test inserting notes and shifting over neighbors
+    func testMeasureInsertShift() {
+        // positive examples
+
+        var m = Measure()
+        let _ = m.insert(note: eighthNote, at: 1/4)
+
+        // resize both freespaces
+        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.frees[0].duration == 1/8, "Resizes 1st freespace")
+        XCTAssert(m.frees[1].duration == 1/2, "Resizes 2nd freepace")
+        _ = m.removeNote(at: 1/8)
+
+        // remove 1st freespace and resize 2nd
+        _ = m.insert(note: eighthNote, at: 0)
+        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.frees.count == 1, "Removes 1st freespace")
+        XCTAssert(m.frees[0].duration == 1/2, "Resizes 2nd freespace")
+        _ = m.removeNote(at: 0)
+        _ = m.removeNote(at: 1/8)
+
+        // resize 1st freespace and remove 2nd
+        _ = m.insert(note: halfNote, at: 1/2)
+        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.frees[0].duration == 1/8, "Resizes 1st freespace")
+        XCTAssert(m.frees.count == 1, "Removes 2nd freespace")
+        _ = m.removeNote(at: 3/4)
+        _ = m.removeNote(at: 1/8)
+
+        // remove both freespaces
+        _ = m.insert(note: eighthNote, at: 0)
+        _ = m.insert(note: halfNote, at: 1/2)
+        XCTAssert(m.insert(note: quarterNote, at: 1/8) == true, "Can insert and shift note")
+        XCTAssert(m.frees.isEmpty, "Removes 1st and 2nd freespace")
+        _ = m.removeNote(at: 1/8)
+
+        // negative example
+        XCTAssert(m.insert(note: halfNote, at: 1/8) == false, "Not enough space for note")
     }
     
     func testNote() {
