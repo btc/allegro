@@ -47,25 +47,29 @@ class Part {
     func appendNote(note: Note) {
         var i = 0 // measure index
         while true {
+
             let m = measures[i]
+
+            // check against time signature to prevent endless loop from bad input
             if note.duration > m.timeSignature {
                 return
             }
             
-            for (pos, duration) in m.getFree() {
+            for (pos, duration) in m.frees {
                 if note.duration <= duration {
                     // add note
                     if insert(note: note, intoMeasureIndex: i, at: pos) == true {
                         return
-                    } else {
-                        continue
                     }
                 }
             }
             // no free space found in this measure
-            extend()
-            print("not enough free space, extend called in appendNote..")
             i += 1
+
+            // extend when we've run out of measures
+            if i >= measures.count {
+                extend()
+            }
         }
     }
     

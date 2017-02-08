@@ -9,7 +9,6 @@
 import CleanroomLogger
 import UIKit
 import SwiftTweaks
-import Rational
 
 #if DEBUG
     let DEBUG = true
@@ -46,7 +45,7 @@ struct Tweaks: TweakLibraryType {
     
     static let flagThickness = Tweak<CGFloat>("UI", "Flags", "Thickness", defaultValue: 10, min: 1)
     static let flagOffset = Tweak<CGFloat>("UI", "Flags", "Offset for the stem to prevent it from poking out", defaultValue: 5, min: 1)
-    static let flagIterOffset = Tweak<CGFloat>("UI", "Flags", "Distance between flags", defaultValue: 10, min: 1)
+    static let flagIterOffset = Tweak<CGFloat>("UI", "Flags", "Distance between flags", defaultValue: 15, min: 1)
     static let flagEndOffsetX = Tweak<CGFloat>("UI", "Flags", "Flag length X", defaultValue: 40, min: 1)
     static let flagEndOffsetY = Tweak<CGFloat>("UI", "Flags", "Flag length Y", defaultValue: 70, min: 1)
 
@@ -60,18 +59,4 @@ struct Tweaks: TweakLibraryType {
         
         return TweakStore(tweaks: allTweaks, enabled: DEBUG)
     }()
-}
-
-extension Rational {
-    var cgFloat: CGFloat {
-        return CGFloat(Double(rational: self))
-    }
-
-    var intApprox: Int {
-        return Int(Double(self.numerator)/Double(self.denominator))
-    }
-
-    var double: Double {
-        return Double(rational: self)
-    }
 }

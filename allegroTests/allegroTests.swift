@@ -61,30 +61,30 @@ class allegroTests: XCTestCase {
         XCTAssert(measure.insert(note: D5quarter, at: 1/4) == false, "Notes can't be placed overlapping another note")
         
         // test for correct freespace
-        var freeSpace = measure.getFree()
+        var freeSpace = measure.frees
         XCTAssert(freeSpace.count == 2, "Two freespaces")
         XCTAssert(freeSpace[0].pos == 1/4 && freeSpace[0].duration == 1/8, "Check first freespace")
         XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Check second freespace")
         
         // test directly accessing notes
-        if let n0 = measure.getNote(at: 0) {
+        if let n0 = measure.note(at: 0) {
             XCTAssert(n0 == A4quarter, "Note can be accessed directly")
         } else {
             XCTFail("Note can be accessed directly")
         }
-        if let n1 = measure.getNote(at: 3/8) {
+        if let n1 = measure.note(at: 3/8) {
             XCTAssert(n1 == C5eighth, "Note can be accessed directly")
         } else {
             XCTFail("Note can be accessed directly")
         }
-        if let n2 = measure.getNote(at: 3/4) {
+        if let n2 = measure.note(at: 3/4) {
             XCTAssert(n2 == B4quarter, "Note can be accessed directly")
         } else {
             XCTFail("Note can be accessed directly")
         }
         
         // test getting all notes
-        let notes = measure.getAllNotes()
+        let notes = measure.notes
         XCTAssert(notes.count == 3, "There are exactly 3 notes")
         XCTAssert(notes[0].pos == 0 && notes[0].note == A4quarter, "Note can be accessed")
         XCTAssert(notes[1].pos == 3/8 && notes[1].note == C5eighth, "Note can be accessed")
@@ -92,29 +92,29 @@ class allegroTests: XCTestCase {
         
         // test removing notes
         XCTAssert(measure.removeNote(at: 0) == true, "Remove note at 0")
-        XCTAssert(measure.getAllNotes().count == 2, "There are exactly 2 notes after removing one")
-        freeSpace = measure.getFree()
+        XCTAssert(measure.notes.count == 2, "There are exactly 2 notes after removing one")
+        freeSpace = measure.frees
         XCTAssert(freeSpace.count == 2, "Two freespaces")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is bigger")
         XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Check second freespace")
         
         XCTAssert(measure.removeNote(at: 0) == false, "Not allowed to remove note twice")
-        XCTAssert(measure.getAllNotes().count == 2, "Note cannot be removed twice")
-        freeSpace = measure.getFree()
+        XCTAssert(measure.notes.count == 2, "Note cannot be removed twice")
+        freeSpace = measure.frees
         XCTAssert(freeSpace.count == 2, "Two freespaces")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is same")
         XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Second freespace is same")
         
         XCTAssert(measure.removeNote(at: 3/4) == true, "Remove at 3/4")
-        XCTAssert(measure.getAllNotes().count == 1, "There is only 1 note left")
-        freeSpace = measure.getFree()
+        XCTAssert(measure.notes.count == 1, "There is only 1 note left")
+        freeSpace = measure.frees
         XCTAssert(freeSpace.count == 2, "Two freespaces")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is same")
         XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/2, "Second freespace is bigger")
         
         XCTAssert(measure.removeNote(at: 3/8) == true, "Remove at 3/8")
-        XCTAssert(measure.getAllNotes().count == 0, "There are no notes left")
-        freeSpace = measure.getFree()
+        XCTAssert(measure.notes.count == 0, "There are no notes left")
+        freeSpace = measure.frees
         XCTAssert(freeSpace.count == 1, "One freespace")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 1, "First freespace takes the whole measure")
         
@@ -150,38 +150,6 @@ class allegroTests: XCTestCase {
         XCTAssert(G4quarter.duration == (1/4 * 7/4), "Quarter note with 2 dots")
         G4quarter.dot = .none
         XCTAssert(G4quarter.duration == 1/4, "Quarter note with no dots")
-    }
-    
-    func testNoteView() {
-        let C4 = NoteViewModel(note: Note(value: .quarter, letter: .C, octave: 4), position: 0)
-        XCTAssert(C4.pitch == -6, "C4 is 6 notes below centerline, on the first ledger line")
-        var (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: -6)
-        XCTAssert(letter == Note.Letter.C && octave == 4, "C4 is 6 notes below centerline, on the first ledger line")
-        
-        let A4 = NoteViewModel(note: Note(value: .quarter, letter: .A, octave: 4), position: 0)
-        XCTAssert(A4.pitch == -1, "A4 is 1 note below centerline")
-        (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: -1)
-        XCTAssert(letter == Note.Letter.A && octave == 4, "A4 is 1 note below centerline")
-        
-        let B4 = NoteViewModel(note: Note(value: .quarter, letter: .B, octave: 4), position: 0)
-        XCTAssert(B4.pitch == 0, "B4 is at the centerline")
-        (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: 0)
-        XCTAssert(letter == Note.Letter.B && octave == 4, "B4 is at the centerline")
-        
-        let C5 = NoteViewModel(note: Note(value: .quarter, letter: .C, octave: 5), position: 0)
-        XCTAssert(C5.pitch == 1, "C5 is 1 note above centerline")
-        (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: 1)
-        XCTAssert(letter == Note.Letter.C && octave == 5, "C5 is 1 note above centerline")
-        
-        let G5 = NoteViewModel(note: Note(value: .quarter, letter: .G, octave: 5), position: 0)
-        XCTAssert(G5.pitch == 5, "G5 is 5 notes above centerline")
-        (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: 5)
-        XCTAssert(letter == Note.Letter.G && octave == 5, "G5 is 5 notes above centerline")
-        
-        let B5 = NoteViewModel(note: Note(value: .quarter, letter: .B, octave: 5), position: 0)
-        XCTAssert(B5.pitch == 7, "B5 is 7 notes above centerline, right above first ledger line")
-        (letter,octave) = NoteViewModel.pitchToLetterAndOffset(pitch: 7)
-        XCTAssert(letter == Note.Letter.B && octave == 5, "B5 is 7 notes above centerline, right above first ledger line")
     }
     
     func testKey() {
@@ -345,6 +313,8 @@ class allegroTests: XCTestCase {
         //XCTAssert(dMajorRun.measures.count == 4, "expected measure count: 4 actual: " + String(dMajorRun.measures.count))
         //let KeyDTest = mockPart("KeyDTest")
         //XCTAssert(KeyDTest.measures.count == 2)
+        let beams = mockPart("beams")
+        XCTAssert(beams.measures.count == 3)
     }
     
     func testPerformanceExample() {

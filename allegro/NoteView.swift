@@ -11,9 +11,45 @@ import UIKit
 import Rational
 
 class NoteView: NoteActionView {
-
-    let geometry: NoteGeometry
-
+    var geometry: NoteGeometry
+    
+    // ALL THE STUFF THAT GETS TOUCHED BY THE OUTSIDE WORLD
+    // origin of the note head in the parent coordinate frame
+    var noteOrigin = CGPoint.zero {
+        didSet {
+            frame = CGRect(
+                origin: noteOrigin,
+                size: CGSize(width: defaultNoteWidth * scale, height: defaultNoteHeight * scale)
+            )
+        }
+    }
+    
+    // thickness in the x direction of the stem
+    // this is use to get the other side of the stem in the x direction to make sure
+    // beams end in on the right side of the stem
+    var stemThickness: CGFloat {
+        return 3 * scale
+    }
+    
+    // It should be in the coordinate frame of the parent.
+    var stemEndY: CGFloat? = nil
+    
+    
+    var flagStart: CGPoint {
+        var start = CGPoint(
+            x: frame.size.width + stemOffset.x + flagStartOffset,
+            y: stemEndingY - frame.origin.y)
+        
+        if (note.flipped) {
+            start = CGPoint(
+                x: -stemOffset.x - flagStartOffset - stemThickness,
+                y: stemEndingY - frame.origin.y)
+        }
+        
+        return start
+    }
+    // END OUTSIDE WORLD STUFF
+    
     // since everything was designed for iPhone 7, we stretch/squash the note
     // to fit other screen sizes
     // The default note size is (70, 55.16665)
@@ -21,8 +57,21 @@ class NoteView: NoteActionView {
     fileprivate let defaultNoteWidth = CGFloat(70)
     fileprivate let defaultNoteHeight = CGFloat(55.16665)
     
-    var scale: CGFloat {
+    fileprivate var scale: CGFloat {
         return geometry.staffHeight / defaultNoteHeight
+    }
+    
+    fileprivate let defaultStemHeightScale = CGFloat(2)
+    fileprivate var stemEndingY: CGFloat {
+        if let stemEndY = stemEndY {
+            return stemEndY
+        }
+        
+        if (note.flipped) {
+            return frame.origin.y + frame.size.height + geometry.staffHeight * defaultStemHeightScale
+        }
+        
+        return frame.origin.y - geometry.staffHeight * defaultStemHeightScale
     }
     
     // The NoteView draws the note as two separate UIBezierPaths.
@@ -34,11 +83,6 @@ class NoteView: NoteActionView {
     // into the inner rectangle
     fileprivate var noteInset: CGPoint {
         return CGPoint(x: 3 * scale, y: 3 * scale)
-    }
-    
-    // thickness in the x direction of the stem
-    var stemThickness: CGFloat {
-        return 3 * scale
     }
     
     // since the note head is a rotated oval that is shrunk to fit the frame,
@@ -54,95 +98,40 @@ class NoteView: NoteActionView {
     // radians only!
     fileprivate let rotationAngle = CGFloat(-10 * Double.pi / 180.0)
     
-    // frame of the note head in the parent coordinate frame
-    var noteOrigin = CGPoint.zero
-
-    var noteFrame: CGRect {
-        return CGRect(
-            origin: noteOrigin,
-            size: CGSize(width: defaultNoteWidth * scale, height: defaultNoteHeight * scale)
-        )
-    }
-    
-    // The NoteView extends its own frame to accommodate the extra height of
-    // the stem, which can be changed by the parent.
-    // This constant describes the y position the NoteView extends itself to.
-    // It should be in the coordinate frame of the parent.
-    var stemEndY = CGFloat(0) {
-        didSet {
-            updateNoteFrame()
-        }
-    }
-    
     // Since the flag points down, we need to decrease the stem height
     // to prevent the stem from poking above the flag
-    var flagOffset = CGFloat(5)
+    fileprivate var flagOffset = CGFloat(5)
     
     // Since the note is rotated slightly, we need to add an offset
     // to the flag start to position it at the right point
-    var flagStartOffset: CGFloat {
+    fileprivate var flagStartOffset: CGFloat {
         return CGFloat(-1.5 * scale)
     }
-    var _flagEndOffset = CGPoint(x: 40, y: 70)
-    var flagEndOffset: CGPoint {
+    fileprivate var _flagEndOffset = CGPoint(x: 40, y: 70)
+    fileprivate var flagEndOffset: CGPoint {
         return CGPoint(x: _flagEndOffset.x * scale, y: _flagEndOffset.y * scale)
     }
     
-    fileprivate let flagLayer: CAShapeLayer
-    var shouldDrawFlag: Bool {
-        set(newShouldDraw) {
-            flagLayer.isHidden = shouldDrawFlag
-        }
-        
-        get {
-            return flagLayer.isHidden
-        }
-    }
-
+    var shouldDrawFlag = false
     fileprivate var flagThickness = CGFloat(10)
-    fileprivate var flagIterOffset = CGFloat(10)
+    fileprivate var flagIterOffset = CGFloat(15)
     
-    var flagStart: CGPoint {
-        var start = CGPoint(
-            x: noteFrame.size.width + stemOffset.x + flagStartOffset,
-            y: 0)
-        
-        if (flipped) {
-            start = CGPoint(
-                x: -stemOffset.x - flagStartOffset - stemThickness,
-                y: frame.size.height)
-        }
-        
-        return start
-    }
-    
-    
-    fileprivate var flipped: Bool {
-        return stemEndY > noteFrame.origin.y + noteFrame.size.height
-    }
-    
-    // This is the note head frame in the NoteView coordinate frame.
-    // We need this to draw the note head inside the rectangle
-    // that contains the note head and stem
-    fileprivate var noteHeadFrame = CGRect.zero {
-        didSet {
-            actionFrame = noteHeadFrame
-        }
-    }
-
     let note: NoteViewModel
+    
+    let drawLayer: CAShapeLayer = CAShapeLayer()
 
     init(note: NoteViewModel, geometry: NoteGeometry) {
         self.note = note
         self.geometry = geometry
-        flagLayer = CAShapeLayer()
         super.init(frame: .zero)
         // makes it transparent so we see the lines behind
         isOpaque = false
-        layer.addSublayer(flagLayer)
+        
+        layer.addSublayer(drawLayer)
         
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
-        Tweaks.bindMultiple(tweaksToWatch) {
+        Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
+            guard let `self` = self else { return }
             self.flagIterOffset = Tweaks.assign(Tweaks.flagIterOffset)
             self.flagOffset = Tweaks.assign(Tweaks.flagOffset)
             self.flagThickness = Tweaks.assign(Tweaks.flagThickness)
@@ -152,7 +141,13 @@ class NoteView: NoteActionView {
             )
             
             self.setNeedsLayout()
-            self.updateNoteFrame()
+            
+            // tweaks calls this on initialization
+            // but the frame is sized to zero with causes all sorts of weird NaN errors
+            // so we have to skip
+            if self.frame.size != .zero {
+                self.computePaths()
+            }
         }
     }
     
@@ -160,51 +155,9 @@ class NoteView: NoteActionView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // Since both noteframe and stemEndY are needed to
-    // compute the final frame size yet are set independently
-    // this method makes sure the two generate a coherent frame
-    func updateNoteFrame() {
-        // don't extend the frame at all for whole notes since
-        // they never have a stem
-        if (note.value == Note.Value.whole) {
-            frame = noteFrame
-            noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
-            return
-        }
-        
-        var offset = noteFrame.origin.y - stemEndY
-        if (flipped) {
-            offset = stemEndY - noteFrame.origin.y - noteFrame.size.height
-        }
-        
-        let frameSize = CGSize(width: noteFrame.size.width,
-                               height: noteFrame.size.height + offset)
-        
-        if (!flipped) {
-            frame = CGRect(
-                origin: CGPoint(x: noteFrame.origin.x, y: stemEndY),
-                size: frameSize)
-            noteHeadFrame = CGRect(origin: CGPoint(x: 0, y: offset), size: noteFrame.size)
-        } else {
-            frame = CGRect (
-                origin: noteFrame.origin,
-                size: frameSize
-            )
-            noteHeadFrame = CGRect(origin: CGPoint.zero, size: noteFrame.size)
-        }
-        
-        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration
-            && shouldDrawFlag) {
-            flagLayer.path = getFlagPath().cgPath
-            flagLayer.fillColor = UIColor.black.cgColor
-        }
-    }
-    
     // drawRect is the rectangle we are drawing inside.
     // It should be correctly sized.
-    func getNoteHeadPath(drawRect: CGRect) -> UIBezierPath {
-        let rect = noteHeadFrame.offsetBy(dx: drawRect.origin.x, dy: drawRect.origin.y)
-        
+    func getNoteHeadPath(rect: CGRect) -> UIBezierPath {
         let center = CGPoint(
             x: rect.origin.x + rect.size.width / 2,
             y: rect.origin.y + rect.size.height / 2
@@ -250,37 +203,39 @@ class NoteView: NoteActionView {
         return path
     }
     
-    func getStemPath(notePath: UIBezierPath, drawRect: CGRect) -> UIBezierPath {
+    func getStemPath(notePath: UIBezierPath) -> UIBezierPath {
         // The stem path is a just a rectangle, but we need to make sure it 
         // connects smoothly with the note head
-        let bounds = notePath.cgPath.boundingBox
+        let noteBounds = notePath.cgPath.boundingBox
         
         // We start with the top right corner of the bounding box for the note
         // head path
-        let upStart = CGPoint(x: bounds.origin.x + bounds.size.width,
-                                  y: bounds.origin.y)
+        let upStart = CGPoint(x: noteBounds.origin.x + noteBounds.size.width,
+                                  y: noteBounds.origin.y)
         
         var stemEndOffset = CGFloat(0)
         if (note.value.nominalDuration < Note.Value.quarter.nominalDuration) {
             stemEndOffset = flagOffset
         }
         
+        let stemEnd = stemEndingY - frame.origin.y
+        
         // Since the note head is an oval, we need to add an offset to
         // ensure a smooth merge between the head and stem. 
         // this is the bottom left corner of the final stem rectangle
         var stemStart = CGPoint(x: upStart.x + stemOffset.x, y: upStart.y + stemOffset.y)
         var stemOrigin = CGPoint(x: stemStart.x,
-                                 y: drawRect.origin.y + stemEndOffset)
+                                 y: stemEnd + stemEndOffset)
         
-        var stemSize = CGSize(width: stemThickness, height: stemStart.y)
+        var stemSize = CGSize(width: stemThickness, height: stemStart.y - stemOrigin.y)
 
         
         // flipped means we go the bottom left
-        if (flipped) {
-            let downStart = CGPoint(x: bounds.origin.x, y: bounds.origin.y + bounds.size.height)
+        if (note.flipped) {
+            let downStart = CGPoint(x: noteBounds.origin.x, y: noteBounds.origin.y + noteBounds.size.height)
             stemStart = CGPoint(x: downStart.x - stemOffset.x, y: downStart.y - stemOffset.y)
             stemOrigin = CGPoint(x: stemStart.x - stemThickness, y: stemStart.y)
-            stemSize = CGSize(width: stemThickness, height: drawRect.size.height - stemOrigin.y - stemEndOffset)
+            stemSize = CGSize(width: stemThickness, height: stemEnd - stemOrigin.y - stemEndOffset)
         }
         
         let stemRect = CGRect(
@@ -293,7 +248,7 @@ class NoteView: NoteActionView {
         let path = UIBezierPath()
         
         var start = flagStart
-        var sign = flipped ? CGFloat(-1) : CGFloat(1)
+        var sign = note.flipped ? CGFloat(-1) : CGFloat(1)
         
         func drawSingleFlag(path: UIBezierPath, start: CGPoint) {
             var point = start
@@ -325,20 +280,30 @@ class NoteView: NoteActionView {
             iterDuration = iterDuration / 2
         }
         
+        if (note.flipped) {
+            // not reversing the path causes the union to be incorrect
+            // when combining paths. It has something to do with winding order
+            return path.reversing()
+        }
+        
         return path
     }
-
-    override func draw(_ rect: CGRect) {
-        super.draw(_: rect)
+    
+    func computePaths() {
+        let path = UIBezierPath()
+        let notePath = getNoteHeadPath(rect: bounds)
+        path.append(notePath)
         
-        UIColor.black.set()
-        
-        let notePath = getNoteHeadPath(drawRect: rect)
-        notePath.fill()
-        
-        if (note.value != Note.Value.whole) {
-            let stemPath = getStemPath(notePath: notePath, drawRect: rect)
-            stemPath.fill()
+        if (note.value.nominalDuration < Note.Value.whole.nominalDuration) {
+            path.append(getStemPath(notePath: notePath))
         }
+        
+        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration
+            && shouldDrawFlag) {
+            path.append(getFlagPath())
+        }
+        
+        drawLayer.path = path.cgPath
+        drawLayer.fillColor = UIColor.black.cgColor
     }
 }

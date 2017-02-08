@@ -10,12 +10,6 @@ import UIKit
 
 class NoteActionView: UIView {
 
-    var actionFrame: CGRect = .zero {
-        didSet {
-            // TODO(btc): configure the gesture recognizer
-        }
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
     }

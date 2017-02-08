@@ -193,11 +193,11 @@ class MeasureView: UIView {
             let x = geometry.noteX(position: noteView.note.position,
                                    timeSignature: measureVM.timeSignature)
             let y = geometry.noteY(pitch: noteView.note.pitch)
-
+            
             noteView.noteOrigin = CGPoint(x: x, y: y)
-            noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
-            noteView.shouldDrawFlag = false
-
+            //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
+            noteView.shouldDrawFlag = true//false
+            noteView.note.flipped = true
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
@@ -215,22 +215,16 @@ class MeasureView: UIView {
                     continue
                 }
                 
-                let noteViewOrigin = noteView.frame.origin
+                let flagStart = noteView.frame.origin + noteView.flagStart
                 
                 if (i == 0) {
-                    barStart = CGPoint(
-                        x: noteViewOrigin.x + noteView.flagStart.x,
-                        y: noteViewOrigin.y + noteView.flagStart.y
-                    )
+                    barStart = flagStart
                 }
                 
                 if (i == beam.count - 1) {
-                    barEnd = CGPoint(
-                        x: noteViewOrigin.x + noteView.flagStart.x + noteView.stemThickness,
-                        y: noteViewOrigin.y + noteView.flagStart.y
-                    )
-                    var next = barStart
+                    barEnd = flagStart.offset(dx: noteView.stemThickness, dy: 0)
                     
+                    var next = barStart
                     barPath.move(to: next)
                     next = barEnd
                     barPath.addLine(to: next)
@@ -243,16 +237,22 @@ class MeasureView: UIView {
             }
         }
         
-        barLayer.path = barPath.cgPath
-        barLayer.fillColor = UIColor.black.cgColor
+        // don't draw bars for now since its extremely buggy
+        //barLayer.path = barPath.cgPath
+        //barLayer.fillColor = UIColor.black.cgColor
+        
+        // we compute paths at the end because beams can change stuff
+        for noteView in noteViews {
+            noteView.computePaths()
+        }
     }
 
     func getAccidentalLabel(noteView: NoteView) -> UILabel? {
         guard noteView.note.displayAccidental else { return nil }
         let accidental = noteView.note.accidental
 
-        let center = CGPoint(x: noteView.noteFrame.origin.x,
-                             y: noteView.noteFrame.origin.y + noteView.noteFrame.size.height / 2)
+        let center = CGPoint(x: noteView.frame.origin.x,
+                             y: noteView.frame.origin.y + noteView.frame.size.height / 2)
 
         let info = accidental.infos
 
@@ -374,11 +374,5 @@ extension Note.Accidental {
         case .flat: return ("♭", CGPoint(x: -20, y: -12))
         default: return ("", .zero)
         }
-    }
-}
-
-extension CGPoint {
-    static func - (lhs: CGPoint, rhs: CGPoint) -> CGPoint {
-        return CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
     }
 }

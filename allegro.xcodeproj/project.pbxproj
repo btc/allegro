@@ -55,6 +55,9 @@
 		6B92BE651E308B2600CE2C9F /* MeasureViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */; };
 		6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */; };
 		6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */; };
+		6BED4ABA1E49695F00DD2E19 /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4AB91E49695F00DD2E19 /* CGPoint.swift */; };
+		6BED4ABC1E49698100DD2E19 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4ABB1E49698100DD2E19 /* Array.swift */; };
+		6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4ABD1E496A7900DD2E19 /* Rational.swift */; };
 		6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */; };
 		8280ADAD1E4295AB00DFE061 /* TimeSignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */; };
 		8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */; };
@@ -152,6 +155,9 @@
 		6B92BE641E308B2600CE2C9F /* MeasureViewContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewContainer.swift; sourceTree = "<group>"; };
 		6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
 		6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteSelectorMenu.swift; sourceTree = "<group>"; };
+		6BED4AB91E49695F00DD2E19 /* CGPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
+		6BED4ABB1E49698100DD2E19 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		6BED4ABD1E496A7900DD2E19 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
 		6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = SOURCE_ROOT; };
 		8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSignatureViewController.swift; sourceTree = "<group>"; };
 		8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySignatureViewController.swift; sourceTree = "<group>"; };
@@ -339,6 +345,7 @@
 				6B096E651E3737CF00615723 /* Recognizers */,
 				B96BCCC41E3D5FE50006A047 /* IO */,
 				6B3290EF1E3C463200AE693B /* Audio */,
+				6BED4AB81E49694B00DD2E19 /* Extensions */,
 				6B6E26ED1E288F8200F9CF66 /* AppDelegate.swift */,
 				6B6E271F1E28985F00F9CF66 /* Utils.swift */,
 				B90F77961E3680C1009F0CA3 /* Mocks.swift */,
@@ -395,6 +402,16 @@
 				8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		6BED4AB81E49694B00DD2E19 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6BED4ABB1E49698100DD2E19 /* Array.swift */,
+				6BED4AB91E49695F00DD2E19 /* CGPoint.swift */,
+				6BED4ABD1E496A7900DD2E19 /* Rational.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		B96BCCC41E3D5FE50006A047 /* IO */ = {
@@ -720,10 +737,12 @@
 				6BBD4D201E3FF0EB00F0B50E /* RestView.swift in Sources */,
 				6BE02B4B1E2DD33F0073D06F /* NoteSelectorMenu.swift in Sources */,
 				6B80D7EB1E466F30003996CF /* SideMenuButton.swift in Sources */,
+				6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */,
 				6B6E27291E28B17F00F9CF66 /* DBPathRecognizer.swift in Sources */,
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
 				32B8678A1E2D79F80029F946 /* MeasureView.swift in Sources */,
+				6BED4ABC1E49698100DD2E19 /* Array.swift in Sources */,
 				6B1B8E801E48F3EB00851D02 /* MeasureTouchGuide.swift in Sources */,
 				6B096E5F1E342D6300615723 /* PartStore.swift in Sources */,
 				6B6BE38E1E2DE023007E0491 /* NoteSelectorCell.swift in Sources */,
@@ -743,6 +762,7 @@
 				6B3797FB1E42A8DF001F9246 /* NoteActionView.swift in Sources */,
 				6B3290F11E3C49B200AE693B /* Audio.swift in Sources */,
 				6B6774A71E2D7FE600399BDC /* Part.swift in Sources */,
+				6BED4ABA1E49695F00DD2E19 /* CGPoint.swift in Sources */,
 				B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */,
 				6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */,
 				8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */,

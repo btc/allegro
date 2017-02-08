@@ -122,34 +122,30 @@ struct MeasureViewModel {
     }
     
     private func computeBeamsRecursive(beam: Beam) -> [Beam] {
-        let (splitIndex, discardLeft) = splitBeam(beam: beam)
+        if beam.isEmpty {
+            return []
+        }
+        let (left, right) = splitBeam(beam: beam)
 
-        // no split
-        if splitIndex == 0 {
+        let beamWasNotSplit = left.count == beam.count || right.count == beam.count
+
+        if beamWasNotSplit {
             return [beam]
         }
-
-        let (lhs, rhs) = beam.partition(index: splitIndex)
-
         var beams = [Beam]()
-        
-        if !discardLeft {
-            beams.append(contentsOf: computeBeamsRecursive(beam: lhs))
-        }
-        
-        beams.append(contentsOf: computeBeamsRecursive(beam: rhs))
-
+        beams.append(contentsOf: computeBeamsRecursive(beam: left))
+        beams.append(contentsOf: computeBeamsRecursive(beam: right))
         return beams
     }
     
     // returns index of first element of second part of split
     // eg. beam should be split as beam[0..<i] and beam[i...end]
     // also return whether the first portion should be discarded
-    private func splitBeam(beam: Beam) -> (splitIndex: Int, discard: Bool) {
+    private func splitBeam(beam: Beam) -> (left: Beam, right: Beam) {
         // do not split if there is nothing to split
         if beam.count <= 1 {
             // discard so that we don't have 1 element beams
-            return (0, true)
+            return ([], [])
         }
 
         // split after the first run
@@ -159,26 +155,26 @@ struct MeasureViewModel {
             if note.value != value {
                 // split here because this is the first note that doesn't match
                 if value.hasFlag {
-                    return (index, false)
+                    return beam.partition(index: index)
                 } else {
                     // discard if this run has no flag
-                    return (index, true)
+                    return ([], beam.partition(index: index).right)
                 }
             }
         }
         // no split if everything is in the run
         if value.hasFlag {
-            return (0, false)
+            return ([], beam)
         } else {
             // but this run has no flag so we discard it
-            return (0, true)
+            return ([], [])
         }
     }
 
 
     init(_ measure: Measure) {
         self.measure = measure
-        for (position, note) in measure.getAllNotes() {
+        for (position, note) in measure.notes {
             let newNoteViewModel = NoteViewModel(note: note, position: position)
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
             noteViewModels.append(newNoteViewModel)
@@ -187,12 +183,4 @@ struct MeasureViewModel {
         beams = computeBeams()
     }
 
-}
-
-extension Array {
-    func partition(index: Int) -> (left: Array, right: Array) {
-        let l = self[0..<index]
-        let r = self[index..<count]
-        return (left: Array(l), right: Array(r))
-    }
 }

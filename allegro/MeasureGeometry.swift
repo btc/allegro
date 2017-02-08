@@ -127,14 +127,14 @@ struct MeasureGeometry {
 
         var arr = [Line]()
 
-        let numGridSlots = timeSignature / selectedNoteDuration // spaces between fence posts
-        let numGridlines: Int = numGridSlots.intApprox - 1 // number of fence posts. we ignore the two end posts.
+        let numSlots = numGridSlots(timeSignature: timeSignature, noteDuration: selectedNoteDuration)
+        let numGridlines: Int = numSlots - 1 // number of fence posts. we ignore the two end posts.
 
         // right now, grid lines are evenly-spaced. this will no longer be true once we expand the grid slots to
         // provide more physical space to notes of shorter durations. 
         // Remember, we're going to enforce a minimum slot size and right here is where it's going to happen.
 
-        let gridlineOffset = totalWidth / numGridSlots.cgFloat
+        let gridlineOffset = totalWidth / CGFloat(numSlots)
 
         for i in stride(from: 0, to: numGridlines, by: 1) {
 
@@ -197,15 +197,18 @@ struct MeasureGeometry {
                                timeSignature: Rational,
                                noteDuration: Rational) -> Rational {
 
-        let numPositionsInTime = timeSignature / noteDuration
+        let numPositionsInTime = numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration)
         let ratioOfScreenWidth = x / totalWidth
-        let positionInTime = Int(ratioOfScreenWidth * numPositionsInTime.cgFloat)
-        return Rational(positionInTime) / numPositionsInTime * timeSignature
+        let positionInTime = Int(ratioOfScreenWidth * CGFloat(numPositionsInTime))
+        return Rational(positionInTime) / Rational(numPositionsInTime) * timeSignature
+    }
+
+    private func numGridSlots(timeSignature: Rational, noteDuration: Rational) -> Int {
+        return 2 * (timeSignature / noteDuration).intApprox
     }
 
     private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
-        let numGridSlots = timeSignature / noteDuration
-        return totalWidth / numGridSlots.cgFloat
+        return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration))
     }
 }
 

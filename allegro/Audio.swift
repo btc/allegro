@@ -52,7 +52,7 @@ extension Audio: PartStoreObserver {
         let sequenceLength = AKDuration(beats: Double(m.timeSignature.numerator), tempo: Double(store.part.tempo))
         sequence.setLength(sequenceLength)
 
-        guard let note = m.getNote(at: position) else { return }
+        guard let note = m.note(at: position) else { return }
 
         // let akpos = AKDuration(beats: Double(m.timeSignature.numerator) * position.double)
         let akpos = AKDuration(beats: 0)
