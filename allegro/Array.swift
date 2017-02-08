@@ -12,4 +12,20 @@ extension Array {
         let r = self[index..<count] // TODO(btc): maybe use stride
         return (left: Array(l), right: Array(r))
     }
+
+    func indexOfFirstMatch(condition: (Element) -> Bool) -> Index? {
+        var low = startIndex
+        var high = endIndex
+        var found = false
+        while low < high {
+            let mid = index(low, offsetBy: distance(from: low, to: high) / 2)
+            if condition(self[mid]) {
+                high = mid
+                found = true
+            } else {
+                low = index(after: mid)
+            }
+        }
+        return found ? low : nil
+    }
 }
