@@ -69,6 +69,8 @@ class MeasureView: UIView {
         let v = MeasureTouchGuide()
         return v
     }()
+    
+    fileprivate var spacing = [CGFloat]()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -139,12 +141,11 @@ class MeasureView: UIView {
     }
 
     private func drawVerticalGridlines(rect: CGRect) {
-        guard let store = store, let index = index else { return }
-
-        let measure = store.measure(at: index)
-
-        let lines = geometry.verticalGridlines(timeSignature: measure.timeSignature,
-                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+        let offsets = spacing.enumerated().map {spacing[0..<$0.0].reduce(0, +)}
+        let lines = offsets.map { MeasureGeometry.Line(
+                                    start: CGPoint(x: $0, y: CGFloat(0)),
+                                    end: CGPoint(x: $0, y: geometry.totalHeight))}
+        
         let path = UIBezierPath()
 
         for (start, end) in lines {
@@ -187,14 +188,16 @@ class MeasureView: UIView {
             addSubview(v)
         }
         
-
-        // we're barring all the notes for now
+        let ts = measureVM.timeSignature
+        let dur = store.selectedNoteValue.nominalDuration
+        spacing = geometry.generateDefaultSpacing(timeSig: ts, duration: dur)
+        
         for noteView in noteViews {
+            let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts, duration: dur)
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = geometry.noteX(position: noteView.note.position,
-                                   timeSignature: measureVM.timeSignature)
+            let x = geometry.noteX(spacing: spacing, slot: slot)
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
             noteView.noteOrigin = CGPoint(x: x, y: y)
@@ -204,6 +207,11 @@ class MeasureView: UIView {
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
             }
+            
+            // override the non default spacing for areas that have notes
+            // we can extend this to handle multiple squished notes in the future as well
+            let boundingBox = noteView.frame.boundingBox(other: getAccidentalFrame(noteView: noteView))
+            spacing[slot] = max(boundingBox.size.width, spacing[slot])
         }
         
         let barPath = UIBezierPath()
@@ -240,7 +248,7 @@ class MeasureView: UIView {
             }
         }
         
-        // don't draw bars for now since its extremely buggy
+
         barLayer.path = barPath.cgPath
         barLayer.fillColor = UIColor.black.cgColor
 

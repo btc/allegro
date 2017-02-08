@@ -180,8 +180,8 @@ struct MeasureGeometry {
         return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch) - noteHeight / 2
     }
 
-    func noteX(position: Rational, timeSignature: Rational) -> CGFloat {
-        return position.cgFloat / timeSignature.cgFloat * totalWidth
+    func noteX(spacing: [CGFloat], slot: Int) -> CGFloat {
+        return spacing[0..<slot].reduce(0, +)
     }
 
     func noteStemEnd(pitch: Int, originY y: CGFloat) -> CGFloat {
@@ -209,6 +209,17 @@ struct MeasureGeometry {
 
     private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
         return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration))
+    }
+    
+    func noteToSlot(position: Rational, timeSig: Rational, duration: Rational) -> Int {
+        let slots = Double(numGridSlots(timeSignature: timeSig, noteDuration: duration))
+        let percent = position / timeSig
+        return Int(percent.double * slots)
+    }
+    
+    func generateDefaultSpacing(timeSig: Rational, duration: Rational) -> [CGFloat] {
+        return (0..<numGridSlots(timeSignature: timeSig, noteDuration: duration))
+            .map {_ in verticalGridlineSpacing(timeSignature: timeSig, noteDuration: duration) }
     }
 }
 
