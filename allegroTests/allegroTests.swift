@@ -235,6 +235,7 @@ class allegroTests: XCTestCase {
         let dMajorRun = mockPart("DMajorRun")
         let kDeyTest = mockPart("KDeyTest")
         
+        // test C major scale, key of C
         for measure in cMajorScale.measures {
             let mvm = MeasureViewModel(measure)
             for noteViewModel in mvm.noteViewModels {
@@ -242,6 +243,7 @@ class allegroTests: XCTestCase {
             }
         }
         
+        // test D major scale, key of C
         for measure in dMajorScale.measures {
             let mvm = MeasureViewModel(measure)
             for noteViewModel in mvm.noteViewModels {
@@ -254,6 +256,7 @@ class allegroTests: XCTestCase {
             }
         }
         
+        // test D major run, key of C
         for index in 0..<dMajorRun.measures.count {
             print("measure: " + index.description)
             let mvm = MeasureViewModel(dMajorRun.measures[index])
@@ -269,7 +272,7 @@ class allegroTests: XCTestCase {
                 }
                 // second measure
                 else {
-                    if(noteIndex == 0 || noteIndex == 5) {
+                    if(noteIndex == 0 || noteIndex == 4 || noteIndex == 5) {
                         XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
                     }
                     else {
@@ -279,6 +282,7 @@ class allegroTests: XCTestCase {
             }
         }
         
+        // test D major line, key of D
         for index in 0..<kDeyTest.measures.count {
             let mvm = MeasureViewModel(kDeyTest.measures[index])
             for noteIndex in 0..<mvm.noteViewModels.count {
@@ -307,14 +311,14 @@ class allegroTests: XCTestCase {
     func testMocks() {
         let cMajorScale = mockPart("CMajor")
         XCTAssert(cMajorScale.measures.count == 3, "expected measure count: 3 actual: " + String(cMajorScale.measures.count))
-        //let dMajorScale = mockPart("DMajor")
-        //XCTAssert(dMajorScale.measures.count == 3, "expected measure count: 3 actual: " + String(dMajorScale.measures.count))
-        //let dMajorRun = mockPart("DMajorRun")
-        //XCTAssert(dMajorRun.measures.count == 4, "expected measure count: 4 actual: " + String(dMajorRun.measures.count))
-        //let KeyDTest = mockPart("KeyDTest")
-        //XCTAssert(KeyDTest.measures.count == 2)
-        let beams = mockPart("beams")
-        XCTAssert(beams.measures.count == 3)
+        let dMajorScale = mockPart("DMajor")
+        XCTAssert(dMajorScale.measures.count == 3, "expected measure count: 3 actual: " + String(dMajorScale.measures.count))
+        let dMajorRun = mockPart("DMajorRun")
+        XCTAssert(dMajorRun.measures.count == 2, "expected measure count: 2 actual: " + String(dMajorRun.measures.count))
+        let KeyDTest = mockPart("KeyDTest")
+        XCTAssert(KeyDTest.measures.count == 2)
+        let beams = mockPart("BeamTest")
+        XCTAssert(beams.measures.count == 3, "expected measure count: 3 actual: " + String(beams.measures.count))
     }
     
     func testPerformanceExample() {
