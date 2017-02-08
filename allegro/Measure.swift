@@ -65,6 +65,8 @@ struct Measure {
         self.positions = [np]
     }
 
+
+
     // inserts a Note at the given position in the measure in O(n)
     // returns whether the operation succeeded
     // tries to use next freespace if that will allow the note to be placed
@@ -84,123 +86,54 @@ struct Measure {
             guard (position >= currPos) && (position <= currEnd) else { continue }
 
             // check end of new note
-            if (noteEnd >= currPos) && (noteEnd <= currEnd) { // can insert note in this space without changing next note
-                // add Note and change free space
-                if currPos == position {
-                    // need to put the free space after the new note if the start is the same
-                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
+            guard (noteEnd >= currPos) && (noteEnd <= currEnd) else { continue }
 
-                    if diff == 0 {
-                        // remove this free space
-                        positions[i+1].note = nil
-                        positions.remove(at: i+1)
+            // add Note and change free space
+            if currPos == position {
+                // need to put the free space after the new note if the start is the same
+                positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
 
-                    } else {
-                        // resize and reposition free space
-                        positions[i+1].durationOfFree = diff
-                        positions[i+1].pos = positions[i].pos + note.duration
-                    }
-
-                    return true
-
-                } else if currEnd == noteEnd {
-                    // need to put the free space before the new note if the end is the same
-
-                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
-
-                    if diff == 0 {
-                        // remove this free space
-                        positions[i].note = nil
-                        positions.remove(at: i)
-
-                    } else {
-                        // resize free space
-                        positions[i].durationOfFree = diff
-                    }
-
-                    return true
-
-                } else {
-                    // need to put the note in the middle of the free space and cut it up
-
-                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
-
-                    // resize free space before the note
-                    positions[i].durationOfFree = position - currPos
-
-                    // add leftovers in new free space after new note
-                    let np = NotePosition(pos: noteEnd, note: nil, durationOfFree: currEnd - noteEnd)
-                    self.positions.insert(np, at: i+2)
-
-                    return true
-                }
-
-            } else { // check if we can insert at this position and shift next note over
-
-                // must be a note bc otherwise it would be coalesced
-                guard positions.indices.contains(i+1) else { continue }
-                let nextNotePosition = positions[i+1]
-
-                // have to check that this is freespace
-                guard positions.indices.contains(i+2) else { continue }
-                let nextFreeNotePosition = positions[i+2]
-                guard nextFreeNotePosition.isFree, let nextDurationOfFree = nextFreeNotePosition.durationOfFree else { continue }
-
-                let nextDiff = (nextFreeNotePosition.durationOfFree)! - note.duration
-
-                // check that next freespace has enough reoom for the leftovers from this note
-                guard note.duration <= diff + nextDiff else { continue }
-
-                // save the next note b/c it will be placed back
-                guard let nextNote = nextNotePosition.note else { continue }
-
-                // end of both notes matches the end of second freespace
-                let noteEndCombined = position + note.duration + nextNote.duration
-
-                let nextFreeEnd = nextFreeNotePosition.pos + nextDurationOfFree
-                let endMatch = (noteEndCombined == nextFreeEnd)
-
-                if currPos == position {
-                    // start matches so we can remove curr free and put the note at the same index
-                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
-
-                    // remove curr free
+                if diff == 0 {
+                    // remove this free space
                     positions[i+1].note = nil
                     positions.remove(at: i+1)
 
-                    // reposition next note
-                    positions[i+1].pos = note.duration + position
-
-                    // check end
-                    if endMatch {
-                        // remove 2nd free space
-                        positions[i+2].note = nil
-                        positions.remove(at: i+2)
-                    } else {
-                        // resize 2nd free space
-                        positions[i+2].pos = noteEndCombined
-                        positions[i+2].durationOfFree = nextFreeEnd - noteEndCombined
-                    }
-                    
                 } else {
-                    // start doesn't match so we will resize curr free and place note after it
-                    positions[i].durationOfFree = position - currPos
-                    positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
-
-                    // reposition next note
-                    positions[i+2].pos = note.duration + position
-
-                    // check end
-                    if endMatch {
-                        // remove 2nd freespace
-                        positions[i+3].note = nil
-                        positions.remove(at: i+3)
-                    } else {
-                        // resize 2nd freesapce
-                        positions[i+3].pos = noteEndCombined
-                        positions[i+3].durationOfFree = nextFreeEnd - noteEndCombined
-                    }
+                    // resize and reposition free space
+                    positions[i+1].durationOfFree = diff
+                    positions[i+1].pos = positions[i].pos + note.duration
                 }
+
+                return true
+
+            } else if currEnd == noteEnd {
+                // need to put the free space before the new note if the end is the same
+
+                positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
+
+                if diff == 0 {
+                    // remove this free space
+                    positions[i].note = nil
+                    positions.remove(at: i)
+
+                } else {
+                    // resize free space
+                    positions[i].durationOfFree = diff
+                }
+
+                return true
+
+            } else {
+                // need to put the note in the middle of the free space and cut it up
+
+                positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
+
+                // resize free space before the note
+                positions[i].durationOfFree = position - currPos
+
+                // add leftovers in new free space after new note
+                let np = NotePosition(pos: noteEnd, note: nil, durationOfFree: currEnd - noteEnd)
+                self.positions.insert(np, at: i+2)
 
                 return true
             }
@@ -208,6 +141,65 @@ struct Measure {
         }
         return false
     }
+
+    // determines if this note can nudge its neighbor to the right in O(n)
+    func canNudge(note: Note, at position: Rational) -> Rational? {
+        for (i, notePosition) in positions.enumerated() {
+            // look for the freespace NotePosition that contains this requested position
+
+            guard notePosition.isFree, let durationOfFree = notePosition.durationOfFree else { continue }
+            let currPos = notePosition.pos
+            let currEnd = currPos + durationOfFree
+
+            // check that start of new note falls within this freespace
+            guard (position >= currPos) && (position <= currEnd) else { continue }
+
+            // i+1 must be a note bc otherwise it would be coalesced
+            guard positions.indices.contains(i+1) else { continue }
+            let nextNotePosition = positions[i+1]
+            guard let nextNote = nextNotePosition.note else { continue }
+
+            // have to check that i+2 is freespace
+            guard positions.indices.contains(i+2) else { continue }
+            let nextFreeNotePosition = positions[i+2]
+            guard nextFreeNotePosition.isFree, let nextDurationOfFree = nextFreeNotePosition.durationOfFree else { continue }
+
+            // check that there is enough space for both notes after using nextFree
+            if position + note.duration + nextNote.duration <= nextFreeNotePosition.pos + nextDurationOfFree {
+                return nextNotePosition.pos
+            }
+        }
+        return nil
+    }
+
+    // inserts a note in O(n) at the given position
+    // attempts to nudge 1 note on the right to make room if possible
+    mutating func insertWithNudge(note: Note, at position: Rational) -> Bool {
+
+        // try normal insert
+        if insert(note: note, at: position) {
+            return true
+        }
+
+        // try using this note to nudge its neighbor on the right
+        guard let neighborPosition = canNudge(note: note, at: position) else { return false }
+
+        // remove and save neighbor
+        guard let neighbor = removeAndReturnNote(at: neighborPosition) else { return false }
+
+        // try to insert the new note
+        if !insert(note: note, at: position) {
+            // failed, so we replace neighbor where it came from
+            let success = insert(note: neighbor, at: neighborPosition)
+            if DEBUG && !success {
+                Log.error?.message("Couldn't re-insert removed note. Developer error")
+            }
+            return false
+        }
+        // re-insert neighbor
+        return insert(note: neighbor, at: position + note.duration)
+    }
+
 
     // gets a Note at a specific position in the measure in O(n)
     func note(at position: Rational) -> Note? {
@@ -223,11 +215,18 @@ struct Measure {
     // returns whether the operation was successful
     // worst case O(n^2) to remove and coalesce
     mutating func removeNote(at position: Rational) -> Bool {
-        var removed = false
+        return removeAndReturnNote(at: position) != nil
+    }
+
+    // removes whichever note is at the specified position
+    // returns the note if it was found
+    // worst case O(n^2) to remove and coalesce
+    mutating func removeAndReturnNote(at position: Rational) -> Note? {
+        var removed: Note?
         for i in 0..<positions.count {
             if positions[i].pos == position && !positions[i].isFree {
                 if let note = positions[i].note {
-                    removed = true
+                    removed = note
                     positions[i].note = nil
                     positions[i].durationOfFree = note.duration
                 }
