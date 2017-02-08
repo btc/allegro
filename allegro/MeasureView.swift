@@ -249,15 +249,16 @@ class MeasureView: UIView {
             noteView.computePaths()
         }
     }
-
-    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
-        guard noteView.note.displayAccidental else { return nil }
-        let accidental = noteView.note.accidental
-
+    
+    func getAccidentalFrame(noteView: NoteView) -> CGRect {
+        guard noteView.note.displayAccidental else {
+            return CGRect(origin: noteView.frame.origin, size: .zero)
+        }
+        
         let center = CGPoint(x: noteView.frame.origin.x,
                              y: noteView.frame.origin.y + noteView.frame.size.height / 2)
 
-        let info = accidental.infos
+        let info = noteView.note.accidental.infos
 
         let offset = info.1
 
@@ -265,9 +266,15 @@ class MeasureView: UIView {
         let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
                              y: center.y - size.height / 2 + offset.y)
 
+        return CGRect(origin: origin, size: size)
+    }
+
+    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
+        guard noteView.note.displayAccidental else { return nil }
+        let accidental = noteView.note.accidental
         let label = UILabel()
-        label.frame = CGRect(origin: origin, size: size)
-        label.text = info.0
+        label.frame = getAccidentalFrame(noteView: noteView)
+        label.text = accidental.infos.0
         label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right
         return label
