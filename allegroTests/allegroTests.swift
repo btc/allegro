@@ -34,19 +34,21 @@ class allegroTests: XCTestCase {
     }
 
     func testMeasureBasic() {
-        let n = Note(value: .whole, letter: .A, octave: 1)
-        var m = Measure(time: 3/4)
-        XCTAssert(m.insert(note: n, at: 0) == false, "Whole note doesn't fit in a 3/4 measure")
+        // test initialization
+        let m = Measure()
+        let defaultKey = Key()
+        XCTAssert(m.key.mode == defaultKey.mode &&
+            m.key.fifths == defaultKey.fifths, "New Measure has a default Key")
+        
+        XCTAssert(m.timeSignature == 4/4, "New measure has a default of 4/4 time")
+        
+        var m2 = Measure(time: 3/4)
+        let note = Note(value: .whole, letter: .A, octave: 1)
+        XCTAssert(m2.insert(note: note, at: 0) == false, "Whole note doesn't fit in a 3/4 measure")
     }
 
     func testMeasure() {
-        // test initialization
         var measure = Measure()
-        let defaultKey = Key()
-        XCTAssert(measure.key.mode == defaultKey.mode &&
-            measure.key.fifths == defaultKey.fifths, "New Measure has a default Key")
-        
-        XCTAssert(measure.timeSignature == 4/4, "New measure has a default of 4/4 time")
         
         // test adding notes
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
@@ -118,8 +120,15 @@ class allegroTests: XCTestCase {
         freeSpace = measure.frees
         XCTAssert(freeSpace.count == 1, "One freespace")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 1, "First freespace takes the whole measure")
+    }
+    
+    // test for previous note with same letter
+    func testMeasureGetPrevLetterMatch() {
+        var measure = Measure()
         
-        // test for previous note with same letter
+        let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
+        let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
+        
         _ = measure.insert(note: A4quarter, at: 0)
         _ = measure.insert(note: A4quarter, at: 1/4)
         _ = measure.insert(note: B4quarter, at: 1/2)
@@ -137,7 +146,6 @@ class allegroTests: XCTestCase {
         } else {
             XCTFail("Finds the correct prev note")
         }
-
     }
 
     // test inserting notes and shifting over neighbors
@@ -185,6 +193,7 @@ class allegroTests: XCTestCase {
         XCTAssert(m.insertWithNudge(note: halfNote, at: 1/8) == false, "Not enough space for note")
     }
     
+    // test for changing the dot on a note
     func testMeasureDotNote() {
         var m = Measure()
         
