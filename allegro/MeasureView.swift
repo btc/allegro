@@ -89,7 +89,7 @@ class MeasureView: UIView {
         for (sel, gr) in actionRecognizers {
             gr.addTarget(self, action: sel)
             addGestureRecognizer(gr)
-            gr.require(toFail: screenEdgeGR)
+            gr.require(toFail: screenEdgeGR) // so user can open side menu without accidentally erasing, etc.
             gr.delegate = self
         }
         addGestureRecognizer(screenEdgeGR)
@@ -366,6 +366,7 @@ extension MeasureView: UIGestureRecognizerDelegate {
         }
     }
 }
+
 extension MeasureView: NoteActionDelegate {
     func actionRecognized(gesture: NoteAction, by view: UIView) {
 
