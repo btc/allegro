@@ -12,12 +12,6 @@ import Rational // TODO figure out how to import Rational here without linker er
 
 class allegroTests: XCTestCase {
 
-    let sixteenthNote = Note(value: .sixteenth, letter: .A, octave: 4)
-    let eighthNote = Note(value: .eighth, letter: .A, octave: 4)
-    let quarterNote = Note(value: .quarter, letter: .A, octave: 4)
-    let halfNote = Note(value: .half, letter: .A, octave: 4)
-    let wholeNote = Note(value: .whole, letter: .A, octave: 4)
-
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -147,7 +141,12 @@ class allegroTests: XCTestCase {
     }
 
     // test inserting notes and shifting over neighbors
-    func testMeasureInsertShift() {
+    func testMeasureInsertwithNudge() {
+        
+        let eighthNote = Note(value: .eighth, letter: .A, octave: 4)
+        let quarterNote = Note(value: .quarter, letter: .A, octave: 4)
+        let halfNote = Note(value: .half, letter: .A, octave: 4)
+        
         // positive examples
 
         var m = Measure()
@@ -184,6 +183,23 @@ class allegroTests: XCTestCase {
 
         // negative example
         XCTAssert(m.insertWithNudge(note: halfNote, at: 1/8) == false, "Not enough space for note")
+    }
+    
+    func testMeasureDotNote() {
+        var m = Measure()
+        
+        let _ = m.insert(note: Note(value: .eighth, letter: .A, octave: 4), at: 3/8)
+        let _ = m.insert(note: Note(value: .quarter, letter: .A, octave: 4), at: 0)
+        XCTAssert(m.dotNote(at: 0, dot: .single), "There is already enough space for dotted note")
+        
+        let _ = m.insert(note: Note(value: .eighth, letter: .A, octave: 4), at: 3/4)
+        let _ = m.insert(note: Note(value: .quarter, letter: .A, octave: 4), at: 1/2)
+        XCTAssert(m.dotNote(at: 1/2, dot: .single), "Neighbor is nudged to make space for dotted note")
+        
+        XCTAssert(m.dotNote(at: 0, dot: .none), "Able to remove dot")
+        XCTAssert(m.frees[0].pos == 1/4 && m.frees[0].duration == 1/8, "Freespace created when dot is removed")
+        
+        XCTAssert(m.dotNote(at: 3/8, dot: .single) == false, "Not enough space for dotting note")
     }
     
     func testNote() {
