@@ -67,7 +67,6 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
-        super.touchesBegan(touches, with: event)
 
         guard let t = touches.first, let view = view else {
             state = .failed
@@ -76,11 +75,9 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
         let location = t.location(in: view)
         rawPoints.append(Int(location.x))
         rawPoints.append(Int(location.y))
-        state = .began
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
-        super.touchesMoved(touches, with: event)
 
         if let t = touches.first, let view = view, rawPoints.count >= 2 {
             let location = t.location(in: view)
@@ -94,7 +91,6 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
-        super.touchesEnded(touches, with: event)
 
         var path = Path()
         path.addPointFromRaw(rawPoints)
@@ -109,11 +105,10 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
         let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
         actionDelegate?.actionRecognized(gesture: type, at: point)
         action = type
-        state = .ended
+        state = .recognized
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
-        super.touchesCancelled(touches, with: event)
         state = .cancelled
     }
 }
