@@ -383,10 +383,15 @@ extension MeasureView: NoteActionDelegate {
             }
 
         case .sharp, .natural, .flat:
-            _ = store.setAccidental(.sharp, inMeasure: index, at: pos)
+            let acc: Note.Accidental = gesture == .sharp ? .sharp : gesture == .flat ? .flat : .natural
+            if !store.setAccidental(acc, inMeasure: index, at: pos) {
+                Snackbar(message: "failed to \(gesture) the note", duration: .short).show()
+            }
 
         case .rest:
-            _ = store.changeNoteToRest(inMeasure: index, at: pos)
+            if !store.changeNoteToRest(inMeasure: index, at: pos) {
+                Snackbar(message: "failed to convert note to rest", duration: .short).show()
+            }
         }
     }
 }
