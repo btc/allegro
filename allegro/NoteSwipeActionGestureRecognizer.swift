@@ -34,8 +34,8 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
 
     private func setupSwipeGestures() {
         let map: [NoteAction : [Int]] = [
-            .flat: [0,2],
-            .sharp: [0,6],
+            .flat: [1],
+            .sharp: [7],
             .natural: [0],
             .rest: [3],
             ]
