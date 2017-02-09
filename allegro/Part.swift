@@ -32,13 +32,18 @@ class Part {
 
     func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
         guard measures.indices.contains(i) else { return false }
-        return measures[i].insert(note: note, at: position)
+        return measures[i].insertWithNudge(note: note, at: position)
     }
 
     func removeNote(fromMeasureIndex i: Int, at position: Rational) -> Bool {
         guard measures.indices.contains(i) else { return false }
         // TODO(btc): remove note
         return measures[i].removeNote(at: position)
+    }
+
+    func dotNote(at position: Rational, dot: Note.Dot, atMeasureIndex i: Int) -> Bool {
+        guard measures.indices.contains(i) else { return false }
+        return measures[i].dotNote(at: position, dot: dot)
     }
     
     // Adds the note to first freespace of any measure available.

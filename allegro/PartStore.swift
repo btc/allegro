@@ -112,6 +112,15 @@ class PartStore {
         }
     }
 
+    func dotNote(at position: Rational, dot: Note.Dot, atMeasureIndex i: Int) -> Bool {
+        Log.info?.message("Change note at \(position) to \(dot) at measure \(i)")
+        let succeeded = part.dotNote(at: position, dot: dot, atMeasureIndex: i)
+        if succeeded {
+            notify()
+        }
+        return succeeded
+    }
+
     func measure(at index: Int) -> MeasureViewModel {
         extendIfNecessary(toAccessMeasureAtIndex: index)
         return MeasureViewModel(part.measures[index])

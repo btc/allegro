@@ -190,14 +190,33 @@ struct Measure {
         // try to insert the new note
         if !insert(note: note, at: position) {
             // failed, so we replace neighbor where it came from
-            let success = insert(note: neighbor, at: neighborPosition)
-            if DEBUG && !success {
-                Log.error?.message("Couldn't re-insert removed note. Developer error")
+            if insert(note: neighbor, at: neighborPosition) && DEBUG {
+                Log.error?.message("Couldn't re-insert removed note. Developer Error.")
             }
             return false
         }
         // re-insert neighbor
         return insert(note: neighbor, at: position + note.duration)
+    }
+
+    // Changes the dot on a note in O(n)
+    // Removes original note, adds a dot, and inserts with nudge
+    mutating func dotNote(at position: Rational, dot: Note.Dot) -> Bool {
+        // remove original note and add a dot
+        guard let note = removeAndReturnNote(at: position) else { return false }
+        let originalDot = note.dot
+        note.dot = dot
+
+        if insertWithNudge(note: note, at: position) {
+            return true
+        }
+
+        // re-insert original note if we were unable to insert dotted note with nudge
+        note.dot = originalDot
+        if !insert(note: note, at: position) && DEBUG {
+            Log.error?.message("Unable to re-insert note after failed dotting. Developer Error.")
+        }
+        return false
     }
 
 
