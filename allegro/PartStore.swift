@@ -126,7 +126,7 @@ class PartStore {
         return false
     }
 
-    // returns false if there isn't enough space (and the dot cannot be added)
+    // returns false if there isn't enough space (and the dot cannot be changed)
     func dotNote(inMeasure index: Int, at position: Rational, dot: Note.Dot) -> Bool {
         return false
     }
