@@ -360,7 +360,6 @@ extension MeasureView: PartStoreObserver {
 extension MeasureView: UIGestureRecognizerDelegate {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         switch gestureRecognizer {
-        case editTapGR: return store?.mode == .edit
         case eraseGR: return store?.mode == .erase
         case editPanGR: return store?.mode == .edit
         default: return true
