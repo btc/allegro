@@ -135,12 +135,18 @@ class PartStore {
     // returns false if no note exists at the given measure and position
     func setAccidental(_ accidental: Note.Accidental, inMeasure index: Int, at position: Rational) -> Bool {
         Log.info?.message("set accidental \(accidental) at \(position)")
-        return false
+        guard let n = part.measures[index].note(at: position) else { return false }
+        n.accidental = accidental
+        notify()
+        return true
     }
 
     // returns false if no note exists at the given measure and position
     func changeNoteToRest(inMeasure index: Int, at position: Rational) -> Bool {
         Log.info?.message("change note to rest at \(position)")
-        return false
+        guard let n = part.measures[index].note(at: position) else { return false }
+        n.rest = true
+        notify()
+        return true
     }
 }
