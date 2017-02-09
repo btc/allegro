@@ -270,22 +270,14 @@ class MeasureView: UIView {
         return label
     }
 
-   func erase(sender: UIPanGestureRecognizer) {
+    func erase(sender: UIPanGestureRecognizer) {
         guard store?.mode == .erase else { return }
         
         let location = sender.location(in: self)
 
-        // TODO(btc): if we wind up with lots of subviews, as an optimization, hold explicit references to the note views.
-
-        for v in subviews {
-            guard let nv = v as? NoteView else { continue }
-
-            let locationInSubview = nv.convert(location, from: self)
-            if nv.point(inside: locationInSubview, with: nil) {
-                guard let store = store, let index = index else { return }
-
-                store.removeNote(fromMeasureIndex: index, at: nv.note.position)
-            }
+        if let nv = hitTest(location, with: nil) as? NoteView {
+            guard let store = store, let index = index else { return }
+            store.removeNote(fromMeasureIndex: index, at: nv.note.position)
         }
     }
 
