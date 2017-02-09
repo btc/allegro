@@ -10,6 +10,9 @@ import UIKit
 
 class NoteActionView: UIView {
 
+    var note: NoteViewModel
+    var geometry: NoteGeometry
+
     weak var delegate: NoteActionDelegate?
 
     fileprivate let swipe: NoteSwipeActionGestureRecognizer = {
@@ -38,8 +41,10 @@ class NoteActionView: UIView {
         return gr
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(note: NoteViewModel, geometry: NoteGeometry) {
+        self.note = note
+        self.geometry = geometry
+        super.init(frame: .zero)
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
             (#selector(swiped), swipe),
@@ -62,7 +67,7 @@ class NoteActionView: UIView {
 
     func swiped(sender: NoteSwipeActionGestureRecognizer) {
         if let action = sender.action {
-            delegate?.actionRecognized(gesture: action, at: frame.origin)
+            delegate?.actionRecognized(gesture: action, by: self)
         }
     }
 
@@ -70,11 +75,11 @@ class NoteActionView: UIView {
         if sender.state == .ended {
             switch sender.numberOfTapsRequired {
             case 1:
-                delegate?.actionRecognized(gesture: .undot, at: frame.origin)
+                delegate?.actionRecognized(gesture: .undot, by: self)
             case 2:
-                delegate?.actionRecognized(gesture: .dot, at: frame.origin)
+                delegate?.actionRecognized(gesture: .dot, by: self)
             case 3:
-                delegate?.actionRecognized(gesture: .doubleDot, at: frame.origin)
+                delegate?.actionRecognized(gesture: .doubleDot, by: self)
             default: break
             }
         }

@@ -29,5 +29,5 @@ extension NoteAction: CustomStringConvertible {
 }
 
 protocol NoteActionDelegate: class {
-    func actionRecognized(gesture: NoteAction, at location: CGPoint)
+    func actionRecognized(gesture: NoteAction, by view: UIView)
 }

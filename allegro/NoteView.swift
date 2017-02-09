@@ -11,7 +11,6 @@ import UIKit
 import Rational
 
 class NoteView: NoteActionView {
-    var geometry: NoteGeometry
     
     // ALL THE STUFF THAT GETS TOUCHED BY THE OUTSIDE WORLD
     // origin of the note head in the parent coordinate frame
@@ -116,14 +115,10 @@ class NoteView: NoteActionView {
     fileprivate var flagThickness = CGFloat(10)
     fileprivate var flagIterOffset = CGFloat(15)
     
-    let note: NoteViewModel
-    
     let drawLayer: CAShapeLayer = CAShapeLayer()
 
-    init(note: NoteViewModel, geometry: NoteGeometry) {
-        self.note = note
-        self.geometry = geometry
-        super.init(frame: .zero)
+    override init(note: NoteViewModel, geometry: NoteGeometry) {
+        super.init(note: note, geometry: geometry)
         // makes it transparent so we see the lines behind
         isOpaque = false
         

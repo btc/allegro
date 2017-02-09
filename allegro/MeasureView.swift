@@ -367,12 +367,9 @@ extension MeasureView: UIGestureRecognizerDelegate {
     }
 }
 extension MeasureView: NoteActionDelegate {
-    func actionRecognized(gesture: NoteAction, at location: CGPoint) {
+    func actionRecognized(gesture: NoteAction, by view: UIView) {
 
-        guard let store = store, let index = index else { return }
-        let ts = store.measure(at: index).timeSignature
-        let d = store.selectedNoteValue.nominalDuration
-        let pos = geometry.pointToPositionInTime(x: location.x, timeSignature: ts, noteDuration: d)
+        guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
 
         guard store.mode == .edit else {
             if store.mode == .erase && gesture == .undot { // i.e. the user tapped on note
