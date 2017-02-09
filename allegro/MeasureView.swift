@@ -58,6 +58,7 @@ class MeasureView: UIView {
         return gr
     }()
 
+    // screenEdgeGR exists to prevent the other recognizers from being triggered when user tries to open the side menu
     fileprivate let screenEdgeGR: UIScreenEdgePanGestureRecognizer = {
         let gr = UIScreenEdgePanGestureRecognizer()
         gr.edges = [.right]
@@ -89,6 +90,7 @@ class MeasureView: UIView {
             gr.addTarget(self, action: sel)
             addGestureRecognizer(gr)
             gr.require(toFail: screenEdgeGR)
+            gr.delegate = self
         }
         addGestureRecognizer(screenEdgeGR)
     }
@@ -351,6 +353,17 @@ extension MeasureView: PartStoreObserver {
         geometry = MeasureGeometry(state: state)
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
+    }
+}
+
+extension MeasureView: UIGestureRecognizerDelegate {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        switch gestureRecognizer {
+        case editTapGR: return store?.mode == .edit
+        case eraseGR: return store?.mode == .erase
+        case editPanGR: return store?.mode == .edit
+        default: return true
+        }
     }
 }
 
