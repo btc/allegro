@@ -200,6 +200,7 @@ struct Measure {
     }
 
     // Changes the dot on a note in O(n)
+    // returns success of the operation
     // Removes original note, adds a dot, and inserts with nudge
     mutating func dotNote(at position: Rational, dot: Note.Dot) -> Bool {
         // remove original note and add a dot
@@ -207,6 +208,7 @@ struct Measure {
         let originalDot = note.dot
         note.dot = dot
 
+        // re-insert with new dot
         if insertWithNudge(note: note, at: position) {
             return true
         }
@@ -230,16 +232,14 @@ struct Measure {
         return nil
     }
     
-    // removes whichever note is at the specified position
+    // removes whichever note is at the specified position in O(n)
     // returns whether the operation was successful
-    // worst case O(n^2) to remove and coalesce
     mutating func removeNote(at position: Rational) -> Bool {
         return removeAndReturnNote(at: position) != nil
     }
 
-    // removes whichever note is at the specified position
+    // removes whichever note is at the specified position in O(n)
     // returns the note if it was found
-    // worst case O(n^2) to remove and coalesce
     mutating func removeAndReturnNote(at position: Rational) -> Note? {
         var removed: Note?
         for i in 0..<positions.count {
