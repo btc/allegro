@@ -112,9 +112,9 @@ class PartStore {
         }
     }
 
-    func dotNote(at position: Rational, dot: Note.Dot, atMeasureIndex i: Int) -> Bool {
-        Log.info?.message("Change note at \(position) to \(dot) at measure \(i)")
-        let succeeded = part.dotNote(at: position, dot: dot, atMeasureIndex: i)
+    func dotNote(inMeasure index: Int, at position: Rational, dot: Note.Dot) -> Bool {
+        Log.info?.message("Change note at \(position) to \(dot) dot at measure \(index)")
+        let succeeded = part.dotNote(at: position, dot: dot, atMeasureIndex: index)
         if succeeded {
             notify()
         }
@@ -132,12 +132,6 @@ class PartStore {
                 return true
             }
         }
-        return false
-    }
-
-    // returns false if there isn't enough space (and the dot cannot be changed)
-    func dotNote(inMeasure index: Int, at position: Rational, dot: Note.Dot) -> Bool {
-        Log.info?.message("dot note \(dot) at \(position)")
         return false
     }
 
