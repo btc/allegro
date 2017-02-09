@@ -9,26 +9,13 @@
 import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
-enum NoteSwipeAction: String {
-    case flat
-    case sharp
-    case natural
-    case rest
-}
-
-protocol NoteSwipeActionDelegate: class {
-    func actionRecognized(gesture: NoteSwipeAction, at location: CGPoint)
-}
-
 class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
 
-    var action: NoteSwipeAction?
+    var action: NoteAction?
 
     // TODO: allow tweaks
     let delta: Double = 22
     let costMax = 1
-
-    weak var actionDelegate: NoteSwipeActionDelegate?
 
     private let swipeGestureRecognizer: DBPathRecognizer?
     private var rawPoints = [Int]()
@@ -46,7 +33,7 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
     }
 
     private func setupSwipeGestures() {
-        let map: [NoteSwipeAction : [Int]] = [
+        let map: [NoteAction : [Int]] = [
             .flat: [0,2],
             .sharp: [0,6],
             .natural: [0],
@@ -96,14 +83,11 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
         path.addPointFromRaw(rawPoints)
 
         guard let gesture = swipeGestureRecognizer?.recognizePath(path),
-            let type = gesture.datas as? NoteSwipeAction,
+            let type = gesture.datas as? NoteAction,
             rawPoints.count > 2 else {
                 state = .failed
                 return
         }
-
-        let point = CGPoint(x: rawPoints[0], y: rawPoints[1])
-        actionDelegate?.actionRecognized(gesture: type, at: point)
         action = type
         state = .recognized
     }
