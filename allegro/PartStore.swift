@@ -128,16 +128,19 @@ class PartStore {
 
     // returns false if there isn't enough space (and the dot cannot be changed)
     func dotNote(inMeasure index: Int, at position: Rational, dot: Note.Dot) -> Bool {
+        Log.info?.message("dot note \(dot) at \(position)")
         return false
     }
 
     // returns false if no note exists at the given measure and position
     func setAccidental(_ accidental: Note.Accidental, inMeasure index: Int, at position: Rational) -> Bool {
+        Log.info?.message("set accidental \(accidental) at \(position)")
         return false
     }
 
     // returns false if no note exists at the given measure and position
     func changeNoteToRest(inMeasure index: Int, at position: Rational) -> Bool {
+        Log.info?.message("change note to rest at \(position)")
         return false
     }
 }
