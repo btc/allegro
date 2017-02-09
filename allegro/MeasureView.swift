@@ -70,8 +70,6 @@ class MeasureView: UIView {
         return v
     }()
     
-    fileprivate var spacing = [CGFloat]()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -203,15 +201,20 @@ class MeasureView: UIView {
             noteView.noteOrigin = CGPoint(x: x, y: y)
             //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = true//false
-
-            if let a = getAccidentalLabel(noteView: noteView) {
-                addSubview(a)
-            }
+            noteView.note.flipped = true
             
             // override the non default spacing for areas that have notes
             // we can extend this to handle multiple squished notes in the future as well
             let boundingBox = noteView.frame.boundingBox(other: getAccidentalFrame(noteView: noteView))
             spacing[slot] = max(boundingBox.size.width, spacing[slot])
+            
+            // we still need to handle multiple notes in one column and lay them one after each other
+            // but for now we just lay them one right after each other
+            noteView.noteOrigin = CGPoint(x: x + boundingBox.size.width - noteView.frame.size.width, y: y)
+
+            if let a = getAccidentalLabel(noteView: noteView) {
+                addSubview(a)
+            }
         }
         
         let barPath = UIBezierPath()

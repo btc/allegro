@@ -123,7 +123,7 @@ struct MeasureGeometry {
         return arr
     }
 
-    func verticalGridlines(timeSignature: Rational, selectedNoteDuration: Rational) -> [Line] {
+    func verticalGridlines(measure: MeasureViewModel, timeSignature: Rational, selectedNoteDuration: Rational) -> [Line] {
 
         var arr = [Line]()
 
@@ -194,6 +194,7 @@ struct MeasureGeometry {
     }
 
     func pointToPositionInTime(x: CGFloat,
+                               measure: MeasureViewModel,
                                timeSignature: Rational,
                                noteDuration: Rational) -> Rational {
 
@@ -210,16 +211,6 @@ struct MeasureGeometry {
     private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
         return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration))
     }
-    
-    func noteToSlot(position: Rational, timeSig: Rational, duration: Rational) -> Int {
-        let slots = Double(numGridSlots(timeSignature: timeSig, noteDuration: duration))
-        let percent = position / timeSig
-        return Int(percent.double * slots)
-    }
-    
-    func generateDefaultSpacing(timeSig: Rational, duration: Rational) -> [CGFloat] {
-        return (0..<numGridSlots(timeSignature: timeSig, noteDuration: duration))
-            .map {_ in verticalGridlineSpacing(timeSignature: timeSig, noteDuration: duration) }
-    }
+
 }
 
