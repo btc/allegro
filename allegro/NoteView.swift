@@ -12,16 +12,12 @@ import Rational
 
 class NoteView: NoteActionView {
     
-    // ALL THE STUFF THAT GETS TOUCHED BY THE OUTSIDE WORLD
-    // origin of the note head in the parent coordinate frame
-    var noteOrigin = CGPoint.zero {
-        didSet {
-            frame = CGRect(
-                origin: noteOrigin,
-                size: CGSize(width: defaultNoteWidth * scale, height: defaultNoteHeight * scale)
-            )
-        }
+    // placeholder until we move everything into NoteGeometry
+    var scale: CGFloat {
+        return geometry.scale
     }
+    
+    // ALL THE STUFF THAT GETS TOUCHED BY THE OUTSIDE WORLD
     
     // thickness in the x direction of the stem
     // this is use to get the other side of the stem in the x direction to make sure
@@ -53,13 +49,6 @@ class NoteView: NoteActionView {
     // to fit other screen sizes
     // The default note size is (70, 55.16665)
 
-    fileprivate let defaultNoteWidth = CGFloat(70)
-    fileprivate let defaultNoteHeight = CGFloat(55.16665)
-    
-    fileprivate var scale: CGFloat {
-        return geometry.staffHeight / defaultNoteHeight
-    }
-    
     fileprivate let defaultStemHeightScale = CGFloat(2)
     fileprivate var stemEndingY: CGFloat {
         if let stemEndY = stemEndY {
