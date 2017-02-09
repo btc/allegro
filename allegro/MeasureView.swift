@@ -172,6 +172,7 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.noteViewModels
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g) }
+        noteViews.forEach() { $0.delegate = self }
         let notesToNoteView = noteViewModels.enumerated()
             .map{return ($1, noteViews[$0])}
             .reduce([Int: NoteView]()) {
@@ -363,6 +364,29 @@ extension MeasureView: UIGestureRecognizerDelegate {
         case eraseGR: return store?.mode == .erase
         case editPanGR: return store?.mode == .edit
         default: return true
+        }
+    }
+}
+extension MeasureView: NoteActionDelegate {
+    func actionRecognized(gesture: NoteAction, at location: CGPoint) {
+        guard let store = store, let index = index else { return }
+        let ts = store.measure(at: index).timeSignature
+        let d = store.selectedNoteValue.nominalDuration
+        let pos = geometry.pointToPositionInTime(x: location.x, timeSignature: ts, noteDuration: d)
+        switch gesture {
+
+        case .undot, .dot, .doubleDot:
+            let dot: Note.Dot = gesture == .undot ? .none : gesture == .dot ? .single : .double
+            if !store.dotNote(inMeasure: index, at: pos, dot: dot) {
+                let action = gesture.description
+                Snackbar(message: "not enough space to \(action) note", duration: .short).show()
+            }
+
+        case .sharp, .natural, .flat:
+            _ = store.setAccidental(.sharp, inMeasure: index, at: pos)
+
+        case .rest:
+            _ = store.changeNoteToRest(inMeasure: index, at: pos)
         }
     }
 }

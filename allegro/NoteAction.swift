@@ -18,6 +18,16 @@ enum NoteAction: String {
     case doubleDot
 }
 
+extension NoteAction: CustomStringConvertible {
+    var description: String {
+        switch self {
+        case .flat, .sharp, .natural, .rest, .dot: return rawValue
+        case .undot: return "un-dot"
+        case .doubleDot: return "double dot"
+        }
+    }
+}
+
 protocol NoteActionDelegate: class {
     func actionRecognized(gesture: NoteAction, at location: CGPoint)
 }
