@@ -13,7 +13,6 @@ import SlideMenuControllerSwift
 class CompositionViewController: UIViewController {
 
     fileprivate var noteSelectorMenu: NoteSelectorMenu = {
-        // TODO(btc): when noteSelectorMenu's selected note changes, update the PartStore
         let v = NoteSelectorMenu()
         return v
     }()
