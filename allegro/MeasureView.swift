@@ -349,11 +349,11 @@ extension MeasureView: PartStoreObserver {
         eraseGR.isEnabled = store.mode == .erase
         editPanGR.isEnabled = store.mode == .edit
 
-        guard geometry.state.visibleSize != .zero else { return }
-
-        let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
-                                          selectedNoteDuration: store.selectedNoteValue.nominalDuration)
-        geometry = MeasureGeometry(state: state)
+        if geometry.state.visibleSize != .zero {
+            let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
+                                              selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+            geometry = MeasureGeometry(state: state)
+        }
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
     }
