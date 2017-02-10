@@ -23,7 +23,7 @@ extension PartStoreObserver {
     }
 }
 
-class Weak {
+private class Weak {
     private(set) weak var value: PartStoreObserver?
 
     init(_ value: PartStoreObserver?) {
