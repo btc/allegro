@@ -12,8 +12,22 @@ import SlideMenuControllerSwift
 
 class CompositionViewController: UIViewController {
 
-    fileprivate var noteSelectorMenu: NoteSelectorMenu = {
+    fileprivate let noteSelectorMenu: NoteSelectorMenu = {
         let v = NoteSelectorMenu()
+        return v
+    }()
+
+    fileprivate let modeToggle: UIButton = {
+        let v = UIButton()
+        v.addTarget(self, action: #selector(toggled), for: .touchUpInside)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 16)
+        v.backgroundColor = .allegroPurple
+
+        v.setTitle("Edit", for: .normal)
+        v.setTitleColor(.white, for: .selected)
+
+        v.setTitle("Erase", for: .selected)
+
         return v
     }()
 
@@ -46,6 +60,7 @@ class CompositionViewController: UIViewController {
 
         noteSelectorMenu.selectorDelegate = self
         store.selectedNoteValue = noteSelectorMenu.selectedNoteValue
+        store.subscribe(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,6 +73,7 @@ class CompositionViewController: UIViewController {
 
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
+        view.addSubview(modeToggle)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -70,11 +86,18 @@ class CompositionViewController: UIViewController {
     }
 
     override func viewDidLayoutSubviews() {
-        // occupies the left side of the screen
+        let leftMenuWidth = DEFAULT_TAP_TARGET_SIZE
+        let toggleHeight = DEFAULT_TAP_TARGET_SIZE
+        // occupies (most of) the left side of the screen
         noteSelectorMenu.frame = CGRect(x: 0,
                                         y: 0,
-                                        width: DEFAULT_TAP_TARGET_SIZE,
-                                        height: view.bounds.height)
+                                        width: leftMenuWidth,
+                                        height: view.bounds.height - toggleHeight)
+
+        modeToggle.frame = CGRect(x: 0,
+                                  y: noteSelectorMenu.frame.maxY,
+                                  width: leftMenuWidth,
+                                  height: toggleHeight)
 
         // occupies space to the right of the menu
         editor.frame = CGRect(x: noteSelectorMenu.frame.maxX,
@@ -82,8 +105,27 @@ class CompositionViewController: UIViewController {
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
     }
+
+    func toggled() {
+        switch store.mode {
+        case .edit:
+            store.mode = .erase
+        case .erase:
+            store.mode = .edit
+        }
+    }
 }
 
+extension CompositionViewController: PartStoreObserver {
+    func partStoreChanged() {
+        switch store.mode {
+        case .edit:
+            modeToggle.isSelected = false
+        case .erase:
+            modeToggle.isSelected = true
+        }
+    }
+}
 
 extension CompositionViewController: NoteSelectorDelegate {
     func didChangeSelection(value: Note.Value) {
