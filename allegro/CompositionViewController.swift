@@ -30,6 +30,14 @@ class CompositionViewController: UIViewController {
 
         return v
     }()
+    
+    private let menuIndicator: UIView = {
+        let v = UIButton()
+        v.setImage(#imageLiteral(resourceName: "arrow"), for: UIControlState.normal)
+        v.backgroundColor = .white
+        v.imageView?.contentMode = .scaleAspectFit
+        return v
+    }()
 
     fileprivate let store: PartStore
 
@@ -46,6 +54,8 @@ class CompositionViewController: UIViewController {
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
         // and move the options to the instance of the SideMenuViewController.
         SlideMenuOptions.animationDuration = 0.07 // seconds
+        SlideMenuOptions.contentViewDrag = true
+        SlideMenuOptions.opacityViewBackgroundColor = .clear
 
         let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
         return container
@@ -74,6 +84,7 @@ class CompositionViewController: UIViewController {
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
         view.addSubview(modeToggle)
+        view.addSubview(menuIndicator)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -104,6 +115,13 @@ class CompositionViewController: UIViewController {
                                   y: 0,
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
+        
+        let buttonW = view.bounds.width/30
+        
+        menuIndicator.frame = CGRect(x: view.bounds.width - buttonW,
+                                     y: 0,
+                                     width: buttonW,
+                                     height: view.bounds.height)
     }
 
     func toggled() {
