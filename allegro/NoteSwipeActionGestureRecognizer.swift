@@ -25,9 +25,7 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
     // clienst must NOT call view.addGestureRecognizer(thisObject)
 
     override init(target: Any?, action: Selector?) {
-        swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8,
-                                                  deltaMove: delta,
-                                                  costMax: costMax)
+        swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8)
         super.init(target: target, action: action)
         setupSwipeGestures()
     }
