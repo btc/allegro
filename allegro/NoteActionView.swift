@@ -13,6 +13,9 @@ class NoteActionView: UIView {
     var note: NoteViewModel
     var geometry: NoteGeometry
 
+    // view's hit area is scaled by this factor
+    let hitAreaScaleFactor: CGFloat = 1.5
+
     weak var delegate: NoteActionDelegate?
 
     fileprivate let swipe: NoteSwipeActionGestureRecognizer = {
@@ -91,7 +94,10 @@ class NoteActionView: UIView {
         if let pointOf1stTouch = event?.allTouches?.first?.location(in: self) {
             return super.hitTest(pointOf1stTouch, with: event)
         }
-        return super.hitTest(point, with: event)
+        let widthToAdd = hitAreaScaleFactor * bounds.width - bounds.width
+        let heightToAdd = hitAreaScaleFactor * bounds.height - bounds.height
+        let largerBounds = bounds.insetBy(dx: -widthToAdd / 2, dy: -heightToAdd / 2)
+        return largerBounds.contains(point) ? self : nil
     }
 }
 
