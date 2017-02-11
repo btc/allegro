@@ -216,6 +216,7 @@ class MeasureView: UIView {
                 guard let noteView = notesToNoteView[ObjectIdentifier(noteViewModel).hashValue] else {
                     continue
                 }
+                noteView.shouldDrawFlag = false
                 
                 let flagStart = noteView.frame.origin + noteView.flagStart
                 
@@ -240,9 +241,9 @@ class MeasureView: UIView {
         }
         
         // don't draw bars for now since its extremely buggy
-        //barLayer.path = barPath.cgPath
-        //barLayer.fillColor = UIColor.black.cgColor
-        
+        barLayer.path = barPath.cgPath
+        barLayer.fillColor = UIColor.black.cgColor
+
         // we compute paths at the end because beams can change stuff
         for noteView in noteViews {
             noteView.computePaths()

@@ -96,21 +96,21 @@ private let BeamTest = [
     "8 D 5 n", // beam 1
     "8 A 4 n", // beam 2
     "8 A 4 n", // beam 2
-    "8 B 4 n", // beam 2
-    "8 C 5 n", // beam 2
+    "8 B 4 n", // beam 3
+    "8 C 5 n", // beam 3
     
     "16 G 4 n", // beam 0
     "16 G 4 n", // beam 0
-    "16 G 4 n", // beam 0
-    "16 G 4 n", // beam 0
-    "8 G 4 n", // beam 1
-    "8 G 4 n", // beam 1
-    "16 E 5 n", // beam 2
-    "16 E 5 n", // beam 2
-    "16 E 5 n", // beam 2
-    "16 E 5 n", // beam 2
-    "8 E 5 n", // beam 3
-    "8 E 5 n", // beam 3
+    "16 G 4 n", // beam 1
+    "16 G 4 n", // beam 1
+    "8 G 4 n", // beam 2
+    "8 G 4 n", // beam 2
+    "16 E 5 n", // beam 3
+    "16 E 5 n", // beam 3
+    "16 E 5 n", // beam 4
+    "16 E 5 n", // beam 4
+    "8 E 5 n", // beam 5
+    "8 E 5 n", // beam 5
     
     "4 F 4 n", // no beam
     "8 G 4 n", // beam 0

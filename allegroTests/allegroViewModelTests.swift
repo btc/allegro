@@ -67,13 +67,14 @@ class allegroViewModelTests: XCTestCase {
         // TODO test beam v1
         let part = mockPart("BeamTest")
         let cases: [(measure: Int, beamCount: Int)] = [
-            (0, 1),
-            (1, 4),
+            (0, 4),
+            (1, 6),
             (2, 2),
         ]
 
-        for (measure, beamCount) in cases {
-            XCTAssert(MeasureViewModel(part.measures[measure]).beams.count == beamCount)
+        for (i, testCase) in cases.enumerated() {
+            let (measure, beamCount) = testCase
+            XCTAssertEqual(MeasureViewModel(part.measures[measure]).beams.count, beamCount, "beam failed \(i)")
         }
     }
     
