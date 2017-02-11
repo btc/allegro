@@ -94,6 +94,8 @@ class NoteActionView: UIView {
         if let pointOf1stTouch = event?.allTouches?.first?.location(in: self) {
             return super.hitTest(pointOf1stTouch, with: event)
         }
+        if isHidden || !isUserInteractionEnabled || self.alpha < 0.01 { return nil }
+
         let widthToAdd = hitAreaScaleFactor * bounds.width - bounds.width
         let heightToAdd = hitAreaScaleFactor * bounds.height - bounds.height
         let largerBounds = bounds.insetBy(dx: -widthToAdd / 2, dy: -heightToAdd / 2)
