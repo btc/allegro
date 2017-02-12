@@ -137,8 +137,19 @@ class MeasureView: UIView {
         UIColor.lightGray.setStroke()
         path.stroke()
     }
+    
+    private func getSpacing() -> [CGFloat]{
+        guard let store = store, let index = index else { return [CGFloat]() }
+        
+        let measureVM = store.measure(at: index)
+        let ts = measureVM.timeSignature
+        let dur = store.selectedNoteValue.nominalDuration
+        let spacing = geometry.generateSpacing(timeSig: ts, duration: dur, notes: measureVM.noteViewModels)
+        return spacing
+    }
 
     private func drawVerticalGridlines(rect: CGRect) {
+        let spacing = getSpacing()
         let offsets = spacing.enumerated().map {spacing[0..<$0.0].reduce(0, +)}
         let lines = offsets.map { MeasureGeometry.Line(
                                     start: CGPoint(x: $0, y: CGFloat(0)),
@@ -188,7 +199,7 @@ class MeasureView: UIView {
         
         let ts = measureVM.timeSignature
         let dur = store.selectedNoteValue.nominalDuration
-        spacing = geometry.generateDefaultSpacing(timeSig: ts, duration: dur)
+        let spacing = getSpacing()
         
         for noteView in noteViews {
             let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts, duration: dur)
@@ -198,19 +209,15 @@ class MeasureView: UIView {
             let x = geometry.noteX(spacing: spacing, slot: slot)
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
-            noteView.noteOrigin = CGPoint(x: x, y: y)
-            //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = true//false
             noteView.note.flipped = true
             
-            // override the non default spacing for areas that have notes
-            // we can extend this to handle multiple squished notes in the future as well
-            let boundingBox = noteView.frame.boundingBox(other: getAccidentalFrame(noteView: noteView))
-            spacing[slot] = max(boundingBox.size.width, spacing[slot])
+            let noteGeometry = noteView.geometry
             
             // we still need to handle multiple notes in one column and lay them one after each other
-            // but for now we just lay them one right after each other
-            noteView.noteOrigin = CGPoint(x: x + boundingBox.size.width - noteView.frame.size.width, y: y)
+            // but for now we just lay them overlapping
+            let origin = CGPoint(x: x + spacing[slot] - noteGeometry.getSize().width, y: y)
+            noteView.frame = noteGeometry.getFrame(origin: origin)
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
@@ -261,30 +268,13 @@ class MeasureView: UIView {
         }
     }
     
-    func getAccidentalFrame(noteView: NoteView) -> CGRect {
-        guard noteView.note.displayAccidental else {
-            return CGRect(origin: noteView.frame.origin, size: .zero)
-        }
-        
-        let center = CGPoint(x: noteView.frame.origin.x,
-                             y: noteView.frame.origin.y + noteView.frame.size.height / 2)
 
-        let info = noteView.note.accidental.infos
-
-        let offset = info.1
-
-        let size = CGSize(width: 50, height: 60)
-        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
-                             y: center.y - size.height / 2 + offset.y)
-
-        return CGRect(origin: origin, size: size)
-    }
 
     func getAccidentalLabel(noteView: NoteView) -> UILabel? {
         guard noteView.note.displayAccidental else { return nil }
         let accidental = noteView.note.accidental
         let label = UILabel()
-        label.frame = getAccidentalFrame(noteView: noteView)
+        label.frame = noteView.geometry.getAccidentalFrame(origin: noteView.frame.origin, note: noteView.note)
         label.text = accidental.infos.0
         label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right

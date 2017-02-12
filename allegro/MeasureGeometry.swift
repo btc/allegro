@@ -194,7 +194,6 @@ struct MeasureGeometry {
     }
 
     func pointToPositionInTime(x: CGFloat,
-                               measure: MeasureViewModel,
                                timeSignature: Rational,
                                noteDuration: Rational) -> Rational {
 
@@ -211,6 +210,25 @@ struct MeasureGeometry {
     private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
         return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration))
     }
-
+    
+    func noteToSlot(position: Rational, timeSig: Rational, duration: Rational) -> Int {
+        let slots = Double(numGridSlots(timeSignature: timeSig, noteDuration: duration))
+        let percent = position / timeSig
+        return Int(percent.double * slots)
+    }
+    
+    func generateSpacing(timeSig: Rational, duration: Rational, notes: [NoteViewModel]) -> [CGFloat] {
+        let geometry = noteGeometry
+        var spacing = (0..<numGridSlots(timeSignature: timeSig, noteDuration: duration))
+            .map {_ in verticalGridlineSpacing(timeSignature: timeSig, noteDuration: duration) }
+        
+        for note in notes {
+            let slot = noteToSlot(position: note.position, timeSig: timeSig, duration: duration)
+            let width = geometry.getBoundingBox(origin: .zero, note: note).size.width
+            spacing[slot] = max(width, spacing[slot])
+        }
+        
+        return spacing
+    }
 }
 
