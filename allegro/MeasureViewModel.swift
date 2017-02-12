@@ -173,21 +173,7 @@ struct MeasureViewModel {
     }
 
     fileprivate var spacing = [CGFloat]()
-    
-    private func numGridSlots() -> Int {
-        return 2 * (timeSignature / noteDuration).intApprox
-    }
-    
-    func noteToSlot(position: Rational, timeSig: Rational, duration: Rational) -> Int {
-        let slots = Double(numGridSlots(timeSignature: timeSig, noteDuration: duration))
-        let percent = position / timeSig
-        return Int(percent.double * slots)
-    }
-    
-    func generateDefaultSpacing(timeSig: Rational, duration: Rational) -> [CGFloat] {
-        return (0..<numGridSlots(timeSignature: timeSig, noteDuration: duration))
-            .map {_ in verticalGridlineSpacing(timeSignature: timeSig, noteDuration: duration) }
-    }
+
 
     init(_ measure: Measure) {
         self.measure = measure
