@@ -34,8 +34,9 @@ class CompositionViewController: UIViewController {
     private let menuIndicator: UIView = {
         let v = UIButton()
         v.setImage(#imageLiteral(resourceName: "arrow"), for: UIControlState.normal)
-        v.backgroundColor = .white
         v.imageView?.contentMode = .scaleAspectFit
+        v.backgroundColor = .white
+        v.alpha = 0.6
         return v
     }()
 
@@ -116,10 +117,10 @@ class CompositionViewController: UIViewController {
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
         
-        let buttonW = view.bounds.width/30
+        let buttonW = view.bounds.width/25
         
         menuIndicator.frame = CGRect(x: view.bounds.width - buttonW,
-                                     y: 0,
+                                     y: -DEFAULT_MARGIN_PTS/2,
                                      width: buttonW,
                                      height: view.bounds.height)
     }

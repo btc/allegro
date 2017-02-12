@@ -16,11 +16,11 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
-                label.textColor = .gray
+                //label.textColor = .gray
                 label.backgroundColor = .white
             } else {
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
-                label.textColor = NoteSelectorCell.unselectedTextColor
+                //label.textColor = NoteSelectorCell.unselectedTextColor
             }
         }
     }
@@ -28,27 +28,42 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                label.textColor = .black
+                //label.textColor = .black
                 label.backgroundColor = .allegroBlue
             } else {
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
-                label.textColor = NoteSelectorCell.unselectedTextColor
+                //label.textColor = NoteSelectorCell.unselectedTextColor
             }
         }
     }
 
-    private let label: UILabel = {
-        let v = UILabel()
+    private let label: UIImageView = {
+        let v = UIImageView()
         v.backgroundColor = NoteSelectorCell.unselectedCellColor
-        v.textColor = NoteSelectorCell.unselectedTextColor
-        v.textAlignment = .center
+        //v.textColor = NoteSelectorCell.unselectedTextColor
+        //v.textAlignment = .center
         return v
     }()
+    
 
     // TODO(btc): replace with Note model
     var note: Note.Value? = nil {
         didSet {
-            label.text = note?.description
+            guard let note = note else { return }
+            switch note {
+            case .whole:
+                label.image = #imageLiteral(resourceName: "whole")
+            case .half:
+                label.image = #imageLiteral(resourceName: "half note")
+            case .quarter:
+                label.image = #imageLiteral(resourceName: "quarter note")
+            case .eighth:
+                label.image = #imageLiteral(resourceName: "eighth note")
+            case .sixteenth:
+                label.image = #imageLiteral(resourceName: "sixteenth note")
+            default:
+                label.image = #imageLiteral(resourceName: "Whole Note")
+            }
         }
     }
 
@@ -63,5 +78,6 @@ class NoteSelectorCell: UICollectionViewCell {
 
     override func layoutSubviews() {
         label.frame = bounds
+        label.contentMode = .scaleAspectFit
     }
 }
