@@ -16,11 +16,11 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
-                //label.textColor = .gray
+                self.backgroundColor = .white
                 label.backgroundColor = .white
             } else {
+                self.backgroundColor = NoteSelectorCell.unselectedCellColor
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
-                //label.textColor = NoteSelectorCell.unselectedTextColor
             }
         }
     }
@@ -28,11 +28,11 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                //label.textColor = .black
+                self.backgroundColor = .allegroBlue
                 label.backgroundColor = .allegroBlue
             } else {
+                self.backgroundColor = NoteSelectorCell.unselectedCellColor
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
-                //label.textColor = NoteSelectorCell.unselectedTextColor
             }
         }
     }
@@ -40,13 +40,11 @@ class NoteSelectorCell: UICollectionViewCell {
     private let label: UIImageView = {
         let v = UIImageView()
         v.backgroundColor = NoteSelectorCell.unselectedCellColor
-        //v.textColor = NoteSelectorCell.unselectedTextColor
-        //v.textAlignment = .center
+        v.contentMode = .scaleAspectFit
         return v
     }()
     
 
-    // TODO(btc): replace with Note model
     var note: Note.Value? = nil {
         didSet {
             guard let note = note else { return }
@@ -77,7 +75,7 @@ class NoteSelectorCell: UICollectionViewCell {
     }
 
     override func layoutSubviews() {
-        label.frame = bounds
-        label.contentMode = .scaleAspectFit
+        label.frame = bounds.insetBy(dx: bounds.width*0.1, dy: bounds.height*0.1)
+        
     }
 }
