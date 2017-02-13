@@ -310,7 +310,7 @@ class allegroTests: XCTestCase {
         // test C major scale, key of C
         for measure in cMajorScale.measures {
             let mvm = MeasureViewModel(measure)
-            for noteViewModel in mvm.noteViewModels {
+            for noteViewModel in mvm.notes {
                 XCTAssert(noteViewModel.displayAccidental == false)
             }
         }
@@ -318,7 +318,7 @@ class allegroTests: XCTestCase {
         // test D major scale, key of C
         for measure in dMajorScale.measures {
             let mvm = MeasureViewModel(measure)
-            for noteViewModel in mvm.noteViewModels {
+            for noteViewModel in mvm.notes {
                 if(noteViewModel.letter == Note.Letter.F || noteViewModel.letter == Note.Letter.C) {
                     XCTAssert(noteViewModel.displayAccidental == true)
                 }
@@ -332,23 +332,23 @@ class allegroTests: XCTestCase {
         for index in 0..<dMajorRun.measures.count {
             print("measure: " + index.description)
             let mvm = MeasureViewModel(dMajorRun.measures[index])
-            for noteIndex in 0..<mvm.noteViewModels.count {
+            for noteIndex in 0..<mvm.notes.count {
                 // first measure
                 if(index == 0) {
                     if(noteIndex == 2) {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == true)
                     }
                     else {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == false)
                     }
                 }
                 // second measure
                 else {
                     if(noteIndex == 0 || noteIndex == 4 || noteIndex == 5) {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == true)
                     }
                     else {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == false)
                     }
                 }
             }
@@ -357,23 +357,23 @@ class allegroTests: XCTestCase {
         // test D major line, key of D
         for index in 0..<kDeyTest.measures.count {
             let mvm = MeasureViewModel(kDeyTest.measures[index])
-            for noteIndex in 0..<mvm.noteViewModels.count {
+            for noteIndex in 0..<mvm.notes.count {
                 // first measure
                 if(index == 0) {
                     if(noteIndex == 6) {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == true)
                     }
                     else {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == false)
                     }
                 }
                 // second measure
                 else {
                     if(noteIndex == 1 || noteIndex == 5 || noteIndex == 6) {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == true)
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == true)
                     }
                     else {
-                        XCTAssert(mvm.noteViewModels[noteIndex].displayAccidental == false) 
+                        XCTAssert(mvm.notes[noteIndex].displayAccidental == false) 
                     }
                 }
             }
