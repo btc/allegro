@@ -10,12 +10,39 @@ import Rational
 
 struct MeasureViewModel {
 
-    private let measure: Measure
-    private(set) var noteViewModels = [NoteViewModel]()
-
     // Beams are the lines that connect groups of eighth notes, sixteenth notes, etc
     // We just store a collection of notes that should be beamed together by MeasureView
     typealias Beam = Array<NoteViewModel>
+
+    private static let beamRules: [(Beam, Int) -> (left: Beam, right: Beam)?] = [
+        { (b, i) in // discard if the beam has only 1 element
+            b.count <= 1 ? ([], []) : nil
+        },
+        { (b: Beam, i) in // split when the beam has more than 2 elements
+            i >= 2 ? b.partition(index: i) : nil
+        },
+        { (b, i) in // discard when the note has no flag
+            if b[i].hasFlag {
+                return nil
+            }
+            if b.indices.contains(i+1) {
+                return ([], b.partition(index: i+1).right)
+            }
+            return ([], [])
+        },
+        { (b, i) in // split when value changes
+            if i == 0 {
+                return nil
+            }
+            if b[i].value != b[i-1].value {
+                return b.partition(index: i)
+            }
+            return nil
+        }
+    ]
+
+    private let measure: Measure
+    private(set) var noteViewModels = [NoteViewModel]()
 
     private(set) var beams: [Beam] = []
 
@@ -143,7 +170,7 @@ struct MeasureViewModel {
     // also return whether the first portion should be discarded
     private func splitBeam(beam: Beam) -> (left: Beam, right: Beam) {
         for i in 0..<beam.count {
-            for rule in rules {
+            for rule in MeasureViewModel.beamRules {
                 if let split = rule(beam, i) {
                     return split
                 }
@@ -166,29 +193,3 @@ struct MeasureViewModel {
 
 }
 
-private let rules: [(Beam, Int) -> (left: Beam, right: Beam)?] = [
-    { (b, i) in // discard if the beam has only 1 element
-        b.count <= 1 ? ([], []) : nil
-    },
-    { (b: Beam, i) in // split when the beam has more than 2 elements
-        i >= 2 ? b.partition(index: i) : nil
-    },
-    { (b, i) in // discard when the note has no flag
-        if b[i].hasFlag {
-            return nil
-        }
-        if b.indices.contains(i+1) {
-            return ([], b.partition(index: i+1).right)
-        }
-        return ([], [])
-    },
-    { (b, i) in // split when value changes
-        if i == 0 {
-            return nil
-        }
-        if b[i].value != b[i-1].value {
-            return b.partition(index: i)
-        }
-        return nil
-    }
-]
