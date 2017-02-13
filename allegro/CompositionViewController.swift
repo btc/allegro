@@ -35,8 +35,7 @@ class CompositionViewController: UIViewController {
         let v = UIButton()
         v.setImage(#imageLiteral(resourceName: "arrow"), for: UIControlState.normal)
         v.imageView?.contentMode = .scaleAspectFit
-        v.backgroundColor = .white
-        v.alpha = 0.6
+        v.backgroundColor = .clear
         return v
     }()
 
@@ -55,8 +54,6 @@ class CompositionViewController: UIViewController {
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
         // and move the options to the instance of the SideMenuViewController.
         SlideMenuOptions.animationDuration = 0.07 // seconds
-        SlideMenuOptions.contentViewDrag = true
-        SlideMenuOptions.opacityViewBackgroundColor = .clear
 
         let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
         return container
@@ -117,7 +114,7 @@ class CompositionViewController: UIViewController {
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
         
-        let buttonW = view.bounds.width/25
+        let buttonW = view.bounds.width/30
         
         menuIndicator.frame = CGRect(x: view.bounds.width - buttonW,
                                      y: -DEFAULT_MARGIN_PTS/2,
