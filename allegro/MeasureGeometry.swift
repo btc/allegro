@@ -130,15 +130,30 @@ struct MeasureGeometry {
         let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
         return lines
     }
+    
+    func findSlot(slots: [CGFloat], position: CGFloat) -> Int {
+        var pos = position
+        for (index, element) in slots.enumerated() {
+            pos -= element
+            if pos < CGFloat(0) {
+                return index
+            }
+        }
+        
+        return -1
+    }
 
-    func touchGuideRect(location: CGPoint,
-                          timeSignature: Rational) -> CGRect {
+    func touchGuideRect(measure: MeasureViewModel,
+                        location: CGPoint,
+                        timeSignature: Rational) -> CGRect {
 
-        let spacingBetweenGridlines = verticalGridlineSpacing(timeSignature: timeSignature)
+        let spacing = generateSpacing(measure: measure)
+        let slot = findSlot(slots: spacing, position: location.x)
+        
+        let size = CGSize(width: spacing[slot], height: staffHeight)
 
-        let size = CGSize(width: spacingBetweenGridlines, height: staffHeight)
-
-        let originX = location.x - location.x.truncatingRemainder(dividingBy: spacingBetweenGridlines)
+        
+        let originX = spacing[0..<slot].reduce(0, +)
         let originY = location.y - location.y.truncatingRemainder(dividingBy: heightOfSemitone) + DEFAULT_MARGIN_PTS  - size.height / 2
 
         let origin = CGPoint(x: originX, y: originY)
@@ -146,13 +161,16 @@ struct MeasureGeometry {
         return CGRect(origin: origin, size: size)
     }
 
-    func touchRemainedInPosition(start: CGPoint,
+    func touchRemainedInPosition(measure: MeasureViewModel,
+                                 start: CGPoint,
                                  end: CGPoint,
                                  timeSignature: Rational) -> Bool {
 
-        let startPos = pointToPositionInTime(x: start.x,
+        let startPos = pointToPositionInTime(measure: measure,
+                                             x: start.x,
                                              timeSignature: timeSignature)
-        let endPos = pointToPositionInTime(x: end.x,
+        let endPos = pointToPositionInTime(measure: measure,
+                                           x: end.x,
                                            timeSignature: timeSignature)
         return startPos == endPos
     }
@@ -174,13 +192,13 @@ struct MeasureGeometry {
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / heightOfSemitone + numSpacesBetweenAllLines))
     }
 
-    func pointToPositionInTime(x: CGFloat,
+    func pointToPositionInTime(measure: MeasureViewModel,
+                               x: CGFloat,
                                timeSignature: Rational) -> Rational {
 
         let numPositionsInTime = numGridSlots(timeSignature: timeSignature)
-        let ratioOfScreenWidth = x / totalWidth
-        let positionInTime = Int(ratioOfScreenWidth * CGFloat(numPositionsInTime))
-        return Rational(positionInTime) / Rational(numPositionsInTime) * timeSignature
+        let slot = findSlot(slots: generateSpacing(measure: measure), position: x)
+        return Rational(slot) / Rational(numPositionsInTime) * timeSignature
     }
 
     private func numGridSlots(timeSignature: Rational) -> Int {
