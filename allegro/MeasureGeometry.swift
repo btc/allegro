@@ -202,7 +202,7 @@ struct MeasureGeometry {
     }
 
     private func numGridSlots(timeSignature: Rational) -> Int {
-        return 2 * (timeSignature / state.selectedNoteDuration).intApprox
+        return (timeSignature / state.selectedNoteDuration).intApprox
     }
 
     private func verticalGridlineSpacing(timeSignature: Rational) -> CGFloat {
