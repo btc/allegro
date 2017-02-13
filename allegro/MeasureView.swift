@@ -297,8 +297,7 @@ class MeasureView: UIView {
         // determine position
         let measure = store.measure(at: index)
         let position = geometry.pointToPositionInTime(measure: measure,
-                                                      x: location.x,
-                                                      timeSignature: measure.timeSignature)
+                                                      x: location.x)
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
@@ -324,8 +323,7 @@ class MeasureView: UIView {
             let start = end - sender.translation(in: self)
             if geometry.touchRemainedInPosition(measure: measure,
                                                 start: start,
-                                                end: end,
-                                                timeSignature: ts) {
+                                                end: end) {
                 editTap(sender: sender)
             }
         } else if sender.state == .changed {
