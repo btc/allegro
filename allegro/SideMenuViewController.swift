@@ -161,7 +161,7 @@ class SideMenuViewController: UIViewController {
     }
     
     func timeSignaturesTapped() {
-        let vc = TimeSignatureViewController()
+        let vc = TimeSignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }
     
