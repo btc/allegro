@@ -143,8 +143,7 @@ class MeasureView: UIView {
         
         let measure = store.measure(at: index)
         
-        let lines = geometry.verticalGridlines(measure: measure,
-                                               timeSignature: measure.timeSignature)
+        let lines = geometry.verticalGridlines(measure: measure)
         
         let path = UIBezierPath()
 
@@ -189,7 +188,7 @@ class MeasureView: UIView {
         }
         
         let ts = measureVM.timeSignature
-        let spacing = geometry.generateSpacing(measure: measureVM, timeSig: ts)
+        let spacing = geometry.generateSpacing(measure: measureVM)
         
         for noteView in noteViews {
             let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts)
