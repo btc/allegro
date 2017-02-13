@@ -52,9 +52,7 @@ class Part {
     func appendNote(note: Note) {
         var i = 0 // measure index
         while true {
-
             let m = measures[i]
-
             // check against time signature to prevent endless loop from bad input
             if note.duration > m.timeSignature {
                 return
