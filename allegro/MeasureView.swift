@@ -171,7 +171,7 @@ class MeasureView: UIView {
         guard let store = store, let index = index else { return }
 
         let measureVM = store.measure(at: index)
-        let noteViewModels = measureVM.noteViewModels
+        let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g) }
         noteViews.forEach() { $0.delegate = self }

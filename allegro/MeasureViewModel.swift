@@ -10,20 +10,11 @@ import Rational
 
 struct MeasureViewModel {
 
-    private let measure: Measure
-    private(set) var noteViewModels = [NoteViewModel]()
-
     // Beams are the lines that connect groups of eighth notes, sixteenth notes, etc
     // We just store a collection of notes that should be beamed together by MeasureView
     typealias Beam = Array<NoteViewModel>
 
-    private(set) var beams: [Beam] = []
-
-    var timeSignature: Rational {
-        return measure.timeSignature
-    }
-    
-    private let rules: [(Beam, Int) -> (left: Beam, right: Beam)?] = [
+    private static let beamRules: [(Beam, Int) -> (left: Beam, right: Beam)?] = [
         { (b, i) in // discard if the beam has only 1 element
             b.count <= 1 ? ([], []) : nil
         },
@@ -49,6 +40,16 @@ struct MeasureViewModel {
             return nil
         }
     ]
+
+    private let measure: Measure
+    private(set) var notes = [NoteViewModel]()
+
+    private(set) var beams: [Beam] = []
+
+    var timeSignature: Rational {
+        return measure.timeSignature
+    }
+    
     /*
         For the current NoteViewModel, determines if accidental should be displayed or not
         return true: accidental should be displayed (default)
@@ -122,7 +123,7 @@ struct MeasureViewModel {
         // recursive formulation
         
         var startBeam = Beam()
-        for nvm in noteViewModels {
+        for nvm in notes {
             startBeam.append(nvm)
         }
         let beams = computeBeamsRecursive(beam: startBeam)
@@ -169,7 +170,7 @@ struct MeasureViewModel {
     // also return whether the first portion should be discarded
     private func splitBeam(beam: Beam) -> (left: Beam, right: Beam) {
         for i in 0..<beam.count {
-            for rule in rules {
+            for rule in MeasureViewModel.beamRules {
                 if let split = rule(beam, i) {
                     return split
                 }
@@ -183,7 +184,7 @@ struct MeasureViewModel {
         for (position, note) in measure.notes {
             let newNoteViewModel = NoteViewModel(note: note, position: position)
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
-            noteViewModels.append(newNoteViewModel)
+            notes.append(newNoteViewModel)
         }
 
         beams = computeBeams()
