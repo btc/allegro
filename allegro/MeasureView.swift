@@ -296,7 +296,8 @@ class MeasureView: UIView {
 
         // determine position
         let measure = store.measure(at: index)
-        let position = geometry.pointToPositionInTime(x: location.x,
+        let position = geometry.pointToPositionInTime(measure: measure,
+                                                      x: location.x,
                                                       timeSignature: measure.timeSignature)
 
         // instantiate note
@@ -315,18 +316,21 @@ class MeasureView: UIView {
         guard store?.mode == .edit else { return }
 
         guard let store = store, let index = index else { return }
-        let ts = store.measure(at: index).timeSignature
+        let measure = store.measure(at: index)
+        let ts = measure.timeSignature
 
         if sender.state == .ended {
             let end = sender.location(in: self)
             let start = end - sender.translation(in: self)
-            if geometry.touchRemainedInPosition(start: start,
+            if geometry.touchRemainedInPosition(measure: measure,
+                                                start: start,
                                                 end: end,
                                                 timeSignature: ts) {
                 editTap(sender: sender)
             }
         } else if sender.state == .changed {
-            let rect = geometry.touchGuideRect(location: sender.location(in: self),
+            let rect = geometry.touchGuideRect(measure: measure,
+                                               location: sender.location(in: self),
                                                timeSignature: ts)
             touchGuide.frame = rect
         }
