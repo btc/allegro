@@ -120,6 +120,8 @@ class CompositionViewController: UIViewController {
         
         let buttonW = view.bounds.width/30
         
+        //y value non zero to shift arrow off center and prevent overlap with center staff line
+        //TODO: Potentially find a better way of shifting
         menuIndicator.frame = CGRect(x: view.bounds.width - buttonW,
                                      y: -DEFAULT_MARGIN_PTS/2,
                                      width: buttonW,
