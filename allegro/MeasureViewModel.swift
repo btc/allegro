@@ -7,7 +7,6 @@
 //
 
 import Rational
-import UIKit
 
 struct MeasureViewModel {
 
@@ -171,9 +170,6 @@ struct MeasureViewModel {
             return ([], [])
         }
     }
-
-    fileprivate var spacing = [CGFloat]()
-
 
     init(_ measure: Measure) {
         self.measure = measure

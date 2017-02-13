@@ -210,14 +210,14 @@ class MeasureView: UIView {
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
             noteView.shouldDrawFlag = true//false
-            noteView.note.flipped = true
             
-            let noteGeometry = noteView.geometry
+            var noteGeometry = noteView.geometry
             
             // we still need to handle multiple notes in one column and lay them one after each other
             // but for now we just lay them overlapping
-            let origin = CGPoint(x: x + spacing[slot] - noteGeometry.getSize().width, y: y)
-            noteView.frame = noteGeometry.getFrame(origin: origin)
+            let origin = CGPoint(x: x + spacing[slot] - noteGeometry.frame.size.width, y: y)
+            noteGeometry.origin = origin
+            noteView.frame = noteGeometry.frame
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
@@ -274,7 +274,7 @@ class MeasureView: UIView {
         guard noteView.note.displayAccidental else { return nil }
         let accidental = noteView.note.accidental
         let label = UILabel()
-        label.frame = noteView.geometry.getAccidentalFrame(origin: noteView.frame.origin, note: noteView.note)
+        label.frame = noteView.geometry.getAccidentalFrame(note: noteView.note)
         label.text = accidental.infos.0
         label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right
