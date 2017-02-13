@@ -202,7 +202,7 @@ struct MeasureGeometry {
         var spacing = (0..<numGridSlots(timeSignature: timeSig))
             .map {_ in verticalGridlineSpacing(timeSignature: timeSig) }
         
-        for note in measure.noteViewModels {
+        for note in measure.notes {
             let slot = noteToSlot(position: note.position, timeSig: timeSig)
             let width = geometry.getBoundingBox(note: note).size.width
             spacing[slot] = max(width, spacing[slot])
