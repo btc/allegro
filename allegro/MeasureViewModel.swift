@@ -42,7 +42,7 @@ struct MeasureViewModel {
     ]
 
     private let measure: Measure
-    private(set) var noteViewModels = [NoteViewModel]()
+    private(set) var notes = [NoteViewModel]()
 
     private(set) var beams: [Beam] = []
 
@@ -123,7 +123,7 @@ struct MeasureViewModel {
         // recursive formulation
         
         var startBeam = Beam()
-        for nvm in noteViewModels {
+        for nvm in notes {
             startBeam.append(nvm)
         }
         let beams = computeBeamsRecursive(beam: startBeam)
@@ -185,7 +185,7 @@ struct MeasureViewModel {
         for (position, note) in measure.notes {
             let newNoteViewModel = NoteViewModel(note: note, position: position)
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
-            noteViewModels.append(newNoteViewModel)
+            notes.append(newNoteViewModel)
         }
 
         beams = computeBeams()
