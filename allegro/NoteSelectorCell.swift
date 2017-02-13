@@ -16,10 +16,10 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
-                self.backgroundColor = .white
+                backgroundColor = .white
                 label.backgroundColor = .white
             } else {
-                self.backgroundColor = NoteSelectorCell.unselectedCellColor
+                backgroundColor = NoteSelectorCell.unselectedCellColor
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
             }
         }
@@ -28,10 +28,10 @@ class NoteSelectorCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                self.backgroundColor = .allegroBlue
+                backgroundColor = .allegroBlue
                 label.backgroundColor = .allegroBlue
             } else {
-                self.backgroundColor = NoteSelectorCell.unselectedCellColor
+                backgroundColor = NoteSelectorCell.unselectedCellColor
                 label.backgroundColor = NoteSelectorCell.unselectedCellColor
             }
         }
