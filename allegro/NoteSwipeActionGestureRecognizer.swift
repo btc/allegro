@@ -13,42 +13,13 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
 
     var action: NoteAction?
 
-    // TODO: allow tweaks
-    let delta: Double = 22
-    let costMax = 1
-
-    private let swipeGestureRecognizer: DBPathRecognizer?
-    private var rawPoints = [Int]()
-
-    // installs gesture recognizers on the view
-    // this object does NOT hold a reference to the view
-    // clienst must NOT call view.addGestureRecognizer(thisObject)
-
-    override init(target: Any?, action: Selector?) {
-        swipeGestureRecognizer = DBPathRecognizer(sliceCount: 8)
-        super.init(target: target, action: action)
-        setupSwipeGestures()
-    }
-
-    private func setupSwipeGestures() {
-        let map: [NoteAction : [Int]] = [
-            .flat: [1],
-            .sharp: [7],
-            .natural: [0],
-            .rest: [3],
-            ]
-        for (gesture, pattern) in map {
-            let any = gesture as AnyObject
-            let p = PathModel(directions: pattern, datas: any)
-            swipeGestureRecognizer?.addModel(p)
-        }
-    }
+    private var start: CGPoint?
 
     override func reset() {
         super.reset()
-        rawPoints = []
         state = .possible
         action = nil
+        start = nil
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
@@ -57,36 +28,32 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
             state = .failed
             return
         }
-        let location = t.location(in: view)
-        rawPoints.append(Int(location.x))
-        rawPoints.append(Int(location.y))
+        start = t.location(in: view)
     }
 
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
-
-        if let t = touches.first, let view = view, rawPoints.count >= 2 {
-            let location = t.location(in: view)
-            let xIsDifferent = rawPoints[rawPoints.count-2] != Int(location.x)
-            let yIsDifferent = rawPoints[rawPoints.count-1] != Int(location.y)
-            if (xIsDifferent || yIsDifferent) {
-                rawPoints.append(Int(location.x))
-                rawPoints.append(Int(location.y))
-            }
-        }
-    }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
 
-        var path = Path()
-        path.addPointFromRaw(rawPoints)
-
-        guard let gesture = swipeGestureRecognizer?.recognizePath(path),
-            let type = gesture.datas as? NoteAction,
-            rawPoints.count > 2 else {
-                state = .failed
-                return
+        guard let start = start, let t = touches.first, let view = view else {
+            state = .failed
+            return
         }
-        action = type
+        let end = t.location(in: view)
+
+        switch start.angle(to: end) {
+        case -15 ... 15:
+            action = .natural
+        case 15 ... 90:
+            action = .flat
+        case 90 ... 180:
+            action = .rest
+        case -90 ... -15:
+            action = .sharp
+        default:
+            state = .failed
+            return
+        }
+
         state = .recognized
     }
 

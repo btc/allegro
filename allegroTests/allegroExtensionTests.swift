@@ -32,4 +32,22 @@ class allegroExtensionTests: XCTestCase {
             XCTAssert(c.input.indexOfFirstMatch(condition: c.condition) == c.expectation, "\(i)")
         }
     }
+
+    func testCGPointAngle() {
+        let testCases: [(point: CGPoint, other: CGPoint, expectedAngleInDegrees: CGFloat)] = [
+            (.zero, CGPoint(x: -1, y: 1), 135),
+            (.zero, CGPoint(x: 0, y: 1), 90),
+            (.zero, CGPoint(x: 1, y: 1), 45),
+            (.zero, CGPoint(x: 1, y: 0), 0),
+            (.zero, CGPoint(x: 1, y: -1), -45),
+            (.zero, CGPoint(x: 0, y: -1), -90),
+            (.zero, CGPoint(x: -1, y: -1), -135),
+            (.zero, CGPoint(x: -1, y: 0), 180),
+            (.zero, .zero, 0),
+        ]
+
+        for (i, c) in testCases.enumerated() {
+            XCTAssertEqualWithAccuracy(c.expectedAngleInDegrees, c.point.angle(to: c.other), accuracy: 0.01, "\(i)")
+        }
+    }
 }
