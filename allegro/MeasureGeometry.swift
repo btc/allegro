@@ -163,15 +163,12 @@ struct MeasureGeometry {
 
     func touchRemainedInPosition(measure: MeasureViewModel,
                                  start: CGPoint,
-                                 end: CGPoint,
-                                 timeSignature: Rational) -> Bool {
+                                 end: CGPoint) -> Bool {
 
         let startPos = pointToPositionInTime(measure: measure,
-                                             x: start.x,
-                                             timeSignature: timeSignature)
+                                             x: start.x)
         let endPos = pointToPositionInTime(measure: measure,
-                                           x: end.x,
-                                           timeSignature: timeSignature)
+                                           x: end.x)
         return startPos == endPos
     }
 
@@ -193,12 +190,11 @@ struct MeasureGeometry {
     }
 
     func pointToPositionInTime(measure: MeasureViewModel,
-                               x: CGFloat,
-                               timeSignature: Rational) -> Rational {
+                               x: CGFloat) -> Rational {
 
-        let numPositionsInTime = numGridSlots(timeSignature: timeSignature)
+        let numPositionsInTime = numGridSlots(timeSignature: measure.timeSignature)
         let slot = findSlot(slots: generateSpacing(measure: measure), position: x)
-        return Rational(slot) / Rational(numPositionsInTime) * timeSignature
+        return Rational(slot) / Rational(numPositionsInTime) * measure.timeSignature
     }
 
     private func numGridSlots(timeSignature: Rational) -> Int {
