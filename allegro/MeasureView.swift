@@ -138,22 +138,14 @@ class MeasureView: UIView {
         path.stroke()
     }
     
-    private func getSpacing() -> [CGFloat]{
-        guard let store = store, let index = index else { return [CGFloat]() }
-        
-        let measureVM = store.measure(at: index)
-        let ts = measureVM.timeSignature
-        let dur = store.selectedNoteValue.nominalDuration
-        let spacing = geometry.generateSpacing(timeSig: ts, duration: dur, notes: measureVM.noteViewModels)
-        return spacing
-    }
-
     private func drawVerticalGridlines(rect: CGRect) {
-        let spacing = getSpacing()
-        let offsets = spacing.enumerated().map {spacing[0..<$0.0].reduce(0, +)}
-        let lines = offsets.map { MeasureGeometry.Line(
-                                    start: CGPoint(x: $0, y: CGFloat(0)),
-                                    end: CGPoint(x: $0, y: geometry.totalHeight))}
+        guard let store = store, let index = index else { return }
+        
+        let measure = store.measure(at: index)
+        
+        let lines = geometry.verticalGridlines(measure: measure,
+                                               timeSignature: measure.timeSignature,
+                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         
         let path = UIBezierPath()
 
@@ -199,7 +191,7 @@ class MeasureView: UIView {
         
         let ts = measureVM.timeSignature
         let dur = store.selectedNoteValue.nominalDuration
-        let spacing = getSpacing()
+        let spacing = geometry.generateSpacing(measure: measureVM, timeSig: ts, duration: dur)
         
         for noteView in noteViews {
             let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts, duration: dur)

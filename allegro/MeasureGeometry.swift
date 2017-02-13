@@ -124,26 +124,11 @@ struct MeasureGeometry {
     }
 
     func verticalGridlines(measure: MeasureViewModel, timeSignature: Rational, selectedNoteDuration: Rational) -> [Line] {
-
-        var arr = [Line]()
-
-        let numSlots = numGridSlots(timeSignature: timeSignature, noteDuration: selectedNoteDuration)
-        let numGridlines: Int = numSlots - 1 // number of fence posts. we ignore the two end posts.
-
-        // right now, grid lines are evenly-spaced. this will no longer be true once we expand the grid slots to
-        // provide more physical space to notes of shorter durations. 
-        // Remember, we're going to enforce a minimum slot size and right here is where it's going to happen.
-
-        let gridlineOffset = totalWidth / CGFloat(numSlots)
-
-        for i in stride(from: 0, to: numGridlines, by: 1) {
-
-            let x = gridlineOffset * CGFloat(i + 1)
-            let start = CGPoint(x: x, y: 0)
-            let end = CGPoint(x: x, y: totalHeight)
-            arr.append(Line(start, end))
-        }
-        return arr
+        let spacing = generateSpacing(measure: measure, timeSig: timeSignature, duration: selectedNoteDuration)
+        let offsets = spacing.enumerated().map {spacing[0..<$0.0].reduce(0, +)}
+        
+        let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
+        return lines
     }
 
     func touchGuideRect(location: CGPoint,
@@ -217,12 +202,12 @@ struct MeasureGeometry {
         return Int(percent.double * slots)
     }
     
-    func generateSpacing(timeSig: Rational, duration: Rational, notes: [NoteViewModel]) -> [CGFloat] {
+    func generateSpacing(measure: MeasureViewModel, timeSig: Rational, duration: Rational) -> [CGFloat] {
         let geometry = noteGeometry
         var spacing = (0..<numGridSlots(timeSignature: timeSig, noteDuration: duration))
             .map {_ in verticalGridlineSpacing(timeSignature: timeSig, noteDuration: duration) }
         
-        for note in notes {
+        for note in measure.noteViewModels {
             let slot = noteToSlot(position: note.position, timeSig: timeSig, duration: duration)
             let width = geometry.getBoundingBox(note: note).size.width
             spacing[slot] = max(width, spacing[slot])
