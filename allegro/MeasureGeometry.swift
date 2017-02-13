@@ -224,7 +224,7 @@ struct MeasureGeometry {
         
         for note in notes {
             let slot = noteToSlot(position: note.position, timeSig: timeSig, duration: duration)
-            let width = geometry.getBoundingBox(origin: .zero, note: note).size.width
+            let width = geometry.getBoundingBox(note: note).size.width
             spacing[slot] = max(width, spacing[slot])
         }
         
