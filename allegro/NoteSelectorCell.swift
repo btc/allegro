@@ -60,7 +60,7 @@ class NoteSelectorCell: UICollectionViewCell {
             case .sixteenth:
                 label.image = #imageLiteral(resourceName: "sixteenth note")
             default:
-                label.image = #imageLiteral(resourceName: "Whole Note")
+                label.image = #imageLiteral(resourceName: "quarter note")
             }
         }
     }
