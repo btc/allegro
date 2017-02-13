@@ -33,6 +33,8 @@ struct Measure {
     var timeSignature: Rational
 
     private(set) var positions: [NotePosition]
+    
+    private(set) var ties: [Tie] = [Tie]()
 
     // returns all notes and their positions in O(n)
     var notes: [(pos: Rational, note: Note)] {
@@ -65,7 +67,14 @@ struct Measure {
         self.positions = [np]
     }
 
-
+    // adds a Tie to this measure
+    // returns true on success
+    mutating func addTie(startPos: Rational, endPos: Rational) -> Bool {
+        guard let startNote = note(at: startPos) else {return false}
+        guard let endNote = note(at: endPos) else { return false}
+        ties.append(Tie(startNote: startNote, endNote: endNote))
+        return true
+    }
 
     // inserts a Note at the given position in the measure in O(n)
     // returns whether the operation succeeded

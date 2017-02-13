@@ -43,7 +43,6 @@ struct MeasureViewModel {
 
     private let measure: Measure
     private(set) var notes = [NoteViewModel]()
-
     private(set) var beams: [Beam] = []
 
     var timeSignature: Rational {
