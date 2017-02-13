@@ -144,8 +144,7 @@ class MeasureView: UIView {
         let measure = store.measure(at: index)
         
         let lines = geometry.verticalGridlines(measure: measure,
-                                               timeSignature: measure.timeSignature,
-                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+                                               timeSignature: measure.timeSignature)
         
         let path = UIBezierPath()
 
@@ -190,11 +189,10 @@ class MeasureView: UIView {
         }
         
         let ts = measureVM.timeSignature
-        let dur = store.selectedNoteValue.nominalDuration
-        let spacing = geometry.generateSpacing(measure: measureVM, timeSig: ts, duration: dur)
+        let spacing = geometry.generateSpacing(measure: measureVM, timeSig: ts)
         
         for noteView in noteViews {
-            let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts, duration: dur)
+            let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts)
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
@@ -299,8 +297,7 @@ class MeasureView: UIView {
         // determine position
         let measure = store.measure(at: index)
         let position = geometry.pointToPositionInTime(x: location.x,
-                                                      timeSignature: measure.timeSignature,
-                                                      noteDuration: value.nominalDuration)
+                                                      timeSignature: measure.timeSignature)
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
@@ -319,21 +316,18 @@ class MeasureView: UIView {
 
         guard let store = store, let index = index else { return }
         let ts = store.measure(at: index).timeSignature
-        let d = store.selectedNoteValue.nominalDuration
 
         if sender.state == .ended {
             let end = sender.location(in: self)
             let start = end - sender.translation(in: self)
             if geometry.touchRemainedInPosition(start: start,
                                                 end: end,
-                                                timeSignature: ts,
-                                                noteDuration: d) {
+                                                timeSignature: ts) {
                 editTap(sender: sender)
             }
         } else if sender.state == .changed {
             let rect = geometry.touchGuideRect(location: sender.location(in: self),
-                                               timeSignature: ts,
-                                               noteDuration: d)
+                                               timeSignature: ts)
             touchGuide.frame = rect
         }
 
