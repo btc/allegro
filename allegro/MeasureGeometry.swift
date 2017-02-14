@@ -193,8 +193,12 @@ struct MeasureGeometry {
                                x: CGFloat) -> Rational {
 
         let numPositionsInTime = numGridSlots(timeSignature: measure.timeSignature)
-        let slot = findSlot(slots: generateSpacing(measure: measure), position: x)
-        return Rational(slot) / Rational(numPositionsInTime) * measure.timeSignature
+        let spacing = generateSpacing(measure: measure)
+        
+        let slot = findSlot(slots: spacing, position: x)
+        let startSlot = spacing[0..<slot].reduce(0, +)
+        
+        return Rational(Int(x - startSlot)) / (measure.timeSignature / Rational(numPositionsInTime))
     }
 
     private func numGridSlots(timeSignature: Rational) -> Int {
