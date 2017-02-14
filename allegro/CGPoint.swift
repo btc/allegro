@@ -6,6 +6,7 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 extension CGPoint {
@@ -19,5 +20,10 @@ extension CGPoint {
     
     func offset(dx: CGFloat, dy: CGFloat) -> CGPoint {
         return CGPoint(x: self.x + dx, y: self.y + dy)
+    }
+
+    func angle(to other: CGPoint) -> CGFloat {
+        let relative = other - self
+        return atan2(relative.y, relative.x).degrees
     }
 }
