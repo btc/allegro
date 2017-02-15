@@ -196,9 +196,12 @@ struct MeasureGeometry {
         let spacing = generateSpacing(measure: measure)
         
         let slot = findSlot(slots: spacing, position: x)
+        let slotWidth = Rational(Int(totalWidth)) / Rational(numPositionsInTime)
         let startSlot = spacing[0..<slot].reduce(0, +)
         
-        return Rational(Int(x - startSlot)) / (measure.timeSignature / Rational(numPositionsInTime))
+        let slotPercent = Rational(Int(x - startSlot)) / slotWidth
+        let durationPerSlot = measure.timeSignature / Rational(numPositionsInTime)
+        return (Rational(slot) + slotPercent) * durationPerSlot
     }
 
     private func numGridSlots(timeSignature: Rational) -> Int {
@@ -218,6 +221,7 @@ struct MeasureGeometry {
     func generateSpacing(measure: MeasureViewModel) -> [CGFloat] {
         let geometry = noteGeometry
         let timeSignature = measure.timeSignature
+        var hasNotes = Set<Int>()
         
         var spacing = (0..<numGridSlots(timeSignature: timeSignature))
             .map {_ in verticalGridlineSpacing(timeSignature: timeSignature) }
@@ -225,10 +229,27 @@ struct MeasureGeometry {
         for note in measure.notes {
             let slot = noteToSlot(position: note.position, timeSig: timeSignature)
             let width = geometry.getBoundingBox(note: note).size.width
-            spacing[slot] = max(width, spacing[slot])
+            
+            if hasNotes.contains(slot) {
+                spacing[slot] += width
+            } else {
+                spacing[slot] = max(width, spacing[slot])
+                hasNotes.insert(slot)
+            }
         }
         
         return spacing
+    }
+    
+    func generateNoteX(measure: MeasureViewModel) -> [CGFloat] {
+        let spacing = generateSpacing(measure: measure)
+        let slots = measure.notes.map { noteToSlot(position: $0.position, timeSig: measure.timeSignature) }
+        let groupedBySlot = measure.notes.categorize {noteToSlot(position: $0.position, timeSig: measure.timeSignature) }
+        
+        return slots.map { (slot: Int) -> CGFloat in
+            let group = groupedBySlot[slot] ?? [NoteViewModel]()
+            return spacing[slot] / CGFloat(group.count)
+        }
     }
 }
 

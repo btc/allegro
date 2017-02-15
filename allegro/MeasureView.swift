@@ -188,14 +188,13 @@ class MeasureView: UIView {
         }
         
         let ts = measureVM.timeSignature
-        let spacing = geometry.generateSpacing(measure: measureVM)
+        let spacing = geometry.generateNoteX(measure: measureVM)
         
-        for noteView in noteViews {
-            let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts)
+        for (i, noteView) in noteViews.enumerated() {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = geometry.noteX(spacing: spacing, slot: slot)
+            let x = spacing[0..<i].reduce(0, +)
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
             noteView.shouldDrawFlag = true//false
@@ -204,7 +203,7 @@ class MeasureView: UIView {
             
             // we still need to handle multiple notes in one column and lay them one after each other
             // but for now we just lay them overlapping
-            let origin = CGPoint(x: x + spacing[slot] - noteGeometry.frame.size.width, y: y)
+            let origin = CGPoint(x: x + spacing[i] - noteGeometry.frame.size.width, y: y)
             noteGeometry.origin = origin
             noteView.frame = noteGeometry.frame
 
