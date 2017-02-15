@@ -46,18 +46,19 @@ class CompositionViewController: UIViewController {
 
     fileprivate let audio: Audio?
 
+    //RHSide menu disabled for alpha
     static func create(part: Part) -> UIViewController {
         let store = PartStore(part: part)
         let vc = CompositionViewController(store: store)
-        let sideMenuVC = SideMenuViewController(store: store)
+        //let sideMenuVC = SideMenuViewController(store: store)
 
         // NB(btc): The way the library provides customization (static options) makes it so that it's only feasible to have
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
         // and move the options to the instance of the SideMenuViewController.
-        SlideMenuOptions.animationDuration = 0.07 // seconds
+        //SlideMenuOptions.animationDuration = 0.07 // seconds
 
-        let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
-        return container
+        //let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
+        return vc
     }
 
     private init(store: PartStore) {
@@ -83,7 +84,7 @@ class CompositionViewController: UIViewController {
         view.addSubview(editor)
         view.addSubview(noteSelectorMenu)
         view.addSubview(modeToggle)
-        view.addSubview(menuIndicator)
+        //view.addSubview(menuIndicator) Not being used in Alpha
     }
 
     override func viewWillAppear(_ animated: Bool) {
