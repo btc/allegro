@@ -283,7 +283,8 @@ class MeasureView: UIView {
 
     func editTap(sender: UIGestureRecognizer) {
         guard store?.mode == .edit else {
-            Snackbar(message: "you're in erase mode", duration: .short).show()
+            Snackbar(message: "switched to edit mode", duration: .short).show()
+            store?.mode = .edit
             return
         }
         let location = sender.location(in: self)
