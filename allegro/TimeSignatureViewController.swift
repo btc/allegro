@@ -10,6 +10,7 @@ import UIKit
 
 class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
+    fileprivate let store: PartStore
     
     private let pickerData = [
         ["2","3","4","6","8"],
@@ -63,6 +64,15 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         view.addSubview(toolBar)
         toolBar.setItems([doneButton], animated: false)
         
+    }
+    
+    init(store: PartStore) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) not supported")
     }
     
     override func viewDidLayoutSubviews() {
