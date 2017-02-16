@@ -379,7 +379,11 @@ class allegroTests: XCTestCase {
             }
         }
     }
-    
+
+    func note(_ value: Note.Value) -> Note {
+        return Note(value: value, letter: .A, octave: 4)
+    }
+
     func testMocks() {
         let cMajorScale = mockPart("CMajor")
         XCTAssert(cMajorScale.measures.count == 3, "expected measure count: 3 actual: " + String(cMajorScale.measures.count))
@@ -391,6 +395,70 @@ class allegroTests: XCTestCase {
         XCTAssert(KeyDTest.measures.count == 2)
         let beams = mockPart("BeamTest")
         XCTAssert(beams.measures.count == 3, "expected measure count: 3 actual: " + String(beams.measures.count))
+    }
+
+    func testSimpleMeasureInsertNudgeRight() {
+        var mustNudgeRight = SimpleMeasure()
+        XCTAssert(mustNudgeRight.insert(note: note(.half), at: 0)) // will be nudged to 1/4
+        XCTAssert(mustNudgeRight.insert(note: note(.quarter), at: 7/10)) // will be nudged to 3/4
+
+        XCTAssert(mustNudgeRight.insert(note: note(.quarter), at: 0))
+
+        XCTAssertEqual(mustNudgeRight.notes[0].pos, 0)
+        XCTAssertEqual(mustNudgeRight.notes[1].pos, 1/4)
+        XCTAssertEqual(mustNudgeRight.notes[2].pos, 3/4)
+    }
+
+    func testSimpleMeasureInsertNudgeLeft() {
+        var m = SimpleMeasure()
+        XCTAssert(m.insert(note: note(.half), at: 1/2)) // will remain in place
+        XCTAssert(m.insert(note: note(.quarter), at: 1/4)) // will be nudged to 0
+
+        XCTAssert(m.insert(note: note(.quarter), at: 1/2))
+
+        XCTAssertEqual(m.notes[0].pos, 0)
+        XCTAssertEqual(m.notes[1].pos, 1/4)
+        XCTAssertEqual(m.notes[2].pos, 1/2)
+    }
+
+    func testSimpleMeasureInsertion() {
+
+        // insert a quarter note at 0 into a variety of measures. assert that it ends up where we expect
+
+        let empty = SimpleMeasure()
+
+        var full = SimpleMeasure()
+        XCTAssert(full.insert(note: note(.whole), at: 0))
+
+        var mustNudgeRight = SimpleMeasure()
+        XCTAssert(mustNudgeRight.insert(note: note(.half), at: 0))
+
+        var mustNudgeLeft = SimpleMeasure()
+        XCTAssert(mustNudgeLeft.insert(note: note(.half), at: 2/4))
+
+        typealias testCase = (measure: SimpleMeasure, note: Note, position: Rational, expectedSuccess: Bool, expectedPosition: Rational?)
+        let testCases: [testCase] = [
+            (empty, note(.whole), 1/2, false, nil),
+            (empty, note(.quarter), 1, false, nil),
+            (empty, note(.whole), -1, false, nil),
+            (empty, note(.quarter), 0, true, 0),
+            (full, note(.quarter), 0, false, nil),
+            (mustNudgeRight, note(.quarter), 0, true, 0),
+            (mustNudgeLeft, note(.quarter), 2/4, true, 1/4),
+        ]
+
+        for (i, c) in testCases.enumerated() {
+            var m = c.measure
+            let success = m.insert(note: c.note, at: c.position)
+            XCTAssertEqual(c.expectedSuccess, success, "\(i)")
+            if c.expectedSuccess, let xp = c.expectedPosition {
+                guard let n = m.note(at: xp) else {
+                    XCTFail("\(i)")
+                    return
+                }
+                XCTAssert(n == c.note, "\(i)")
+            }
+        }
     }
     
     func testPerformanceExample() {
