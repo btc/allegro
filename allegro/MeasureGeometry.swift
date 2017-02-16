@@ -242,6 +242,26 @@ struct MeasureGeometry {
     }
     
     func generateNoteX(measure: MeasureViewModel) -> [CGFloat] {
+        var positions = measure.notes.map {($0.position / measure.timeSignature).cgFloat * totalWidth}
+        
+        guard positions.count > 0 else { return [totalWidth] }
+        
+        // whitespace is the space between the notes which gets shrunk as more notes are added
+        var whitespaceIndexes = [Int]()
+        // blackspace is the space taken up by notes
+        var totalBlackSpace = 0
+        
+        for (i, position) in positions.enumerated() {
+            if i > 0 {
+                if position - positions[i - 1] < minNoteWidth {
+                    positions[i] = positions[i - 1] + minNoteWidth
+                } else {
+                    whitespaceIndexes.append(i)
+                }
+            }
+        }
+        
+        
         let spacing = generateSpacing(measure: measure)
         let slots = measure.notes.map { noteToSlot(position: $0.position, timeSig: measure.timeSignature) }
         let groupedBySlot = measure.notes.categorize {noteToSlot(position: $0.position, timeSig: measure.timeSignature) }
