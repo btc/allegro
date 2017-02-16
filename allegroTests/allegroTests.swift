@@ -438,8 +438,11 @@ class allegroTests: XCTestCase {
 
         typealias testCase = (measure: SimpleMeasure, note: Note, position: Rational, expectedSuccess: Bool, expectedPosition: Rational?)
         let testCases: [testCase] = [
+            (empty, note(.whole), 1/2, false, nil),
+            (empty, note(.quarter), 1, false, nil),
+            (empty, note(.whole), -1, false, nil),
             (empty, note(.quarter), 0, true, 0),
-            (full, note(.quarter), 0, false, 0),
+            (full, note(.quarter), 0, false, nil),
             (mustNudgeRight, note(.quarter), 0, true, 0),
             (mustNudgeLeft, note(.quarter), 2/4, true, 1/4),
         ]
