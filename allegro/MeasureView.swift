@@ -32,6 +32,7 @@ class MeasureView: UIView {
     fileprivate let staffLineThickness: CGFloat = 2
 
     fileprivate let barThickness: CGFloat = 5
+    fileprivate let barOffset: CGFloat = 10
 
     fileprivate let barLayer: CAShapeLayer = {
         return CAShapeLayer()
@@ -232,17 +233,28 @@ class MeasureView: UIView {
                 }
                 
                 if (i == beam.count - 1) {
-                    barEnd = flagStart.offset(dx: noteView.stemThickness, dy: 0)
                     
-                    var next = barStart
-                    barPath.move(to: next)
-                    next = barEnd
-                    barPath.addLine(to: next)
-                    next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
-                    barPath.addLine(to: next)
-                    next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
-                    barPath.addLine(to: next)
-                    barPath.close()
+                    func drawBar(barStart: CGPoint, barEnd: CGPoint, barPath: UIBezierPath) {
+                        var next = barStart
+                        barPath.move(to: next)
+                        next = barEnd
+                        barPath.addLine(to: next)
+                        next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
+                        barPath.addLine(to: next)
+                        next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
+                        barPath.addLine(to: next)
+                        barPath.close()
+                    }
+                    barEnd = flagStart.offset(dx: noteView.stemThickness, dy: 0)
+                    drawBar(barStart: barStart, barEnd: barEnd, barPath: barPath)
+                    
+                    if noteViewModel.value == .sixteenth {
+                        let offset = noteViewModel.flipped ? -barOffset: barOffset
+                        barStart = barStart.offset(dx: 0, dy: offset)
+                        barEnd = barEnd.offset(dx: 0, dy: offset)
+                        
+                        drawBar(barStart: barStart, barEnd: barEnd, barPath: barPath)
+                    }
                 }
             }
         }
