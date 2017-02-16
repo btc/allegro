@@ -77,6 +77,8 @@ struct SimpleMeasure {
 
     static let defaultTimeSignature: Rational = 4/4
 
+
+    var keySignature: Key // eg. G Major or d minor
     var timeSignature: Rational
     private(set) var notes: [NotePos] = []
 
@@ -131,8 +133,9 @@ struct SimpleMeasure {
         return frees.reduce(0) { $0 + $1.duration }
     }
 
-    init(timeSignature: Rational = SimpleMeasure.defaultTimeSignature) {
+    init(timeSignature: Rational = SimpleMeasure.defaultTimeSignature, keySignature: Key = .cMajor) {
         self.timeSignature = timeSignature
+        self.keySignature = keySignature
     }
 
     func note(at position: Rational) -> Note? {
@@ -263,5 +266,49 @@ struct SimpleMeasure {
 
         notes.insert(np, at: indexToInsert)
         return true
+    }
+
+    // Changes the dot on a note in O(n)
+    // returns success of the operation
+    // Removes original note, adds a dot, and inserts with nudge
+    mutating func dotNote(at position: Rational, dot: Note.Dot) -> Bool {
+        // remove original note and add a dot
+        guard let note = removeAndReturnNote(at: position) else { return false }
+        let originalDot = note.dot
+        note.dot = dot
+
+        // re-insert with new dot
+        if insert(note: note, at: position) {
+            return true
+        }
+
+        // re-insert original note if we were unable to insert dotted note with nudge
+        note.dot = originalDot
+        if !insert(note: note, at: position) && DEBUG {
+            Log.error?.message("Unable to re-insert note after failed dotting. Developer Error.")
+        }
+        return false
+    }
+
+
+    // Finds the nearest previous note with the same letter if it exists
+    func getPrevLetterMatch(for letter: Note.Letter, at position: Rational) -> Note? {
+        var match: Note? = nil
+        var foundOrig = false
+        for notePosition in notes.reversed() {
+            let curr = notePosition.note
+
+            // find original note
+            if notePosition.pos == position {
+                foundOrig = true
+                continue
+            }
+            // find previous note with same letter
+            if foundOrig && curr.letter == letter {
+                match = notePosition.note
+                break
+            }
+        }
+        return match
     }
 }

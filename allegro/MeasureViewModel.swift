@@ -41,7 +41,7 @@ struct MeasureViewModel {
         }
     ]
 
-    private let measure: Measure
+    private let measure: SimpleMeasure
     private(set) var notes = [NoteViewModel]()
     private(set) var beams: [Beam] = []
 
@@ -83,10 +83,10 @@ struct MeasureViewModel {
      */
     private func checkAccidentalDisplay(note currentNote: Note, position: Rational) -> Bool {
         // get previous matching note from the measure. getPrevLetterMatch(currentNote) can return nil
-        let previous = measure.getPrevLetterMatch(noteLetter: currentNote.letter, position: position)
+        let previous = measure.getPrevLetterMatch(for: currentNote.letter, at: position)
         
         // get key signature hit from the measure (returns accidental if the current note is in the key signature or nil if not)
-        let keyHit = measure.key.keyHit(currentNoteLetter: currentNote.letter)
+        let keyHit = measure.keySignature.keyHit(currentNoteLetter: currentNote.letter)
         
         // no key sig hit
         if(keyHit == nil) {
@@ -204,9 +204,11 @@ struct MeasureViewModel {
         return ([], beam)
     }
 
-    init(_ measure: Measure) {
+    init(_ measure: SimpleMeasure) {
         self.measure = measure
-        for (position, note) in measure.notes {
+        for np in measure.notes {
+            let position = np.pos
+            let note = np.note
             let newNoteViewModel = NoteViewModel(note: note, position: position)
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
             notes.append(newNoteViewModel)

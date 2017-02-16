@@ -18,7 +18,7 @@ class Part {
     var comment: String = ""
 
     // ordered list of measures in the piece
-    private(set) var measures: [Measure] = [Measure]()
+    private(set) var measures: [SimpleMeasure] = [SimpleMeasure]()
     
     // initialize with 1 empty measure
     init() {
@@ -27,12 +27,12 @@ class Part {
 
     func extend() {
         let timeSigForNewMeasure = measures.last?.timeSignature ?? Measure.defaultTimeSignature
-        measures.append(Measure(time: timeSigForNewMeasure))
+        measures.append(SimpleMeasure(timeSignature: timeSigForNewMeasure))
     }
 
     func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
         guard measures.indices.contains(i) else { return false }
-        return measures[i].insertWithNudge(note: note, at: position)
+        return measures[i].insert(note: note, at: position)
     }
 
     func removeNote(fromMeasureIndex i: Int, at position: Rational) -> Bool {
@@ -58,7 +58,9 @@ class Part {
                 return
             }
             
-            for (pos, duration) in m.frees {
+            for free in m.frees {
+                let pos = free.pos
+                let duration = free.duration
                 if note.duration <= duration {
                     // add note
                     if insert(note: note, intoMeasureIndex: i, at: pos) == true {
@@ -85,7 +87,7 @@ class Part {
     
     func setKeySignature(keySignature: Key) {
         for i in 0..<measures.count {
-            measures[i].key = keySignature
+            measures[i].keySignature = keySignature
         }
     }
 }
