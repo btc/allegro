@@ -55,7 +55,7 @@ class HomeMenuViewController: UIViewController {
         let centerX = parent.width / 2
 
         let logoH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let logoW = logoH * THE_GOLDEN_RATIO
+        let logoW = parent.width
 
         logo.frame = CGRect(x: centerX - logoW / 2,
                             y: DEFAULT_MARGIN_PTS,
