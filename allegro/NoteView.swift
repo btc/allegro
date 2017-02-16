@@ -105,6 +105,7 @@ class NoteView: NoteActionView {
     fileprivate var flagIterOffset = CGFloat(15)
     
     let drawLayer: CAShapeLayer = CAShapeLayer()
+    let noteLayer: CAShapeLayer = CAShapeLayer()
 
     override init(note: NoteViewModel, geometry: NoteGeometry) {
         super.init(note: note, geometry: geometry)
@@ -112,6 +113,7 @@ class NoteView: NoteActionView {
         isOpaque = false
         
         layer.addSublayer(drawLayer)
+        //layer.addSublayer(noteLayer)
         
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
         Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
@@ -273,10 +275,16 @@ class NoteView: NoteActionView {
         return path
     }
     
+    override func draw(_ rect: CGRect) {
+        let notePath = getNoteHeadPath(rect: bounds)
+        UIColor.black.set()
+        notePath.fill()
+    }
+    
     func computePaths() {
         let path = UIBezierPath()
         let notePath = getNoteHeadPath(rect: bounds)
-        path.append(notePath)
+        //noteLayer.path = notePath.cgPath
         
         if (note.value.nominalDuration < Note.Value.whole.nominalDuration) {
             path.append(getStemPath(notePath: notePath))
