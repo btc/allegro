@@ -17,7 +17,16 @@ struct NotePos {
     }
 
     var end: Rational {
-        return pos + note.duration
+        get {
+            return pos + note.duration
+        }
+        set(newEnd) {
+            pos = newEnd - note.duration
+        }
+    }
+
+    var duration: Rational {
+        return note.duration
     }
 
     func freespaceBetween(_ later: NotePos) -> FreePos? {
@@ -27,20 +36,27 @@ struct NotePos {
         return nil
     }
 
-    func startsAtOrAfter(_ position: Rational) -> Bool {
-        return position <= start
+    func startsStrictlyAfter(_ position: Rational) -> Bool {
+        return position < start
     }
 
-    func startsStrictlyBefore(_ other: NotePos) -> Bool {
-        return start < other.start
+    func startsAtOrBefore(_ other: NotePos) -> Bool {
+        return start <= other.start
     }
 
-    func endsStrictlyBeforeStartOf(_ other: NotePos) -> Bool {
-        return end < other.start
+    func lengthOfOverlap(with other: NotePos) -> Rational {
+        if !startsAtOrBefore(other) {
+            return other.lengthOfOverlap(with: self)
+        }
+        // this starts before or at the same place as the other NotePos
+        if other.end <= end {
+            return other.duration
+        }
+        return max(end - other.start, 0)
     }
 
-    func endsStrictlyAfter(_ position: Rational) -> Bool {
-        return position < end
+    func overlaps(with other: NotePos) -> Bool {
+        return lengthOfOverlap(with: other) > 0
     }
 }
 
@@ -61,11 +77,11 @@ struct FreePos {
     }
 
     func freespaceRight(of position: Rational) -> Rational {
-        return end > position ? end - position : 0
+        return contains(position) ? end - position : 0
     }
 
     func freespaceLeft(of position: Rational) -> Rational {
-        return pos > start ? pos - start : 0
+        return contains(position) ? position - start : 0
     }
 
     func startsAfter(_ position: Rational) -> Bool {
@@ -194,7 +210,7 @@ struct SimpleMeasure {
     // thus, this function returns nil when notes is empty
     func indexToInsert(_ position: Rational) -> Int {
         for (i, np) in notes.enumerated() {
-            if np.startsAtOrAfter(position) {
+            if np.startsStrictlyAfter(position) {
                 return i
             }
         }
@@ -214,8 +230,7 @@ struct SimpleMeasure {
         for i in stride(from: index, through: 0, by: -1) {
             let thereIsOverlap = startOfNextNote < notes[i].end
             if thereIsOverlap {
-                let sizeOfOverlap = notes[i].end - startOfNextNote
-                notes[i].pos = notes[i].pos - sizeOfOverlap
+                notes[i].end = startOfNextNote
             }
             startOfNextNote = notes[i].pos
         }
@@ -225,7 +240,7 @@ struct SimpleMeasure {
         var np = NotePos(pos: initialDesiredPosition, note: note)
 
         if np.end > end { // too late
-            np.pos = end - np.note.duration
+            np.end = end
         }
         if np.start < start { // too early
             return false
@@ -234,67 +249,34 @@ struct SimpleMeasure {
             return false
         }
 
-        // At this point, we've determined there's enough space in the measure. now we need to determine whether we...
-        // a) no nudge
-        // b) inside a note: nudge left, if still not enough space nudge all
-        // c) not inside a note: nudge right, if still not enough space nudge all
-
         let indexToInsert = self.indexToInsert(np.pos)
 
-        // b)
-        if notes.indices.contains(indexToInsert - 1) && notes[indexToInsert-1].endsStrictlyAfter(np.pos) {
-            let freespaceL = freespaceLeft(of: np.pos)
-            let overlap = notes[indexToInsert-1].end - np.pos
-            let amountToNudgeLeft = min(freespaceL, overlap)
-            let positionToNudgeToTheLeftOf = np.pos - amountToNudgeLeft
-            nudgeLeft(startingAt: indexToInsert - 1, toTheLeftOf: positionToNudgeToTheLeftOf)
+        while (true) {
+            let bumpsIntoNoteOnTheLeft = notes.indices.contains(indexToInsert - 1) && notes[indexToInsert-1].overlaps(with: np)
+            let bumpsIntoNoteOnTheRight = notes.indices.contains(indexToInsert) && notes[indexToInsert].overlaps(with: np)
 
-            if overlap <= freespaceL {
-                notes.insert(np, at: indexToInsert)
-                return true
+            if bumpsIntoNoteOnTheLeft {
+                let prev = notes[indexToInsert-1]
+                let freespaceL = freespaceLeft(of: np.pos)
+                let overlap = prev.lengthOfOverlap(with: np)
+                let amountWeAreAbleToNudgeLeft = min(freespaceL, overlap)
+                let newEndOfPreviousNote = prev.end - amountWeAreAbleToNudgeLeft
+                nudgeLeft(startingAt: indexToInsert - 1, toTheLeftOf: newEndOfPreviousNote)
+                np.pos = newEndOfPreviousNote
+                continue
             }
-
-            np.pos = positionToNudgeToTheLeftOf
-
-            nudgeRight(startingAt: indexToInsert, toTheRightOf: np.end)
-            notes.insert(np, at: indexToInsert)
-            return true
+            if bumpsIntoNoteOnTheRight {
+                let next = notes[indexToInsert]
+                let freespaceR = freespaceRight(of: np.end)
+                let overlap = np.lengthOfOverlap(with: next)
+                let amountWeAreAbleToNudgeRight = min(overlap, freespaceR)
+                let newStartOfNextNote = next.start + amountWeAreAbleToNudgeRight
+                nudgeRight(startingAt: indexToInsert, toTheRightOf: newStartOfNextNote)
+                np.end = newStartOfNextNote
+                continue
+            }
+            break
         }
-
-        let thisNoteIsTheLastNote = indexToInsert == notes.endIndex
-        if thisNoteIsTheLastNote {
-            notes.insert(np, at: indexToInsert)
-            return true
-        }
-        // note that we depend on short-circuit of first condition to not access notes[i] OOB
-        let thereIsEnoughSpaceBeforeStartOfNextNote = notes[indexToInsert].startsAtOrAfter(np.end)
-
-        if thereIsEnoughSpaceBeforeStartOfNextNote {
-            notes.insert(np, at: indexToInsert)
-            return true
-        }
-        // there wasn't enough space before the start of the next element
-
-        let freespaceR = freespaceRight(of: np.pos)
-
-        // c)
-        if np.note.duration <= freespaceR {
-            // note can't fit automatically, but it can if we nudge to the right
-            nudgeRight(startingAt: indexToInsert, toTheRightOf: np.end)
-            notes.insert(np, at: indexToInsert)
-            return true
-        }
-
-        // C)
-
-        // take all of the free space on the right and update |np|'s position
-        // optimization: only do this if freespaceR > 0
-        nudgeRight(startingAt: indexToInsert, toTheRightOf: np.pos + freespaceR)
-        np.pos = np.pos - np.note.duration + freespaceR
-
-        // take freespace to the left (only if necessary)
-        nudgeLeft(startingAt: indexToInsert - 1, toTheLeftOf: np.pos)
-
         notes.insert(np, at: indexToInsert)
         return true
     }
