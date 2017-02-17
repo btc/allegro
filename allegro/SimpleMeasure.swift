@@ -228,10 +228,7 @@ struct SimpleMeasure {
     mutating func nudgeLeft(startingAt index: Int, toTheLeftOf position: Rational) {
         var startOfNextNote = position
         for i in stride(from: index, through: 0, by: -1) {
-            let thereIsOverlap = startOfNextNote < notes[i].end
-            if thereIsOverlap {
-                notes[i].end = startOfNextNote
-            }
+            notes[i].end = min(startOfNextNote, notes[i].end)
             startOfNextNote = notes[i].pos
         }
     }
