@@ -164,7 +164,6 @@ struct MeasureGeometry {
     func touchRemainedInPosition(measure: MeasureViewModel,
                                  start: CGPoint,
                                  end: CGPoint) -> Bool {
-
         let startPos = pointToPositionInTime(measure: measure,
                                              x: start.x)
         let endPos = pointToPositionInTime(measure: measure,
