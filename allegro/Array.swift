@@ -13,7 +13,7 @@ extension Array {
         return (left: Array(l), right: Array(r))
     }
 
-    func indexOfFirstMatch(condition: (Element) -> Bool) -> Index? {
+    func indexOfFirstMatch(_ condition: (Element) -> Bool) -> Index? {
         var low = startIndex
         var high = endIndex
         var found = false

@@ -100,13 +100,9 @@ struct SimpleMeasure {
         return total
     }
 
-    // returns nil if the position is after the last index of notes
-    // thus, this function returns nil when notes is empty
     func indexToInsert(_ position: Rational) -> Int {
-        for (i, np) in notes.enumerated() {
-            if np.startsStrictlyAfter(position) {
-                return i
-            }
+        if let index = notes.indexOfFirstMatch({ $0.startsStrictlyAfter(position) }) {
+            return index
         }
         return notes.endIndex
     }
