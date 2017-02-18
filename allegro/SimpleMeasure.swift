@@ -12,7 +12,6 @@ struct SimpleMeasure {
 
     static let defaultTimeSignature: Rational = 4/4
 
-
     var keySignature: Key // eg. G Major or d minor
     var timeSignature: Rational
 
