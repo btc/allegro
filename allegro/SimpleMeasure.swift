@@ -43,7 +43,7 @@ struct SimpleMeasure {
         self.timeSignature = timeSignature
         self.keySignature = keySignature
 
-        // didSet callbacks are not triggered in constructors, so we have to manually initialize the freespace
+        // didSet callbacks are not triggered in constructors, so we have to manually initialize the freespace.
         // we cannot call computeFrees() until all properties are initialized, so we initialize them to junk values to
         // appease the compiler
         frees = []
@@ -66,7 +66,7 @@ struct SimpleMeasure {
         return notes.remove(at: i).note
     }
 
-    // speed this up with binary search
+    // TODO(btc): speed this up with binary search
     func index(of position: Rational) -> Int? {
         for (i, np) in notes.enumerated() {
             if np.pos == position {
