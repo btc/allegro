@@ -34,9 +34,7 @@ struct SimpleMeasure {
         return timeSignature
     }
 
-    var start: Rational {
-        return 0
-    }
+    let start: Rational = 0
 
     var end: Rational {
         return timeSignature
