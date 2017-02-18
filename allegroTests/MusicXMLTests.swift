@@ -27,10 +27,12 @@ class musicXMLTests: XCTestCase {
         let part = Part()
         let store = PartStore(part: part)
 
-        let parser = MusicXMLParser(store: store)
 
         let n0 = Note(value: .quarter, letter: .A, octave: 4)
         let _ = part.insert(note: n0, intoMeasureIndex: 0, at: 1/4)
+
+        let parser = MusicXMLParser(store: store)
+
 
         parser.save(filename: "test.xml")
     }

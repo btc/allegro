@@ -37,31 +37,27 @@ class Note {
         }
     }
 
-    enum Accidental {
-        case natural        // unicode ♮
-        case sharp          // unicode ♯
-        case flat           // unicode ♭
-        case doubleSharp    // unicode ♯♯
-        case doubleFlat     // unicode ♭♭
+    enum Accidental : Int {
+        case doubleFlat = -2    // unicode ♭♭
+        case flat = -1          // unicode ♭
+        case natural = 0        // unicode ♮
+        case sharp = 1          // unicode ♯
+        case doubleSharp = 2    // unicode ♯♯
     }
 
     // Value represents the glyph that is drawn on screen, not the true duration of the note.
     // The true duration may be modified by dots or triplets, but the glyph is the same.
     // See https://en.wikipedia.org/wiki/Note_value
     enum Value: CustomStringConvertible {
-        case whole, half, quarter, eighth, sixteenth, thirtysecond, sixtyfourth, onetwentyeighth, twofiftysixth
+        case whole, half, quarter, eighth, sixteenth
 
         var description: String {
             switch self {
-            case .whole: return "1"
-            case .half: return "1/2"
-            case .quarter: return "1/4"
-            case .eighth: return "1/8"
-            case .sixteenth: return "1/16"
-            case .thirtysecond: return "1/32"
-            case .sixtyfourth: return "1/64"
-            case .onetwentyeighth: return "1/128"
-            case .twofiftysixth: return "1/256"
+            case .whole: return "whole"
+            case .half: return "half"
+            case .quarter: return "quarter"
+            case .eighth: return "eighth"
+            case .sixteenth: return "sixteenth"
             }
         }
         var nominalDuration: Rational {
@@ -71,10 +67,6 @@ class Note {
             case .quarter: return 1/4
             case .eighth: return 1/8
             case .sixteenth: return 1/16
-            case .thirtysecond: return 1/32
-            case .sixtyfourth: return 1/64
-            case .onetwentyeighth: return 1/128
-            case .twofiftysixth: return 1/256
             }
         }
         
