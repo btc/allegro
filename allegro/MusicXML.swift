@@ -13,43 +13,49 @@
 import AEXML
 
 class MusicXMLParser {
-    var store: PartStore? {
+    var store: PartStore {
         willSet {
-            if let store = store {
-                store.unsubscribe(self)
-            }
+            store.unsubscribe(self)
         }
         didSet {
-            if let store = store {
-                store.subscribe(self)
-            }
+            store.subscribe(self)
         }
     }
-    
-    let part: Part
+    var partDoc: AEXMLDocument = AEXMLDocument()
     
     fileprivate func parse() {
-        let partDoc = AEXMLDocument()
-        // TODO doctype
+
+        //TODO add doctype, but not as a child because we don't want /> at the end
+//        let doctypeString = "!DOCTYPE score-partwise PUBLIC \"-//Recordare//DTD MusicXML 3.0 Partwise//EN\" \"http://www.musicxml.org/dtds/partwise.dtd\""
+//        let _ = partDoc.addChild(name: doctypeString)
+
         let score_partwise = partDoc.addChild(name: "score-partwise", attributes: ["version": "3.0"])
         let part_list = score_partwise.addChild(name: "part-list")
         
-        // TODO part name properly
         let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
-        let part_name = score_part.addChild(name: "part-name", value: "\(store)")
+        let _ = score_part.addChild(name: "part-name", value: "\(store.part.title)")
         
         let part = score_partwise.addChild(name: "part", attributes: ["id:": "P1"])
         
         // TODO iterate through measures
     }
+
+    func save(filename: String) {
+        // TODO write to disk
+
+        let msg: String = "\n" + partDoc.xml + "\n"
+        print(msg)
+    }
     
-    init(part: Part) {
-        self.part = part
+    init(store: PartStore) {
+        self.store = store
+        parse()
     }
 }
 
 extension MusicXMLParser: PartStoreObserver {
     func partStoreChanged() {
+        Log.info?.message("MusicXMLParser re-parsing")
         parse()
     }
 }

@@ -71,6 +71,7 @@
 		A38CFF6CB5898986752C58AB /* Pods_allegroTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A041ACB4829148BD2BFA2916 /* Pods_allegroTests.framework */; };
 		B90F77971E3680C1009F0CA3 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F77961E3680C1009F0CA3 /* Mocks.swift */; };
 		B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96BCCC51E3D60650006A047 /* MusicXML.swift */; };
+		B98BF2801E58FBEB000CCF3E /* MusicXMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */; };
 		B9ADCB821E2ED1F5001D72AE /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ADCB811E2ED1F5001D72AE /* Key.swift */; };
 		B9AEF2811E40564900B0910E /* allegroViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */; };
 /* End PBXBuildFile section */
@@ -177,6 +178,7 @@
 		B48B0377F0C8F35F8EAD5DDB /* Pods-allegro.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegro.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegro/Pods-allegro.debug.xcconfig"; sourceTree = "<group>"; };
 		B90F77961E3680C1009F0CA3 /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		B96BCCC51E3D60650006A047 /* MusicXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXML.swift; sourceTree = "<group>"; };
+		B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXMLTests.swift; sourceTree = "<group>"; };
 		B9ADCB811E2ED1F5001D72AE /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 		B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = allegroViewModelTests.swift; sourceTree = "<group>"; };
 		BEA53266E630B8937E68457C /* Pods-allegroUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 				6B6E27021E288F8200F9CF66 /* allegroTests.swift */,
 				B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */,
 				6B4CFB561E4ACD900087CEA8 /* allegroExtensionTests.swift */,
+				B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */,
 				6B6E27041E288F8200F9CF66 /* Info.plist */,
 				47F8F36E1E59104200F959C9 /* testSimpleMeasure.swift */,
 			);
@@ -800,6 +803,7 @@
 				6B6E27031E288F8200F9CF66 /* allegroTests.swift in Sources */,
 				47F8F36F1E59104200F959C9 /* testSimpleMeasure.swift in Sources */,
 				B9AEF2811E40564900B0910E /* allegroViewModelTests.swift in Sources */,
+				B98BF2801E58FBEB000CCF3E /* MusicXMLTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
