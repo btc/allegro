@@ -8,91 +8,6 @@
 
 import Rational
 
-struct NotePos {
-    var pos: Rational
-    let note: Note
-
-    var start: Rational {
-        return pos
-    }
-
-    var end: Rational {
-        get {
-            return pos + note.duration
-        }
-        set(newEnd) {
-            pos = newEnd - note.duration
-        }
-    }
-
-    var duration: Rational {
-        return note.duration
-    }
-
-    func freespaceBetween(_ later: NotePos) -> FreePos? {
-        if later.pos - end > 0 {
-            return FreePos(pos: end, duration: later.pos - end)
-        }
-        return nil
-    }
-
-    func startsStrictlyAfter(_ position: Rational) -> Bool {
-        return position < start
-    }
-
-    func startsAtOrBefore(_ other: NotePos) -> Bool {
-        return start <= other.start
-    }
-
-    func lengthOfOverlap(with other: NotePos) -> Rational {
-        if !startsAtOrBefore(other) {
-            return other.lengthOfOverlap(with: self)
-        }
-        // this starts before or at the same place as the other NotePos
-        if other.end <= end {
-            return other.duration
-        }
-        return max(end - other.start, 0)
-    }
-
-    func overlaps(with other: NotePos) -> Bool {
-        return lengthOfOverlap(with: other) > 0
-    }
-}
-
-struct FreePos {
-    let pos: Rational
-    let duration: Rational
-
-    var start: Rational {
-        return pos
-    }
-
-    var end: Rational {
-        return pos + duration
-    }
-
-    func contains(_ position: Rational) -> Bool {
-        return start <= position && position <= end
-    }
-
-    func freespaceRight(of position: Rational) -> Rational {
-        return contains(position) ? end - position : 0
-    }
-
-    func freespaceLeft(of position: Rational) -> Rational {
-        return contains(position) ? position - start : 0
-    }
-
-    func startsAfter(_ position: Rational) -> Bool {
-        return position < start
-    }
-
-    func endsBefore(_ position: Rational) -> Bool {
-        return end < position
-    }
-}
-
 struct SimpleMeasure {
 
     static let defaultTimeSignature: Rational = 4/4
@@ -336,5 +251,90 @@ struct SimpleMeasure {
             }
         }
         return arr
+    }
+}
+
+struct NotePos {
+    var pos: Rational
+    let note: Note
+
+    var start: Rational {
+        return pos
+    }
+
+    var end: Rational {
+        get {
+            return pos + note.duration
+        }
+        set(newEnd) {
+            pos = newEnd - note.duration
+        }
+    }
+
+    var duration: Rational {
+        return note.duration
+    }
+
+    func freespaceBetween(_ later: NotePos) -> FreePos? {
+        if later.pos - end > 0 {
+            return FreePos(pos: end, duration: later.pos - end)
+        }
+        return nil
+    }
+
+    func startsStrictlyAfter(_ position: Rational) -> Bool {
+        return position < start
+    }
+
+    func startsAtOrBefore(_ other: NotePos) -> Bool {
+        return start <= other.start
+    }
+
+    func lengthOfOverlap(with other: NotePos) -> Rational {
+        if !startsAtOrBefore(other) {
+            return other.lengthOfOverlap(with: self)
+        }
+        // this starts before or at the same place as the other NotePos
+        if other.end <= end {
+            return other.duration
+        }
+        return max(end - other.start, 0)
+    }
+
+    func overlaps(with other: NotePos) -> Bool {
+        return lengthOfOverlap(with: other) > 0
+    }
+}
+
+struct FreePos {
+    let pos: Rational
+    let duration: Rational
+
+    var start: Rational {
+        return pos
+    }
+
+    var end: Rational {
+        return pos + duration
+    }
+
+    func contains(_ position: Rational) -> Bool {
+        return start <= position && position <= end
+    }
+
+    func freespaceRight(of position: Rational) -> Rational {
+        return contains(position) ? end - position : 0
+    }
+
+    func freespaceLeft(of position: Rational) -> Rational {
+        return contains(position) ? position - start : 0
+    }
+
+    func startsAfter(_ position: Rational) -> Bool {
+        return position < start
+    }
+
+    func endsBefore(_ position: Rational) -> Bool {
+        return end < position
     }
 }
