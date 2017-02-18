@@ -101,6 +101,7 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
     }
     
     func backButtonTapped() {
+<<<<<<< HEAD
         if !store.hasNotes() {
             guard let numerator = Int(pickerData[0][timeSigPickerView.selectedRow(inComponent: 0)]) else {return}
             guard let denominator = Int(pickerData[1][timeSigPickerView.selectedRow(inComponent: 1)]) else {return}
@@ -108,6 +109,10 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
                 store.part.setTimeSignature(timeSignature: curTime)
             }
         }
+=======
+        let curTime = Rational(Int(pickerData[0][timeSigPickerView.selectedRow(inComponent: 0)])!, Int(pickerData[1][timeSigPickerView.selectedRow(inComponent: 1)])!)
+        store.part.setTimeSignature(timeSignature: curTime!)
+>>>>>>> RH menu updates to current time Signature for the part whenever changed
         
         let _ = navigationController?.popViewController(animated: true)
     }
