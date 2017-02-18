@@ -100,7 +100,20 @@ struct SimpleMeasure {
 
     var keySignature: Key // eg. G Major or d minor
     var timeSignature: Rational
-    private(set) var notes: [NotePos] = []
+
+    private(set) var freespace: Rational
+
+    private(set) var frees: [FreePos] = [] {
+        didSet {
+            freespace = frees.reduce(0) { $0 + $1.duration }
+        }
+    }
+
+    private(set) var notes: [NotePos] = [] {
+        didSet {
+            frees = computeFrees()
+        }
+    }
 
     var capacity: Rational {
         return timeSignature
@@ -114,48 +127,17 @@ struct SimpleMeasure {
         return timeSignature
     }
 
-    var frees: [FreePos] {
-
-        if notes.isEmpty {
-            return [FreePos(pos: start, duration: capacity)]
-        }
-
-        var arr: [FreePos] = []
-        for (i, np) in notes.enumerated() {
-
-
-            if i == notes.startIndex { // if first note isn't at position 0, add the free space that runs up to the start of the note
-
-                // first
-                if np.pos != 0 {
-                    arr.append(FreePos(pos: 0, duration: np.pos))
-                }
-            } else { // otherwise add the space between the last note and the next note
-
-                // middle: add space to the left of current |np|
-                if let fp = notes[i-1].freespaceBetween(np) {
-                    arr.append(fp)
-                }
-            }
-
-            if (i == notes.endIndex - 1) { // add the space after the end of the note if space exists
-
-                // last: add space to the right of current |np|
-                if np.end < end {
-                    arr.append(FreePos(pos: np.end, duration: end - np.end))
-                }
-            }
-        }
-        return arr
-    }
-
-    var freespace: Rational {
-        return frees.reduce(0) { $0 + $1.duration }
-    }
-
     init(timeSignature: Rational = SimpleMeasure.defaultTimeSignature, keySignature: Key = .cMajor) {
         self.timeSignature = timeSignature
         self.keySignature = keySignature
+
+        // didSet callbacks are not triggered in constructors, so we have to manually initialize the freespace
+        // we cannot call computeFrees() until all properties are initialized, so we initialize them to junk values to
+        // appease the compiler
+        frees = []
+        freespace = 0
+        frees = computeFrees()
+        freespace = frees.reduce(0) { $0 + $1.duration }
     }
 
     func note(at position: Rational) -> Note? {
@@ -320,5 +302,39 @@ struct SimpleMeasure {
             }
         }
         return match
+    }
+
+    private func computeFrees() -> [FreePos] {
+        if notes.isEmpty {
+            return [FreePos(pos: start, duration: capacity)]
+        }
+
+        var arr: [FreePos] = []
+        for (i, np) in notes.enumerated() {
+
+
+            if i == notes.startIndex { // if first note isn't at position 0, add the free space that runs up to the start of the note
+
+                // first
+                if np.pos != 0 {
+                    arr.append(FreePos(pos: 0, duration: np.pos))
+                }
+            } else { // otherwise add the space between the last note and the next note
+
+                // middle: add space to the left of current |np|
+                if let fp = notes[i-1].freespaceBetween(np) {
+                    arr.append(fp)
+                }
+            }
+
+            if (i == notes.endIndex - 1) { // add the space after the end of the note if space exists
+
+                // last: add space to the right of current |np|
+                if np.end < end {
+                    arr.append(FreePos(pos: np.end, duration: end - np.end))
+                }
+            }
+        }
+        return arr
     }
 }
