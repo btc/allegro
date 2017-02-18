@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Rational
 
 class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     
@@ -49,6 +50,14 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         return tb
     }()
     
+    init(store: PartStore) {
+        self.store = store
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) not supported")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +109,9 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
     }
     
     func backButtonTapped() {
+        let curTime = Rational(Int(pickerData[0][timeSigPickerView.selectedRow(inComponent: 0)])!, Int(pickerData[1][timeSigPickerView.selectedRow(inComponent: 1)])!)
+        store.part.setTimeSignature(timeSignature: curTime!)
+        
         let _ = navigationController?.popViewController(animated: true)
     }
     

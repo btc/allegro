@@ -34,7 +34,8 @@ class SideMenuViewController: UIViewController {
     private let timeSignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "timesig34"), for: UIControlState.normal)
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE)
         return v
     }()
     
@@ -144,11 +145,14 @@ class SideMenuViewController: UIViewController {
                              width: parent.width / CGFloat(signatureButtonBlocks.count),
                              height: buttonBlocksHeight)
         }
+        
+        timeSignature.setTitle(store.part.getTimeSignature().description, for: .normal)
     }
 
     func updateUI() {
         editButton.isSelected = store.mode == .edit
         eraseButton.isSelected = store.mode == .erase
+        timeSignature.setTitle(store.part.getTimeSignature().description, for: .normal)
     }
     func eraseButtonTapped() {
         store.mode = .erase
