@@ -29,7 +29,7 @@ class allegroExtensionTests: XCTestCase {
         ]
 
         for (i, c) in testCases.enumerated() {
-            XCTAssert(c.input.indexOfFirstMatch(condition: c.condition) == c.expectation, "\(i)")
+            XCTAssert(c.input.indexOfFirstMatch(c.condition) == c.expectation, "\(i)")
         }
     }
 
