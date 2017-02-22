@@ -19,7 +19,9 @@ class MusicXMLParser {
 
     // also called ticks per quarter note. 4 because the minimum note is 1/16
     private let divisionsPerQuarterNote: Rational = 4
-    
+
+    // generate partDoc from the music model in the Store
+    // traverses each Note in each Measure in the Part
     fileprivate func generate() {
 
         partDoc = AEXMLDocument()
@@ -78,6 +80,20 @@ class MusicXMLParser {
         }
     }
 
+    // parses an XML document and creates a Part with Measures and Notes
+    fileprivate func parse(partDoc: AEXMLDocument) -> Part {
+
+        // TODO check the doctype
+
+        let part = Part()
+
+        for child in partDoc.children {
+            // TODO
+        }
+
+        return part
+    }
+
     func save(filename: String) {
         // TODO write to disk
 
@@ -85,6 +101,14 @@ class MusicXMLParser {
 
         let msg: String = "\n" + partDoc.xml + "\n"
         Log.info?.message(msg)
+    }
+
+    func load(filename: String) {
+        // TODO read from disk
+
+        Log.info?.message("reading MusicXML from \(filename)")
+
+//        let xmlDoc = try AEXMLDocument(xml: data, options: options)
     }
     
     init(store: PartStore) {
