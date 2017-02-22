@@ -214,6 +214,75 @@ struct MeasureGeometry {
         return Int(percent.double * slots)
     }
     
+    typealias Interval = (start: CGFloat, end: CGFloat)
+    
+    // whitespace is the region between the notes that are not covered by the bounding boxes
+    func computeWhitespace(measure: MeasureViewModel) -> [Interval] {
+        var whitespace = [Interval]()
+        var blackspace = [Interval(0, 0)]
+        
+        var totalBlackspace = CGFloat(0)
+        let defaultWidth = state.visibleSize.width
+        
+        guard measure.notes.count > 0 else { return [(CGFloat(0), defaultWidth)] }
+        let g = noteGeometry
+        var last = CGFloat(0)
+        
+        // Calculate the whitespace intervals between notes if there are any
+        // Also merges consecutive notes into contiguous interval
+        for note in measure.notes {
+            let noteCenterX = Rational(Int(defaultWidth)) * note.position / measure.timeSignature
+            let bbox = g.getBoundingBox(note: note)
+            
+            var defaultX = noteCenterX.cgFloat - bbox.size.width / 2
+            
+            if defaultX > last {
+                whitespace.append(Interval(last, defaultX))
+                blackspace.append(Interval(defaultX, defaultX))
+            } else {
+                defaultX = last
+                blackspace[-1].end = defaultX + bbox.width
+            }
+            
+            last = defaultX + bbox.width
+            totalBlackspace += bbox.width
+        }
+        
+        if last < defaultWidth {
+            whitespace.append(Interval(last, defaultWidth))
+        } else {
+            whitespace.append(Interval(last, last))
+        }
+        
+        if totalBlackspace < defaultWidth {
+            let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
+            let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
+            
+            var defaultWhitespaceBefore = CGFloat(0)
+            var shrunkWhitespaceBefore = CGFloat(0)
+            
+            whitespace = whitespace.enumerated().map { (i: Int, ws: Interval) in
+                let diff = ws.end - ws.start
+                
+                defaultWhitespaceBefore += diff
+                shrunkWhitespaceBefore += diff * whitespaceScaling
+                
+                let start = ws.start - defaultWhitespaceBefore - shrunkWhitespaceBefore
+                let end = start + diff * whitespaceScaling
+                
+                
+                // blackspace[i] refers to the blackspace immediately following the whitespace
+                let blackSize = blackspace[i].end - blackspace[i].start
+                blackspace[i].start = end
+                blackspace[i].start = end + blackSize
+                
+                return Interval(start, end)
+            }
+        }
+        
+        return whitespace;
+    }
+    
     func generateSpacing(measure: MeasureViewModel) -> [CGFloat] {
         let geometry = noteGeometry
         let timeSignature = measure.timeSignature
