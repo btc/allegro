@@ -20,7 +20,7 @@ class MusicXMLParser {
     // also called ticks per quarter note. 4 because the minimum note is 1/16
     private let divisionsPerQuarterNote: Rational = 4
     
-    fileprivate func parse() {
+    fileprivate func generate() {
 
         partDoc = AEXMLDocument()
 
@@ -96,6 +96,6 @@ class MusicXMLParser {
 extension MusicXMLParser: PartStoreObserver {
     func partStoreChanged() {
         Log.info?.message("MusicXMLParser re-parsing")
-        parse()
+        generate()
     }
 }
