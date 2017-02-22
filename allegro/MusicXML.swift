@@ -51,7 +51,7 @@ class MusicXMLParser {
             let _ = attributes.addChild(name: "divisions", value: "\(divisionsPerQuarterNote.numerator)")
 
             let key = attributes.addChild(name: "key")
-            let _ = key.addChild(name: "fifths", value: "\(m.key.fifths)")
+            let _ = key.addChild(name: "fifths", value: "\(m.keySignature.fifths)")
 
             let time = attributes.addChild(name: "time")
             let _ = time.addChild(name: "beats", value: "\(m.timeSignature.numerator)")
@@ -61,8 +61,10 @@ class MusicXMLParser {
             let _ = clef.addChild(name: "sign", value: "G")
             let _ = clef.addChild(name: "line", value: "2")
 
-            for (_,n) in m.notes {
+            for notePos in m.notes {
                 // make a new note
+
+                let n = notePos.note
 
                 let note = measure.addChild(name: "note")
 
