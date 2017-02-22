@@ -14,20 +14,15 @@ import AEXML
 import Rational
 
 class MusicXMLParser {
-    var store: PartStore {
-        willSet {
-            store.unsubscribe(self)
-        }
-        didSet {
-            store.subscribe(self)
-        }
-    }
+    var store: PartStore
     var partDoc: AEXMLDocument = AEXMLDocument()
 
     // also called ticks per quarter note. 4 because the minimum note is 1/16
     private let divisionsPerQuarterNote: Rational = 4
     
     fileprivate func parse() {
+
+        partDoc = AEXMLDocument()
 
         //TODO add doctype, but not as a child because we don't want /> at the end
 //        let doctypeString = "!DOCTYPE score-partwise PUBLIC \"-//Recordare//DTD MusicXML 3.0 Partwise//EN\" \"http://www.musicxml.org/dtds/partwise.dtd\""
@@ -41,7 +36,11 @@ class MusicXMLParser {
         
         let part = score_partwise.addChild(name: "part", attributes: ["id:": "P1"])
 
+        // TODO: beams, flipped, triplets, ties
+        // TODO: don't include last measure if it is empty
+
         for (i,m) in store.part.measures.enumerated() {
+
             // make a new measure
             let measure = part.addChild(name: "measure", attributes: ["number": "\(i+1)"])
             let attributes = measure.addChild(name: "attributes")
@@ -82,19 +81,20 @@ class MusicXMLParser {
     func save(filename: String) {
         // TODO write to disk
 
+        Log.info?.message("saving MusicXML to \(filename)")
+
         let msg: String = "\n" + partDoc.xml + "\n"
-        print(msg)
+        Log.info?.message(msg)
     }
     
     init(store: PartStore) {
         self.store = store
-        parse()
+        store.subscribe(self)
     }
 }
 
 extension MusicXMLParser: PartStoreObserver {
     func partStoreChanged() {
-        // TODO this doesn't get called!
         Log.info?.message("MusicXMLParser re-parsing")
         parse()
     }
