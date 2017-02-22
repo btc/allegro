@@ -123,37 +123,38 @@ struct MeasureGeometry {
         return arr
     }
 
-    func verticalGridlines(measure: MeasureViewModel) -> [Line] {
-        let spacing = generateSpacing(measure: measure)
-        let offsets = spacing.enumerated().map {spacing[0..<$0.0].reduce(0, +)}
-        
-        let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
-        return lines
-    }
-    
-    func findSlot(slots: [CGFloat], position: CGFloat) -> Int {
-        var pos = position
-        for (index, element) in slots.enumerated() {
-            pos -= element
-            if pos < CGFloat(0) {
-                return index
-            }
+    func verticalGridlines(timeSignature: Rational, selectedNoteDuration: Rational) -> [Line] {
+
+        var arr = [Line]()
+
+        let numSlots = numGridSlots(timeSignature: timeSignature, noteDuration: selectedNoteDuration)
+        let numGridlines: Int = numSlots - 1 // number of fence posts. we ignore the two end posts.
+
+        // right now, grid lines are evenly-spaced. this will no longer be true once we expand the grid slots to
+        // provide more physical space to notes of shorter durations. 
+        // Remember, we're going to enforce a minimum slot size and right here is where it's going to happen.
+
+        let gridlineOffset = totalWidth / CGFloat(numSlots)
+
+        for i in stride(from: 0, to: numGridlines, by: 1) {
+
+            let x = gridlineOffset * CGFloat(i + 1)
+            let start = CGPoint(x: x, y: 0)
+            let end = CGPoint(x: x, y: totalHeight)
+            arr.append(Line(start, end))
         }
-        
-        return -1
+        return arr
     }
 
-    func touchGuideRect(measure: MeasureViewModel,
-                        location: CGPoint,
-                        timeSignature: Rational) -> CGRect {
+    func touchGuideRect(location: CGPoint,
+                          timeSignature: Rational,
+                          noteDuration: Rational) -> CGRect {
 
-        let spacing = generateSpacing(measure: measure)
-        let slot = findSlot(slots: spacing, position: location.x)
-        
-        let size = CGSize(width: spacing[slot], height: staffHeight)
+        let spacingBetweenGridlines = verticalGridlineSpacing(timeSignature: timeSignature, noteDuration: noteDuration)
 
-        
-        let originX = spacing[0..<slot].reduce(0, +)
+        let size = CGSize(width: spacingBetweenGridlines, height: staffHeight)
+
+        let originX = location.x - location.x.truncatingRemainder(dividingBy: spacingBetweenGridlines)
         let originY = location.y - location.y.truncatingRemainder(dividingBy: heightOfSemitone) + DEFAULT_MARGIN_PTS  - size.height / 2
 
         let origin = CGPoint(x: originX, y: originY)
@@ -161,13 +162,15 @@ struct MeasureGeometry {
         return CGRect(origin: origin, size: size)
     }
 
-    func touchRemainedInPosition(measure: MeasureViewModel,
-                                 start: CGPoint,
-                                 end: CGPoint) -> Bool {
-        let startPos = pointToPositionInTime(measure: measure,
-                                             x: start.x)
-        let endPos = pointToPositionInTime(measure: measure,
-                                           x: end.x)
+    func touchRemainedInPosition(start: CGPoint,
+                                 end: CGPoint,
+                                 timeSignature: Rational,
+                                 noteDuration: Rational) -> Bool {
+
+        let startPos = pointToPositionInTime(x: start.x,
+                                             timeSignature: timeSignature)
+        let endPos = pointToPositionInTime(x: end.x,
+                                           timeSignature: timeSignature)
         return startPos == endPos
     }
 
@@ -175,8 +178,8 @@ struct MeasureGeometry {
         return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch) - noteHeight / 2
     }
 
-    func noteX(spacing: [CGFloat], slot: Int) -> CGFloat {
-        return spacing[0..<slot].reduce(0, +)
+    func noteX(position: Rational, timeSignature: Rational) -> CGFloat {
+        return position.cgFloat / timeSignature.cgFloat * totalWidth
     }
 
     func noteStemEnd(pitch: Int, originY y: CGFloat) -> CGFloat {
@@ -188,46 +191,18 @@ struct MeasureGeometry {
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / heightOfSemitone + numSpacesBetweenAllLines))
     }
 
-    func pointToPositionInTime(measure: MeasureViewModel,
-                               x: CGFloat) -> Rational {
-
-        let numPositionsInTime = numGridSlots(timeSignature: measure.timeSignature)
-        let spacing = generateSpacing(measure: measure)
-        
-        let slot = findSlot(slots: spacing, position: x)
-        let startSlot = spacing[0..<slot].reduce(0, +)
-        
-        return Rational(Int(x - startSlot)) / (measure.timeSignature / Rational(numPositionsInTime))
+    func pointToPositionInTime(x: CGFloat,
+                               timeSignature: Rational) -> Rational {
+        let ratioOfScreenWidth: Rational = Rational(Int(x), Int(totalWidth)) ?? 0
+        return (ratioOfScreenWidth * timeSignature).lowestTerms
     }
 
-    private func numGridSlots(timeSignature: Rational) -> Int {
-        return (timeSignature / state.selectedNoteDuration).intApprox
+    private func numGridSlots(timeSignature: Rational, noteDuration: Rational) -> Int {
+        return (timeSignature / noteDuration).intApprox
     }
 
-    private func verticalGridlineSpacing(timeSignature: Rational) -> CGFloat {
-        return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature))
-    }
-    
-    func noteToSlot(position: Rational, timeSig: Rational) -> Int {
-        let slots = Double(numGridSlots(timeSignature: timeSig))
-        let percent = position / timeSig
-        return Int(percent.double * slots)
-    }
-    
-    func generateSpacing(measure: MeasureViewModel) -> [CGFloat] {
-        let geometry = noteGeometry
-        let timeSignature = measure.timeSignature
-        
-        var spacing = (0..<numGridSlots(timeSignature: timeSignature))
-            .map {_ in verticalGridlineSpacing(timeSignature: timeSignature) }
-        
-        for note in measure.notes {
-            let slot = noteToSlot(position: note.position, timeSig: timeSignature)
-            let width = geometry.getBoundingBox(note: note).size.width
-            spacing[slot] = max(width, spacing[slot])
-        }
-        
-        return spacing
+    private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
+        return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration))
     }
 }
 

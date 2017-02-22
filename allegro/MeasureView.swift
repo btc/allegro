@@ -66,11 +66,6 @@ class MeasureView: UIView {
         return gr
     }()
 
-    fileprivate let touchGuide: UIView = {
-        let v = MeasureTouchGuide()
-        return v
-    }()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -138,14 +133,14 @@ class MeasureView: UIView {
         UIColor.lightGray.setStroke()
         path.stroke()
     }
-    
+
     private func drawVerticalGridlines(rect: CGRect) {
         guard let store = store, let index = index else { return }
-        
+
         let measure = store.measure(at: index)
-        
-        let lines = geometry.verticalGridlines(measure: measure)
-        
+
+        let lines = geometry.verticalGridlines(timeSignature: measure.timeSignature,
+                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         let path = UIBezierPath()
 
         for (start, end) in lines {
@@ -165,7 +160,6 @@ class MeasureView: UIView {
         super.layoutSubviews()
         
         subviews.forEach { $0.removeFromSuperview() }
-        addSubview(touchGuide)
 
         guard let store = store, let index = index else { return }
 
@@ -188,26 +182,19 @@ class MeasureView: UIView {
             addSubview(v)
         }
         
-        let ts = measureVM.timeSignature
-        let spacing = geometry.generateSpacing(measure: measureVM)
-        
+
+        // we're barring all the notes for now
         for noteView in noteViews {
-            let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts)
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = geometry.noteX(spacing: spacing, slot: slot)
+            let x = geometry.noteX(position: noteView.note.position,
+                                   timeSignature: measureVM.timeSignature)
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
+            noteView.noteOrigin = CGPoint(x: x, y: y)
+            //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = true//false
-            
-            var noteGeometry = noteView.geometry
-            
-            // we still need to handle multiple notes in one column and lay them one after each other
-            // but for now we just lay them overlapping
-            let origin = CGPoint(x: x + spacing[slot] - noteGeometry.frame.size.width, y: y)
-            noteGeometry.origin = origin
-            noteView.frame = noteGeometry.frame
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)
@@ -259,7 +246,7 @@ class MeasureView: UIView {
             }
         }
         
-
+        // don't draw bars for now since its extremely buggy
         barLayer.path = barPath.cgPath
         barLayer.fillColor = UIColor.black.cgColor
 
@@ -268,15 +255,25 @@ class MeasureView: UIView {
             noteView.computePaths()
         }
     }
-    
-
 
     func getAccidentalLabel(noteView: NoteView) -> UILabel? {
         guard noteView.note.displayAccidental else { return nil }
         let accidental = noteView.note.accidental
+
+        let center = CGPoint(x: noteView.frame.origin.x,
+                             y: noteView.frame.origin.y + noteView.frame.size.height / 2)
+
+        let info = accidental.infos
+
+        let offset = info.1
+
+        let size = CGSize(width: 50, height: 60)
+        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
+                             y: center.y - size.height / 2 + offset.y)
+
         let label = UILabel()
-        label.frame = noteView.geometry.getAccidentalFrame(note: noteView.note)
-        label.text = accidental.infos.0
+        label.frame = CGRect(origin: origin, size: size)
+        label.text = info.0
         label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right
         return label
@@ -311,8 +308,8 @@ class MeasureView: UIView {
 
         // determine position
         let measure = store.measure(at: index)
-        let position = geometry.pointToPositionInTime(measure: measure,
-                                                      x: location.x)
+        let position = geometry.pointToPositionInTime(x: location.x,
+                                                      timeSignature: measure.timeSignature)
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
@@ -330,25 +327,19 @@ class MeasureView: UIView {
         guard store?.mode == .edit else { return }
 
         guard let store = store, let index = index else { return }
-        let measure = store.measure(at: index)
-        let ts = measure.timeSignature
+        let ts = store.measure(at: index).timeSignature
+        let d = store.selectedNoteValue.nominalDuration
 
         if sender.state == .ended {
             let end = sender.location(in: self)
             let start = end - sender.translation(in: self)
-            if geometry.touchRemainedInPosition(measure: measure,
-                                                start: start,
-                                                end: end) {
+            if geometry.touchRemainedInPosition(start: start,
+                                                end: end,
+                                                timeSignature: ts,
+                                                noteDuration: d) {
                 editTap(sender: sender)
             }
-        } else if sender.state == .changed {
-            let rect = geometry.touchGuideRect(measure: measure,
-                                               location: sender.location(in: self),
-                                               timeSignature: ts)
-            touchGuide.frame = rect
         }
-
-        touchGuide.isHidden = sender.state != .changed
     }
 }
 
