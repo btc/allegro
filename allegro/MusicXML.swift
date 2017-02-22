@@ -82,15 +82,38 @@ class MusicXMLParser {
         }
     }
 
+    private func addMeasure(measureElement: AEXMLElement) -> SimpleMeasure {
+        var measure = SimpleMeasure()
+        for child in measureElement.children {
+            switch child.name {
+            case "key":
+                guard let keySigString = child.value else {continue}
+                guard let keySigInt = Int(keySigString) else {continue}
+                measure.keySignature.fifths = keySigInt
+            default: continue
+            }
+        }
+        return measure
+    }
+    
     // parses an XML document and creates a Part with Measures and Notes
-    fileprivate func parse(partDoc: AEXMLDocument) -> Part {
+    func parse(partDoc: AEXMLDocument) -> Part {
 
         // TODO check the doctype
 
         let part = Part()
 
         for child in partDoc.children {
-            // TODO
+            switch child.name {
+            case "part-name":
+                if let value = child.value {
+                    part.title = value
+                }
+            case "measure":
+                let measure = addMeasure(measureElement: child)
+                part.addMeasure(measure: measure)
+            default: continue
+            }
         }
 
         return part

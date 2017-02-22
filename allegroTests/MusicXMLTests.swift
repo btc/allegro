@@ -23,7 +23,7 @@ class musicXMLTests: XCTestCase {
         super.tearDown()
     }
 
-    func testParse() {
+    func testGenerate() {
         let part = Part()
         let store = PartStore(part: part)
         let parser = MusicXMLParser(store: store)
@@ -33,6 +33,24 @@ class musicXMLTests: XCTestCase {
         let _ = store.insert(note: n0, intoMeasureIndex: 0, at: 1/4)
 
         parser.save(filename: "test.xml")
+    }
+    
+    func testParse() {
+        let part = Part()
+        let store = PartStore(part: part)
+        let parser = MusicXMLParser(store: store)
+        
+        let n0 = Note(value: .quarter, letter: .A, octave: 4)
+        let _ = store.insert(note: n0, intoMeasureIndex: 0, at: 1/4)
+        
+        let partDoc = parser.partDoc
+        
+        let parser2 = MusicXMLParser(store: PartStore(part: Part()))
+        let newPart = parser2.parse(partDoc)
+        
+        for m in newPart.measures {
+            // todo
+        }
     }
 
 }
