@@ -7,5 +7,15 @@
 //
 
 class Triplet {
+    let notes: [Note] = [Note]()
     
+    init(notesArr: [Note]) {
+        self.notes = notesArr
+    }
+    
+    func isEmpty() -> Bool {
+        // find any non-rests
+        let results = notes.filter {$0.rest == false}
+        return results.isEmpty
+    }
 }
