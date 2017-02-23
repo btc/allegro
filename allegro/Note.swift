@@ -15,14 +15,26 @@ class Note {
     // Accidentals are semitone modifiers that do not affect the vertical placement of the note on the staff
     // See #42 for more information
     // Updated Letter to include String backing for cases when processing requires using a String
-    enum Letter : Int, CustomStringConvertible {
-        case C = 0
-        case D = 1
-        case E = 2
-        case F = 3
-        case G = 4
-        case A = 5
-        case B = 6
+    enum Letter : String, CustomStringConvertible {
+        case C = "C"
+        case D = "D"
+        case E = "E"
+        case F = "F"
+        case G = "G"
+        case A = "A"
+        case B = "B"
+
+        var pitch: Int {
+            switch self {
+            case .C: return 0
+            case .D: return 1
+            case .E: return 2
+            case .F: return 3
+            case .G: return 4
+            case .A: return 5
+            case .B: return 6
+            }
+        }
         
         var description: String {
             switch self {
