@@ -46,7 +46,7 @@ class NoteViewModel {
             let octaveDiff = 7 * (5 - note.octave)
             
             // +1 is because we're counting from C5 but we want the center at B4
-            return note.letter.rawValue - octaveDiff + 1
+            return note.letter.pitch - octaveDiff + 1
         }
     }
 
