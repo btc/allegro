@@ -60,18 +60,13 @@ class Note {
     // Value represents the glyph that is drawn on screen, not the true duration of the note.
     // The true duration may be modified by dots or triplets, but the glyph is the same.
     // See https://en.wikipedia.org/wiki/Note_value
-    enum Value: CustomStringConvertible {
-        case whole, half, quarter, eighth, sixteenth
+    enum Value: String {
+        case whole = "whole"
+        case half = "half"
+        case quarter = "quarter"
+        case eighth = "eighth"
+        case sixteenth = "sixteenth"
 
-        var description: String {
-            switch self {
-            case .whole: return "whole"
-            case .half: return "half"
-            case .quarter: return "quarter"
-            case .eighth: return "eighth"
-            case .sixteenth: return "sixteenth"
-            }
-        }
         var nominalDuration: Rational {
             switch self {
             case .whole: return 1
