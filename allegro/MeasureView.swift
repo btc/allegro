@@ -66,11 +66,6 @@ class MeasureView: UIView {
         return gr
     }()
 
-    fileprivate let touchGuide: UIView = {
-        let v = MeasureTouchGuide()
-        return v
-    }()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -165,7 +160,6 @@ class MeasureView: UIView {
         super.layoutSubviews()
         
         subviews.forEach { $0.removeFromSuperview() }
-        addSubview(touchGuide)
 
         guard let store = store, let index = index else { return }
 
@@ -189,14 +183,14 @@ class MeasureView: UIView {
         }
         
         let ts = measureVM.timeSignature
-        let spacing = geometry.generateSpacing(measure: measureVM)
+        let spacing = geometry.computeNoteSpacing(measure: measureVM)
         
-        for noteView in noteViews {
+        for (i, noteView) in noteViews.enumerated() {
             let slot = geometry.noteToSlot(position: noteView.note.position, timeSig: ts)
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = geometry.noteX(spacing: spacing, slot: slot)
+            let x = spacing[i].start
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
             noteView.shouldDrawFlag = true//false
@@ -205,8 +199,7 @@ class MeasureView: UIView {
             
             // we still need to handle multiple notes in one column and lay them one after each other
             // but for now we just lay them overlapping
-            let origin = CGPoint(x: x + spacing[slot] - noteGeometry.frame.size.width, y: y)
-            noteGeometry.origin = origin
+            noteGeometry.origin = CGPoint(x: x, y: y)
             noteView.frame = noteGeometry.frame
 
             if let a = getAccidentalLabel(noteView: noteView) {
@@ -331,7 +324,6 @@ class MeasureView: UIView {
 
         guard let store = store, let index = index else { return }
         let measure = store.measure(at: index)
-        let ts = measure.timeSignature
 
         if sender.state == .ended {
             let end = sender.location(in: self)
@@ -341,14 +333,7 @@ class MeasureView: UIView {
                                                 end: end) {
                 editTap(sender: sender)
             }
-        } else if sender.state == .changed {
-            let rect = geometry.touchGuideRect(measure: measure,
-                                               location: sender.location(in: self),
-                                               timeSignature: ts)
-            touchGuide.frame = rect
         }
-
-        touchGuide.isHidden = sender.state != .changed
     }
 }
 

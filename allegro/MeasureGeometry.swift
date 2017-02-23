@@ -123,9 +123,9 @@ struct MeasureGeometry {
         return arr
     }
 
+    // uh this doesn't really do anything but we'll just delete some time later
     func verticalGridlines(measure: MeasureViewModel) -> [Line] {
-        let spacing = generateSpacing(measure: measure)
-        let offsets = spacing.enumerated().map {spacing[0..<$0.0].reduce(0, +)}
+        let offsets = [CGFloat]()
         
         let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
         return lines
@@ -141,24 +141,6 @@ struct MeasureGeometry {
         }
         
         return -1
-    }
-
-    func touchGuideRect(measure: MeasureViewModel,
-                        location: CGPoint,
-                        timeSignature: Rational) -> CGRect {
-
-        let spacing = generateSpacing(measure: measure)
-        let slot = findSlot(slots: spacing, position: location.x)
-        
-        let size = CGSize(width: spacing[slot], height: staffHeight)
-
-        
-        let originX = spacing[0..<slot].reduce(0, +)
-        let originY = location.y - location.y.truncatingRemainder(dividingBy: heightOfSemitone) + DEFAULT_MARGIN_PTS  - size.height / 2
-
-        let origin = CGPoint(x: originX, y: originY)
-
-        return CGRect(origin: origin, size: size)
     }
 
     func touchRemainedInPosition(measure: MeasureViewModel,
@@ -190,14 +172,7 @@ struct MeasureGeometry {
 
     func pointToPositionInTime(measure: MeasureViewModel,
                                x: CGFloat) -> Rational {
-
-        let numPositionsInTime = numGridSlots(timeSignature: measure.timeSignature)
-        let spacing = generateSpacing(measure: measure)
-        
-        let slot = findSlot(slots: spacing, position: x)
-        let startSlot = spacing[0..<slot].reduce(0, +)
-        
-        return Rational(Int(x - startSlot)) / (measure.timeSignature / Rational(numPositionsInTime))
+        return Rational(Int(x), Int(totalWidth))! * measure.timeSignature
     }
 
     private func numGridSlots(timeSignature: Rational) -> Int {
@@ -217,14 +192,14 @@ struct MeasureGeometry {
     typealias Interval = (start: CGFloat, end: CGFloat)
     
     // whitespace is the region between the notes that are not covered by the bounding boxes
-    func computeWhitespace(measure: MeasureViewModel) -> [Interval] {
+    func computeNoteSpacing(measure: MeasureViewModel) -> [Interval]{
         var whitespace = [Interval]()
-        var blackspace = [Interval(0, 0)]
+        var blackspace = [Interval]()
         
         var totalBlackspace = CGFloat(0)
         let defaultWidth = state.visibleSize.width
         
-        guard measure.notes.count > 0 else { return [(CGFloat(0), defaultWidth)] }
+        guard measure.notes.count > 0 else { return [Interval]() }
         let g = noteGeometry
         var last = CGFloat(0)
         
@@ -234,69 +209,44 @@ struct MeasureGeometry {
             let noteCenterX = Rational(Int(defaultWidth)) * note.position / measure.timeSignature
             let bbox = g.getBoundingBox(note: note)
             
-            var defaultX = noteCenterX.cgFloat - bbox.size.width / 2
-            
-            if defaultX > last {
-                whitespace.append(Interval(last, defaultX))
-                blackspace.append(Interval(defaultX, defaultX))
-            } else {
-                defaultX = last
-                blackspace[-1].end = defaultX + bbox.width
-            }
+            let defaultX = max(last,noteCenterX.cgFloat - bbox.size.width / 2)
+            whitespace.append(Interval(last, defaultX))
+            blackspace.append(Interval(defaultX, defaultX + bbox.width))
             
             last = defaultX + bbox.width
             totalBlackspace += bbox.width
         }
         
+        // add the whitespace after the last note
         if last < defaultWidth {
             whitespace.append(Interval(last, defaultWidth))
-        } else {
-            whitespace.append(Interval(last, last))
         }
         
-        if totalBlackspace < defaultWidth {
-            let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
+        let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
+        
+        if totalWhitespace > 0 && totalBlackspace < defaultWidth {
             let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
             
-            var defaultWhitespaceBefore = CGFloat(0)
-            var shrunkWhitespaceBefore = CGFloat(0)
+            var whitespaceBefore = CGFloat(0)
             
-            whitespace = whitespace.enumerated().map { (i: Int, ws: Interval) in
-                let diff = ws.end - ws.start
+            for (i, space) in whitespace.enumerated() {
+                let diff = (space.end - space.start) * whitespaceScaling
+                let start = whitespaceBefore
+                let end = space.start + diff
                 
-                defaultWhitespaceBefore += diff
-                shrunkWhitespaceBefore += diff * whitespaceScaling
-                
-                let start = ws.start - defaultWhitespaceBefore - shrunkWhitespaceBefore
-                let end = start + diff * whitespaceScaling
-                
-                
-                // blackspace[i] refers to the blackspace immediately following the whitespace
-                let blackSize = blackspace[i].end - blackspace[i].start
-                blackspace[i].start = end
-                blackspace[i].start = end + blackSize
-                
-                return Interval(start, end)
+                whitespaceBefore += diff
+                whitespace[i] = Interval(start, end)
+            }
+            
+            blackspace = blackspace.enumerated().map {
+                Interval(
+                    whitespace[$0].end,
+                    whitespace[$0].end + $1.end - $1.start
+                )
             }
         }
         
-        return whitespace;
-    }
-    
-    func generateSpacing(measure: MeasureViewModel) -> [CGFloat] {
-        let geometry = noteGeometry
-        let timeSignature = measure.timeSignature
-        
-        var spacing = (0..<numGridSlots(timeSignature: timeSignature))
-            .map {_ in verticalGridlineSpacing(timeSignature: timeSignature) }
-        
-        for note in measure.notes {
-            let slot = noteToSlot(position: note.position, timeSig: timeSignature)
-            let width = geometry.getBoundingBox(note: note).size.width
-            spacing[slot] = max(width, spacing[slot])
-        }
-        
-        return spacing
+        return blackspace
     }
 }
 
