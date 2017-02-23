@@ -82,14 +82,18 @@ class Note {
     var octave: Int
     var accidental: Accidental
     var rest: Bool // true if the Note is a rest
+    weak var tie: Tie? // holds a reference to a Tie if this Note belongs to one
+    weak var triplet: Triplet? // holds a reference to a Triplet if this Note belongs to one
 
-    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
+    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false, tie: Tie? = nil, triplet: Triplet? = nil) {
         self.value = value
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
         self.rest = rest
         self.dot = .none
+        self.tie = tie
+        self.triplet = triplet
     }
     
     static func == (lhs: Note, rhs: Note) -> Bool {

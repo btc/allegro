@@ -15,5 +15,7 @@ class Tie {
     init(startNote: Note, endNote: Note) {
         self.start = startNote
         self.end = endNote
+        startNote.tie = self
+        endNote.tie = self
     }
 }

@@ -10,11 +10,20 @@ import Rational
 class Triplet {
     let notes: [Note]   // keep track of notes in the triplet
     let realDuration: Rational  //duration of each note in the triplet
-    init?(note1: Note, note2: Note, note3: Note, nominalDuration: Rational) {
-        guard(note1.duration == note2.duration && note2.duration == note3.duration) else {
+    let nominalDuration: Rational
+    init?(notesArr: [Note]) {
+        guard(notesArr[0].duration == notesArr[1].duration && notesArr[1].duration == notesArr[2].duration)
+        else {
             return nil
         }
-        self.notes = [Note](arrayLiteral: note1, note2, note3)
+        self.notes = notesArr
+        self.nominalDuration = notes[0].duration
         self.realDuration = nominalDuration * 2/3;
+    }
+    
+    func isEmpty() -> Bool {
+        // find any non-rests
+        let results = notes.filter {$0.rest == false}
+        return results.isEmpty
     }
 }

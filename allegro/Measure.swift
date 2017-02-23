@@ -28,6 +28,9 @@ struct Measure {
             frees = computeFrees()
         }
     }
+    
+    private(set) var ties: [Tie] = [Tie]()
+    private(set) var triplets: [Triplet] = [Triplet]()
 
     var capacity: Rational {
         return timeSignature
@@ -63,6 +66,16 @@ struct Measure {
 
     mutating func removeAndReturnNote(at position: Rational) -> Note? {
         guard let i = index(of: position) else { return nil }
+        // check if note is part of triplet or tie
+        if let tie = notes[i].note.tie {
+            // contains tie
+            // TODO remove the tie from the ties array
+        }
+        if let triplet = notes[i].note.triplet {
+            // contains triplet
+            // TODO turn note into rest
+            // if triplet.isEmpty(), remove it from triplets array
+        }
         return notes.remove(at: i).note
     }
 
@@ -189,7 +202,30 @@ struct Measure {
         }
         return false
     }
-
+    
+    // adds a Tie to this measure
+    // returns true on success
+    mutating func addTie(startPos: Rational, endPos: Rational) -> Bool {
+        guard let startNote = note(at: startPos) else {return false}
+        guard let endNote = note(at: endPos) else { return false}
+        ties.append(Tie(startNote: startNote, endNote: endNote))
+        return true
+    }
+    
+    // adds a Triplet to this measure
+    // returns true on success
+    mutating func addTriplet(notePositions: [Rational]) -> Bool {
+        guard (notePositions.isEmpty == false) else {return false}
+        guard (notePositions.count <= 3) else {return false}
+        var notes = [Note]()
+        for pos in notePositions {
+            guard let note = note(at: pos) else {return false}
+            notes.append(note)
+        }
+        guard let newTriplet = Triplet(notesArr: notes) else {return false}
+        triplets.append(newTriplet)
+        return true
+    }
 
     // Finds the nearest previous note with the same letter if it exists
     func getPrevLetterMatch(for letter: Note.Letter, at position: Rational) -> Note? {
