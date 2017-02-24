@@ -377,8 +377,8 @@
 				B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */,
 				6B4CFB561E4ACD900087CEA8 /* allegroExtensionTests.swift */,
 				B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */,
-				6B6E27041E288F8200F9CF66 /* Info.plist */,
 				47F8F36E1E59104200F959C9 /* testSimpleMeasure.swift */,
+				6B6E27041E288F8200F9CF66 /* Info.plist */,
 			);
 			path = allegroTests;
 			sourceTree = "<group>";
