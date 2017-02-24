@@ -40,6 +40,11 @@ class NoteSwipeActionGestureRecognizer: UIGestureRecognizer {
         }
         let end = t.location(in: view)
 
+        if start.distance(to: end) < 15 {
+            state = .failed
+            return
+        }
+
         switch start.angle(to: end) {
         case -15 ... 15:
             action = .natural
