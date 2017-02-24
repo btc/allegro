@@ -70,7 +70,8 @@ class MusicXMLParser : PartStoreObserver {
 
                 let pitch = note.addChild(name: "pitch")
                 let _ = pitch.addChild(name: "step", value: n.letter.description)
-                let _ = pitch.addChild(name: "alter", value: "\(n.accidental.rawValue)")
+                let _ = pitch.addChild(name: "alter", value: "\(n.accidental.alter)")
+                
                 let _ = pitch.addChild(name: "octave", value: "\(n.octave)" )
 
                 let duration = (n.duration * divisionsPerQuarterNote).numerator
@@ -117,7 +118,7 @@ class MusicXMLParser : PartStoreObserver {
             if let alterElem = getFirstChildMatch(elem: pitchElem, name: "alter") {
                 let alterString = alterElem.value ?? "0"
                 let alterInt = Int(alterString) ?? 0
-                accidental = Note.Accidental(rawValue: alterInt) ?? Note.Accidental.natural
+                accidental = Note.Accidental(alter: alterInt)
             }
 
             // octave is an int
@@ -280,6 +281,28 @@ class MusicXMLParser : PartStoreObserver {
         Log.info?.message("MusicXMLParser re-parsing")
         generate()
     }
-    
+}
+
+// extend Note.Accidental to translate b/t MusicXML definition as an Int
+extension Note.Accidental {
+    init(alter input: Int) {
+        switch input {
+        case -2: self = .doubleFlat
+        case -1: self = .flat
+        case 0: self = .natural
+        case 1: self = .sharp
+        case 2: self = .doubleSharp
+        default: self = .natural
+        }
+    }
+    var alter: Int {
+        switch self {
+        case .doubleFlat: return -2
+        case .flat: return -1
+        case .natural: return 0
+        case .sharp: return 1
+        case .doubleSharp: return 2
+        }
+    }
 }
 

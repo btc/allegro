@@ -40,7 +40,9 @@ class musicXMLTests: XCTestCase {
         let parser = MusicXMLParser(store: store)
         
         let n0 = Note(value: .quarter, letter: .A, octave: 4)
+        let n1 = Note(value: .eighth, letter: .G, octave: 4, accidental: .sharp, rest: false)
         let _ = store.insert(note: n0, intoMeasureIndex: 0, at: 1/4)
+        let _ = store.insert(note: n1, intoMeasureIndex: 0, at: 1/2)
         
         let partDoc = parser.partDoc
         
@@ -52,6 +54,7 @@ class musicXMLTests: XCTestCase {
         
         let cases: [(measure: Int, note: Note, at: Rational)] = [
             (0, n0, 1/4),
+            (0, n1, 1/2)
             ]
 
         for (i, testCase) in cases.enumerated() {
