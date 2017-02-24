@@ -13,7 +13,7 @@
 import AEXML
 import Rational
 
-class MusicXMLParser {
+class MusicXMLParser : PartStoreObserver {
     var store: PartStore
     var partDoc: AEXMLDocument = AEXMLDocument()
 
@@ -276,11 +276,10 @@ class MusicXMLParser {
         return elem.children.filter({$0.name == name})
     }
 
-}
-
-extension MusicXMLParser: PartStoreObserver {
     func partStoreChanged() {
         Log.info?.message("MusicXMLParser re-parsing")
         generate()
     }
+    
 }
+
