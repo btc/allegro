@@ -77,7 +77,7 @@ class MusicXMLParser : PartStoreObserver {
                 let duration = (n.duration * divisionsPerQuarterNote).numerator
                 let _ = note.addChild(name: "duration", value: "\(duration)")
 
-                let _ = note.addChild(name: "type", value: "\(n.value.rawValue)")
+                let _ = note.addChild(name: "type", value: "\(n.value.type)")
 
                 if n.rest {
                     note.addChild(name: "rest")
@@ -131,7 +131,7 @@ class MusicXMLParser : PartStoreObserver {
         // check for note type, also called value. eg. quarter, eighth, etc
         if let typeElem = getFirstChildMatch(elem: noteElement, name: "type") {
             let typeString = typeElem.value ?? "quarter"
-            value = Note.Value(rawValue: typeString) ?? Note.Value.quarter
+            value = Note.Value(type: typeString)
         }
 
         // check for rest
@@ -329,6 +329,28 @@ extension Note.Letter {
         case .E: return "E"
         case .F: return "F"
         case .G: return "G"
+        }
+    }
+}
+
+// parse from a String
+extension Note.Value {
+    init (type input: String) {
+        switch input {
+        case "whole": self = .whole
+        case "half": self = .half
+        case "quarter": self = .quarter
+        case "eighth": self = .eighth
+        default: self = .quarter
+        }
+    }
+    var type: String {
+        switch self {
+        case .whole: return "whole"
+        case .half: return "half"
+        case .quarter: return "quarter"
+        case .eighth: return "eighth"
+        case .sixteenth: return "sixteenth"
         }
     }
 }
