@@ -44,7 +44,7 @@ struct Key {
     var fifths: Int
     
     /* List of letters that have accidentals in this key */
-    var lettersWithAccidentals: Set<String>
+    var lettersWithAccidentals: Set<Note.Letter>
     
     /* The "number" of each letter's associated accidental for all major keys 
         i.e. B is always the first flat
@@ -52,22 +52,22 @@ struct Key {
         D is flatted 4th
         C is sharped 5th, etc. etc.
      */
-    let KeyNumbers = [
-        -7: "F",
-        -6: "C",
-        -5: "G",
-        -4: "D",
-        -3: "A",
-        -2: "E",
-        -1: "B",
-         0: "C",
-         1: "F",
-         2: "C",
-         3: "G",
-         4: "D",
-         5: "A",
-         6: "E",
-         7: "B"
+    let KeyNumbers: [Int: Note.Letter] = [
+        -7: .F,
+        -6: .C,
+        -5: .G,
+        -4: .D,
+        -3: .A,
+        -2: .E,
+        -1: .B,
+        0: .C,
+        1: .F,
+        2: .C,
+        3: .G,
+        4: .D,
+        5: .A,
+        6: .E,
+        7: .B
     ]
     
     // default key is C Major, which has no sharps or flats
@@ -78,13 +78,13 @@ struct Key {
         // add sharped letters to lettersWithAccidentals
         if fifths > 0 {
             for index in stride(from: fifths, through: 1, by: -1) {
-                lettersWithAccidentals.insert(KeyNumbers[index] ?? "C")
+                lettersWithAccidentals.insert(KeyNumbers[index] ?? .C)
             }
         }
         // add flatted letters to lettersWithAccidentals
         if fifths < 0 {
             for index in stride(from: fifths, through: -1, by: 1) {
-                lettersWithAccidentals.insert(KeyNumbers[index] ?? "C")
+                lettersWithAccidentals.insert(KeyNumbers[index] ?? .C)
             }
         }
     }
@@ -92,7 +92,7 @@ struct Key {
     // Returns true if the current note's letter matches an accidental in the key signature
     // TESTING: DONE
     func keyHit(currentNoteLetter: Note.Letter) -> Note.Accidental? {
-        if lettersWithAccidentals.contains(currentNoteLetter.description) {
+        if lettersWithAccidentals.contains(currentNoteLetter) {
             return (fifths > 0) ? .sharp : .flat
         }
         return nil
