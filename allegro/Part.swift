@@ -29,9 +29,11 @@ class Part {
         let timeSigForNewMeasure = measures.last?.timeSignature ?? Measure.defaultTimeSignature
         measures.append(SimpleMeasure(timeSignature: timeSigForNewMeasure))
     }
-    
-    func addMeasure(measure: SimpleMeasure) {
-        measures.append(measure)
+
+    // overwrite a measure with another
+    func setMeasure(measureIndex: Int, measure: SimpleMeasure) {
+        guard measures.indices.contains(measureIndex) else { return }
+        measures[measureIndex] = measure
     }
 
     func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {

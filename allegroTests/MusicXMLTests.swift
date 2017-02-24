@@ -36,8 +36,7 @@ class musicXMLTests: XCTestCase {
     }
     
     func testParse() {
-        let part = Part()
-        let store = PartStore(part: part)
+        let store = PartStore(part: Part())
         let parser = MusicXMLParser(store: store)
         
         let n0 = Note(value: .quarter, letter: .A, octave: 4)
@@ -46,10 +45,22 @@ class musicXMLTests: XCTestCase {
         let partDoc = parser.partDoc
         
         let parser2 = MusicXMLParser(store: PartStore(part: Part()))
-        let newPart = parser2.parse(partDoc)
+        guard let newPart = parser2.parse(partDoc: partDoc) else {
+            XCTFail("Unable to parse")
+            return
+        }
         
-        for m in newPart.measures {
-            // todo
+        let cases: [(measure: Int, note: Note, at: Rational)] = [
+            (0, n0, 1/4),
+            ]
+
+        for (i, testCase) in cases.enumerated() {
+            let (m, n, pos) = testCase
+            if let foundNote = newPart.measures[m].note(at: pos) {
+                XCTAssertTrue(foundNote == n, "test case \(i) wrong Note")
+            } else {
+                XCTFail("test case \(i) Note not found")
+            }
         }
     }
 
