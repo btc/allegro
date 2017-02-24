@@ -49,12 +49,12 @@ class Note {
         }
     }
 
-    enum Accidental : Int {
-        case doubleFlat = -2    // unicode ♭♭
-        case flat = -1          // unicode ♭
-        case natural = 0        // unicode ♮
-        case sharp = 1          // unicode ♯
-        case doubleSharp = 2    // unicode ♯♯
+    enum Accidental {
+        case doubleFlat     // unicode ♭♭
+        case flat           // unicode ♭
+        case natural        // unicode ♮
+        case sharp          // unicode ♯
+        case doubleSharp    // unicode ♯♯
     }
 
     // Value represents the glyph that is drawn on screen, not the true duration of the note.
