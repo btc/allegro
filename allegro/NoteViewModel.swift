@@ -41,12 +41,25 @@ class NoteViewModel {
     // -1 moves it down
     var pitch: Int {
         get {
+            // convert letter into an Int, counting number of notes above C
+            var pitch: Int {
+                switch self.note.letter {
+                case .C: return 0
+                case .D: return 1
+                case .E: return 2
+                case .F: return 3
+                case .G: return 4
+                case .A: return 5
+                case .B: return 6
+                }
+            }
+            
             // the number of notes away this note is from octave 5
             // 5 is the center, and 7 is the total number of notes (ABCDEFG)
             let octaveDiff = 7 * (5 - note.octave)
             
             // +1 is because we're counting from C5 but we want the center at B4
-            return note.letter.pitch - octaveDiff + 1
+            return pitch - octaveDiff + 1
         }
     }
 
