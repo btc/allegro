@@ -152,6 +152,7 @@ extension CompositionViewController: PartStoreObserver {
 extension CompositionViewController: NoteSelectorDelegate {
     func didChangeSelection(value: Note.Value) {
         store.selectedNoteValue = value
+        store.mode = .edit
         Log.info?.message("user selected \(value) value")
     }
 }
