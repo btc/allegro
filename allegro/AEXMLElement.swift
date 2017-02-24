@@ -19,11 +19,21 @@ extension AEXMLElement {
         return childrenMatch(name: name).first
     }
     
-    // TODO safe value for any type
     // returns the value as Int if possible otherwise fallback
     func safeValueInt(fallback: Int) -> Int {
+        let parse = { (input: String) -> Int? in
+            return Int(input)
+        }
+        return safeValue(parse: parse, fallback: fallback)
+    }
+    
+    // TODO figure out how clients can use Int init(String)->Int? with the generic function
+    // that way we can remove safeValueInt
+    
+    // tries to use parse to create T if possible otherwise fallback
+    func safeValue<T>(parse: (String) -> T?, fallback: T) -> T {
         if let valueString = self.value {
-            return Int(valueString) ?? fallback
+            return parse(valueString) ?? fallback
         } else {
             return fallback
         }

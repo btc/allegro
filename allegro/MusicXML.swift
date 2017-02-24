@@ -110,8 +110,7 @@ class MusicXMLParser : PartStoreObserver {
 
             // step is the letter A-G
             if let stepElem = pitchElem.firstChildMatch(name: "step") {
-                let stepString = stepElem.value ?? "C"
-                letter = Note.Letter(step: stepString)
+                letter = stepElem.safeValue(parse: Note.Letter.init, fallback: .C)
             }
 
             // alter is the accidental eg. natural, flat, sharp
@@ -128,8 +127,7 @@ class MusicXMLParser : PartStoreObserver {
 
         // check for note type, also called value. eg. quarter, eighth, etc
         if let typeElem = noteElement.firstChildMatch(name: "type") {
-            let typeString = typeElem.value ?? "quarter"
-            value = Note.Value(type: typeString)
+            value = typeElem.safeValue(parse: Note.Value.init, fallback: .quarter)
         }
 
         // check for rest
