@@ -106,36 +106,36 @@ class MusicXMLParser : PartStoreObserver {
         var rest = false
 
         // check for all parts of pitch
-        if let pitchElem = getFirstChildMatch(elem: noteElement, name: "pitch") {
+        if let pitchElem = noteElement.firstChildMatch(name: "pitch") {
 
             // step is the letter A-G
-            if let stepElem = getFirstChildMatch(elem: pitchElem, name: "step") {
+            if let stepElem = pitchElem.firstChildMatch(name: "step") {
                 let stepString = stepElem.value ?? "C"
                 letter = Note.Letter(step: stepString)
             }
 
             // alter is the accidental eg. natural, flat, sharp
-            if let alterElem = getFirstChildMatch(elem: pitchElem, name: "alter") {
+            if let alterElem = pitchElem.firstChildMatch(name: "alter") {
                 let alterString = alterElem.value ?? "0"
                 let alterInt = Int(alterString) ?? 0
                 accidental = Note.Accidental(alter: alterInt)
             }
 
             // octave is an int
-            if let octaveElem = getFirstChildMatch(elem: pitchElem, name: "octave") {
+            if let octaveElem = pitchElem.firstChildMatch(name: "octave") {
                 let octaveString = octaveElem.value ?? "4"
                 octave = Int(octaveString) ?? 4
             }
         }
 
         // check for note type, also called value. eg. quarter, eighth, etc
-        if let typeElem = getFirstChildMatch(elem: noteElement, name: "type") {
+        if let typeElem = noteElement.firstChildMatch(name: "type") {
             let typeString = typeElem.value ?? "quarter"
             value = Note.Value(type: typeString)
         }
 
         // check for rest
-        if let _ = getFirstChildMatch(elem: noteElement, name: "rest") {
+        if let _ = noteElement.firstChildMatch(name: "rest") {
             rest = true
         }
 
@@ -146,16 +146,16 @@ class MusicXMLParser : PartStoreObserver {
 
         // set the rational position
         var position: Rational = 0
-        if let positionElem = getFirstChildMatch(elem: noteElement, name: "rational-position") {
+        if let positionElem = noteElement.firstChildMatch(name: "rational-position") {
             var numerator = 0
             var denominator = 1
 
-            if let numeratorElem = getFirstChildMatch(elem: positionElem, name: "numerator") {
+            if let numeratorElem = positionElem.firstChildMatch(name: "numerator") {
                 let numeratorString = numeratorElem.value ?? "0"
                 numerator = Int(numeratorString) ?? 0
             }
 
-            if let denominatorElem = getFirstChildMatch(elem: positionElem, name: "denominator") {
+            if let denominatorElem = positionElem.firstChildMatch(name: "denominator") {
                 let denominatorString = denominatorElem.value ?? "1"
                 denominator = Int(denominatorString) ?? 1
             }
@@ -176,21 +176,21 @@ class MusicXMLParser : PartStoreObserver {
         let number = (Int(numberString) ?? 1) - 1
 
         // check for key, as an int in the circle of fifths cf. Key.swift
-        if let keyElem = getFirstChildMatch(elem: measureElement, name: "key") {
+        if let keyElem = measureElement.firstChildMatch(name: "key") {
             let keySigString = keyElem.value ?? "0"
             let keySigInt = Int(keySigString) ?? 0
             measure.keySignature.fifths = keySigInt
         }
 
         // check for the time signature and convert to rational
-        if let timeElem = getFirstChildMatch(elem: measureElement, name: "time") {
+        if let timeElem = measureElement.firstChildMatch(name: "time") {
             var numerator = 4
             var denominator = 4
-            if let beatsElem = getFirstChildMatch(elem: timeElem, name: "beats") {
+            if let beatsElem = timeElem.firstChildMatch(name: "beats") {
                 let beatsString = beatsElem.value ?? "4"
                 numerator = Int(beatsString) ?? 4
             }
-            if let beatTypeElem = getFirstChildMatch(elem: timeElem, name: "beat-type") {
+            if let beatTypeElem = timeElem.firstChildMatch(name: "beat-type") {
                 let beatTypeString = beatTypeElem.value ?? "4"
                 denominator = Int(beatTypeString) ?? 4
             }
@@ -198,7 +198,7 @@ class MusicXMLParser : PartStoreObserver {
         }
 
         // find all note elements and parse them
-        let noteElements = getChildMatches(elem: measureElement, name: "note")
+        let noteElements = measureElement.childrenMatch(name: "note")
         for noteElem in noteElements {
             let (note, position) = parseNote(noteElement: noteElem)
             guard measure.insert(note: note, at: position) else {
@@ -219,16 +219,16 @@ class MusicXMLParser : PartStoreObserver {
 
         // Set part title. We need to do:
         // partDoc -> score-partwise -> part-list -> score-part -> part-name
-        guard let part_list = getFirstChildMatch(elem: partDoc.root, name: "part-list") else { return nil }
-        guard let score_part = getFirstChildMatch(elem: part_list, name: "score-part") else { return nil }
-        guard let part_name = getFirstChildMatch(elem: score_part, name: "part-name") else { return nil }
+        guard let part_list = partDoc.root.firstChildMatch(name: "part-list") else { return nil }
+        guard let score_part = part_list.firstChildMatch(name: "score-part") else { return nil }
+        guard let part_name = score_part.firstChildMatch(name: "part-name") else { return nil }
         part.title = part_name.value ?? ""
 
         // find the part
-        guard let partElem = getFirstChildMatch(elem: partDoc.root, name: "part") else { return nil }
+        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return nil }
 
         // loop over all measures and parse them
-        let measureElements = getChildMatches(elem: partElem, name: "measure")
+        let measureElements = partElem.childrenMatch(name: "measure")
         for measureElem in measureElements {
             let (i, measure) = parseMeasure(measureElement: measureElem)
 
@@ -268,20 +268,25 @@ class MusicXMLParser : PartStoreObserver {
         store.subscribe(self)
     }
 
-
-    // TODO make extensions
-    func getFirstChildMatch(elem: AEXMLElement, name: String) -> AEXMLElement? {
-        return getChildMatches(elem: elem, name: name).first
-    }
-    func getChildMatches(elem: AEXMLElement, name: String) -> [AEXMLElement] {
-        return elem.children.filter({$0.name == name})
-    }
-
     func partStoreChanged() {
         Log.info?.message("MusicXMLParser re-parsing")
         generate()
     }
 }
+
+extension AEXMLElement {
+    
+    // returns all children whose name matches the input
+    func childrenMatch(name: String) -> [AEXMLElement] {
+        return children.filter({$0.name == name})
+    }
+    
+    // returns the first child whose name matches the input
+    func firstChildMatch(name: String) -> AEXMLElement? {
+        return childrenMatch(name: name).first
+    }
+}
+
 
 // extend Note.Accidental to translate b/t MusicXML definition as an Int
 extension Note.Accidental {
