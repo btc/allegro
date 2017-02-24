@@ -69,7 +69,7 @@ class MusicXMLParser : PartStoreObserver {
                 let note = measure.addChild(name: "note")
 
                 let pitch = note.addChild(name: "pitch")
-                let _ = pitch.addChild(name: "step", value: n.letter.description)
+                let _ = pitch.addChild(name: "step", value: n.letter.step)
                 let _ = pitch.addChild(name: "alter", value: "\(n.accidental.alter)")
                 
                 let _ = pitch.addChild(name: "octave", value: "\(n.octave)" )
@@ -111,7 +111,7 @@ class MusicXMLParser : PartStoreObserver {
             // step is the letter A-G
             if let stepElem = getFirstChildMatch(elem: pitchElem, name: "step") {
                 let stepString = stepElem.value ?? "C"
-                letter = Note.Letter(rawValue: stepString) ?? Note.Letter.C
+                letter = Note.Letter(step: stepString)
             }
 
             // alter is the accidental eg. natural, flat, sharp
@@ -302,6 +302,33 @@ extension Note.Accidental {
         case .natural: return 0
         case .sharp: return 1
         case .doubleSharp: return 2
+        }
+    }
+}
+
+// parse from a String
+extension Note.Letter {
+    init(step input: String) {
+        switch input {
+        case "A": self = .A
+        case "B": self = .B
+        case "C": self = .C
+        case "D": self = .D
+        case "E": self = .E
+        case "F": self = .F
+        case "G": self = .G
+        default: self = .C
+        }
+    }
+    var step: String {
+        switch self {
+        case .A: return "A"
+        case .B: return "B"
+        case .C: return "C"
+        case .D: return "D"
+        case .E: return "E"
+        case .F: return "F"
+        case .G: return "G"
         }
     }
 }

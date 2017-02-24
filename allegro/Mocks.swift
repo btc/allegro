@@ -134,7 +134,17 @@ private func parse(_ input: String) -> Note {
     default: value = .quarter
     }
     
-    let letter = Note.Letter(rawValue: comp[1]) ?? Note.Letter.C
+    var letter: Note.Letter
+    switch comp[1] {
+    case "A": letter = .A
+    case "B": letter = .B
+    case "C": letter = .C
+    case "D": letter = .D
+    case "E": letter = .E
+    case "F": letter = .F
+    case "G": letter = .G
+    default: letter = .C
+    }
     
     var octave: Int = 5
     if let parsedOctave: Int = Int(comp[2]) {

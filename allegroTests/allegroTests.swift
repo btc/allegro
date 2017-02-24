@@ -251,7 +251,7 @@ class allegroTests: XCTestCase {
         
         // check C major for no key hits
         for note in allNotes {
-            XCTAssert(cMajor.keyHit(currentNoteLetter: note.letter) == nil, "Improper key hit on cMajor. Letter: " + note.letter.description)
+            XCTAssert(cMajor.keyHit(currentNoteLetter: note.letter) == nil, "Improper key hit on cMajor. Letter: " + String(describing: note.letter))
         }
         
         // check D major for key hits
@@ -259,13 +259,13 @@ class allegroTests: XCTestCase {
             // should have keyHits for F and C (and they should return sharps) for D Major
             if(note == F || note == C) {
                 XCTAssert(dMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.sharp,
-                          "Improper keyHit returned for D Major. Letter: " + note.letter.description + " returned: "
+                          "Improper keyHit returned for D Major. Letter: " + String(describing: note.letter) + " returned: "
                            + dMajor.keyHit(currentNoteLetter: note.letter).debugDescription) // D major => F sharp key hit
             }
             // make sure keyHit returning nil for all other letters for D Major
             else {
                 XCTAssert(dMajor.keyHit(currentNoteLetter: note.letter) == nil,
-                          "Improper keyHit returned for D Major. Letter: " + note.letter.description + " returned: "
+                          "Improper keyHit returned for D Major. Letter: " + String(describing: note.letter) + " returned: "
                            + dMajor.keyHit(currentNoteLetter: note.letter).debugDescription)
             }
         }
@@ -275,13 +275,13 @@ class allegroTests: XCTestCase {
             // F major => B flat key hit
             if(note == B) {
                 XCTAssert(fMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.flat,
-                          "Improper keyHit returned for F major. Letter: " + note.letter.description + " returned"
+                          "Improper keyHit returned for F major. Letter: " + String(describing: note.letter) + " returned"
                           + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription) // F major => B flat key hit
             }
             // make sure keyHit returning nil for all other letters for F Major
             else {
                 XCTAssert(fMajor.keyHit(currentNoteLetter: note.letter) == nil,
-                          "Improper keyHit returned for F major. Letter: " + note.letter.description + " returned"
+                          "Improper keyHit returned for F major. Letter: " + String(describing: note.letter) + " returned"
                             + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription) // F major => B flat key hit)
             }
         }
@@ -289,14 +289,14 @@ class allegroTests: XCTestCase {
         // check C flat major for key hits
         for note in allNotes {
             XCTAssert(cFlatMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.flat,
-                      "Improper keyHit returned for C flat major. Letter: " + note.letter.description + " returned"
+                      "Improper keyHit returned for C flat major. Letter: " + String(describing: note.letter) + " returned"
                         + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription)
         }
 
         // check C sharp major for key hits
         for note in allNotes {
             XCTAssert(cSharpMajor.keyHit(currentNoteLetter: note.letter) == Note.Accidental.sharp,
-                      "Improper keyHit returned for C sharp major. Letter: " + note.letter.description + " returned"
+                      "Improper keyHit returned for C sharp major. Letter: " + String(describing: note.letter) + " returned"
                         + fMajor.keyHit(currentNoteLetter: note.letter).debugDescription)
         }
     }
