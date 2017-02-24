@@ -20,7 +20,6 @@ class CompositionViewController: UIViewController {
     fileprivate let modeToggle: UIButton = {
         let v = UIButton()
         v.addTarget(self, action: #selector(toggled), for: .touchUpInside)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 16)
         v.backgroundColor = .allegroPurple
 
         v.setImage(#imageLiteral(resourceName: "note mode"), for: .normal)
