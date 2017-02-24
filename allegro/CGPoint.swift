@@ -26,4 +26,8 @@ extension CGPoint {
         let relative = other - self
         return atan2(relative.y, relative.x).degrees
     }
+
+    func distance(to other: CGPoint) -> CGFloat {
+        return sqrt(pow(x-other.x, 2) + pow(y-other.y, 2))
+    }
 }
