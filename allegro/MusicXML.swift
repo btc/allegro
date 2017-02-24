@@ -116,15 +116,13 @@ class MusicXMLParser : PartStoreObserver {
 
             // alter is the accidental eg. natural, flat, sharp
             if let alterElem = pitchElem.firstChildMatch(name: "alter") {
-                let alterString = alterElem.value ?? "0"
-                let alterInt = Int(alterString) ?? 0
+                let alterInt = alterElem.safeValueInt(fallback: 0)
                 accidental = Note.Accidental(alter: alterInt)
             }
 
             // octave is an int
             if let octaveElem = pitchElem.firstChildMatch(name: "octave") {
-                let octaveString = octaveElem.value ?? "4"
-                octave = Int(octaveString) ?? 4
+                octave = octaveElem.safeValueInt(fallback: 4)
             }
         }
 
@@ -151,13 +149,11 @@ class MusicXMLParser : PartStoreObserver {
             var denominator = 1
 
             if let numeratorElem = positionElem.firstChildMatch(name: "numerator") {
-                let numeratorString = numeratorElem.value ?? "0"
-                numerator = Int(numeratorString) ?? 0
+                numerator = numeratorElem.safeValueInt(fallback: 0)
             }
 
             if let denominatorElem = positionElem.firstChildMatch(name: "denominator") {
-                let denominatorString = denominatorElem.value ?? "1"
-                denominator = Int(denominatorString) ?? 1
+                denominator = denominatorElem.safeValueInt(fallback: 1)
             }
             position = Rational(numerator, denominator) ?? 0
         }
@@ -177,9 +173,7 @@ class MusicXMLParser : PartStoreObserver {
 
         // check for key, as an int in the circle of fifths cf. Key.swift
         if let keyElem = measureElement.firstChildMatch(name: "key") {
-            let keySigString = keyElem.value ?? "0"
-            let keySigInt = Int(keySigString) ?? 0
-            measure.keySignature.fifths = keySigInt
+            measure.keySignature.fifths = keyElem.safeValueInt(fallback: 0)
         }
 
         // check for the time signature and convert to rational
@@ -187,12 +181,10 @@ class MusicXMLParser : PartStoreObserver {
             var numerator = 4
             var denominator = 4
             if let beatsElem = timeElem.firstChildMatch(name: "beats") {
-                let beatsString = beatsElem.value ?? "4"
-                numerator = Int(beatsString) ?? 4
+                numerator = beatsElem.safeValueInt(fallback: 4)
             }
             if let beatTypeElem = timeElem.firstChildMatch(name: "beat-type") {
-                let beatTypeString = beatTypeElem.value ?? "4"
-                denominator = Int(beatTypeString) ?? 4
+                denominator = beatTypeElem.safeValueInt(fallback: 4)
             }
             measure.timeSignature = Rational(numerator, denominator) ?? 4/4
         }
@@ -284,6 +276,16 @@ extension AEXMLElement {
     // returns the first child whose name matches the input
     func firstChildMatch(name: String) -> AEXMLElement? {
         return childrenMatch(name: name).first
+    }
+    
+    // TODO safe value for any type
+    // returns the value as Int if possible otherwise fallback
+    func safeValueInt(fallback: Int) -> Int {
+        if let valueString = self.value {
+            return Int(valueString) ?? fallback
+        } else {
+            return fallback
+        }
     }
 }
 
