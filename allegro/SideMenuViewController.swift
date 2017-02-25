@@ -171,7 +171,7 @@ class SideMenuViewController: UIViewController {
     }
     
     func keySignaturesTapped() {
-        let vc = KeySignatureViewController()
+        let vc = KeySignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
