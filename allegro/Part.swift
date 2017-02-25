@@ -100,4 +100,8 @@ class Part {
             measures[i].keySignature = keySignature
         }
     }
+    
+    var keySignature: Key {
+        return measures[0].keySignature
+    }
 }

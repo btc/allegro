@@ -43,7 +43,8 @@ class SideMenuViewController: UIViewController {
     private let keySignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "C# major"), for: UIControlState.normal)
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE/2)
         return v
     }()
     
@@ -152,6 +153,7 @@ class SideMenuViewController: UIViewController {
         editButton.isSelected = store.mode == .edit
         eraseButton.isSelected = store.mode == .erase
         timeSignature.setTitle(store.part.timeSignature.description, for: .normal)
+        keySignature.setTitle(store.part.keySignature.keySigString, for: .normal)
     }
     func eraseButtonTapped() {
         store.mode = .erase
