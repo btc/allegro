@@ -375,7 +375,9 @@ extension MeasureView: NoteActionDelegate {
         guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
 
         guard store.mode == .edit else {
-            if store.mode == .erase && gesture == .undot { // i.e. the user tapped on note
+            if store.mode == .erase{ // i.e. the user tapped on note
+
+                // TODO: btc remove this case
                 store.removeNote(fromMeasureIndex: index, at: pos)
             }
             return
@@ -383,11 +385,9 @@ extension MeasureView: NoteActionDelegate {
 
         switch gesture {
 
-        case .undot, .dot, .doubleDot:
-            let dot: Note.Dot = gesture == .undot ? .none : gesture == .dot ? .single : .double
-            if !store.dotNote(inMeasure: index, at: pos, dot: dot) {
-                let action = gesture.description
-                Snackbar(message: "not enough space to \(action) note", duration: .short).show()
+        case .toggleDot, .toggleDoubleDot:
+            if !store.toggleDot(inMeasure: index, at: pos, action: gesture) {
+                Snackbar(message: "not enough space to dot note", duration: .short).show()
             }
 
         case .sharp, .natural, .flat:

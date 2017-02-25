@@ -71,12 +71,10 @@ class NoteActionView: UIView {
     func tapped(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             switch sender.numberOfTapsRequired {
-            case 1:
-                delegate?.actionRecognized(gesture: .undot, by: self)
             case 2:
-                delegate?.actionRecognized(gesture: .dot, by: self)
+                delegate?.actionRecognized(gesture: .toggleDot, by: self)
             case 3:
-                delegate?.actionRecognized(gesture: .doubleDot, by: self)
+                delegate?.actionRecognized(gesture: .toggleDoubleDot, by: self)
             default: break
             }
         }
