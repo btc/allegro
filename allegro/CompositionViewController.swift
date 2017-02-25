@@ -21,13 +21,8 @@ class CompositionViewController: UIViewController {
         let v = UIButton()
         v.addTarget(self, action: #selector(toggled), for: .touchUpInside)
         v.backgroundColor = .allegroPurple
-
         v.setImage(#imageLiteral(resourceName: "note mode"), for: .normal)
-        v.setTitleColor(.white, for: .selected)
-
         v.setImage(#imageLiteral(resourceName: "eraser"), for: .selected)
-        v.imageView?.layer.minificationFilter = kCAFilterTrilinear
-
         return v
     }()
     
