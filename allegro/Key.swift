@@ -33,6 +33,10 @@ struct Key {
     }
     let mode: Key.Mode
     
+    /* Highest and lowest acceptable values for key signature fifths */
+    static let maxFifth = 7
+    static let minFifth = -7
+    
     /* 
         Represents the number of accidentals in the key (according to the circle of fifths starting with 0 => C Major
         (-) => number of flats
