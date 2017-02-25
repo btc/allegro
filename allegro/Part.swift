@@ -30,6 +30,12 @@ class Part {
         measures.append(SimpleMeasure(timeSignature: timeSigForNewMeasure))
     }
 
+    // overwrite a measure with another
+    func setMeasure(measureIndex: Int, measure: SimpleMeasure) {
+        guard measures.indices.contains(measureIndex) else { return }
+        measures[measureIndex] = measure
+    }
+
     func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
         guard measures.indices.contains(i) else { return false }
         return measures[i].insert(note: note, at: position)

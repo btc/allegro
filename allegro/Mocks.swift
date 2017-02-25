@@ -131,9 +131,6 @@ private func parse(_ input: String) -> Note {
     case "4": value = .quarter
     case "8": value = .eighth
     case "16": value = .sixteenth
-    case "32": value = .thirtysecond
-    case "64": value = .sixtyfourth
-    case "128": value = .onetwentyeighth
     default: value = .quarter
     }
     

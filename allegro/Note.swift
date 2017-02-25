@@ -15,55 +15,24 @@ class Note {
     // Accidentals are semitone modifiers that do not affect the vertical placement of the note on the staff
     // See #42 for more information
     // Updated Letter to include String backing for cases when processing requires using a String
-    enum Letter : Int, CustomStringConvertible {
-        case C = 0
-        case D = 1
-        case E = 2
-        case F = 3
-        case G = 4
-        case A = 5
-        case B = 6
-        
-        var description: String {
-            switch self {
-            case .C: return "C"
-            case .D: return "D"
-            case .E: return "E"
-            case .F: return "F"
-            case .G: return "G"
-            case .A: return "A"
-            case .B: return "B"
-            }
-        }
+    enum Letter {
+        case A, B, C, D, E, F, G
     }
 
     enum Accidental {
+        case doubleFlat     // unicode ♭♭
+        case flat           // unicode ♭
         case natural        // unicode ♮
         case sharp          // unicode ♯
-        case flat           // unicode ♭
         case doubleSharp    // unicode ♯♯
-        case doubleFlat     // unicode ♭♭
     }
 
     // Value represents the glyph that is drawn on screen, not the true duration of the note.
     // The true duration may be modified by dots or triplets, but the glyph is the same.
     // See https://en.wikipedia.org/wiki/Note_value
-    enum Value: CustomStringConvertible {
-        case whole, half, quarter, eighth, sixteenth, thirtysecond, sixtyfourth, onetwentyeighth, twofiftysixth
+    enum Value {
+        case whole, half, quarter, eighth, sixteenth
 
-        var description: String {
-            switch self {
-            case .whole: return "1"
-            case .half: return "1/2"
-            case .quarter: return "1/4"
-            case .eighth: return "1/8"
-            case .sixteenth: return "1/16"
-            case .thirtysecond: return "1/32"
-            case .sixtyfourth: return "1/64"
-            case .onetwentyeighth: return "1/128"
-            case .twofiftysixth: return "1/256"
-            }
-        }
         var nominalDuration: Rational {
             switch self {
             case .whole: return 1
@@ -71,10 +40,6 @@ class Note {
             case .quarter: return 1/4
             case .eighth: return 1/8
             case .sixteenth: return 1/16
-            case .thirtysecond: return 1/32
-            case .sixtyfourth: return 1/64
-            case .onetwentyeighth: return 1/128
-            case .twofiftysixth: return 1/256
             }
         }
         

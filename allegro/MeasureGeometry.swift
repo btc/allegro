@@ -130,18 +130,6 @@ struct MeasureGeometry {
         let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
         return lines
     }
-    
-    func findSlot(slots: [CGFloat], position: CGFloat) -> Int {
-        var pos = position
-        for (index, element) in slots.enumerated() {
-            pos -= element
-            if pos < CGFloat(0) {
-                return index
-            }
-        }
-        
-        return -1
-    }
 
     func touchRemainedInPosition(measure: MeasureViewModel,
                                  start: CGPoint,
@@ -157,8 +145,8 @@ struct MeasureGeometry {
         return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch) - noteHeight / 2
     }
 
-    func noteX(spacing: [CGFloat], slot: Int) -> CGFloat {
-        return spacing[0..<slot].reduce(0, +)
+    func noteX(position: Rational, timeSignature: Rational) -> CGFloat {
+        return position.cgFloat / timeSignature.cgFloat * totalWidth
     }
 
     func noteStemEnd(pitch: Int, originY y: CGFloat) -> CGFloat {
@@ -172,23 +160,10 @@ struct MeasureGeometry {
 
     func pointToPositionInTime(measure: MeasureViewModel,
                                x: CGFloat) -> Rational {
-        return Rational(Int(x), Int(totalWidth))! * measure.timeSignature
+        let ratioOfScreenWidth: Rational = Rational(Int(x), Int(totalWidth)) ?? 0
+        return (ratioOfScreenWidth * measure.timeSignature).lowestTerms
     }
 
-    private func numGridSlots(timeSignature: Rational) -> Int {
-        return (timeSignature / state.selectedNoteDuration).intApprox
-    }
-
-    private func verticalGridlineSpacing(timeSignature: Rational) -> CGFloat {
-        return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature))
-    }
-    
-    func noteToSlot(position: Rational, timeSig: Rational) -> Int {
-        let slots = Double(numGridSlots(timeSignature: timeSig))
-        let percent = position / timeSig
-        return Int(percent.double * slots)
-    }
-    
     typealias Interval = (start: CGFloat, end: CGFloat)
     
     // whitespace is the region between the notes that are not covered by the bounding boxes
