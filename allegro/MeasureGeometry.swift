@@ -56,12 +56,9 @@ struct MeasureGeometry {
     // it's a lot easier to compute width than height, so they are provided independently to allow clients to minimize
     // arithmetic operations
 
+    // we're fixing totalWidth for now for testing purposes
     var totalWidth: CGFloat {
-        let minNoteWidth = Rational(Int(self.minNoteWidth))
-        let numNotesPerMeasure = 1 / state.selectedNoteDuration
-        let visibleWidth = state.visibleSize.width
-        let reservedWidth = (minNoteWidth * numNotesPerMeasure).cgFloat
-        return max(reservedWidth, visibleWidth)
+        return state.visibleSize.width
     }
 
     // as an optimization, this could be defined as a lazy let getter
@@ -160,8 +157,31 @@ struct MeasureGeometry {
 
     func pointToPositionInTime(measure: MeasureViewModel,
                                x: CGFloat) -> Rational {
-        let ratioOfScreenWidth: Rational = Rational(Int(x), Int(totalWidth)) ?? 0
-        return (ratioOfScreenWidth * measure.timeSignature).lowestTerms
+        let notesStartX = computeNoteStartX(measure: measure)
+        var notesCenterX = notesStartX.map { $0 + noteGeometry.frame.size.width / 2 }
+        notesCenterX.insert(0, at: 0)
+        notesCenterX.append(totalWidth)
+        
+        var positions = measure.notes.map { $0.position }
+        positions.insert(Rational(0), at: 0)
+        positions.append(measure.timeSignature)
+        
+        let findIndex = notesCenterX.index { x < $0 }
+        guard let noteAfterIndex = findIndex else { return Rational(0) }
+        guard noteAfterIndex != 0 else { return Rational(0) }
+        
+        let noteBeforeX = notesCenterX[noteAfterIndex - 1]
+        let noteBeforeTime = positions[noteAfterIndex - 1]
+        
+        let noteAfterX = notesCenterX[noteAfterIndex]
+        let noteAfterTime = positions[noteAfterIndex]
+        
+        let intervalSize = noteAfterX - noteBeforeX
+        let inside = Rational(Int(x - noteBeforeX), Int(intervalSize))
+        
+        guard let percentInside = inside else { return noteBeforeTime }
+        let output = noteBeforeTime + percentInside * (noteAfterTime - noteBeforeTime)
+        return output.lowestTerms
     }
 
     typealias Interval = (start: CGFloat, end: CGFloat)
