@@ -12,6 +12,7 @@ class NoteActionView: UIView {
 
     let note: NoteViewModel
     let geometry: NoteGeometry
+    let store: PartStore
 
     // view's hit area is scaled by this factor
     let hitAreaScaleFactor: CGFloat = 1.5
@@ -37,10 +38,12 @@ class NoteActionView: UIView {
         return gr
     }()
 
-    init(note: NoteViewModel, geometry: NoteGeometry) {
+    init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         self.note = note
         self.geometry = geometry
+        self.store = store
         super.init(frame: .zero)
+        store.subscribe(self)
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
             (#selector(swiped), swipe),
@@ -104,5 +107,13 @@ extension NoteActionView: UIGestureRecognizerDelegate {
         let thisIsTapAndOtherIsAlsoTapButNotOurTap = gestureIsOneOfOurTapRecognizers && otherIsATapRecognizer
 
         return gestureIsOurSwipeRecognizer || thisIsTapAndOtherIsAlsoTapButNotOurTap
+    }
+}
+
+extension NoteActionView: PartStoreObserver {
+    func partStoreChanged() {
+        for r in [swipe, dot, doubleDot] {
+            r.isEnabled = store.mode == .edit
+        }
     }
 }
