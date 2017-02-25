@@ -118,8 +118,8 @@ class NoteView: NoteActionView {
     let drawLayer: CAShapeLayer = CAShapeLayer()
     let noteLayer: CAShapeLayer = CAShapeLayer()
 
-    override init(note: NoteViewModel, geometry: NoteGeometry) {
-        super.init(note: note, geometry: geometry)
+    override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
+        super.init(note: note, geometry: geometry, store: store)
         // makes it transparent so we see the lines behind
         isOpaque = false
         
