@@ -10,8 +10,8 @@ import UIKit
 
 class NoteActionView: UIView {
 
-    var note: NoteViewModel
-    var geometry: NoteGeometry
+    let note: NoteViewModel
+    let geometry: NoteGeometry
 
     // view's hit area is scaled by this factor
     let hitAreaScaleFactor: CGFloat = 1.5
