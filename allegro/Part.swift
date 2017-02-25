@@ -91,7 +91,7 @@ class Part {
         }
     }
     
-    func getTimeSignature() -> Rational {
+    var timeSignature: Rational {
         return measures[0].timeSignature
     }
     
