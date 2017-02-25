@@ -35,6 +35,14 @@ class KeySignatureViewController: UIViewController {
         v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
+    
+    // This is a placeholder for the functionality in the demo where sharps are added to the screen as needed
+    private let keySigLabel: UILabel = {
+        let v = UILabel()
+        v.textColor = .gray
+        v.adjustsFontSizeToFitWidth = true
+        return v
+    }()
 
     init(store: PartStore) {
         self.store = store
@@ -45,6 +53,15 @@ class KeySignatureViewController: UIViewController {
         fatalError("init(coder:) not supported")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        store.subscribe(self)
+        updateUI()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        store.unsubscribe(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
@@ -52,10 +69,11 @@ class KeySignatureViewController: UIViewController {
         view.addSubview(backButton)
         view.addSubview(sharpButton)
         view.addSubview(flatButton)
+        view.addSubview(keySigLabel)
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
-        
+        sharpButton.addTarget(self, action: #selector(sharpButtonTapped), for: .touchUpInside)
+        flatButton.addTarget(self, action: #selector(flatButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -83,6 +101,16 @@ class KeySignatureViewController: UIViewController {
                                    width: DEFAULT_TAP_TARGET_SIZE,
                                    height: DEFAULT_TAP_TARGET_SIZE)
         
+        keySigLabel.frame = CGRect(x: parent.width/2,
+                                   y: parent.height/2,
+                                   width: DEFAULT_TAP_TARGET_SIZE,
+                                   height: DEFAULT_TAP_TARGET_SIZE)
+        
+    }
+    
+    func updateUI() {
+        // TODO: Modify to reveal sharps and flat on screen as appropriate
+        keySigLabel.text = store.part.keySignature.keySigString
     }
     
     func backButtonTapped() {
@@ -90,12 +118,27 @@ class KeySignatureViewController: UIViewController {
     }
     
     func sharpButtonTapped() {
-        print("sharp button tapped")
         let curSig = store.part.keySignature
         if curSig.fifths < Key.maxFifth {
             let newKeySig = Key(mode: .major, fifths: curSig.fifths + 1)
             store.part.setKeySignature(keySignature: newKeySig)
         }
+        updateUI()
     }
     
+    func flatButtonTapped() {
+        let curSig = store.part.keySignature
+        if curSig.fifths > Key.minFifth {
+            let newKeySig = Key(mode: .major, fifths: curSig.fifths - 1)
+            store.part.setKeySignature(keySignature: newKeySig)
+        }
+        updateUI()
+    }
+    
+}
+
+extension KeySignatureViewController: PartStoreObserver {
+    func partStoreChanged() {
+        updateUI()
+    }
 }
