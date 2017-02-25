@@ -13,19 +13,8 @@ enum NoteAction: String {
     case sharp
     case natural
     case rest
-    case undot
-    case dot
-    case doubleDot
-}
-
-extension NoteAction: CustomStringConvertible {
-    var description: String {
-        switch self {
-        case .flat, .sharp, .natural, .rest, .dot: return rawValue
-        case .undot: return "un-dot"
-        case .doubleDot: return "double dot"
-        }
-    }
+    case toggleDot
+    case toggleDoubleDot
 }
 
 protocol NoteActionDelegate: class {
