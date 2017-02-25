@@ -109,6 +109,24 @@ class testSimpleMeasure: XCTestCase {
         XCTAssert(freeSpace.count == 1, "One freespace")
         XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 1, "First freespace takes the whole measure")
     }
+
+    func testFillWithRests() {
+        var measure = SimpleMeasure()
+
+        let n0 = Note(value: .quarter, letter: .C, octave: 5)
+        let n1 = Note(value: .eighth, letter: .D, octave: 5)
+
+        let _ = measure.insert(note: n0, at: 1/4)
+        let _ = measure.insert(note: n1, at: 5/8)
+
+        measure.fillWithRests()
+
+        XCTAssert(measure.frees.isEmpty, "measure should be filled with rests")
+
+        XCTAssert(measure.notes.contains(where: {$0.pos == 0 && $0.duration == 1/4}), "test 0")
+        XCTAssert(measure.notes.contains(where: {$0.pos == 1/2 && $0.duration == 1/8}), "test 1")
+        XCTAssert(measure.notes.contains(where: {$0.pos == 3/4 && $0.duration == 1/4}), "test 2")
+    }
     
     func testPerformanceExample() {
         // This is an example of a performance test case.

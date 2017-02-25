@@ -212,6 +212,39 @@ struct SimpleMeasure {
         return match
     }
 
+
+    // rounds notes positions to nearest 1/16
+    mutating func alignNotes() {
+
+    }
+
+    // make a rest Note from a FreePos
+    private func restFromFreespace(freePos: FreePos) -> Note {
+        var value = Note.Value.quarter
+
+        // TODO not just rounding but the actual duration
+        // maybe we can just get closer using dots?
+
+        switch freePos.duration {
+        case 0..<1/8: value = .sixteenth
+        case 1/8..<1/4: value = .eighth
+        case 1/4..<1/2: value = .quarter
+        case 1/2..<1: value = .half
+        default: value = .whole
+        }
+        return Note(value: value, letter: .B, octave: 4, accidental: .natural, rest: true)
+    }
+
+    // fills freespaces with rests
+    mutating func fillWithRests() {
+        for freePos in frees {
+            let rest = restFromFreespace(freePos: freePos)
+            if !insert(note: rest, at: freePos.pos) && DEBUG {
+                Log.error?.message("SimpleMeasure unable to convert freespace to rest. Developer error.")
+            }
+        }
+    }
+
     private func computeFrees() -> [FreePos] {
         if notes.isEmpty {
             return [FreePos(pos: start, duration: capacity)]
