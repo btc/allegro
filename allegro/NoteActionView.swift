@@ -23,13 +23,6 @@ class NoteActionView: UIView {
         return gr
     }()
 
-    fileprivate let undot: UITapGestureRecognizer = {
-        let gr = UITapGestureRecognizer()
-        gr.numberOfTouchesRequired = 1
-        gr.numberOfTapsRequired = 1
-        return gr
-    }()
-
     fileprivate let dot: UITapGestureRecognizer = {
         let gr = UITapGestureRecognizer()
         gr.numberOfTouchesRequired = 1
@@ -51,7 +44,6 @@ class NoteActionView: UIView {
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
             (#selector(swiped), swipe),
-            (#selector(tapped), undot),
             (#selector(tapped), dot),
             (#selector(tapped), doubleDot),
             ]
@@ -60,7 +52,6 @@ class NoteActionView: UIView {
             addGestureRecognizer(gr)
             gr.delegate = self
         }
-        undot.require(toFail: dot)
         dot.require(toFail: doubleDot)
     }
 
@@ -106,6 +97,12 @@ class NoteActionView: UIView {
 extension NoteActionView: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                            shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer == swipe
+
+        let gestureIsOurSwipeRecognizer = gestureRecognizer == swipe
+        let gestureIsOneOfOurTapRecognizers = gestureRecognizer == dot || gestureRecognizer == doubleDot
+        let otherIsATapRecognizer = otherGestureRecognizer as? UITapGestureRecognizer != nil
+        let thisIsTapAndOtherIsAlsoTapButNotOurTap = gestureIsOneOfOurTapRecognizers && otherIsATapRecognizer
+
+        return gestureIsOurSwipeRecognizer || thisIsTapAndOtherIsAlsoTapButNotOurTap
     }
 }
