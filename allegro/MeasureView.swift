@@ -181,18 +181,18 @@ class MeasureView: UIView {
             addSubview(v)
         }
         
+        let startXForNotes = geometry.computeNoteStartX(measure: measureVM)
+        
         // we're barring all the notes for now
-        for noteView in noteViews {
+        for (noteView, startX) in zip(noteViews, startXForNotes) {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = geometry.noteX(position: noteView.note.position,
-                                   timeSignature: measureVM.timeSignature)
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
-            noteView.noteOrigin = CGPoint(x: x, y: y)
+            noteView.noteOrigin = CGPoint(x: startX, y: y)
             //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
-            noteView.shouldDrawFlag = true//false
+            noteView.shouldDrawFlag = true//fals
 
             if let a = getAccidentalLabel(noteView: noteView) {
                 addSubview(a)

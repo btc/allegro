@@ -167,14 +167,14 @@ struct MeasureGeometry {
     typealias Interval = (start: CGFloat, end: CGFloat)
     
     // whitespace is the region between the notes that are not covered by the bounding boxes
-    func computeNoteSpacing(measure: MeasureViewModel) -> [Interval]{
+    func computeNoteStartX(measure: MeasureViewModel) -> [CGFloat] {
         var whitespace = [Interval]()
         var blackspace = [Interval]()
         
         var totalBlackspace = CGFloat(0)
         let defaultWidth = state.visibleSize.width
         
-        guard measure.notes.count > 0 else { return [Interval]() }
+        guard measure.notes.count > 0 else { return [CGFloat]() }
         let g = noteGeometry
         var last = CGFloat(0)
         
@@ -213,15 +213,21 @@ struct MeasureGeometry {
                 whitespace[i] = Interval(start, end)
             }
             
-            blackspace = blackspace.enumerated().map {
+            blackspace = zip(whitespace, blackspace).map {
                 Interval(
-                    whitespace[$0].end,
-                    whitespace[$0].end + $1.end - $1.start
+                    $0.end,
+                    $0.end + $1.end - $1.start
                 )
             }
         }
         
-        return blackspace
+        // right now blackspace includes the necessary space for an accidental if it exists
+        // we now remove that to get the start position of the note frame by itself
+        let startX = zip(blackspace, measure.notes).map {
+            $0.start + g.frame.origin.x - g.getBoundingBox(note: $1).origin.x
+        }
+        
+        return startX
     }
 }
 
