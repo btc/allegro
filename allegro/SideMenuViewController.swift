@@ -146,13 +146,12 @@ class SideMenuViewController: UIViewController {
                              height: buttonBlocksHeight)
         }
         
-        timeSignature.setTitle(store.part.getTimeSignature().description, for: .normal)
     }
 
     func updateUI() {
         editButton.isSelected = store.mode == .edit
         eraseButton.isSelected = store.mode == .erase
-        timeSignature.setTitle(store.part.getTimeSignature().description, for: .normal)
+        timeSignature.setTitle(store.part.timeSignature.description, for: .normal)
     }
     func eraseButtonTapped() {
         store.mode = .erase
