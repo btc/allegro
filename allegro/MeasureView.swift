@@ -43,10 +43,8 @@ class MeasureView: UIView {
         return gr
     }()
 
-    let panGestureRecognizer: UIPanGestureRecognizer = {
-        let gr = UIPanGestureRecognizer()
-        gr.minimumNumberOfTouches = 1
-        gr.maximumNumberOfTouches = 1
+    let longPressPanGestureRecognizer: UILongPressGestureRecognizer = {
+        let gr = UILongPressGestureRecognizer()
         gr.cancelsTouchesInView = false // TODO: why?
         return gr
     }()
@@ -71,7 +69,7 @@ class MeasureView: UIView {
 
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
             (#selector(tap), tapGestureRecognizer),
-            (#selector(pan), panGestureRecognizer),
+            (#selector(longPressPan), longPressPanGestureRecognizer),
             ]
         for (sel, gr) in actionRecognizers {
             gr.addTarget(self, action: sel)
@@ -270,7 +268,7 @@ class MeasureView: UIView {
         return label
     }
 
-    func pan(sender: UIGestureRecognizer) {
+    func longPressPan(sender: UIGestureRecognizer) {
         guard let store = store else { return }
 
         if store.mode == .edit && sender.state == .ended {
@@ -352,6 +350,17 @@ extension MeasureView: PartStoreObserver {
                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
             geometry = MeasureGeometry(state: state)
         }
+
+        // NB(btc): we adjust minimum press duration to allow erase panning to function properly.
+        // one alternative is to have a separate pan gesture recognizer for erase panning and use the long press only for
+        // edit mode
+        switch store.mode {
+        case .erase:
+            longPressPanGestureRecognizer.minimumPressDuration = 0.01 // if this is zero, taps don't work
+        case .edit:
+            longPressPanGestureRecognizer.minimumPressDuration = 0.5 // default
+        }
+
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
     }
