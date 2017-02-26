@@ -144,8 +144,10 @@ class testSimpleMeasure: XCTestCase {
         var rightFreespace = basicNudgeLeftMeasure.freespaceRight(of: 1/8)
         XCTAssert(rightFreespace == 5/8, "Incorrect freespaceRight calculation. Expected 5/8, received: " + rightFreespace.description)
         
-        // test nudge left
+        // insert and nudge left
         XCTAssert(basicNudgeLeftMeasure.insert(note: B4quarter, at: 1/4) == true, "Could not insert and nudge left")
+        
+        // test for correct nudge behavior
         if let nl0 = basicNudgeLeftMeasure.note(at: 0) {
             XCTAssert(nl0 == A4quarter, "Nudge left failed. Expected A4quarter, received: " + nl0.letter.step)
         } else {
@@ -153,8 +155,7 @@ class testSimpleMeasure: XCTestCase {
         }
         if let nl1 = basicNudgeLeftMeasure.note(at: 1/4) {
             XCTAssert(nl1 == B4quarter, "Insert with nudge left failed. Expected B4quarter, receiverd: " + nl1.letter.step)
-        }
-        else {
+        } else {
             XCTFail("Could not access note as pos 1/4 in basicNudgeLeftMeasure")
         }
         
@@ -164,6 +165,16 @@ class testSimpleMeasure: XCTestCase {
         // test right freespace
         rightFreespace = basicNudgeLeftMeasure.freespaceRight(of: 1/8)
         XCTAssert(rightFreespace == 1/2, "Incorrect freespaceRight calculation. Expected 1/2, received: " + rightFreespace.description)
+        
+        // test dotting with nudge right
+        XCTAssert(basicNudgeLeftMeasure.dotNote(at: 0, dot: Note.Dot.single) == true, "Error dotting note")
+        
+        // check for correct nudge behavior
+        if let nl2 = basicNudgeLeftMeasure.note(at: 3/8) {
+            XCTAssert(nl2 == B4quarter)
+        } else {
+            XCTFail("Could not access note at pos: 3/8")
+        }
     }
     
     func testAdvancedLeftNudge() {
