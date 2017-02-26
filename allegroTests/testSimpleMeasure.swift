@@ -132,8 +132,6 @@ class testSimpleMeasure: XCTestCase {
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
-        let C5eighth = Note(value: .eighth, letter: .C, octave: 5)
-        let Awhole = Note(value: .whole, letter: .A, octave: 4)
         
         // insert quarter
         XCTAssert(basicNudgeLeftMeasure.insert(note: A4quarter, at: 1/8) == true)
@@ -218,6 +216,31 @@ class testSimpleMeasure: XCTestCase {
         } else {
             XCTFail("Could not access note at pos: 1/2")
         }
+        
+        // Insert and nudge right
+        XCTAssert(doubleNudgeLeftMeasure.insert(note: C5eighth, at: 3/8) == true, "Error inserting note with right nudge")
+        
+        // Check for correct nudge behavior
+        if let doubleN4 = doubleNudgeLeftMeasure.note(at: 1/2) {
+            XCTAssert(doubleN4 == C5eighth)
+        } else {
+            XCTFail("Could not access note at pos: 1/2")
+        }
+        if let doubleN5 = doubleNudgeLeftMeasure.note(at: 5/8) {
+            XCTAssert(doubleN5 == C4quarter)
+        } else {
+            XCTFail("Could not access note at pos: 5/8")
+        }
+        
+        // Check for correct freespace
+        let frees = doubleNudgeLeftMeasure.frees
+        XCTAssert(frees.count == 1)
+        XCTAssert(frees[0].duration == 1/8)
+        XCTAssert(frees[0].pos == 7/8)
+        XCTAssert(doubleNudgeLeftMeasure.freespace == 1/8)
+        XCTAssert(doubleNudgeLeftMeasure.freespaceLeft(of: 1) == 1/8)
+        XCTAssert(doubleNudgeLeftMeasure.freespaceLeft(of: 7/8) == 0)
+        XCTAssert(doubleNudgeLeftMeasure.freespaceRight(of: 3/8) == 1/8)
     }
     
     func testPerformanceExample() {
