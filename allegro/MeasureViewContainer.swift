@@ -48,7 +48,6 @@ class MeasureViewContainer: UIScrollView {
         super.init(frame: .zero)
         backgroundColor = .white
         panGestureRecognizer.minimumNumberOfTouches = 1
-        isDirectionalLockEnabled = true
 
         addSubview(measureView)
     }
