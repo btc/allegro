@@ -184,7 +184,7 @@ struct MeasureGeometry {
         var totalBlackspace = CGFloat(0)
         let defaultWidth = state.visibleSize.width
         
-        guard measure.notes.count > 0 else { return [CGFloat]() }
+        guard measure.notes.count > 0 else { return [] }
         let g = noteGeometry
         var last = CGFloat(0)
         
