@@ -10,8 +10,9 @@ import UIKit
 
 class NoteActionView: UIView {
 
-    var note: NoteViewModel
-    var geometry: NoteGeometry
+    let note: NoteViewModel
+    let geometry: NoteGeometry
+    let store: PartStore
 
     // view's hit area is scaled by this factor
     let hitAreaScaleFactor: CGFloat = 1.5
@@ -20,13 +21,6 @@ class NoteActionView: UIView {
 
     fileprivate let swipe: NoteSwipeActionGestureRecognizer = {
         let gr = NoteSwipeActionGestureRecognizer()
-        return gr
-    }()
-
-    fileprivate let undot: UITapGestureRecognizer = {
-        let gr = UITapGestureRecognizer()
-        gr.numberOfTouchesRequired = 1
-        gr.numberOfTapsRequired = 1
         return gr
     }()
 
@@ -44,14 +38,15 @@ class NoteActionView: UIView {
         return gr
     }()
 
-    init(note: NoteViewModel, geometry: NoteGeometry) {
+    init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         self.note = note
         self.geometry = geometry
+        self.store = store
         super.init(frame: .zero)
+        store.subscribe(self)
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
             (#selector(swiped), swipe),
-            (#selector(tapped), undot),
             (#selector(tapped), dot),
             (#selector(tapped), doubleDot),
             ]
@@ -60,7 +55,6 @@ class NoteActionView: UIView {
             addGestureRecognizer(gr)
             gr.delegate = self
         }
-        undot.require(toFail: dot)
         dot.require(toFail: doubleDot)
     }
 
@@ -77,12 +71,10 @@ class NoteActionView: UIView {
     func tapped(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             switch sender.numberOfTapsRequired {
-            case 1:
-                delegate?.actionRecognized(gesture: .undot, by: self)
             case 2:
-                delegate?.actionRecognized(gesture: .dot, by: self)
+                delegate?.actionRecognized(gesture: .toggleDot, by: self)
             case 3:
-                delegate?.actionRecognized(gesture: .doubleDot, by: self)
+                delegate?.actionRecognized(gesture: .toggleDoubleDot, by: self)
             default: break
             }
         }
@@ -106,6 +98,20 @@ class NoteActionView: UIView {
 extension NoteActionView: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                            shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer == swipe
+
+        let gestureIsOurSwipeRecognizer = gestureRecognizer == swipe
+        let gestureIsOneOfOurTapRecognizers = gestureRecognizer == dot || gestureRecognizer == doubleDot
+        let otherIsATapRecognizer = otherGestureRecognizer as? UITapGestureRecognizer != nil
+        let thisIsTapAndOtherIsAlsoTapButNotOurTap = gestureIsOneOfOurTapRecognizers && otherIsATapRecognizer
+
+        return gestureIsOurSwipeRecognizer || thisIsTapAndOtherIsAlsoTapButNotOurTap
+    }
+}
+
+extension NoteActionView: PartStoreObserver {
+    func partStoreChanged() {
+        for r in [swipe, dot, doubleDot] {
+            r.isEnabled = store.mode == .edit
+        }
     }
 }

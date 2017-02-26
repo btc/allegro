@@ -11,11 +11,12 @@ import UIKit
 class MeasureViewContainer: UIScrollView {
 
     var store: PartStore? {
-        set {
-            measureView.store = newValue
+        willSet {
+            store?.unsubscribe(self)
         }
-        get {
-            return measureView.store
+        didSet {
+            store?.subscribe(self)
+            measureView.store = store
         }
     }
 
@@ -46,8 +47,7 @@ class MeasureViewContainer: UIScrollView {
     init() {
         super.init(frame: .zero)
         backgroundColor = .white
-        panGestureRecognizer.minimumNumberOfTouches = 2
-        isDirectionalLockEnabled = true
+        panGestureRecognizer.minimumNumberOfTouches = 1
 
         addSubview(measureView)
     }
@@ -72,5 +72,17 @@ class MeasureViewContainer: UIScrollView {
         let g = MeasureGeometry(state: s) // because measureView doesn't have a geometry until layoutSubviews
         let point = CGPoint(x: 0, y: g.totalHeight / 2 - g.state.visibleSize.height / 2)
         setContentOffset(point, animated: false)
+    }
+}
+
+extension MeasureViewContainer: PartStoreObserver {
+    func partStoreChanged() {
+        guard let store = store else { return }
+        switch store.mode {
+        case .edit:
+            panGestureRecognizer.minimumNumberOfTouches = 1
+        case .erase:
+            panGestureRecognizer.minimumNumberOfTouches = 2
+        }
     }
 }

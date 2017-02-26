@@ -59,10 +59,6 @@ class NoteSelectorCell: UICollectionViewCell {
                 label.image = #imageLiteral(resourceName: "eighth note")
             case .sixteenth:
                 label.image = #imageLiteral(resourceName: "sixteenth note")
-            default:
-                //nothing higher is currently supported. Will add relevant assets
-                //as needed
-                label.image = #imageLiteral(resourceName: "quarter note")
             }
         }
     }

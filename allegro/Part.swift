@@ -91,6 +91,10 @@ class Part {
         }
     }
     
+    var timeSignature: Rational {
+        return measures[0].timeSignature
+    }
+    
     func setKeySignature(keySignature: Key) {
         for i in 0..<measures.count {
             measures[i].keySignature = keySignature

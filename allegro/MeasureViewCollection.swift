@@ -36,7 +36,7 @@ class MeasureViewCollection: UICollectionView {
 
         store.subscribe(self)
 
-        panGestureRecognizer.minimumNumberOfTouches = 2
+        panGestureRecognizer.minimumNumberOfTouches = 1
         panGestureRecognizer.maximumNumberOfTouches = 2
         isPagingEnabled = true
         backgroundColor = .lightGray
@@ -102,5 +102,11 @@ extension MeasureViewCollection: UICollectionViewDataSource {
 extension MeasureViewCollection: PartStoreObserver {
     func partStoreChanged() {
         measureCount = store.measureCount
+        switch store.mode {
+        case .edit:
+            panGestureRecognizer.minimumNumberOfTouches = 1
+        case .erase:
+            panGestureRecognizer.minimumNumberOfTouches = 2
+        }
     }
 }

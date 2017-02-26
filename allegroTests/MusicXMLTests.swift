@@ -9,6 +9,7 @@
 import XCTest
 @testable import allegro
 import Rational
+import AEXML
 
 class musicXMLTests: XCTestCase {
 
@@ -34,7 +35,7 @@ class musicXMLTests: XCTestCase {
 
         parser.save(filename: "test.xml")
     }
-    
+
     func testParse() {
         let store = PartStore(part: Part())
         let parser = MusicXMLParser(store: store)
@@ -65,6 +66,31 @@ class musicXMLTests: XCTestCase {
                 XCTFail("test case \(i) Note not found")
             }
         }
+    }
+
+    func testLoad() {
+
+        let parser = MusicXMLParser(store: PartStore(part: Part()))
+
+        guard let part = parser.load(filename: "example0") else {
+            XCTFail("Unable to load")
+            return
+        }
+
+        let n0 = Note(value: .whole, letter: .C, octave: 4)
+        let cases: [(measure: Int, note: Note, at: Rational)] = [
+            (0, n0, 0),
+        ]
+
+        for (i, testCase) in cases.enumerated() {
+            let (m, n, pos) = testCase
+            if let foundNote = part.measures[m].note(at: pos) {
+                XCTAssertTrue(foundNote == n, "test case \(i) wrong Note")
+            } else {
+                XCTFail("test case \(i) Note not found")
+            }
+        }
+
     }
 
 }

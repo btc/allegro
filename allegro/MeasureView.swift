@@ -38,24 +38,14 @@ class MeasureView: UIView {
         return CAShapeLayer()
     }()
 
-    fileprivate let editTapGR: UITapGestureRecognizer = {
+    let tapGestureRecognizer: UITapGestureRecognizer = {
         let gr = UITapGestureRecognizer()
         return gr
     }()
 
-    fileprivate let editPanGR: UIPanGestureRecognizer = {
-        let gr = UIPanGestureRecognizer()
-        gr.minimumNumberOfTouches = 1
-        gr.maximumNumberOfTouches = 1
+    let longPressPanGestureRecognizer: UILongPressGestureRecognizer = {
+        let gr = UILongPressGestureRecognizer()
         gr.cancelsTouchesInView = false // TODO: why?
-        return gr
-    }()
-
-    fileprivate let eraseGR: UIPanGestureRecognizer = {
-        let gr = UIPanGestureRecognizer()
-        gr.minimumNumberOfTouches = 1
-        gr.maximumNumberOfTouches = 1
-        gr.cancelsTouchesInView = false
         return gr
     }()
 
@@ -78,9 +68,8 @@ class MeasureView: UIView {
         backgroundColor = .white
 
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
-            (#selector(editTap), editTapGR),
-            (#selector(editPan), editPanGR),
-            (#selector(erase), eraseGR),
+            (#selector(tap), tapGestureRecognizer),
+            (#selector(longPressPan), longPressPanGestureRecognizer),
             ]
         for (sel, gr) in actionRecognizers {
             gr.addTarget(self, action: sel)
@@ -165,7 +154,7 @@ class MeasureView: UIView {
         let measureVM = store.measure(at: index)
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
-        let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g) }
+        let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g, store: store) }
         noteViews.forEach() { $0.delegate = self }
         let notesToNoteView = noteViewModels.enumerated()
             .map{return ($1, noteViews[$0])}
@@ -277,7 +266,19 @@ class MeasureView: UIView {
         return label
     }
 
-    func erase(sender: UIPanGestureRecognizer) {
+    func longPressPan(sender: UIGestureRecognizer) {
+        guard let store = store else { return }
+
+        if store.mode == .edit && sender.state == .ended {
+            edit(sender: sender)
+        }
+
+        if store.mode == .erase {
+            erase(sender: sender)
+        }
+    }
+
+    private func erase(sender: UIGestureRecognizer) {
         guard store?.mode == .erase else { return }
         
         let location = sender.location(in: self)
@@ -285,15 +286,31 @@ class MeasureView: UIView {
         if let nv = hitTest(location, with: nil) as? NoteView {
             guard let store = store, let index = index else { return }
             store.removeNote(fromMeasureIndex: index, at: nv.note.position)
+        } else if let _ = sender as? UITapGestureRecognizer {
+            Snackbar(message: "you're in erase mode", duration: .short).show()
         }
     }
 
-    func editTap(sender: UIGestureRecognizer) {
-        guard store?.mode == .edit else {
-            if store?.mode == .erase {
+    func tap(sender: UIGestureRecognizer) {
+        guard let store = store, let index = index else { return }
+
+        if store.mode == .edit {
+            edit(sender: sender)
+
+        } else if store.mode == .erase {
+
+            if store.measure(at: index).notes.isEmpty {
+                store.mode = .edit
                 Snackbar(message: "switched to edit mode", duration: .short).show()
-                store?.mode = .edit
+                return
             }
+
+            erase(sender: sender)
+        }
+    }
+
+    private func edit(sender: UIGestureRecognizer) {
+        guard store?.mode == .edit else {
             return
         }
         let location = sender.location(in: self)
@@ -319,50 +336,34 @@ class MeasureView: UIView {
             Snackbar(message: "no space for note", duration: .short).show()
         }
     }
-
-    func editPan(sender: UIPanGestureRecognizer) {
-        guard store?.mode == .edit else { return }
-
-        guard let store = store, let index = index else { return }
-        let measure = store.measure(at: index)
-
-        if sender.state == .ended {
-            let end = sender.location(in: self)
-            let start = end - sender.translation(in: self)
-            if geometry.touchRemainedInPosition(measure: measure,
-                                                start: start,
-                                                end: end) {
-                editTap(sender: sender)
-            }
-        }
-    }
 }
 
 extension MeasureView: PartStoreObserver {
     func partStoreChanged() {
         guard let store = store else { return }
 
-        eraseGR.isEnabled = store.mode == .erase
-        editPanGR.isEnabled = store.mode == .edit
-
         if geometry.state.visibleSize != .zero {
             let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
             geometry = MeasureGeometry(state: state)
         }
+
+        // NB(btc): we adjust minimum press duration to allow erase panning to function properly.
+        // one alternative is to have a separate pan gesture recognizer for erase panning and use the long press only for
+        // edit mode
+        switch store.mode {
+        case .erase:
+            longPressPanGestureRecognizer.minimumPressDuration = 0.01 // if this is zero, taps don't work
+        case .edit:
+            longPressPanGestureRecognizer.minimumPressDuration = 0.5 // default
+        }
+
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
     }
 }
 
 extension MeasureView: UIGestureRecognizerDelegate {
-    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        switch gestureRecognizer {
-        case eraseGR: return store?.mode == .erase
-        case editPanGR: return store?.mode == .edit
-        default: return true
-        }
-    }
 }
 
 extension MeasureView: NoteActionDelegate {
@@ -371,7 +372,9 @@ extension MeasureView: NoteActionDelegate {
         guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
 
         guard store.mode == .edit else {
-            if store.mode == .erase && gesture == .undot { // i.e. the user tapped on note
+            if store.mode == .erase{ // i.e. the user tapped on note
+
+                // TODO: btc remove this case
                 store.removeNote(fromMeasureIndex: index, at: pos)
             }
             return
@@ -379,11 +382,9 @@ extension MeasureView: NoteActionDelegate {
 
         switch gesture {
 
-        case .undot, .dot, .doubleDot:
-            let dot: Note.Dot = gesture == .undot ? .none : gesture == .dot ? .single : .double
-            if !store.dotNote(inMeasure: index, at: pos, dot: dot) {
-                let action = gesture.description
-                Snackbar(message: "not enough space to \(action) note", duration: .short).show()
+        case .toggleDot, .toggleDoubleDot:
+            if !store.toggleDot(inMeasure: index, at: pos, action: gesture) {
+                Snackbar(message: "not enough space to dot note", duration: .short).show()
             }
 
         case .sharp, .natural, .flat:

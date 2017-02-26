@@ -52,7 +52,7 @@ struct Key {
         D is flatted 4th
         C is sharped 5th, etc. etc.
      */
-    let KeyNumbers: [Int: Note.Letter] = [
+    static let KeyNumbers: [Int: Note.Letter] = [
         -7: .F,
         -6: .C,
         -5: .G,
@@ -78,19 +78,18 @@ struct Key {
         // add sharped letters to lettersWithAccidentals
         if fifths > 0 {
             for index in stride(from: fifths, through: 1, by: -1) {
-                lettersWithAccidentals.insert(KeyNumbers[index] ?? .C)
+                lettersWithAccidentals.insert(Key.KeyNumbers[index] ?? .C)
             }
         }
         // add flatted letters to lettersWithAccidentals
         if fifths < 0 {
             for index in stride(from: fifths, through: -1, by: 1) {
-                lettersWithAccidentals.insert(KeyNumbers[index] ?? .C)
+                lettersWithAccidentals.insert(Key.KeyNumbers[index] ?? .C)
             }
         }
     }
     
     // Returns true if the current note's letter matches an accidental in the key signature
-    // TESTING: DONE
     func keyHit(currentNoteLetter: Note.Letter) -> Note.Accidental? {
         if lettersWithAccidentals.contains(currentNoteLetter) {
             return (fifths > 0) ? .sharp : .flat
