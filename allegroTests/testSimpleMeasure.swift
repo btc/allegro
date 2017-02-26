@@ -132,7 +132,7 @@ class testSimpleMeasure: XCTestCase {
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
-        
+
         // insert quarter
         XCTAssert(basicNudgeLeftMeasure.insert(note: A4quarter, at: 1/8) == true)
         
@@ -165,7 +165,7 @@ class testSimpleMeasure: XCTestCase {
         // test right freespace
         rightFreespace = basicNudgeLeftMeasure.freespaceRight(of: 1/8)
         XCTAssert(rightFreespace == 1/2, "Incorrect freespaceRight calculation. Expected 1/2, received: " + rightFreespace.description)
-        
+
         // test dotting with nudge right
         XCTAssert(basicNudgeLeftMeasure.dotNote(at: 0, dot: Note.Dot.single) == true, "Error dotting note")
         
@@ -227,7 +227,7 @@ class testSimpleMeasure: XCTestCase {
         } else {
             XCTFail("Could not access note at pos: 1/2")
         }
-        
+
         // Insert and nudge right
         XCTAssert(doubleNudgeLeftMeasure.insert(note: C5eighth, at: 3/8) == true, "Error inserting note with right nudge")
         
