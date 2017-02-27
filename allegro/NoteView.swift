@@ -110,7 +110,7 @@ class NoteView: NoteActionView {
     fileprivate var flagEndOffset: CGPoint {
         return CGPoint(x: _flagEndOffset.x * scale, y: _flagEndOffset.y * scale)
     }
-    
+
     var shouldDrawFlag = false
     fileprivate var flagThickness = CGFloat(10)
     fileprivate var flagIterOffset = CGFloat(15)
@@ -288,7 +288,7 @@ class NoteView: NoteActionView {
     
     override func draw(_ rect: CGRect) {
         let notePath = getNoteHeadPath(rect: bounds)
-        UIColor.black.set()
+        color.set()
         notePath.fill()
     }
     
@@ -307,6 +307,6 @@ class NoteView: NoteActionView {
         }
         
         drawLayer.path = path.cgPath
-        drawLayer.fillColor = UIColor.black.cgColor
+        drawLayer.fillColor = color.cgColor
     }
 }

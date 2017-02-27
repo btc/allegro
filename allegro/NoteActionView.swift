@@ -14,6 +14,8 @@ class NoteActionView: UIView {
     let geometry: NoteGeometry
     let store: PartStore
 
+    var color: UIColor = .black
+
     // view's hit area is scaled by this factor
     let hitAreaScaleFactor: CGFloat = 1.5
 
