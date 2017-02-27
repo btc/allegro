@@ -102,19 +102,19 @@ struct Key {
         return nil
     }
     
-    var successor:Int {
+    var successor:Key {
         if fifths == maxFifth {
-            return fifths
+            return self
         } else {
-            return fifths + 1
+            return Key(mode: mode, fifths: fifths + 1)
         }
     }
     
-    var predecessor:Int {
+    var predecessor:Key {
         if fifths == minFifth {
-            return fifths
+            return self
         } else {
-            return fifths - 1
+            return Key(mode: mode, fifths: fifths - 1)
         }
     }
 }
