@@ -24,8 +24,8 @@ class testSimpleMeasure: XCTestCase {
     
     // basic tests
     func testSimpleMeasure() {
-        var basicMeasure = SimpleMeasure()
-        var wholeNoteMeasure = SimpleMeasure()
+        var basicMeasure = Measure()
+        var wholeNoteMeasure = Measure()
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
@@ -128,7 +128,7 @@ class testSimpleMeasure: XCTestCase {
     }
     
     func testBasicLeftNudge() {
-        var basicNudgeLeftMeasure = SimpleMeasure() // basic left nudging
+        var basicNudgeLeftMeasure = Measure() // basic left nudging
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
@@ -178,8 +178,8 @@ class testSimpleMeasure: XCTestCase {
     }
     
     func testAdvancedLeftNudge() {
-        var singleNudgeLeftMeasure = SimpleMeasure() // this measure will require a single left nudge on insertion (1/8 at 0, 1/4 at 1/2, 1/4 -> 5/8)
-        var doubleNudgeLeftMeasure = SimpleMeasure() // this measure will require a double left nudge on insertion (1/4 at 1/8, 1/4 at 3/8, 1/4 -> 1/2)
+        var singleNudgeLeftMeasure = Measure() // this measure will require a single left nudge on insertion (1/8 at 0, 1/4 at 1/2, 1/4 -> 5/8)
+        var doubleNudgeLeftMeasure = Measure() // this measure will require a double left nudge on insertion (1/4 at 1/8, 1/4 at 3/8, 1/4 -> 1/2)
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)

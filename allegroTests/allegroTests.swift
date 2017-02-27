@@ -35,7 +35,7 @@ class allegroTests: XCTestCase {
     
     // test for previous note with same letter
     func testMeasureGetPrevLetterMatch() {
-        var measure = SimpleMeasure()
+        var measure = Measure()
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
@@ -61,7 +61,7 @@ class allegroTests: XCTestCase {
     
     // test for changing the dot on a note
     func testMeasureDotNote() {
-        var m = SimpleMeasure()
+        var m = Measure()
         
         let _ = m.insert(note: Note(value: .eighth, letter: .A, octave: 4), at: 3/8)
         let _ = m.insert(note: Note(value: .quarter, letter: .A, octave: 4), at: 0)
@@ -262,7 +262,7 @@ class allegroTests: XCTestCase {
     }
 
     func testSimpleMeasureInsertNudgeRight() {
-        var mustNudgeRight = SimpleMeasure()
+        var mustNudgeRight = Measure()
         XCTAssert(mustNudgeRight.insert(note: note(.half), at: 0)) // will be nudged to 1/4
         XCTAssert(mustNudgeRight.insert(note: note(.quarter), at: 7/10)) // will be nudged to 3/4
 
@@ -274,7 +274,7 @@ class allegroTests: XCTestCase {
     }
 
     func testSimpleMeasureInsertNudgeLeft() {
-        var m = SimpleMeasure()
+        var m = Measure()
         XCTAssert(m.insert(note: note(.half), at: 1/2)) // will remain in place
         XCTAssert(m.insert(note: note(.quarter), at: 1/4)) // will be nudged to 0
 
@@ -289,18 +289,18 @@ class allegroTests: XCTestCase {
 
         // insert a quarter note at 0 into a variety of measures. assert that it ends up where we expect
 
-        let empty = SimpleMeasure()
+        let empty = Measure()
 
-        var full = SimpleMeasure()
+        var full = Measure()
         XCTAssert(full.insert(note: note(.whole), at: 0))
 
-        var mustNudgeRight = SimpleMeasure()
+        var mustNudgeRight = Measure()
         XCTAssert(mustNudgeRight.insert(note: note(.half), at: 0))
 
-        var mustNudgeLeft = SimpleMeasure()
+        var mustNudgeLeft = Measure()
         XCTAssert(mustNudgeLeft.insert(note: note(.half), at: 2/4))
 
-        typealias testCase = (measure: SimpleMeasure, note: Note, position: Rational, expectedSuccess: Bool, expectedPosition: Rational?)
+        typealias testCase = (measure: Measure, note: Note, position: Rational, expectedSuccess: Bool, expectedPosition: Rational?)
         let testCases: [testCase] = [
             (empty, note(.quarter), 0, true, 0),
             (full, note(.quarter), 0, false, 0),

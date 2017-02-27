@@ -8,7 +8,7 @@
 
 import Rational
 
-struct SimpleMeasure {
+struct Measure {
 
     static let defaultTimeSignature: Rational = 4/4
 
@@ -39,7 +39,7 @@ struct SimpleMeasure {
         return timeSignature
     }
 
-    init(timeSignature: Rational = SimpleMeasure.defaultTimeSignature, keySignature: Key = .cMajor) {
+    init(timeSignature: Rational = Measure.defaultTimeSignature, keySignature: Key = .cMajor) {
         self.timeSignature = timeSignature
         self.keySignature = keySignature
 

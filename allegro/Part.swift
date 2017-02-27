@@ -18,7 +18,7 @@ class Part {
     var comment: String = ""
 
     // ordered list of measures in the piece
-    private(set) var measures: [SimpleMeasure] = [SimpleMeasure]()
+    private(set) var measures: [Measure] = [Measure]()
     
     // initialize with 1 empty measure
     init() {
@@ -26,12 +26,12 @@ class Part {
     }
 
     func extend() {
-        let timeSigForNewMeasure = measures.last?.timeSignature ?? SimpleMeasure.defaultTimeSignature
-        measures.append(SimpleMeasure(timeSignature: timeSigForNewMeasure))
+        let timeSigForNewMeasure = measures.last?.timeSignature ?? Measure.defaultTimeSignature
+        measures.append(Measure(timeSignature: timeSigForNewMeasure))
     }
 
     // overwrite a measure with another
-    func setMeasure(measureIndex: Int, measure: SimpleMeasure) {
+    func setMeasure(measureIndex: Int, measure: Measure) {
         guard measures.indices.contains(measureIndex) else { return }
         measures[measureIndex] = measure
     }

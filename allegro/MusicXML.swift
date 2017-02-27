@@ -161,8 +161,8 @@ class MusicXMLParser : PartStoreObserver {
     }
 
     // Parse an AEXMLElement that represents a Measure and return it
-    private func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: SimpleMeasure) {
-        var measure = SimpleMeasure()
+    private func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: Measure) {
+        var measure = Measure()
 
         // number is the index of the measure
         // should this default to something else?
