@@ -13,6 +13,7 @@ class MeasureViewContainer: UIScrollView {
     var store: PartStore? {
         set {
             measureView.store = newValue
+            newValue?.subscribe(self)
         }
         get {
             return measureView.store
@@ -58,19 +59,38 @@ class MeasureViewContainer: UIScrollView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        guard let store = store else { return }
-        let s = MeasureGeometry.State(visibleSize: bounds.size,
+        guard let store = store, let index = index else { return }
+        let measure = store.measure(at: index)
+        let s = MeasureGeometry.State(measureVM: measure,
+                                      visibleSize: bounds.size,
                                       selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         measureView.geometry = MeasureGeometry(state: s)
-        contentSize = measureView.bounds.size // is computed when geometry is set
+        contentSize = measureView.bounds.size
     }
 
     func scrollToCenterOfStaffLines() {
-        guard let store = store else { return }
-        let s = MeasureGeometry.State(visibleSize: bounds.size,
+        guard let store = store, let index = index else { return }
+        let measure = store.measure(at: index)
+        let s = MeasureGeometry.State(measureVM: measure,
+                                      visibleSize: bounds.size,
                                       selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         let g = MeasureGeometry(state: s) // because measureView doesn't have a geometry until layoutSubviews
         let point = CGPoint(x: 0, y: g.totalHeight / 2 - g.state.visibleSize.height / 2)
         setContentOffset(point, animated: false)
+    }
+}
+
+extension MeasureViewContainer: PartStoreObserver {
+    func partStoreChanged() {
+        guard let store = store, let index = index else { return }
+        if measureView.geometry.state.visibleSize != .zero {
+            let measure = store.measure(at: index)
+            let state = MeasureGeometry.State(measureVM: measure,
+                                              visibleSize: measureView.geometry.state.visibleSize,
+                                              selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+            measureView.geometry = MeasureGeometry(state: state)
+        }
+        
+        contentSize = measureView.bounds.size
     }
 }

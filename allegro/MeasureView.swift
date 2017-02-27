@@ -181,10 +181,8 @@ class MeasureView: UIView {
             addSubview(v)
         }
         
-        let startXForNotes = geometry.computeNoteStartX(measure: measureVM)
-        
         // we're barring all the notes for now
-        for (noteView, startX) in zip(noteViews, startXForNotes) {
+        for (noteView, startX) in zip(noteViews, geometry.noteStartX) {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
@@ -305,8 +303,7 @@ class MeasureView: UIView {
         let pitchRelativeToCenterLine = geometry.pointToPitch(location)
 
         // determine position
-        let measure = store.measure(at: index)
-        let position = geometry.pointToPositionInTime(measure:measure, x: location.x)
+        let position = geometry.pointToPositionInTime(x: location.x)
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
@@ -322,15 +319,11 @@ class MeasureView: UIView {
 
     func editPan(sender: UIPanGestureRecognizer) {
         guard store?.mode == .edit else { return }
-
-        guard let store = store, let index = index else { return }
-        let measure = store.measure(at: index)
-
+        
         if sender.state == .ended {
             let end = sender.location(in: self)
             let start = end - sender.translation(in: self)
-            if geometry.touchRemainedInPosition(measure: measure,
-                                                start: start,
+            if geometry.touchRemainedInPosition(start: start,
                                                 end: end) {
                 editTap(sender: sender)
             }
@@ -345,11 +338,6 @@ extension MeasureView: PartStoreObserver {
         eraseGR.isEnabled = store.mode == .erase
         editPanGR.isEnabled = store.mode == .edit
 
-        if geometry.state.visibleSize != .zero {
-            let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
-                                              selectedNoteDuration: store.selectedNoteValue.nominalDuration)
-            geometry = MeasureGeometry(state: state)
-        }
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
     }

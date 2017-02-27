@@ -20,16 +20,18 @@ struct MeasureGeometry {
 
     struct State {
 
+        let measureVM: MeasureViewModel
         let visibleSize: CGSize
         let selectedNoteDuration: Rational
 
-        init(visibleSize: CGSize, selectedNoteDuration: Rational) {
+        init(measureVM: MeasureViewModel, visibleSize: CGSize, selectedNoteDuration: Rational) {
+            self.measureVM = measureVM
             self.visibleSize = visibleSize
             self.selectedNoteDuration = selectedNoteDuration
         }
     }
 
-    static let zero = MeasureGeometry(state: State(visibleSize: .zero, selectedNoteDuration: 1))
+    static let zero = MeasureGeometry(state: State(measureVM: MeasureViewModel(SimpleMeasure()), visibleSize: .zero, selectedNoteDuration: 1))
 
     let state: State
 
@@ -58,7 +60,19 @@ struct MeasureGeometry {
 
     // we're fixing totalWidth for now for testing purposes
     var totalWidth: CGFloat {
-        return state.visibleSize.width
+        let measure = state.measureVM
+        guard measure.notes.count > 0 else { return state.visibleSize.width }
+        
+        let spacing = noteStartX
+        var finalNoteEndspacing = spacing[spacing.count - 1]
+        
+        // the bbox can extend past the note frame itself for dots
+        // which we don't have for now but in the future :)
+        let bbox = noteGeometry.getBoundingBox(note: measure.notes[measure.notes.count - 1])
+        finalNoteEndspacing += bbox.origin.x - noteGeometry.frame.origin.x
+        finalNoteEndspacing += bbox.size.width
+        
+        return max(finalNoteEndspacing, state.visibleSize.width)
     }
 
     // as an optimization, this could be defined as a lazy let getter
@@ -128,13 +142,10 @@ struct MeasureGeometry {
         return lines
     }
 
-    func touchRemainedInPosition(measure: MeasureViewModel,
-                                 start: CGPoint,
+    func touchRemainedInPosition(start: CGPoint,
                                  end: CGPoint) -> Bool {
-        let startPos = pointToPositionInTime(measure: measure,
-                                             x: start.x)
-        let endPos = pointToPositionInTime(measure: measure,
-                                           x: end.x)
+        let startPos = pointToPositionInTime(x: start.x)
+        let endPos = pointToPositionInTime(x: end.x)
         return startPos == endPos
     }
 
@@ -155,10 +166,9 @@ struct MeasureGeometry {
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / heightOfSemitone + numSpacesBetweenAllLines))
     }
 
-    func pointToPositionInTime(measure: MeasureViewModel,
-                               x: CGFloat) -> Rational {
-        let notesStartX = computeNoteStartX(measure: measure)
-        var notesCenterX = notesStartX.map { $0 + noteGeometry.frame.size.width / 2 }
+    func pointToPositionInTime(x: CGFloat) -> Rational {
+        let measure = state.measureVM
+        var notesCenterX = noteStartX.map { $0 + noteGeometry.frame.size.width / 2 }
         notesCenterX.insert(0, at: 0)
         notesCenterX.append(totalWidth)
         
@@ -186,68 +196,72 @@ struct MeasureGeometry {
 
     typealias Interval = (start: CGFloat, end: CGFloat)
     
-    // whitespace is the region between the notes that are not covered by the bounding boxes
-    func computeNoteStartX(measure: MeasureViewModel) -> [CGFloat] {
-        var whitespace = [Interval]()
-        var blackspace = [Interval]()
-        
-        var totalBlackspace = CGFloat(0)
-        let defaultWidth = state.visibleSize.width
-        
-        guard measure.notes.count > 0 else { return [CGFloat]() }
-        let g = noteGeometry
-        var last = CGFloat(0)
-        
-        // Calculate the whitespace intervals between notes if there are any
-        // Also merges consecutive notes into contiguous interval
-        for note in measure.notes {
-            let noteCenterX = Rational(Int(defaultWidth)) * note.position / measure.timeSignature
-            let bbox = g.getBoundingBox(note: note)
+    var noteStartX: [CGFloat] {
+        get {
+            let measure = state.measureVM
             
-            let defaultX = max(last,noteCenterX.cgFloat - bbox.size.width / 2)
-            whitespace.append(Interval(last, defaultX))
-            blackspace.append(Interval(defaultX, defaultX + bbox.width))
+            // whitespace is the region between the notes that are not covered by the bounding boxes
+            var whitespace = [Interval]()
+            var blackspace = [Interval]()
             
-            last = defaultX + bbox.width
-            totalBlackspace += bbox.width
-        }
-        
-        // add the whitespace after the last note
-        if last < defaultWidth {
-            whitespace.append(Interval(last, defaultWidth))
-        }
-        
-        let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
-        
-        if totalWhitespace > 0 && totalBlackspace < defaultWidth {
-            let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
+            var totalBlackspace = CGFloat(0)
+            let defaultWidth = state.visibleSize.width
             
-            var whitespaceBefore = CGFloat(0)
+            guard measure.notes.count > 0 else { return [CGFloat]() }
+            let g = noteGeometry
+            var last = CGFloat(0)
             
-            for (i, space) in whitespace.enumerated() {
-                let diff = (space.end - space.start) * whitespaceScaling
-                let start = whitespaceBefore
-                let end = space.start + diff
+            // Calculate the whitespace intervals between notes if there are any
+            // Also merges consecutive notes into contiguous interval
+            for note in measure.notes {
+                let noteCenterX = Rational(Int(defaultWidth)) * note.position / measure.timeSignature
+                let bbox = g.getBoundingBox(note: note)
                 
-                whitespaceBefore += diff
-                whitespace[i] = Interval(start, end)
+                let defaultX = max(last,noteCenterX.cgFloat - bbox.size.width / 2)
+                whitespace.append(Interval(last, defaultX))
+                blackspace.append(Interval(defaultX, defaultX + bbox.width))
+                
+                last = defaultX + bbox.width
+                totalBlackspace += bbox.width
             }
             
-            blackspace = zip(whitespace, blackspace).map {
-                Interval(
-                    $0.end,
-                    $0.end + $1.end - $1.start
-                )
+            // add the whitespace after the last note
+            if last < defaultWidth {
+                whitespace.append(Interval(last, defaultWidth))
             }
+            
+            let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
+            
+            if totalWhitespace > 0 && totalBlackspace < defaultWidth {
+                let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
+                
+                var whitespaceBefore = CGFloat(0)
+                
+                for (i, space) in whitespace.enumerated() {
+                    let diff = (space.end - space.start) * whitespaceScaling
+                    let start = whitespaceBefore
+                    let end = space.start + diff
+                    
+                    whitespaceBefore += diff
+                    whitespace[i] = Interval(start, end)
+                }
+                
+                blackspace = zip(whitespace, blackspace).map {
+                    Interval(
+                        $0.end,
+                        $0.end + $1.end - $1.start
+                    )
+                }
+            }
+            
+            // right now blackspace includes the necessary space for an accidental if it exists
+            // we now remove that to get the start position of the note frame by itself
+            let startX = zip(blackspace, measure.notes).map {
+                $0.start + g.frame.origin.x - g.getBoundingBox(note: $1).origin.x
+            }
+            
+            return startX
         }
-        
-        // right now blackspace includes the necessary space for an accidental if it exists
-        // we now remove that to get the start position of the note frame by itself
-        let startX = zip(blackspace, measure.notes).map {
-            $0.start + g.frame.origin.x - g.getBoundingBox(note: $1).origin.x
-        }
-        
-        return startX
     }
 }
 
