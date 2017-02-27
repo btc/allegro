@@ -6,7 +6,7 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
-class Tie {
+class Tie: Equatable {
     // keep track of starting / ending note
     
     let start: Note
@@ -17,5 +17,9 @@ class Tie {
         self.end = endNote
         startNote.tie = self
         endNote.tie = self
+    }
+    
+    static func ==(lhs: Tie, rhs: Tie) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
 }

@@ -52,6 +52,16 @@ class Part {
         return measures[i].dotNote(at: position, dot: dot)
     }
     
+    func addTie(atMeasureIndex i: Int, at startPos: Rational, at endPos: Rational) -> Bool {
+        guard measures.indices.contains(i) else { return false }
+        return measures[i].addTie(startPos: startPos, endPos: endPos)
+    }
+    
+    func removeTie(atMeasureIndex i: Int, tie: Tie) -> Bool {
+        guard measures.indices.contains(i) else { return false }
+        return measures[i].removeTie(tie: tie)
+    }
+    
     // Adds the note to first freespace of any measure available.
     // If it doesn't fit, the next free space is tried, then a new measure is created
     // If the note's duration is longer than the time signature, the note is not added

@@ -70,6 +70,10 @@ struct Measure {
         if let tie = notes[i].note.tie {
             // contains tie
             // TODO remove the tie from the ties array
+            let success = removeTie(tie: tie)
+            if (success == false || notes[i].note.tie != nil) {
+                Log.error?.message("Error removing tie")
+            }
         }
         if let triplet = notes[i].note.triplet {
             // contains triplet
@@ -210,6 +214,17 @@ struct Measure {
         guard let endNote = note(at: endPos) else { return false}
         ties.append(Tie(startNote: startNote, endNote: endNote))
         return true
+    }
+    
+    // removes a Tie from this measure
+    mutating func removeTie(tie: Tie) -> Bool {
+        for (i, member) in ties.enumerated() {
+            if(member == tie) {
+                ties.remove(at: i)
+                return true
+            }
+        }
+        return false
     }
     
     // adds a Triplet to this measure

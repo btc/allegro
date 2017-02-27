@@ -7,7 +7,7 @@
 //
 
 class Triplet {
-    let notes: [Note] = [Note]()
+    var notes: [Note] = [Note]()
     
     init(notesArr: [Note]) {
         self.notes = notesArr
