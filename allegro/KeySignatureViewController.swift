@@ -23,16 +23,17 @@ class KeySignatureViewController: UIViewController {
     private let sharpButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "sharp"), for: .normal)
-        v.imageView?.contentMode = .scaleAspectFit
+        v.setTitleColor(.black, for: .normal)
+        v.setTitle("♯", for: UIControlState.normal)
+        v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 60)
         return v
     }()
     
     private let flatButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "flat"), for: .normal)
-        v.imageView?.contentMode = .scaleAspectFit
+        v.setTitleColor(.black, for: .normal)
+        v.setTitle("♭", for: UIControlState.normal)
+        v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 60)
         return v
     }()
     
@@ -110,7 +111,7 @@ class KeySignatureViewController: UIViewController {
     
     func updateUI() {
         // TODO: Modify to reveal sharps and flat on screen as appropriate
-        keySigLabel.text = store.part.keySignature.keySigString
+        keySigLabel.text = store.part.keySignature.description
     }
     
     func backButtonTapped() {
@@ -119,20 +120,14 @@ class KeySignatureViewController: UIViewController {
     
     func sharpButtonTapped() {
         let curSig = store.part.keySignature
-        if curSig.fifths < Key.maxFifth {
-            let newKeySig = Key(mode: .major, fifths: curSig.fifths + 1)
-            store.part.setKeySignature(keySignature: newKeySig)
-        }
-        updateUI()
+        let newKeySig = Key(mode: .major, fifths: curSig.successor)
+        store.setKeySignature(keySignature: newKeySig)
     }
     
     func flatButtonTapped() {
         let curSig = store.part.keySignature
-        if curSig.fifths > Key.minFifth {
-            let newKeySig = Key(mode: .major, fifths: curSig.fifths - 1)
-            store.part.setKeySignature(keySignature: newKeySig)
-        }
-        updateUI()
+        let newKeySig = Key(mode: .major, fifths: curSig.predecessor)
+        store.setKeySignature(keySignature: newKeySig)
     }
     
 }
@@ -140,5 +135,45 @@ class KeySignatureViewController: UIViewController {
 extension KeySignatureViewController: PartStoreObserver {
     func partStoreChanged() {
         updateUI()
+    }
+}
+
+// Will be changed to properly arranged labels 
+private extension Key {
+    var description: String {
+        switch fifths {
+        case 7:
+            return "C♯"
+        case 6:
+            return "F♯"
+        case 5:
+            return "B Maj"
+        case 4:
+            return "E Maj"
+        case 3:
+            return "A Maj"
+        case 2:
+            return "D Maj"
+        case 1:
+            return "G Maj"
+        case 0:
+            return "C Maj"
+        case -1:
+            return "F Maj"
+        case -2:
+            return "B♭"
+        case -3:
+            return "E♭"
+        case -4:
+            return "A♭"
+        case -5:
+            return "D♭"
+        case -6:
+            return "G♭"
+        case -7:
+            return "C♭"
+        default: // Defaults to C Major if invalid fifth used
+            return "C"
+        }
     }
 }

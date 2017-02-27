@@ -168,4 +168,17 @@ class PartStore {
         notify()
         return true
     }
+    
+    func setKeySignature(keySignature: Key) {
+        part.setKeySignature(keySignature: keySignature)
+        notify()
+    }
+    
+    func setTimeSignature(timeSignature: Rational) {
+        if !hasNotes() {
+            part.setTimeSignature(timeSignature: timeSignature)
+        }
+        notify()
+    }
+    
 }
