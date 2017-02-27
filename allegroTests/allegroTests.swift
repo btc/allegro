@@ -32,99 +32,10 @@ class allegroTests: XCTestCase {
         let part = Part()
         XCTAssert(part.tempo == 120, "New Part tempo default is 120 bpm")
     }
-
-    func testMeasureBasic() {
-        // test initialization
-        let m = Measure()
-        let defaultKey = Key()
-        XCTAssert(m.key.mode == defaultKey.mode &&
-            m.key.fifths == defaultKey.fifths, "New Measure has a default Key")
-        
-        XCTAssert(m.timeSignature == 4/4, "New measure has a default of 4/4 time")
-        
-        var m2 = Measure(time: 3/4)
-        let note = Note(value: .whole, letter: .A, octave: 1)
-        XCTAssert(m2.insert(note: note, at: 0) == false, "Whole note doesn't fit in a 3/4 measure")
-    }
-
-    func testMeasure() {
-        var measure = Measure()
-        
-        // test adding notes
-        let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
-        let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
-        let C5eighth = Note(value: .eighth, letter: .C, octave: 5)
-        let D5quarter = Note(value: .quarter, letter: .D, octave: 5)
-        
-        XCTAssert(measure.insert(note: A4quarter, at: 0) == true, "Note can be placed at start of free space")
-        XCTAssert(measure.insert(note: B4quarter, at: 3/4) == true, "Note can be placed at end of free space")
-        XCTAssert(measure.insert(note: C5eighth, at: 3/8) == true, "Note can be placed in the middle of free space")
-        
-        XCTAssert(measure.insert(note: D5quarter, at: 0) == false, "Notes can't be placed on another note")
-        XCTAssert(measure.insert(note: D5quarter, at: 1/4) == false, "Notes can't be placed overlapping another note")
-        
-        // test for correct freespace
-        var freeSpace = measure.frees
-        XCTAssert(freeSpace.count == 2, "Two freespaces")
-        XCTAssert(freeSpace[0].pos == 1/4 && freeSpace[0].duration == 1/8, "Check first freespace")
-        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Check second freespace")
-        
-        // test directly accessing notes
-        if let n0 = measure.note(at: 0) {
-            XCTAssert(n0 == A4quarter, "Note can be accessed directly")
-        } else {
-            XCTFail("Note can be accessed directly")
-        }
-        if let n1 = measure.note(at: 3/8) {
-            XCTAssert(n1 == C5eighth, "Note can be accessed directly")
-        } else {
-            XCTFail("Note can be accessed directly")
-        }
-        if let n2 = measure.note(at: 3/4) {
-            XCTAssert(n2 == B4quarter, "Note can be accessed directly")
-        } else {
-            XCTFail("Note can be accessed directly")
-        }
-        
-        // test getting all notes
-        let notes = measure.notes
-        XCTAssert(notes.count == 3, "There are exactly 3 notes")
-        XCTAssert(notes[0].pos == 0 && notes[0].note == A4quarter, "Note can be accessed")
-        XCTAssert(notes[1].pos == 3/8 && notes[1].note == C5eighth, "Note can be accessed")
-        XCTAssert(notes[2].pos == 3/4 && notes[2].note == B4quarter, "Note can be accessed")
-        
-        // test removing notes
-        XCTAssert(measure.removeNote(at: 0) == true, "Remove note at 0")
-        XCTAssert(measure.notes.count == 2, "There are exactly 2 notes after removing one")
-        freeSpace = measure.frees
-        XCTAssert(freeSpace.count == 2, "Two freespaces")
-        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is bigger")
-        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Check second freespace")
-        
-        XCTAssert(measure.removeNote(at: 0) == false, "Not allowed to remove note twice")
-        XCTAssert(measure.notes.count == 2, "Note cannot be removed twice")
-        freeSpace = measure.frees
-        XCTAssert(freeSpace.count == 2, "Two freespaces")
-        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is same")
-        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/4, "Second freespace is same")
-        
-        XCTAssert(measure.removeNote(at: 3/4) == true, "Remove at 3/4")
-        XCTAssert(measure.notes.count == 1, "There is only 1 note left")
-        freeSpace = measure.frees
-        XCTAssert(freeSpace.count == 2, "Two freespaces")
-        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 3/8, "First freespace is same")
-        XCTAssert(freeSpace[1].pos == 1/2 && freeSpace[1].duration == 1/2, "Second freespace is bigger")
-        
-        XCTAssert(measure.removeNote(at: 3/8) == true, "Remove at 3/8")
-        XCTAssert(measure.notes.count == 0, "There are no notes left")
-        freeSpace = measure.frees
-        XCTAssert(freeSpace.count == 1, "One freespace")
-        XCTAssert(freeSpace[0].pos == 0 && freeSpace[0].duration == 1, "First freespace takes the whole measure")
-    }
     
     // test for previous note with same letter
     func testMeasureGetPrevLetterMatch() {
-        var measure = Measure()
+        var measure = SimpleMeasure()
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
@@ -134,68 +45,23 @@ class allegroTests: XCTestCase {
         _ = measure.insert(note: B4quarter, at: 1/2)
         _ = measure.insert(note: A4quarter, at: 3/4)
         
-        XCTAssert(measure.getPrevLetterMatch(noteLetter: .A, position: 0) == nil, "No same letter note before first note")
-        if let match = measure.getPrevLetterMatch(noteLetter: .A, position: 1/4) {
+        XCTAssert(measure.getPrevLetterMatch(for: .A, at: 0) == nil, "No same letter note before first note")
+        if let match = measure.getPrevLetterMatch(for: .A, at: 1/4) {
             XCTAssert(match == A4quarter, "Finds the correct prev note")
         } else {
             XCTFail("Finds the correct prev note")
         }
-        XCTAssert(measure.getPrevLetterMatch(noteLetter: .B, position: 1/2) == nil, "No same letter note")
-        if let match = measure.getPrevLetterMatch(noteLetter: .A, position: 3/4) {
+        XCTAssert(measure.getPrevLetterMatch(for: .B, at: 1/2) == nil, "No same letter note")
+        if let match = measure.getPrevLetterMatch(for: .A, at: 3/4) {
             XCTAssert(match == A4quarter, "Finds the correct prev note")
         } else {
             XCTFail("Finds the correct prev note")
         }
-    }
-
-    // test inserting notes and shifting over neighbors
-    func testMeasureInsertwithNudge() {
-        
-        let eighthNote = Note(value: .eighth, letter: .A, octave: 4)
-        let quarterNote = Note(value: .quarter, letter: .A, octave: 4)
-        let halfNote = Note(value: .half, letter: .A, octave: 4)
-        
-        // positive examples
-
-        var m = Measure()
-        let _ = m.insert(note: eighthNote, at: 1/4)
-
-        // resize both freespaces
-        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
-        XCTAssert(m.frees[0].duration == 1/8, "Resizes 1st freespace")
-        XCTAssert(m.frees[1].duration == 1/2, "Resizes 2nd freepace")
-        _ = m.removeNote(at: 1/8)
-
-        // remove 1st freespace and resize 2nd
-        _ = m.insert(note: eighthNote, at: 0)
-        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
-        XCTAssert(m.frees.count == 1, "Removes 1st freespace")
-        XCTAssert(m.frees[0].duration == 1/2, "Resizes 2nd freespace")
-        _ = m.removeNote(at: 0)
-        _ = m.removeNote(at: 1/8)
-
-        // resize 1st freespace and remove 2nd
-        _ = m.insert(note: halfNote, at: 1/2)
-        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
-        XCTAssert(m.frees[0].duration == 1/8, "Resizes 1st freespace")
-        XCTAssert(m.frees.count == 1, "Removes 2nd freespace")
-        _ = m.removeNote(at: 3/4)
-        _ = m.removeNote(at: 1/8)
-
-        // remove both freespaces
-        _ = m.insert(note: eighthNote, at: 0)
-        _ = m.insert(note: halfNote, at: 1/2)
-        XCTAssert(m.insertWithNudge(note: quarterNote, at: 1/8) == true, "Can insert and nudge note")
-        XCTAssert(m.frees.isEmpty, "Removes 1st and 2nd freespace")
-        _ = m.removeNote(at: 1/8)
-
-        // negative example
-        XCTAssert(m.insertWithNudge(note: halfNote, at: 1/8) == false, "Not enough space for note")
     }
     
     // test for changing the dot on a note
     func testMeasureDotNote() {
-        var m = Measure()
+        var m = SimpleMeasure()
         
         let _ = m.insert(note: Note(value: .eighth, letter: .A, octave: 4), at: 3/8)
         let _ = m.insert(note: Note(value: .quarter, letter: .A, octave: 4), at: 0)
@@ -206,9 +72,7 @@ class allegroTests: XCTestCase {
         XCTAssert(m.dotNote(at: 1/2, dot: .single), "Neighbor is nudged to make space for dotted note")
         
         XCTAssert(m.dotNote(at: 0, dot: .none), "Able to remove dot")
-        XCTAssert(m.frees[0].pos == 1/4 && m.frees[0].duration == 1/8, "Freespace created when dot is removed")
-        
-        XCTAssert(m.dotNote(at: 3/8, dot: .single) == false, "Not enough space for dotting note")
+        XCTAssert(m.frees[0].pos == 1/4 && m.frees[0].duration == 1/8, "Freespace created when dot is removed")        
     }
     
     func testNote() {

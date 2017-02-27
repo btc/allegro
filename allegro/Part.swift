@@ -26,7 +26,7 @@ class Part {
     }
 
     func extend() {
-        let timeSigForNewMeasure = measures.last?.timeSignature ?? Measure.defaultTimeSignature
+        let timeSigForNewMeasure = measures.last?.timeSignature ?? SimpleMeasure.defaultTimeSignature
         measures.append(SimpleMeasure(timeSignature: timeSigForNewMeasure))
     }
 
