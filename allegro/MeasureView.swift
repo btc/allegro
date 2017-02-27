@@ -269,13 +269,18 @@ class MeasureView: UIView {
     }
 
     func longPressPan(sender: UIGestureRecognizer) {
-        guard let store = store else { return }
+        guard let store = store, let index = index else { return }
 
         if store.mode == .edit && sender.state == .ended {
             edit(sender: sender)
         }
 
         if store.mode == .erase {
+            if store.measure(at: index).notes.isEmpty {
+                store.mode = .edit
+                Snackbar(message: "switched to edit mode", duration: .short).show()
+                return
+            }
             erase(sender: sender)
         }
     }
