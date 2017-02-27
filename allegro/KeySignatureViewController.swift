@@ -120,14 +120,12 @@ class KeySignatureViewController: UIViewController {
     
     func sharpButtonTapped() {
         let curSig = store.part.keySignature
-        let newKeySig = Key(mode: .major, fifths: curSig.successor)
-        store.setKeySignature(keySignature: newKeySig)
+        store.setKeySignature(keySignature: curSig.successor)
     }
     
     func flatButtonTapped() {
         let curSig = store.part.keySignature
-        let newKeySig = Key(mode: .major, fifths: curSig.predecessor)
-        store.setKeySignature(keySignature: newKeySig)
+        store.setKeySignature(keySignature: curSig.predecessor)
     }
     
 }
