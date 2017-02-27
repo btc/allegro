@@ -36,8 +36,8 @@ class Part {
         measures[measureIndex] = measure
     }
 
-    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
-        guard measures.indices.contains(i) else { return false }
+    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Rational? {
+        guard measures.indices.contains(i) else { return nil }
         return measures[i].insert(note: note, at: position)
     }
 
@@ -69,7 +69,7 @@ class Part {
                 let duration = free.duration
                 if note.duration <= duration {
                     // add note
-                    if insert(note: note, intoMeasureIndex: i, at: pos) == true {
+                    if insert(note: note, intoMeasureIndex: i, at: pos) != nil {
                         return
                     }
                 }

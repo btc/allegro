@@ -338,9 +338,9 @@ class MeasureView: UIView {
         let note = Note(value: value, letter: letter, octave: octave)
 
         // attempt to insert
-        let succeeded = store.insert(note: note, intoMeasureIndex: index, at: position)
+        let actualPosition = store.insert(note: note, intoMeasureIndex: index, at: position)
 
-        if !succeeded {
+        if actualPosition == nil {
             Snackbar(message: "no space for note", duration: .short).show()
         }
     }

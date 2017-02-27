@@ -191,7 +191,7 @@ class MusicXMLParser : PartStoreObserver {
         let noteElements = measureElement.childrenMatch(name: "note")
         for noteElem in noteElements {
             let (note, position) = parseNote(noteElement: noteElem)
-            guard measure.insert(note: note, at: position) else {
+            guard let _ = measure.insert(note: note, at: position) else {
                 Log.error?.message("parseMeasure: unable to insert note: \(note) at \(position)")
                 continue
             }

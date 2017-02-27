@@ -123,17 +123,17 @@ struct Measure {
         }
     }
 
-    mutating func insert(note: Note, at initialDesiredPosition: Rational) -> Bool {
+    mutating func insert(note: Note, at initialDesiredPosition: Rational) -> Rational? {
         var np = NotePos(pos: initialDesiredPosition, note: note)
 
         if np.end > end { // too late
             np.end = end
         }
         if np.start < start { // too early
-            return false
+            return nil
         }
         if note.duration > freespace { // not enough space
-            return false
+            return nil
         }
 
         let indexToInsert = self.indexToInsert(np.pos)
@@ -165,7 +165,7 @@ struct Measure {
             break
         }
         notes.insert(np, at: indexToInsert)
-        return true
+        return np.pos
     }
 
     // Changes the dot on a note in O(n)
@@ -178,13 +178,13 @@ struct Measure {
         note.dot = dot
 
         // re-insert with new dot
-        if insert(note: note, at: position) {
+        if insert(note: note, at: position) != nil {
             return true
         }
 
         // re-insert original note if we were unable to insert dotted note with nudge
         note.dot = originalDot
-        if !insert(note: note, at: position) && DEBUG {
+        if insert(note: note, at: position) == nil && DEBUG {
             Log.error?.message("Unable to re-insert note after failed dotting. Developer Error.")
         }
         return false
