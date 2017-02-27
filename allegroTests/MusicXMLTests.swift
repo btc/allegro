@@ -13,6 +13,18 @@ import AEXML
 
 class musicXMLTests: XCTestCase {
 
+    let notes = [
+        Note(value: .whole, letter: .C, octave: 4),
+        Note(value: .quarter, letter: .A, octave: 4),
+        Note(value: .eighth, letter: .G, octave: 4, accidental: .sharp, rest: false),
+    ]
+
+    let cases: [(measureIndex: Int, noteIndex: Int, pos: Rational)] = [
+        (0, 0, 0),
+        (1, 1, 1/4),
+        (1, 2, 1/2)
+    ]
+
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -25,72 +37,74 @@ class musicXMLTests: XCTestCase {
     }
 
     func testGenerate() {
-        let part = Part()
-        let store = PartStore(part: part)
-        let parser = MusicXMLParser(store: store)
-
-
-        let n0 = Note(value: .quarter, letter: .A, octave: 4)
-        let _ = store.insert(note: n0, intoMeasureIndex: 0, at: 1/4)
-
-        parser.save(filename: "test.xml")
-    }
-
-    func testParse() {
         let store = PartStore(part: Part())
         let parser = MusicXMLParser(store: store)
-        
-        let n0 = Note(value: .quarter, letter: .A, octave: 4)
-        let n1 = Note(value: .eighth, letter: .G, octave: 4, accidental: .sharp, rest: false)
-        let _ = store.insert(note: n0, intoMeasureIndex: 0, at: 1/4)
-        let _ = store.insert(note: n1, intoMeasureIndex: 0, at: 1/2)
-        
-        let partDoc = parser.partDoc
-        
+
+        // insert notes into store
+        for c in cases {
+            let _ = store.insert(note: notes[c.noteIndex], intoMeasureIndex: c.measureIndex, at: c.pos)
+        }
+
+        // TODO test the XML generated matches example0
+//        Log.info?.message(parser.partDoc.xml)
+//        print(parser.partDoc.xml)
+
         let parser2 = MusicXMLParser(store: PartStore(part: Part()))
-        guard let newPart = parser2.parse(partDoc: partDoc) else {
-            XCTFail("Unable to parse")
-            return
-        }
-        
-        let cases: [(measure: Int, note: Note, at: Rational)] = [
-            (0, n0, 1/4),
-            (0, n1, 1/2)
-            ]
 
-        for (i, testCase) in cases.enumerated() {
-            let (m, n, pos) = testCase
-            if let foundNote = newPart.measures[m].note(at: pos) {
-                XCTAssertTrue(foundNote == n, "test case \(i) wrong Note")
-            } else {
-                XCTFail("test case \(i) Note not found")
-            }
-        }
-    }
-
-    func testLoad() {
-
-        let parser = MusicXMLParser(store: PartStore(part: Part()))
-
-        guard let part = parser.load(filename: "example0") else {
+        guard let part = parser2.bundleLoad(filename: "example0") else {
             XCTFail("Unable to load")
             return
         }
 
-        let n0 = Note(value: .whole, letter: .C, octave: 4)
-        let cases: [(measure: Int, note: Note, at: Rational)] = [
-            (0, n0, 0),
-        ]
+        print("parser xml:\n")
+        print(parser.partDoc.xml)
+        print("\nparser2 xml:\n")
+        print(parser2.partDoc.xml)
 
-        for (i, testCase) in cases.enumerated() {
-            let (m, n, pos) = testCase
-            if let foundNote = part.measures[m].note(at: pos) {
-                XCTAssertTrue(foundNote == n, "test case \(i) wrong Note")
-            } else {
-                XCTFail("test case \(i) Note not found")
-            }
+        XCTAssertTrue(parser.partDoc.xmlCompact == parser2.partDoc.xmlCompact, "XML matches")
+    }
+
+    func testSaveLoad() {
+        let store = PartStore(part: Part())
+        let parser = MusicXMLParser(store: store)
+
+        for c in cases {
+            let _ = store.insert(note: notes[c.noteIndex], intoMeasureIndex: c.measureIndex, at: c.pos)
         }
 
+        parser.save(filename: "test")
+
+        let parser2 = MusicXMLParser(store: PartStore(part: Part()))
+        guard let part2 = parser2.load(filename: "test") else {
+            XCTFail("Unable to open file")
+            return
+        }
+
+        for (i,c) in cases.enumerated() {
+            if let note = part2.measures[c.measureIndex].note(at: c.pos) {
+                XCTAssertTrue(note == notes[c.noteIndex], "found note \(i)")
+            } else {
+                XCTFail("Unable to find note \(i)")
+            }
+        }
+    }
+
+    func testBundleLoad() {
+
+        let parser = MusicXMLParser(store: PartStore(part: Part()))
+
+        guard let part = parser.bundleLoad(filename: "example0") else {
+            XCTFail("Unable to load")
+            return
+        }
+
+        for (i,c) in cases.enumerated() {
+            if let note = part.measures[c.measureIndex].note(at: c.pos) {
+                XCTAssertTrue(note == notes[c.noteIndex], "found note \(i)")
+            } else {
+                XCTFail("Unable to find note \(i)")
+            }
+        }
     }
 
 }

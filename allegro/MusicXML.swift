@@ -74,7 +74,8 @@ class MusicXMLParser : PartStoreObserver {
                 
                 let _ = pitch.addChild(name: "octave", value: "\(n.octave)" )
 
-                let duration = (n.duration * divisionsPerQuarterNote).numerator
+                let duration = Int((n.duration * divisionsPerQuarterNote).double)
+
                 let _ = note.addChild(name: "duration", value: "\(duration)")
 
                 let _ = note.addChild(name: "type", value: "\(n.value.type)")
@@ -232,18 +233,57 @@ class MusicXMLParser : PartStoreObserver {
         return part
     }
 
+    // save the Part to disk in Documents.
+    // Note: filename should not include .xml extension
     func save(filename: String) {
-        // TODO write to disk
+        Log.info?.message("saving MusicXML to \(filename).xml")
 
-        Log.info?.message("saving MusicXML to \(filename)")
+        do {
+            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
-        let msg: String = "\n" + partDoc.xml + "\n"
-        Log.info?.message(msg)
+            // Find the file
+            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
+            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
+
+            // Write XML to the file
+            try partDoc.xml.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
+
+        } catch {
+            Log.error?.message("Failed to save XML to Documents. Error: \(error)")
+        }
+    }
+
+    // Load an XML file from Documents and then parse it as a Part
+    // Note filename should not include .xml extension
+    func load(filename: String) -> Part? {
+        Log.info?.message("reading MusicXML from \(filename).xml")
+
+        do {
+            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+
+            // Find the file
+            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
+            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
+
+            // Load XML from file
+            let data = try Data(contentsOf: fileURL)
+
+            // Parse XML
+            let newPartDoc = try AEXMLDocument(xml: data)
+            let newPart = parse(partDoc: newPartDoc)
+            partDoc = newPartDoc
+
+            return newPart
+
+        } catch {
+            Log.error?.message("Failed to load XML from Documents. Error: \(error)")
+            return nil
+        }
     }
 
     // attempts to load a file as XML and then parse it as a Part
-    func load(filename: String) -> Part? {
-        Log.info?.message("reading MusicXML from \(filename)")
+    func bundleLoad(filename: String) -> Part? {
+        Log.info?.message("reading MusicXML from \(filename).xml")
 
         // TODO do we have to do something for the path for when we save parts on the phone?
         guard
