@@ -241,16 +241,31 @@ class MusicXMLParser : PartStoreObserver {
         Log.info?.message(msg)
     }
 
-    func load(filename: String) {
+    // attempts to load a file as XML and then parse it as a Part
+    func load(filename: String) -> Part? {
         Log.info?.message("reading MusicXML from \(filename)")
 
-//        let xmlDoc = try AEXMLDocument(xml: data, options: options)
+        // TODO do we have to do something for the path for when we save parts on the phone?
+        guard
+            let xmlPath = Bundle.main.path(forResource: filename, ofType: "xml"),
+            let data = try? Data(contentsOf: URL(fileURLWithPath: xmlPath))
+            else {
+                Log.error?.message("Unable to open file")
+                return nil
+        }
 
-        // TODO
-        // open file from disk
-        // create AEXMLDocument
-        // call parse to create Part
-        // create PartStore with Part <-- this could be higher up
+        guard let newPartDoc = try? AEXMLDocument(xml: data) else {
+            Log.error?.message("Unable to create AEXMLDocument from file")
+            return nil
+        }
+
+        guard let newPart = parse(partDoc: newPartDoc) else {
+            Log.error?.message("Unable to parse AEXMLDocument into Part")
+            return nil
+        }
+
+        partDoc = newPartDoc
+        return newPart
     }
     
     init(store: PartStore) {

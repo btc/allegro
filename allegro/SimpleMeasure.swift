@@ -101,7 +101,7 @@ struct SimpleMeasure {
     }
 
     func indexToInsert(_ position: Rational) -> Int {
-        if let index = notes.indexOfFirstMatch({ $0.startsStrictlyAfter(position) }) {
+        if let index = notes.indexOfFirstMatch({ $0.startsAtOrAfter(position) }) {
             return index
         }
         return notes.endIndex
@@ -277,6 +277,10 @@ struct NotePos {
 
     func startsStrictlyAfter(_ position: Rational) -> Bool {
         return position < start
+    }
+
+    func startsAtOrAfter(_ position: Rational) -> Bool {
+        return position <= start
     }
 
     func startsAtOrBefore(_ other: NotePos) -> Bool {

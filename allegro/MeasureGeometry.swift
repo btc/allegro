@@ -142,13 +142,6 @@ struct MeasureGeometry {
         return lines
     }
 
-    func touchRemainedInPosition(start: CGPoint,
-                                 end: CGPoint) -> Bool {
-        let startPos = pointToPositionInTime(x: start.x)
-        let endPos = pointToPositionInTime(x: end.x)
-        return startPos == endPos
-    }
-
     func noteY(pitch: Int) -> CGFloat {
         return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch) - noteHeight / 2
     }

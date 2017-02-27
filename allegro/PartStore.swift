@@ -79,7 +79,12 @@ class PartStore {
     }
 
     private func notify() {
-        observers.forEach { $0.value?.partStoreChanged() }
+        // prunes released objects as it iterates
+        observers = observers.filter {
+            guard let value = $0.value else { return false }
+            value.partStoreChanged()
+            return true
+        }
     }
 
     private func extendIfNecessary(toAccessMeasureAtIndex i: Int) {
@@ -112,9 +117,20 @@ class PartStore {
         }
     }
 
-    func dotNote(inMeasure index: Int, at position: Rational, dot: Note.Dot) -> Bool {
-        Log.info?.message("Change note at \(position) to \(dot) dot at measure \(index)")
-        let succeeded = part.dotNote(at: position, dot: dot, atMeasureIndex: index)
+    func toggleDot(inMeasure index: Int, at position: Rational, action: NoteAction) -> Bool {
+        guard let note = part.measures[index].note(at: position) else { return false }
+        let currentDot = note.dot
+        var newDot: Note.Dot = .none // is always assigned a new value!
+        switch action {
+        case .toggleDoubleDot:
+            newDot = currentDot == Note.Dot.double ? Note.Dot.none : Note.Dot.double
+        case .toggleDot:
+            newDot = currentDot == Note.Dot.single ? Note.Dot.none : Note.Dot.single
+        default:
+            return false
+        }
+        Log.info?.message("Change note at \(position) to \(newDot) dot at measure \(index)")
+        let succeeded = part.dotNote(at: position, dot: newDot, atMeasureIndex: index)
         if succeeded {
             notify()
         }

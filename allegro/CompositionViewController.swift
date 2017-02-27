@@ -20,15 +20,9 @@ class CompositionViewController: UIViewController {
     fileprivate let modeToggle: UIButton = {
         let v = UIButton()
         v.addTarget(self, action: #selector(toggled), for: .touchUpInside)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 16)
         v.backgroundColor = .allegroPurple
-
         v.setImage(#imageLiteral(resourceName: "note mode"), for: .normal)
-        v.setTitleColor(.white, for: .selected)
-
         v.setImage(#imageLiteral(resourceName: "eraser"), for: .selected)
-        v.imageView?.layer.minificationFilter = kCAFilterTrilinear
-
         return v
     }()
     
@@ -50,15 +44,15 @@ class CompositionViewController: UIViewController {
     static func create(part: Part) -> UIViewController {
         let store = PartStore(part: part)
         let vc = CompositionViewController(store: store)
-        //let sideMenuVC = SideMenuViewController(store: store)
+        let sideMenuVC = SideMenuViewController(store: store)
 
         // NB(btc): The way the library provides customization (static options) makes it so that it's only feasible to have
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
         // and move the options to the instance of the SideMenuViewController.
-        //SlideMenuOptions.animationDuration = 0.07 // seconds
+        SlideMenuOptions.animationDuration = 0.07 // seconds
 
-        //let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
-        return vc
+        let container = SlideMenuController(mainViewController: vc, rightMenuViewController: sideMenuVC)
+        return container
     }
 
     private init(store: PartStore) {
@@ -153,6 +147,7 @@ extension CompositionViewController: PartStoreObserver {
 extension CompositionViewController: NoteSelectorDelegate {
     func didChangeSelection(value: Note.Value) {
         store.selectedNoteValue = value
+        store.mode = .edit
         Log.info?.message("user selected \(value) value")
     }
 }

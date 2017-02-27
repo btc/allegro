@@ -11,12 +11,12 @@ import UIKit
 class MeasureViewContainer: UIScrollView {
 
     var store: PartStore? {
-        set {
-            measureView.store = newValue
-            newValue?.subscribe(self)
+        willSet {
+            store?.unsubscribe(self)
         }
-        get {
-            return measureView.store
+        didSet {
+            store?.subscribe(self)
+            measureView.store = store
         }
     }
 
@@ -47,8 +47,7 @@ class MeasureViewContainer: UIScrollView {
     init() {
         super.init(frame: .zero)
         backgroundColor = .white
-        panGestureRecognizer.minimumNumberOfTouches = 2
-        isDirectionalLockEnabled = true
+        panGestureRecognizer.minimumNumberOfTouches = 1
 
         addSubview(measureView)
     }
@@ -92,5 +91,12 @@ extension MeasureViewContainer: PartStoreObserver {
         }
         
         contentSize = measureView.bounds.size
+        
+        switch store.mode {
+        case .edit:
+            panGestureRecognizer.minimumNumberOfTouches = 1
+        case .erase:
+            panGestureRecognizer.minimumNumberOfTouches = 2
+        }
     }
 }
