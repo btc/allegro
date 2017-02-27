@@ -34,8 +34,8 @@ struct Key {
     let mode: Key.Mode
     
     /* Highest and lowest acceptable values for key signature fifths */
-    static let maxFifth = 7
-    static let minFifth = -7
+    let maxFifth = 7
+    let minFifth = -7
     
     /* 
         Represents the number of accidentals in the key (according to the circle of fifths starting with 0 => C Major
@@ -74,44 +74,6 @@ struct Key {
         7: .B
     ]
     
-    // Can be changed to return images as well
-    // Currently left as strings for label title
-    var keySigString: String {
-        switch fifths {
-        case 7:
-            return "C♯"
-        case 6:
-            return "F♯"
-        case 5:
-            return "B Maj"
-        case 4:
-            return "E Maj"
-        case 3:
-            return "A Maj"
-        case 2:
-            return "D Maj"
-        case 1:
-            return "G Maj"
-        case 0:
-            return "C Maj"
-        case -1:
-            return "F Maj"
-        case -2:
-            return "B♭"
-        case -3:
-            return "E♭"
-        case -4:
-            return "A♭"
-        case -5:
-            return "D♭"
-        case -6:
-            return "G♭"
-        case -7:
-            return "C♭"
-        default: // Defaults to C Major if invalid fifth used
-            return "C"
-        }
-    }
     
     // default key is C Major, which has no sharps or flats
     init(mode: Key.Mode = .major, fifths: Int = 0) {
@@ -138,6 +100,22 @@ struct Key {
             return (fifths > 0) ? .sharp : .flat
         }
         return nil
+    }
+    
+    var successor:Int {
+        if fifths == maxFifth {
+            return fifths
+        } else {
+            return fifths + 1
+        }
+    }
+    
+    var predecessor:Int {
+        if fifths == minFifth {
+            return fifths
+        } else {
+            return fifths - 1
+        }
     }
 }
 

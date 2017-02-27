@@ -84,10 +84,21 @@ class Part {
         }
     }
     
-    //Setters for time signatures
+    func hasNotes() -> Bool {
+        for m in measures {
+            if m.notes.count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    //Setters for signatures
     func setTimeSignature(timeSignature: Rational) {
-        for i in 0..<measures.count {
-            measures[i].timeSignature = timeSignature
+        if !hasNotes() {
+            for i in 0..<measures.count {
+                measures[i].timeSignature = timeSignature
+            }
         }
     }
     
