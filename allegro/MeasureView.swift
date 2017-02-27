@@ -276,7 +276,7 @@ class MeasureView: UIView {
         }
 
         if store.mode == .erase {
-            if store.measure(at: index).notes.isEmpty {
+            if sender.state == .ended && store.measure(at: index).notes.isEmpty {
                 store.mode = .edit
                 Snackbar(message: "switched to edit mode", duration: .short).show()
                 return
