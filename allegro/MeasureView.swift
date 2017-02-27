@@ -156,6 +156,9 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g, store: store) }
+        noteViews.forEach {
+            $0.isSelected = $0.note.position == store.selectedNote?.position && store.selectedNote?.measure == index
+        }
         noteViews.forEach() { $0.delegate = self }
         let notesToNoteView = noteViewModels.enumerated()
             .map{return ($1, noteViews[$0])}
@@ -380,7 +383,7 @@ extension MeasureView: NoteActionDelegate {
         guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
 
         guard store.mode == .edit else {
-            if store.mode == .erase{ // i.e. the user tapped on note
+            if store.mode == .erase { // i.e. the user tapped on note
 
                 // TODO: btc remove this case
                 store.removeNote(fromMeasureIndex: index, at: pos)
@@ -405,6 +408,8 @@ extension MeasureView: NoteActionDelegate {
             if !store.changeNoteToRest(inMeasure: index, at: pos) {
                 Snackbar(message: "failed to convert note to rest", duration: .short).show()
             }
+        case .select:
+            store.selectedNote = (index, pos)
         }
     }
 }
