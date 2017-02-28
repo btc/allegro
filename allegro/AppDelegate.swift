@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             window = UIWindow(frame: UIScreen.main.bounds)
         }
-        window?.rootViewController = RootNavigationViewController(rootViewController: HomeMenuViewController())
+        window?.rootViewController = RootNavigationViewController(rootViewController: PartListingViewController())
         window?.makeKeyAndVisible()
         Log.info?.message("App launched!")
         return true

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeMenuViewController: UIViewController {
+class PartListingViewController: UIViewController {
     
 
     private let logo: UIView = {
