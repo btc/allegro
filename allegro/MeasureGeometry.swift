@@ -20,18 +20,18 @@ struct MeasureGeometry {
 
     struct State {
 
-        let measureVM: MeasureViewModel
+        let measure: MeasureViewModel
         let visibleSize: CGSize
         let selectedNoteDuration: Rational
 
-        init(measureVM: MeasureViewModel, visibleSize: CGSize, selectedNoteDuration: Rational) {
-            self.measureVM = measureVM
+        init(measure: MeasureViewModel, visibleSize: CGSize, selectedNoteDuration: Rational) {
+            self.measure = measure
             self.visibleSize = visibleSize
             self.selectedNoteDuration = selectedNoteDuration
         }
     }
 
-    static let zero = MeasureGeometry(state: State(measureVM: MeasureViewModel(SimpleMeasure()), visibleSize: .zero, selectedNoteDuration: 1))
+    static let zero = MeasureGeometry(state: State(measure: MeasureViewModel(SimpleMeasure()), visibleSize: .zero, selectedNoteDuration: 1))
 
     let state: State
 
@@ -60,7 +60,7 @@ struct MeasureGeometry {
 
     // we're fixing totalWidth for now for testing purposes
     var totalWidth: CGFloat {
-        let measure = state.measureVM
+        let measure = state.measure
         guard measure.notes.count > 0 else { return state.visibleSize.width }
         
         let spacing = noteStartX
@@ -160,7 +160,7 @@ struct MeasureGeometry {
     }
 
     func pointToPositionInTime(x: CGFloat) -> Rational {
-        let measure = state.measureVM
+        let measure = state.measure
         var notesCenterX = noteStartX.map { $0 + noteGeometry.frame.size.width / 2 }
         notesCenterX.insert(0, at: 0)
         notesCenterX.append(totalWidth)
@@ -191,7 +191,7 @@ struct MeasureGeometry {
     
     var noteStartX: [CGFloat] {
         get {
-            let measure = state.measureVM
+            let measure = state.measure
             
             // whitespace is the region between the notes that are not covered by the bounding boxes
             var whitespace = [Interval]()

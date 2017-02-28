@@ -60,7 +60,7 @@ class MeasureViewContainer: UIScrollView {
         super.layoutSubviews()
         guard let store = store, let index = index else { return }
         let measure = store.measure(at: index)
-        let s = MeasureGeometry.State(measureVM: measure,
+        let s = MeasureGeometry.State(measure: measure,
                                       visibleSize: bounds.size,
                                       selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         measureView.geometry = MeasureGeometry(state: s)
@@ -70,7 +70,7 @@ class MeasureViewContainer: UIScrollView {
     func scrollToCenterOfStaffLines() {
         guard let store = store, let index = index else { return }
         let measure = store.measure(at: index)
-        let s = MeasureGeometry.State(measureVM: measure,
+        let s = MeasureGeometry.State(measure: measure,
                                       visibleSize: bounds.size,
                                       selectedNoteDuration: store.selectedNoteValue.nominalDuration)
         let g = MeasureGeometry(state: s) // because measureView doesn't have a geometry until layoutSubviews
@@ -84,7 +84,7 @@ extension MeasureViewContainer: PartStoreObserver {
         guard let store = store, let index = index else { return }
         if measureView.geometry.state.visibleSize != .zero {
             let measure = store.measure(at: index)
-            let state = MeasureGeometry.State(measureVM: measure,
+            let state = MeasureGeometry.State(measure: measure,
                                               visibleSize: measureView.geometry.state.visibleSize,
                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
             measureView.geometry = MeasureGeometry(state: state)
