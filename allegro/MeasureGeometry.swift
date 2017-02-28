@@ -31,7 +31,7 @@ struct MeasureGeometry {
         }
     }
 
-    static let zero = MeasureGeometry(state: State(measure: MeasureViewModel(SimpleMeasure()), visibleSize: .zero, selectedNoteDuration: 1))
+    static let zero = MeasureGeometry(state: State(measure: MeasureViewModel(Measure()), visibleSize: .zero, selectedNoteDuration: 1))
 
     let state: State
 
