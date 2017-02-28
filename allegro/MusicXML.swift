@@ -17,8 +17,9 @@ class MusicXMLParser : PartStoreObserver {
     var store: PartStore
     var partDoc: AEXMLDocument = AEXMLDocument()
 
-    // also called ticks per quarter note. 4 because the minimum note is 1/16
-    private let divisionsPerQuarterNote: Rational = 4
+    // also called ticks per quarter note.
+    // 16 because the minimum duration is a 1/64 note (from a double-dotted 1/16 note)
+    private let divisionsPerQuarterNote: Rational = 16
 
     // generate partDoc from the music model in the Store
     // traverses each Note in each Measure in the Part
@@ -34,9 +35,14 @@ class MusicXMLParser : PartStoreObserver {
         let part_list = score_partwise.addChild(name: "part-list")
         
         let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
-        let _ = score_part.addChild(name: "part-name", value: "\(store.part.title)")
+
+        if !store.part.title.isEmpty {
+            let _ = score_part.addChild(name: "part-name", value: "\(store.part.title)")
+        } else {
+            let _ = score_part.addChild(name: "part-name")
+        }
         
-        let part = score_partwise.addChild(name: "part", attributes: ["id:": "P1"])
+        let part = score_partwise.addChild(name: "part", attributes: ["id": "P1"])
 
         // TODO: beams, flipped, triplets, ties
         // TODO: don't include last measure if it is empty
@@ -48,7 +54,7 @@ class MusicXMLParser : PartStoreObserver {
             let attributes = measure.addChild(name: "attributes")
 
             // NB. divisions per quarter note. 4 because the minimum note is 1/16
-            let _ = attributes.addChild(name: "divisions", value: "\(divisionsPerQuarterNote.numerator)")
+            let _ = attributes.addChild(name: "divisions", value: "\(divisionsPerQuarterNote.intApprox)")
 
             let key = attributes.addChild(name: "key")
             let _ = key.addChild(name: "fifths", value: "\(m.keySignature.fifths)")
@@ -74,7 +80,12 @@ class MusicXMLParser : PartStoreObserver {
                 
                 let _ = pitch.addChild(name: "octave", value: "\(n.octave)" )
 
-                let duration = Int((n.duration * divisionsPerQuarterNote).double)
+                // convert to ticks per quarter note, so we must convert to number of quarter notes then into ticks
+                let quarterNoteDuration = n.duration * 4
+                let duration = (quarterNoteDuration * divisionsPerQuarterNote).intApprox
+
+                print("NOTE value: \(n.value) duration: \(n.duration) durationInt: \(duration)\n")
+
 
                 let _ = note.addChild(name: "duration", value: "\(duration)")
 
@@ -139,7 +150,7 @@ class MusicXMLParser : PartStoreObserver {
         // create note
         let note = Note(value: value, letter: letter, octave: octave, accidental: accidental, rest: rest)
 
-        // TODO dots
+        // TODO dots. maybe use duration?
 
         // set the rational position
         var position: Rational = 0
