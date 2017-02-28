@@ -155,6 +155,9 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g, store: store) }
+        noteViews.forEach {
+            $0.isSelected = $0.note.position == store.selectedNote?.position && store.selectedNote?.measure == index
+        }
         noteViews.forEach() { $0.delegate = self }
         let notesToNoteView = noteViewModels.enumerated()
             .map{return ($1, noteViews[$0])}
@@ -265,13 +268,18 @@ class MeasureView: UIView {
     }
 
     func longPressPan(sender: UIGestureRecognizer) {
-        guard let store = store else { return }
+        guard let store = store, let index = index else { return }
 
         if store.mode == .edit && sender.state == .ended {
             edit(sender: sender)
         }
 
         if store.mode == .erase {
+            if sender.state == .ended && store.measure(at: index).notes.isEmpty {
+                store.mode = .edit
+                Snackbar(message: "switched to edit mode", duration: .short).show()
+                return
+            }
             erase(sender: sender)
         }
     }
@@ -327,9 +335,9 @@ class MeasureView: UIView {
         let note = Note(value: value, letter: letter, octave: octave)
 
         // attempt to insert
-        let succeeded = store.insert(note: note, intoMeasureIndex: index, at: position)
+        let actualPosition = store.insert(note: note, intoMeasureIndex: index, at: position)
 
-        if !succeeded {
+        if actualPosition == nil {
             Snackbar(message: "no space for note", duration: .short).show()
         }
     }
@@ -363,7 +371,7 @@ extension MeasureView: NoteActionDelegate {
         guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
 
         guard store.mode == .edit else {
-            if store.mode == .erase{ // i.e. the user tapped on note
+            if store.mode == .erase { // i.e. the user tapped on note
 
                 // TODO: btc remove this case
                 store.removeNote(fromMeasureIndex: index, at: pos)
@@ -388,6 +396,8 @@ extension MeasureView: NoteActionDelegate {
             if !store.changeNoteToRest(inMeasure: index, at: pos) {
                 Snackbar(message: "failed to convert note to rest", duration: .short).show()
             }
+        case .select:
+            store.selectedNote = (index, pos)
         }
     }
 }

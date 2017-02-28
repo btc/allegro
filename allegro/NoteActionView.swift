@@ -14,6 +14,14 @@ class NoteActionView: UIView {
     let geometry: NoteGeometry
     let store: PartStore
 
+    var isSelected: Bool = false {
+        didSet {
+            color = isSelected ? .allegroBlue : .black
+            setNeedsDisplay()
+        }
+    }
+    var color: UIColor = .black
+
     // view's hit area is scaled by this factor
     let hitAreaScaleFactor: CGFloat = 1.5
 
@@ -38,6 +46,11 @@ class NoteActionView: UIView {
         return gr
     }()
 
+    fileprivate let select: UILongPressGestureRecognizer = {
+        let gr = UILongPressGestureRecognizer()
+        return gr
+    }()
+
     init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         self.note = note
         self.geometry = geometry
@@ -49,6 +62,7 @@ class NoteActionView: UIView {
             (#selector(swiped), swipe),
             (#selector(tapped), dot),
             (#selector(tapped), doubleDot),
+            (#selector(selected), select),
             ]
         for (sel, gr) in actionRecognizers {
             gr.addTarget(self, action: sel)
@@ -56,10 +70,20 @@ class NoteActionView: UIView {
             gr.delegate = self
         }
         dot.require(toFail: doubleDot)
+
+        for gr: UIGestureRecognizer in [dot, doubleDot, swipe] {
+            gr.require(toFail: select)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) not supported")
+    }
+
+    func selected(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            delegate?.actionRecognized(gesture: .select, by: self)
+        }
     }
 
     func swiped(sender: NoteSwipeActionGestureRecognizer) {

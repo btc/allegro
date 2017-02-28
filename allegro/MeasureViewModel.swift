@@ -41,7 +41,7 @@ struct MeasureViewModel {
         }
     ]
 
-    private let measure: SimpleMeasure
+    private let measure: Measure
     private(set) var notes = [NoteViewModel]()
     private(set) var beams: [Beam] = []
 
@@ -204,7 +204,7 @@ struct MeasureViewModel {
         return ([], beam)
     }
 
-    init(_ measure: SimpleMeasure) {
+    init(_ measure: Measure) {
         self.measure = measure
         for np in measure.notes {
             let position = np.pos

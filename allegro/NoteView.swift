@@ -110,22 +110,20 @@ class NoteView: NoteActionView {
     fileprivate var flagEndOffset: CGPoint {
         return CGPoint(x: _flagEndOffset.x * scale, y: _flagEndOffset.y * scale)
     }
-    
+
     var shouldDrawFlag = false
     fileprivate var flagThickness = CGFloat(10)
     fileprivate var flagIterOffset = CGFloat(15)
     
-    let drawLayer: CAShapeLayer = CAShapeLayer()
-    let noteLayer: CAShapeLayer = CAShapeLayer()
+    let stemLayer: CAShapeLayer = CAShapeLayer() // TODO(btc): rename to stemLayer
 
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
         // makes it transparent so we see the lines behind
         isOpaque = false
-        
-        layer.addSublayer(drawLayer)
-        //layer.addSublayer(noteLayer)
-        
+
+        layer.addSublayer(stemLayer)
+
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
         Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
             guard let `self` = self else { return }
@@ -288,15 +286,14 @@ class NoteView: NoteActionView {
     
     override func draw(_ rect: CGRect) {
         let notePath = getNoteHeadPath(rect: bounds)
-        UIColor.black.set()
+        color.set()
         notePath.fill()
     }
     
     func computePaths() {
         let path = UIBezierPath()
         let notePath = getNoteHeadPath(rect: bounds)
-        //noteLayer.path = notePath.cgPath
-        
+
         if (note.value.nominalDuration < Note.Value.whole.nominalDuration) {
             path.append(getStemPath(notePath: notePath))
         }
@@ -306,7 +303,7 @@ class NoteView: NoteActionView {
             path.append(getFlagPath())
         }
         
-        drawLayer.path = path.cgPath
-        drawLayer.fillColor = UIColor.black.cgColor
+        stemLayer.path = path.cgPath
+        stemLayer.fillColor = UIColor.black.cgColor
     }
 }

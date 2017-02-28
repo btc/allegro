@@ -161,8 +161,8 @@ class MusicXMLParser : PartStoreObserver {
     }
 
     // Parse an AEXMLElement that represents a Measure and return it
-    private func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: SimpleMeasure) {
-        var measure = SimpleMeasure()
+    private func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: Measure) {
+        var measure = Measure()
 
         // number is the index of the measure
         // should this default to something else?
@@ -191,7 +191,7 @@ class MusicXMLParser : PartStoreObserver {
         let noteElements = measureElement.childrenMatch(name: "note")
         for noteElem in noteElements {
             let (note, position) = parseNote(noteElement: noteElem)
-            guard measure.insert(note: note, at: position) else {
+            guard let _ = measure.insert(note: note, at: position) else {
                 Log.error?.message("parseMeasure: unable to insert note: \(note) at \(position)")
                 continue
             }

@@ -43,7 +43,8 @@ class SideMenuViewController: UIViewController {
     private let keySignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "C# major"), for: UIControlState.normal)
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE/2)
         return v
     }()
     
@@ -152,6 +153,7 @@ class SideMenuViewController: UIViewController {
         editButton.isSelected = store.mode == .edit
         eraseButton.isSelected = store.mode == .erase
         timeSignature.setTitle(store.part.timeSignature.description, for: .normal)
+        keySignature.setTitle(store.part.keySignature.description, for: .normal)
     }
     func eraseButtonTapped() {
         store.mode = .erase
@@ -169,7 +171,7 @@ class SideMenuViewController: UIViewController {
     }
     
     func keySignaturesTapped() {
-        let vc = KeySignatureViewController()
+        let vc = KeySignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -179,3 +181,44 @@ extension SideMenuViewController: PartStoreObserver {
         updateUI()
     }
 }
+
+// descriptions for the side menu
+private extension Key {
+    var description: String {
+        switch fifths {
+        case 7:
+            return "C♯"
+        case 6:
+            return "F♯"
+        case 5:
+            return "B Maj"
+        case 4:
+            return "E Maj"
+        case 3:
+            return "A Maj"
+        case 2:
+            return "D Maj"
+        case 1:
+            return "G Maj"
+        case 0:
+            return "C Maj"
+        case -1:
+            return "F Maj"
+        case -2:
+            return "B♭"
+        case -3:
+            return "E♭"
+        case -4:
+            return "A♭"
+        case -5:
+            return "D♭"
+        case -6:
+            return "G♭"
+        case -7:
+            return "C♭"
+        default: // Defaults to C Major if invalid fifth used
+            return "C"
+        }
+    }
+}
+

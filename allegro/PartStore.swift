@@ -37,6 +37,12 @@ enum CompositionMode {
 
 class PartStore {
 
+    var selectedNote: (measure: Int, position: Rational)? {
+        didSet {
+            notify()
+        }
+    }
+
     var mode: CompositionMode {
         didSet {
             notify()
@@ -98,16 +104,17 @@ class PartStore {
         }
     }
 
-    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
+    func insert(note: Note, intoMeasureIndex i: Int, at desiredPosition: Rational) -> Rational? {
         extendIfNecessary(toAccessMeasureAtIndex: i)
-        Log.info?.message("insert \(note.duration.description) into measure \(i) at \(position.lowestTerms)")
-        let succeeded = part.insert(note: note, intoMeasureIndex: i, at: position)
+        Log.info?.message("insert \(note.duration.description) into measure \(i) at \(desiredPosition.lowestTerms)")
+        let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
-        if succeeded {
+        if let ap = actualPosition {
+            selectedNote = (i, ap)
             notify()
-            observers.forEach { $0.value?.noteAdded(in: i, at: position) }
+            observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
         }
-        return succeeded
+        return actualPosition
     }
 
     func removeNote(fromMeasureIndex i: Int, at position: Rational) {
@@ -168,4 +175,17 @@ class PartStore {
         notify()
         return true
     }
+    
+    func setKeySignature(keySignature: Key) {
+        part.setKeySignature(keySignature: keySignature)
+        notify()
+    }
+    
+    func setTimeSignature(timeSignature: Rational) {
+        if !hasNotes() {
+            part.setTimeSignature(timeSignature: timeSignature)
+        }
+        notify()
+    }
+    
 }

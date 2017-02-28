@@ -24,8 +24,8 @@ class testSimpleMeasure: XCTestCase {
     
     // basic tests
     func testSimpleMeasure() {
-        var basicMeasure = SimpleMeasure()
-        var wholeNoteMeasure = SimpleMeasure()
+        var basicMeasure = Measure()
+        var wholeNoteMeasure = Measure()
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
@@ -34,7 +34,7 @@ class testSimpleMeasure: XCTestCase {
         
         // ############################### WHOLE NOTE MEASURE TESTS
         // Test insert whole note at pos 1/2. Should nudge left to 0
-        XCTAssert(wholeNoteMeasure.insert(note: Awhole, at: 1/2) == true, "Could not insert whole note at position 1/2")
+        XCTAssert(wholeNoteMeasure.insert(note: Awhole, at: 1/2) != nil, "Could not insert whole note at position 1/2")
         if let wholeNote = wholeNoteMeasure.note(at: 0) {
             XCTAssert(wholeNote == Awhole, "Wrong note nudged left")
         }
@@ -42,15 +42,15 @@ class testSimpleMeasure: XCTestCase {
             XCTFail("Whole note inserted at 1/2 not properly nudged left")
         }
         // Test insert note past capacity
-        XCTAssert(wholeNoteMeasure.insert(note: A4quarter, at: 1/2) == false, "Note cannot fill a measure past free capacity")
+        XCTAssert(wholeNoteMeasure.insert(note: A4quarter, at: 1/2) == nil, "Note cannot fill a measure past free capacity")
         
         // ############################### BASIC MEASURE TESTS
         // Test insert before 0
-        XCTAssert(basicMeasure.insert(note: A4quarter, at: -1/2) == false, "Note cannot be placed before 0.")
+        XCTAssert(basicMeasure.insert(note: A4quarter, at: -1/2) == nil, "Note cannot be placed before 0.")
         
         // Test basic insertions without nudging
-        XCTAssert(basicMeasure.insert(note: A4quarter, at: 0) == true, "Note can be placed at start of free space")
-        XCTAssert(basicMeasure.insert(note: B4quarter, at: 1/4) == true, "Note can be placed at end of free space")
+        XCTAssert(basicMeasure.insert(note: A4quarter, at: 0) != nil, "Note can be placed at start of free space")
+        XCTAssert(basicMeasure.insert(note: B4quarter, at: 1/4) != nil, "Note can be placed at end of free space")
         
         // test for correct basic freespace
         var freeSpace = basicMeasure.frees
@@ -59,7 +59,7 @@ class testSimpleMeasure: XCTestCase {
            + ", " + freeSpace[0].duration.description + ")")
         
         // Test basic insertion without nudging in middle of freespace
-        XCTAssert(basicMeasure.insert(note: C5eighth, at: 6/8) == true, "Error inserting note in middle of free space")
+        XCTAssert(basicMeasure.insert(note: C5eighth, at: 6/8) != nil, "Error inserting note in middle of free space")
         
         // test for correct freespace
         freeSpace = basicMeasure.frees
@@ -128,13 +128,13 @@ class testSimpleMeasure: XCTestCase {
     }
     
     func testBasicLeftNudge() {
-        var basicNudgeLeftMeasure = SimpleMeasure() // basic left nudging
+        var basicNudgeLeftMeasure = Measure() // basic left nudging
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
 
         // insert quarter
-        XCTAssert(basicNudgeLeftMeasure.insert(note: A4quarter, at: 1/8) == true)
+        XCTAssert(basicNudgeLeftMeasure.insert(note: A4quarter, at: 1/8) != nil)
         
         // test left freespace
         var leftFreespace = basicNudgeLeftMeasure.freespaceLeft(of: 1/8)
@@ -145,7 +145,7 @@ class testSimpleMeasure: XCTestCase {
         XCTAssert(rightFreespace == 5/8, "Incorrect freespaceRight calculation. Expected 5/8, received: " + rightFreespace.description)
         
         // insert and nudge left
-        XCTAssert(basicNudgeLeftMeasure.insert(note: B4quarter, at: 1/4) == true, "Could not insert and nudge left")
+        XCTAssert(basicNudgeLeftMeasure.insert(note: B4quarter, at: 1/4) != nil, "Could not insert and nudge left")
         
         // test for correct nudge behavior
         if let nl0 = basicNudgeLeftMeasure.note(at: 0) {
@@ -178,17 +178,17 @@ class testSimpleMeasure: XCTestCase {
     }
     
     func testAdvancedLeftNudge() {
-        var singleNudgeLeftMeasure = SimpleMeasure() // this measure will require a single left nudge on insertion (1/8 at 0, 1/4 at 1/2, 1/4 -> 5/8)
-        var doubleNudgeLeftMeasure = SimpleMeasure() // this measure will require a double left nudge on insertion (1/4 at 1/8, 1/4 at 3/8, 1/4 -> 1/2)
+        var singleNudgeLeftMeasure = Measure() // this measure will require a single left nudge on insertion (1/8 at 0, 1/4 at 1/2, 1/4 -> 5/8)
+        var doubleNudgeLeftMeasure = Measure() // this measure will require a double left nudge on insertion (1/4 at 1/8, 1/4 at 3/8, 1/4 -> 1/2)
         
         let A4quarter = Note(value: .quarter, letter: .A, octave: 4)
         let B4quarter = Note(value: .quarter, letter: .B, octave: 4)
         let C4quarter = Note(value: .quarter, letter: .C, octave: 4)
         let C5eighth = Note(value: .eighth, letter: .C, octave: 5)
         
-        XCTAssert(singleNudgeLeftMeasure.insert(note: C5eighth, at: 0) == true, "Error inserting note")
-        XCTAssert(singleNudgeLeftMeasure.insert(note: A4quarter, at: 1/2) == true, "Error inserting note")
-        XCTAssert(singleNudgeLeftMeasure.insert(note: B4quarter, at: 5/8) == true, "Error inserting note with left nudge")
+        XCTAssert(singleNudgeLeftMeasure.insert(note: C5eighth, at: 0) != nil, "Error inserting note")
+        XCTAssert(singleNudgeLeftMeasure.insert(note: A4quarter, at: 1/2) != nil, "Error inserting note")
+        XCTAssert(singleNudgeLeftMeasure.insert(note: B4quarter, at: 5/8) != nil, "Error inserting note with left nudge")
         
         // Check for correct nudge behavior
         if let singleN1 = singleNudgeLeftMeasure.note(at: 0) {
@@ -207,9 +207,9 @@ class testSimpleMeasure: XCTestCase {
             XCTFail("Could not access note at pos: 5/8")
         }
         
-        XCTAssert(doubleNudgeLeftMeasure.insert(note: A4quarter, at: 1/8) == true, "Error inserting note")
-        XCTAssert(doubleNudgeLeftMeasure.insert(note: B4quarter, at: 3/8) == true, "Error inserting note")
-        XCTAssert(doubleNudgeLeftMeasure.insert(note: C4quarter, at: 4/8) == true, "Error inserting note with double left nudge")
+        XCTAssert(doubleNudgeLeftMeasure.insert(note: A4quarter, at: 1/8) != nil, "Error inserting note")
+        XCTAssert(doubleNudgeLeftMeasure.insert(note: B4quarter, at: 3/8) != nil, "Error inserting note")
+        XCTAssert(doubleNudgeLeftMeasure.insert(note: C4quarter, at: 4/8) != nil, "Error inserting note with double left nudge")
         
         // Check for correct nudge behavior
         if let doubleN1 = doubleNudgeLeftMeasure.note(at: 0) {
@@ -229,7 +229,7 @@ class testSimpleMeasure: XCTestCase {
         }
 
         // Insert and nudge right
-        XCTAssert(doubleNudgeLeftMeasure.insert(note: C5eighth, at: 3/8) == true, "Error inserting note with right nudge")
+        XCTAssert(doubleNudgeLeftMeasure.insert(note: C5eighth, at: 3/8) != nil, "Error inserting note with right nudge")
         
         // Check for correct nudge behavior
         if let doubleN4 = doubleNudgeLeftMeasure.note(at: 1/2) {

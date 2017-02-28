@@ -1,211 +1,171 @@
 //
-//  Measure.swift
+//  SimpleMeasure.swift
 //  allegro
 //
-//  Created by Brian Tiger Chow on 1/16/17.
+//  Created by Brian Tiger Chow on 2/16/17.
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
 import Rational
 
-// holds information about this specific note in the measure
-// the position is measured in relation to the time signature as a simplified rational
-// eg. in 3/4 time, a quarter note on beat 2 has position 1/2, and there is no space for another note after it.
-struct NotePosition {
-    var pos: Rational
-    var isFree: Bool {
-        get {
-            return (note == nil)
-        }
-    }
-    var note: Note?
-    var durationOfFree: Rational?
-}
-
 struct Measure {
 
     static let defaultTimeSignature: Rational = 4/4
 
-    // the key signature eg. G Major or d minor
-    var key: Key
-    
-    // used in simplified form, eg. 2/2 and 4/4 are treated the same
+    var keySignature: Key // eg. G Major or d minor
     var timeSignature: Rational
 
-    private(set) var positions: [NotePosition]
-    
-    private(set) var ties: [Tie] = [Tie]()
+    private(set) var freespace: Rational
 
-    // returns all notes and their positions in O(n)
-    var notes: [(pos: Rational, note: Note)] {
-        var ret = [(Rational,Note)]()
-        for notePosition in positions {
-            if !notePosition.isFree, let note = notePosition.note {
-                ret.append((notePosition.pos, note))
-            }
+    private(set) var frees: [FreePos] = [] {
+        didSet {
+            freespace = frees.reduce(0) { $0 + $1.duration }
         }
-        return ret
     }
 
-    // returns all of the free space in the measure in O(n)
-    var frees: [(pos: Rational, duration: Rational)] {
-        var ret = [(Rational,Rational)]()
-        for notePosition in positions {
-            if notePosition.isFree, let duration = notePosition.durationOfFree {
-                ret.append((notePosition.pos, duration))
-            }
+    private(set) var notes: [NotePos] = [] {
+        didSet {
+            frees = computeFrees()
         }
-        return ret
     }
 
-    init(time: Rational = Measure.defaultTimeSignature, key: Key = Key()) {
-        self.timeSignature = time
-        self.key = key
-
-        // notes starts with a single free NotePosition that takes up the whole measure
-        let np = NotePosition(pos: 0, note: nil, durationOfFree: time)
-        self.positions = [np]
+    var capacity: Rational {
+        return timeSignature
     }
 
-    // adds a Tie to this measure
-    // returns true on success
-    mutating func addTie(startPos: Rational, endPos: Rational) -> Bool {
-        guard let startNote = note(at: startPos) else {return false}
-        guard let endNote = note(at: endPos) else { return false}
-        ties.append(Tie(startNote: startNote, endNote: endNote))
-        return true
+    let start: Rational = 0
+
+    var end: Rational {
+        return timeSignature
     }
 
-    // inserts a Note at the given position in the measure in O(n)
-    // returns whether the operation succeeded
-    // tries to use next freespace if that will allow the note to be placed
-    mutating func insert(note: Note, at position: Rational) -> Bool {
-        
-        let noteEnd = position + note.duration
-        
-        for (i, notePosition) in positions.enumerated() {
+    init(timeSignature: Rational = Measure.defaultTimeSignature, keySignature: Key = .cMajor) {
+        self.timeSignature = timeSignature
+        self.keySignature = keySignature
 
-            guard notePosition.isFree, let durationOfFree = notePosition.durationOfFree else { continue }
-
-            let currPos = notePosition.pos
-            let currEnd = currPos + durationOfFree
-            let diff = durationOfFree - note.duration
-
-            // check that start of new note falls within this freespace
-            guard (position >= currPos) && (position <= currEnd) else { continue }
-
-            // check end of new note
-            guard (noteEnd >= currPos) && (noteEnd <= currEnd) else { continue }
-
-            // add Note and change free space
-            if currPos == position {
-                // need to put the free space after the new note if the start is the same
-                positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i)
-
-                if diff == 0 {
-                    // remove this free space
-                    positions[i+1].note = nil
-                    positions.remove(at: i+1)
-
-                } else {
-                    // resize and reposition free space
-                    positions[i+1].durationOfFree = diff
-                    positions[i+1].pos = positions[i].pos + note.duration
-                }
-
-                return true
-
-            } else if currEnd == noteEnd {
-                // need to put the free space before the new note if the end is the same
-
-                positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
-
-                if diff == 0 {
-                    // remove this free space
-                    positions[i].note = nil
-                    positions.remove(at: i)
-
-                } else {
-                    // resize free space
-                    positions[i].durationOfFree = diff
-                }
-
-                return true
-
-            } else {
-                // need to put the note in the middle of the free space and cut it up
-
-                positions.insert(NotePosition(pos: position, note: note, durationOfFree: nil), at: i+1)
-
-                // resize free space before the note
-                positions[i].durationOfFree = position - currPos
-
-                // add leftovers in new free space after new note
-                let np = NotePosition(pos: noteEnd, note: nil, durationOfFree: currEnd - noteEnd)
-                self.positions.insert(np, at: i+2)
-
-                return true
-            }
-
-        }
-        return false
+        // didSet callbacks are not triggered in constructors, so we have to manually initialize the freespace.
+        // we cannot call computeFrees() until all properties are initialized, so we initialize them to junk values to
+        // appease the compiler
+        frees = []
+        freespace = 0
+        frees = computeFrees()
+        freespace = frees.reduce(0) { $0 + $1.duration }
     }
 
-    // determines if this note can nudge its neighbor to the right in O(n)
-    func canNudge(note: Note, at position: Rational) -> Rational? {
-        for (i, notePosition) in positions.enumerated() {
-            // look for the freespace NotePosition that contains this requested position
+    func note(at position: Rational) -> Note? {
+        guard let i = index(of: position) else { return nil }
+        return notes[i].note
+    }
 
-            guard notePosition.isFree, let durationOfFree = notePosition.durationOfFree else { continue }
-            let currPos = notePosition.pos
-            let currEnd = currPos + durationOfFree
+    mutating func removeNote(at position: Rational) -> Bool {
+        return removeAndReturnNote(at: position) != nil
+    }
 
-            // check that start of new note falls within this freespace
-            guard (position >= currPos) && (position <= currEnd) else { continue }
+    mutating func removeAndReturnNote(at position: Rational) -> Note? {
+        guard let i = index(of: position) else { return nil }
+        return notes.remove(at: i).note
+    }
 
-            // i+1 must be a note bc otherwise it would be coalesced
-            guard positions.indices.contains(i+1) else { continue }
-            let nextNotePosition = positions[i+1]
-            guard let nextNote = nextNotePosition.note else { continue }
-
-            // have to check that i+2 is freespace
-            guard positions.indices.contains(i+2) else { continue }
-            let nextFreeNotePosition = positions[i+2]
-            guard nextFreeNotePosition.isFree, let nextDurationOfFree = nextFreeNotePosition.durationOfFree else { continue }
-
-            // check that there is enough space for both notes after using nextFree
-            if position + note.duration + nextNote.duration <= nextFreeNotePosition.pos + nextDurationOfFree {
-                return nextNotePosition.pos
+    // TODO(btc): speed this up with binary search
+    func index(of position: Rational) -> Int? {
+        for (i, np) in notes.enumerated() {
+            if np.pos == position {
+                return i
             }
         }
         return nil
     }
 
-    // inserts a note in O(n) at the given position
-    // attempts to nudge 1 note on the right to make room if possible
-    mutating func insertWithNudge(note: Note, at position: Rational) -> Bool {
-
-        // try normal insert
-        if insert(note: note, at: position) {
-            return true
-        }
-
-        // try using this note to nudge its neighbor on the right
-        guard let neighborPosition = canNudge(note: note, at: position) else { return false }
-
-        // remove and save neighbor
-        guard let neighbor = removeAndReturnNote(at: neighborPosition) else { return false }
-
-        // try to insert the new note
-        if !insert(note: note, at: position) {
-            // failed, so we replace neighbor where it came from
-            if insert(note: neighbor, at: neighborPosition) && DEBUG {
-                Log.error?.message("Couldn't re-insert removed note. Developer Error.")
+    func freespaceRight(of position: Rational) -> Rational {
+        var total: Rational = 0
+        for fp in frees {
+            if fp.contains(position) {
+                total = total + fp.freespaceRight(of: position)
+            } else if fp.startsAfter(position) {
+                total = total + fp.duration
             }
-            return false
         }
-        // re-insert neighbor
-        return insert(note: neighbor, at: position + note.duration)
+        return total
+    }
+
+    func freespaceLeft(of position: Rational) -> Rational {
+        var total: Rational = 0
+        for free in frees {
+            if free.contains(position) {
+                total = total + free.freespaceLeft(of: position)
+            } else if free.endsBefore(position) {
+                total = total + free.duration
+            }
+        }
+        return total
+    }
+
+    func indexToInsert(_ position: Rational) -> Int {
+        if let index = notes.indexOfFirstMatch({ $0.startsAtOrAfter(position) }) {
+            return index
+        }
+        return notes.endIndex
+    }
+
+    mutating func nudgeRight(startingAt index: Int, toTheRightOf position: Rational) {
+        var endOfPreviousNote = position
+        for i in stride(from: index, to: notes.endIndex, by: 1) {
+            notes[i].pos = max(notes[i].pos, endOfPreviousNote)
+            endOfPreviousNote = notes[i].end
+        }
+    }
+
+    mutating func nudgeLeft(startingAt index: Int, toTheLeftOf position: Rational) {
+        var startOfNextNote = position
+        for i in stride(from: index, through: 0, by: -1) {
+            notes[i].end = min(startOfNextNote, notes[i].end)
+            startOfNextNote = notes[i].pos
+        }
+    }
+
+    mutating func insert(note: Note, at initialDesiredPosition: Rational) -> Rational? {
+        var np = NotePos(pos: initialDesiredPosition, note: note)
+
+        if np.end > end { // too late
+            np.end = end
+        }
+        if np.start < start { // too early
+            return nil
+        }
+        if note.duration > freespace { // not enough space
+            return nil
+        }
+
+        let indexToInsert = self.indexToInsert(np.pos)
+
+        while (true) {
+            let bumpsIntoNoteOnTheLeft = notes.indices.contains(indexToInsert - 1) && notes[indexToInsert-1].overlaps(with: np)
+            let bumpsIntoNoteOnTheRight = notes.indices.contains(indexToInsert) && notes[indexToInsert].overlaps(with: np)
+
+            if bumpsIntoNoteOnTheLeft {
+                let prev = notes[indexToInsert-1]
+                let freespaceL = freespaceLeft(of: np.pos)
+                let overlap = prev.lengthOfOverlap(with: np)
+                let amountWeAreAbleToNudgeLeft = min(freespaceL, overlap)
+                let newEndOfPreviousNote = prev.end - amountWeAreAbleToNudgeLeft
+                nudgeLeft(startingAt: indexToInsert - 1, toTheLeftOf: newEndOfPreviousNote)
+                np.pos = newEndOfPreviousNote
+                continue
+            }
+            if bumpsIntoNoteOnTheRight {
+                let next = notes[indexToInsert]
+                let freespaceR = freespaceRight(of: np.end)
+                let overlap = np.lengthOfOverlap(with: next)
+                let amountWeAreAbleToNudgeRight = min(overlap, freespaceR)
+                let newStartOfNextNote = next.start + amountWeAreAbleToNudgeRight
+                nudgeRight(startingAt: indexToInsert, toTheRightOf: newStartOfNextNote)
+                np.end = newStartOfNextNote
+                continue
+            }
+            break
+        }
+        notes.insert(np, at: indexToInsert)
+        return np.pos
     }
 
     // Changes the dot on a note in O(n)
@@ -218,95 +178,160 @@ struct Measure {
         note.dot = dot
 
         // re-insert with new dot
-        if insertWithNudge(note: note, at: position) {
+        if insert(note: note, at: position) != nil {
             return true
         }
 
         // re-insert original note if we were unable to insert dotted note with nudge
         note.dot = originalDot
-        if !insert(note: note, at: position) && DEBUG {
+        if insert(note: note, at: position) == nil && DEBUG {
             Log.error?.message("Unable to re-insert note after failed dotting. Developer Error.")
         }
         return false
     }
 
 
-    // gets a Note at a specific position in the measure in O(n)
-    func note(at position: Rational) -> Note? {
-        for notePosition in positions {
-            if notePosition.pos == position && !notePosition.isFree {
-                return notePosition.note
+    // Finds the nearest previous note with the same letter if it exists
+    func getPrevLetterMatch(for letter: Note.Letter, at position: Rational) -> Note? {
+        var match: Note? = nil
+        var foundOrig = false
+        for notePosition in notes.reversed() {
+            let curr = notePosition.note
+
+            // find original note
+            if notePosition.pos == position {
+                foundOrig = true
+                continue
             }
+            // find previous note with same letter
+            if foundOrig && curr.letter == letter {
+                match = notePosition.note
+                break
+            }
+        }
+        return match
+    }
+
+    private func computeFrees() -> [FreePos] {
+        if notes.isEmpty {
+            return [FreePos(pos: start, duration: capacity)]
+        }
+
+        var arr: [FreePos] = []
+        for (i, np) in notes.enumerated() {
+
+
+            if i == notes.startIndex { // if first note isn't at position 0, add the free space that runs up to the start of the note
+
+                // first
+                if np.pos != 0 {
+                    arr.append(FreePos(pos: 0, duration: np.pos))
+                }
+            } else { // otherwise add the space between the last note and the next note
+
+                // middle: add space to the left of current |np|
+                if let fp = notes[i-1].freespaceBetween(np) {
+                    arr.append(fp)
+                }
+            }
+
+            if (i == notes.endIndex - 1) { // add the space after the end of the note if space exists
+
+                // last: add space to the right of current |np|
+                if np.end < end {
+                    arr.append(FreePos(pos: np.end, duration: end - np.end))
+                }
+            }
+        }
+        return arr
+    }
+}
+
+struct NotePos {
+    var pos: Rational
+    let note: Note
+
+    var start: Rational {
+        return pos
+    }
+
+    var end: Rational {
+        get {
+            return pos + note.duration
+        }
+        set(newEnd) {
+            pos = newEnd - note.duration
+        }
+    }
+
+    var duration: Rational {
+        return note.duration
+    }
+
+    func freespaceBetween(_ later: NotePos) -> FreePos? {
+        if later.pos - end > 0 {
+            return FreePos(pos: end, duration: later.pos - end)
         }
         return nil
     }
-    
-    // removes whichever note is at the specified position in O(n)
-    // returns whether the operation was successful
-    mutating func removeNote(at position: Rational) -> Bool {
-        return removeAndReturnNote(at: position) != nil
+
+    func startsStrictlyAfter(_ position: Rational) -> Bool {
+        return position < start
     }
 
-    // removes whichever note is at the specified position in O(n)
-    // returns the note if it was found
-    mutating func removeAndReturnNote(at position: Rational) -> Note? {
-        var removed: Note?
-        for i in 0..<positions.count {
-            if positions[i].pos == position && !positions[i].isFree {
-                if let note = positions[i].note {
-                    removed = note
-                    positions[i].note = nil
-                    positions[i].durationOfFree = note.duration
-                }
-            }
-        }
-        // coalesce after loop bc it may delete entries that we are iterating over
-        coalesce()
-        return removed
+    func startsAtOrAfter(_ position: Rational) -> Bool {
+        return position <= start
     }
-    
-    // coalesces free space NotePosition objects in O(n)
-    private mutating func coalesce() {
-        var i = 0
-        while(true) {
-            if (i == positions.count - 1) {
-                break
-            }
-            let curr = positions[i]
-            if curr.isFree, let durationOfFree = curr.durationOfFree {
-                let next = positions[i+1]
-                if next.isFree, let nextDurationOfFree = next.durationOfFree {
-                    // coalesce i+1 into i
-                    positions[i].durationOfFree = durationOfFree + nextDurationOfFree
-                    positions.remove(at: i+1)
-                    continue
-                }
-            }
-            i += 1
-        }
+
+    func startsAtOrBefore(_ other: NotePos) -> Bool {
+        return start <= other.start
     }
-    
-    // Finds the nearest previous note with the same letter if it exists
-    func getPrevLetterMatch(noteLetter: Note.Letter, position: Rational) -> Note? {
-        var match: Note? = nil
-        var foundOrig = false
-        for notePosition in positions.reversed() {
-            if let curr = notePosition.note {
-            
-                // find original note
-                if notePosition.pos == position {
-                    foundOrig = true
-                    continue
-                }
-            
-                // find previous note with same letter
-                if foundOrig && curr.letter == noteLetter {
-                    match = notePosition.note
-                    break
-                }
-            }
+
+    func lengthOfOverlap(with other: NotePos) -> Rational {
+        if !startsAtOrBefore(other) {
+            return other.lengthOfOverlap(with: self)
         }
-        
-        return match
+        // this starts before or at the same place as the other NotePos
+        if other.end <= end {
+            return other.duration
+        }
+        return max(end - other.start, 0)
+    }
+
+    func overlaps(with other: NotePos) -> Bool {
+        return lengthOfOverlap(with: other) > 0
+    }
+}
+
+struct FreePos {
+    let pos: Rational
+    let duration: Rational
+
+    var start: Rational {
+        return pos
+    }
+
+    var end: Rational {
+        return pos + duration
+    }
+
+    func contains(_ position: Rational) -> Bool {
+        return start <= position && position <= end
+    }
+
+    func freespaceRight(of position: Rational) -> Rational {
+        return contains(position) ? end - position : 0
+    }
+
+    func freespaceLeft(of position: Rational) -> Rational {
+        return contains(position) ? position - start : 0
+    }
+
+    func startsAfter(_ position: Rational) -> Bool {
+        return position < start
+    }
+
+    func endsBefore(_ position: Rational) -> Bool {
+        return end < position
     }
 }
