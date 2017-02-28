@@ -5,13 +5,13 @@
 <score-partwise version="3.0">
   <part-list>
     <score-part id="P1">
-      <part-name />
+      <part-name>Example0</part-name>
     </score-part>
   </part-list>
   <part id="P1">
     <measure number="1">
       <attributes>
-        <divisions>4</divisions>
+        <divisions>16</divisions>
         <key>
           <fifths>0</fifths>
         </key>
@@ -30,7 +30,7 @@
           <alter>0</alter>
           <octave>4</octave>
         </pitch>
-        <duration>16</duration>
+        <duration>64</duration>
         <type>whole</type>
         <rational-position>
           <numerator>0</numerator>
@@ -40,7 +40,7 @@
     </measure>
     <measure number="2">
         <attributes>
-            <divisions>4</divisions>
+            <divisions>16</divisions>
             <key>
                 <fifths>0</fifths>
             </key>
@@ -59,7 +59,7 @@
                 <alter>0</alter>
                 <octave>4</octave>
             </pitch>
-            <duration>4</duration>
+            <duration>16</duration>
             <type>quarter</type>
             <rational-position>
                 <numerator>1</numerator>
@@ -72,7 +72,7 @@
                 <alter>1</alter>
                 <octave>4</octave>
             </pitch>
-            <duration>4</duration>
+            <duration>8</duration>
             <type>eighth</type>
             <rational-position>
                 <numerator>1</numerator>
@@ -82,7 +82,7 @@
     </measure>
     <measure number="3">
         <attributes>
-            <divisions>4</divisions>
+            <divisions>16</divisions>
             <key>
                 <fifths>0</fifths>
             </key>
