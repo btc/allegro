@@ -122,14 +122,14 @@ class NoteView: NoteActionView {
         
         let label = UILabel()
         label.frame = geometry.getAccidentalFrame(note: note)
-        label.text = note.accidental.infos.0
+        label.text = note.note.accidental.infos.0
         label.font = UIFont(name: "DejaVu Sans", size: 70)
         label.textAlignment = .right
         return label
     }
     
     var dotView: UIView? {
-        guard note.dot != .none else { return nil }
+        guard note.note.dot != .none else { return nil }
         
         let view = UIView()
         let dframe = geometry.getDotBoundingBox(note: note)
@@ -138,7 +138,7 @@ class NoteView: NoteActionView {
         let dotSize = CGSize(width: 2 * geometry.dotRadius, height: 2 * geometry.dotRadius)
         let dotPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: dotSize))
         
-        if note.dot == .double {
+        if note.note.dot == .double {
             let secondDotOrigin = CGPoint.zero.offset(dx: dframe.size.width - dotSize.width, dy: 0)
             dotPath.append(UIBezierPath(ovalIn: CGRect(origin: secondDotOrigin, size:dotSize)))
         }
@@ -202,8 +202,8 @@ class NoteView: NoteActionView {
         // First we draw an oval and then cut out the oval inside.
         let path = UIBezierPath(ovalIn: rect)
         
-        if (note.value == Note.Value.whole ||
-            note.value == Note.Value.half) {
+        if (note.note.value == Note.Value.whole ||
+            note.note.value == Note.Value.half) {
             path.append(UIBezierPath(ovalIn: rect.insetBy(dx: noteInset.x, dy: noteInset.y)))
             // This makes sure the cutout is a different color based on the winding
             path.usesEvenOddFillRule = true
@@ -213,7 +213,7 @@ class NoteView: NoteActionView {
         // We need to translate it by the center point
         // since the rotation is around the origin 
         // yet the center point is not.
-        if (note.value != Note.Value.whole) {
+        if (note.note.value != Note.Value.whole) {
             let rotation = CGAffineTransform.identity
                 .translatedBy(x: center.x, y: center.y)
                 .rotated(by: rotationAngle)
@@ -250,7 +250,7 @@ class NoteView: NoteActionView {
                                   y: noteBounds.origin.y)
         
         var stemEndOffset = CGFloat(0)
-        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration) {
+        if (note.note.value.nominalDuration < Note.Value.quarter.nominalDuration) {
             stemEndOffset = flagOffset
         }
         
@@ -306,7 +306,7 @@ class NoteView: NoteActionView {
         
         var iterDuration = Note.Value.eighth.nominalDuration
         while (true) {
-            if note.value.nominalDuration > iterDuration {
+            if note.note.value.nominalDuration > iterDuration {
                 break
             }
             
@@ -335,11 +335,11 @@ class NoteView: NoteActionView {
         let path = UIBezierPath()
         let notePath = getNoteHeadPath(rect: bounds)
 
-        if (note.value.nominalDuration < Note.Value.whole.nominalDuration) {
+        if (note.note.value.nominalDuration < Note.Value.whole.nominalDuration) {
             path.append(getStemPath(notePath: notePath))
         }
         
-        if (note.value.nominalDuration < Note.Value.quarter.nominalDuration
+        if (note.note.value.nominalDuration < Note.Value.quarter.nominalDuration
             && shouldDrawFlag) {
             path.append(getFlagPath())
         }

@@ -154,15 +154,20 @@ class MeasureView: UIView {
         let measureVM = store.measure(at: index)
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
-        let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g, store: store) }
-        noteViews.forEach { view in
-            view.isSelected = store.selectedNotes.contains(view.note.position) && store.currentMeasure == index
+        let noteViews = noteViewModels
+            .map { $0.note.rest ? RestView(note: $0, geometry: g, store: store) : NoteView(note: $0, geometry: g, store: store) }
+        let nonRestViews = noteViews.filter { $0 is NoteView }
+        
+        if let nonRestViews = nonRestViews as? [NoteView] {
+            nonRestViews.forEach {
+                    $0.isSelected = $0.note.position == store.selectedNote?.position && store.selectedNote?.measure == index
+            }
+            nonRestViews.forEach() { $0.delegate = self }
         }
-        noteViews.forEach() { $0.delegate = self }
-        let notesToNoteView = noteViewModels.enumerated()
-            .map{return ($1, noteViews[$0])}
-            .reduce([Int: NoteView]()) {
-                (dict: [Int:NoteView], kv: (NoteViewModel, NoteView)) -> [Int:NoteView]  in
+        
+        let notesToNoteView = zip(noteViewModels, noteViews)
+            .reduce([Int: UIView]()) {
+                (dict: [Int:UIView], kv: (NoteViewModel, UIView)) -> [Int:UIView]  in
                 var out = dict
                 out[ObjectIdentifier(kv.0).hashValue] = kv.1
                 return out
@@ -174,15 +179,20 @@ class MeasureView: UIView {
         }
         
         // we're barring all the notes for now
-        for (noteView, startX) in zip(noteViews, geometry.noteStartX) {
+        for (view, startX) in zip(noteViews, geometry.noteStartX) {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let y = geometry.noteY(pitch: noteView.note.pitch)
-            
-            noteView.noteOrigin = CGPoint(x: startX, y: y)
-            //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
-            noteView.shouldDrawFlag = true//fals
+            if let noteView = view as? NoteView {
+                    let y = geometry.noteY(pitch: noteView.note.pitch)
+                    
+                noteView.noteOrigin = CGPoint(x: startX, y: y)
+                //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
+                noteView.shouldDrawFlag = true//fals
+            } else if let restView = view as? RestView {
+                let y = geometry.noteY(pitch: 0)
+                restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: CGSize(width: 50, height: 50))
+            }
         }
         
         let barPath = UIBezierPath()
@@ -192,9 +202,8 @@ class MeasureView: UIView {
             var barEnd = CGPoint.zero
             
             for (i, noteViewModel) in beam.enumerated() {
-                guard let noteView = notesToNoteView[ObjectIdentifier(noteViewModel).hashValue] else {
-                    continue
-                }
+                guard let beamNoteView = notesToNoteView[ObjectIdentifier(noteViewModel).hashValue] else { continue }
+                guard let noteView = beamNoteView as? NoteView else { continue }
                 noteView.shouldDrawFlag = false
                 
                 let flagStart = noteView.frame.origin + noteView.flagStart
@@ -219,7 +228,7 @@ class MeasureView: UIView {
                     barEnd = flagStart.offset(dx: noteView.stemThickness, dy: 0)
                     drawBar(barStart: barStart, barEnd: barEnd, barPath: barPath)
                     
-                    if noteViewModel.value == .sixteenth {
+                    if noteViewModel.note.value == .sixteenth {
                         let offset = noteViewModel.flipped ? -barOffset: barOffset
                         barStart = barStart.offset(dx: 0, dy: offset)
                         barEnd = barEnd.offset(dx: 0, dy: offset)
@@ -235,7 +244,8 @@ class MeasureView: UIView {
         barLayer.fillColor = UIColor.black.cgColor
 
         // we compute paths at the end because beams can change stuff
-        for noteView in noteViews {
+        for view in noteViews {
+            guard let noteView = view as? NoteView else { continue }
             noteView.computePaths()
         }
     }

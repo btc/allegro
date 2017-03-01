@@ -207,10 +207,10 @@ struct MeasureGeometry {
             // Calculate the whitespace intervals between notes if there are any
             // Also merges consecutive notes into contiguous interval
             for note in measure.notes {
-                let noteCenterX = Rational(Int(defaultWidth)) * note.position / measure.timeSignature
+                let noteCenterX = defaultWidth * note.position.cgFloat / measure.timeSignature.cgFloat
                 let bbox = g.getBoundingBox(note: note)
                 
-                let defaultX = max(last,noteCenterX.cgFloat - bbox.size.width / 2)
+                let defaultX = max(last,noteCenterX - bbox.size.width / 2)
                 whitespace.append(Interval(last, defaultX))
                 blackspace.append(Interval(defaultX, defaultX + bbox.width))
                 
