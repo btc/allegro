@@ -341,16 +341,9 @@ extension MeasureView: UIGestureRecognizerDelegate {
 extension MeasureView: NoteActionDelegate {
     func actionRecognized(gesture: NoteAction, by view: UIView) {
 
+        guard store?.mode == .edit else { return }
+
         guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
-
-        guard store.mode == .edit else {
-            if store.mode == .erase { // i.e. the user tapped on note
-
-                // TODO: btc remove this case
-                store.removeNote(fromMeasureIndex: index, at: pos)
-            }
-            return
-        }
 
         switch gesture {
 
