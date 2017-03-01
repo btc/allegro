@@ -13,9 +13,7 @@
 import AEXML
 import Rational
 
-class MusicXMLParser : PartStoreObserver {
-    var store: PartStore
-    var partDoc: AEXMLDocument = AEXMLDocument()
+class MusicXMLParser {
 
     // also called ticks per quarter note.
     // 16 because the minimum duration is a 1/64 note (from a double-dotted 1/16 note)
@@ -23,9 +21,9 @@ class MusicXMLParser : PartStoreObserver {
 
     // generate partDoc from the music model in the Store
     // traverses each Note in each Measure in the Part
-    fileprivate func generate() {
+    func generate(part: Part) -> AEXMLDocument {
 
-        partDoc = AEXMLDocument()
+        let partDoc = AEXMLDocument()
 
         //TODO add doctype, but not as a child because we don't want /> at the end
 //        let doctypeString = "!DOCTYPE score-partwise PUBLIC \"-//Recordare//DTD MusicXML 3.0 Partwise//EN\" \"http://www.musicxml.org/dtds/partwise.dtd\""
@@ -36,21 +34,18 @@ class MusicXMLParser : PartStoreObserver {
         
         let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
 
-        if !store.part.title.isEmpty {
-            let _ = score_part.addChild(name: "part-name", value: "\(store.part.title)")
-        } else {
-            let _ = score_part.addChild(name: "part-name")
-        }
+        let _ = score_part.addChild(name: "part-name", value: part.title)
+        // TODO comments, composer
         
-        let part = score_partwise.addChild(name: "part", attributes: ["id": "P1"])
+        let partElem = score_partwise.addChild(name: "part", attributes: ["id": "P1"])
 
         // TODO: beams, flipped, triplets, ties
         // TODO: don't include last measure if it is empty
 
-        for (i,m) in store.part.measures.enumerated() {
+        for (i,m) in part.measures.enumerated() {
 
             // make a new measure
-            let measure = part.addChild(name: "measure", attributes: ["number": "\(i+1)"])
+            let measure = partElem.addChild(name: "measure", attributes: ["number": "\(i+1)"])
             let attributes = measure.addChild(name: "attributes")
 
             // NB. divisions per quarter note. 4 because the minimum note is 1/16
@@ -104,6 +99,8 @@ class MusicXMLParser : PartStoreObserver {
 
             }
         }
+
+        return partDoc
     }
 
     // parse an AEXMLElement that represents a Note and return it
@@ -212,22 +209,26 @@ class MusicXMLParser : PartStoreObserver {
         return (number, measure)
     }
 
+    func parsePartTitle(partDoc: AEXMLDocument) -> String? {
+        // partDoc -> score-partwise -> part-list -> score-part -> part-name
+        guard let part_list = partDoc.root.firstChildMatch(name: "part-list") else { return nil }
+        guard let score_part = part_list.firstChildMatch(name: "score-part") else { return nil }
+        guard let part_name = score_part.firstChildMatch(name: "part-name") else { return nil }
+        return part_name.value
+    }
+
     // parses an XML document and creates a Part with Measures and Notes
-    func parse(partDoc: AEXMLDocument) -> Part? {
+    func parse(partDoc: AEXMLDocument) -> Part {
 
         // TODO check the doctype
 
         let part = Part()
 
-        // Set part title. We need to do:
-        // partDoc -> score-partwise -> part-list -> score-part -> part-name
-        guard let part_list = partDoc.root.firstChildMatch(name: "part-list") else { return nil }
-        guard let score_part = part_list.firstChildMatch(name: "score-part") else { return nil }
-        guard let part_name = score_part.firstChildMatch(name: "part-name") else { return nil }
-        part.title = part_name.value ?? ""
+        // Find Part title
+        part.title = parsePartTitle(partDoc: partDoc)
 
         // find the part
-        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return nil }
+        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return part }
 
         // loop over all measures and parse them
         let measureElements = partElem.childrenMatch(name: "measure")
@@ -242,91 +243,6 @@ class MusicXMLParser : PartStoreObserver {
         }
 
         return part
-    }
-
-    // save the Part to disk in Documents.
-    // Note: filename should not include .xml extension
-    func save(filename: String) {
-        Log.info?.message("saving MusicXML to \(filename).xml")
-
-        do {
-            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-
-            // Find the file
-            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
-            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
-
-            // Write XML to the file
-            try partDoc.xml.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
-
-        } catch {
-            Log.error?.message("Failed to save XML to Documents. Error: \(error)")
-        }
-    }
-
-    // Load an XML file from Documents and then parse it as a Part
-    // Note filename should not include .xml extension
-    func load(filename: String) -> Part? {
-        Log.info?.message("reading MusicXML from \(filename).xml")
-
-        do {
-            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-
-            // Find the file
-            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
-            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
-
-            // Load XML from file
-            let data = try Data(contentsOf: fileURL)
-
-            // Parse XML
-            let newPartDoc = try AEXMLDocument(xml: data)
-            let newPart = parse(partDoc: newPartDoc)
-            partDoc = newPartDoc
-
-            return newPart
-
-        } catch {
-            Log.error?.message("Failed to load XML from Documents. Error: \(error)")
-            return nil
-        }
-    }
-
-    // attempts to load a file as XML and then parse it as a Part
-    func bundleLoad(filename: String) -> Part? {
-        Log.info?.message("reading MusicXML from \(filename).xml")
-
-        // TODO do we have to do something for the path for when we save parts on the phone?
-        guard
-            let xmlPath = Bundle.main.path(forResource: filename, ofType: "xml"),
-            let data = try? Data(contentsOf: URL(fileURLWithPath: xmlPath))
-            else {
-                Log.error?.message("Unable to open file")
-                return nil
-        }
-
-        guard let newPartDoc = try? AEXMLDocument(xml: data) else {
-            Log.error?.message("Unable to create AEXMLDocument from file")
-            return nil
-        }
-
-        guard let newPart = parse(partDoc: newPartDoc) else {
-            Log.error?.message("Unable to parse AEXMLDocument into Part")
-            return nil
-        }
-
-        partDoc = newPartDoc
-        return newPart
-    }
-    
-    init(store: PartStore) {
-        self.store = store
-        store.subscribe(self)
-    }
-
-    func partStoreChanged() {
-        Log.info?.message("MusicXMLParser re-parsing")
-        generate()
     }
 }
 

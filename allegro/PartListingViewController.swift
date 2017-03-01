@@ -94,9 +94,9 @@ extension PartListingViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
-        if let cell = aCell as? PartListingCell {
-            cell.part = partFileManager.load(forIndex: indexPath.item)
-        }
+        let cell = aCell as? PartListingCell
+        cell?.part = partFileManager.load(forIndex: indexPath.item)
+
         return aCell
     }
 }
