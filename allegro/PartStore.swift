@@ -93,9 +93,9 @@ class PartStore {
         }
     }
 
-    private func extendIfNecessary(toAccessMeasureAtIndex i: Int) {
+    private func extendIfNecessaryToAccessMeasure(at index: Int) {
         var extended = false
-        while part.measures.count <= i + 1 {
+        while part.measures.count <= index + 1 {
             part.extend()
             extended = true
         }
@@ -105,7 +105,7 @@ class PartStore {
     }
 
     func insert(note: Note, intoMeasureIndex i: Int, at desiredPosition: Rational) -> Rational? {
-        extendIfNecessary(toAccessMeasureAtIndex: i)
+        extendIfNecessaryToAccessMeasure(at: i)
         Log.info?.message("insert \(note.duration.description) into measure \(i) at \(desiredPosition.lowestTerms)")
         let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
@@ -144,7 +144,7 @@ class PartStore {
     }
 
     func measure(at index: Int) -> MeasureViewModel {
-        extendIfNecessary(toAccessMeasureAtIndex: index)
+        extendIfNecessaryToAccessMeasure(at: index)
         return MeasureViewModel(part.measures[index])
     }
     
