@@ -186,7 +186,7 @@ class SideMenuViewController: UIViewController {
     }
     
     func playButtonTapped() {
-        audio.playMeasure(measure: 0)
+        audio.playMeasure(measure: store.currentMeasure)
     }
 }
 
