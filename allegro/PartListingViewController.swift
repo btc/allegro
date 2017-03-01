@@ -9,16 +9,7 @@
 import UIKit
 
 class PartListingViewController: UIViewController {
-    
 
-    private let logo: UIView = {
-        let v = UILabel() // TODO(btc): replace this with the logo image
-        v.text = Strings.APP_NAME
-        v.textAlignment = .center
-        v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 60)
-        return v
-    }()
-    
     private let newCompositionButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = UIColor.gray
@@ -26,21 +17,28 @@ class PartListingViewController: UIViewController {
         return v
     }()
 
-    private let instructionsButton: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = UIColor.gray
-        v.setTitle(Strings.INSTRUCTIONS, for: .normal)
+    private let partListing: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        let v = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        v.register(PartListingCell.self, forCellWithReuseIdentifier: PartListingCell.reuseID)
+        v.backgroundColor = .allegroBlue
         return v
     }()
 
+    fileprivate let partFileManager: PartFileManager = PartFileManager()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        partListing.dataSource = self
+        partListing.delegate = self
+
         view.backgroundColor = UIColor.white
-        
-        view.addSubview(logo)
+
+        view.addSubview(partListing)
         view.addSubview(newCompositionButton)
-        view.addSubview(instructionsButton)
-        
+
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
         let p = newPart()
@@ -51,32 +49,7 @@ class PartListingViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
 
-        let parent = view.bounds
-        let centerX = parent.width / 2
-
-        let logoH = parent.height / 2 - 2 * DEFAULT_MARGIN_PTS
-        let logoW = parent.width
-
-        logo.frame = CGRect(x: centerX - logoW / 2,
-                            y: DEFAULT_MARGIN_PTS,
-                            width: logoW,
-                            height: logoH)
-
-        let numButtons = [newCompositionButton, instructionsButton].count
-        
-        // FYI: this buttonH value ends up being 60.5 on iPhone 6
-        let buttonH: CGFloat = (parent.height / 2 - 3 * DEFAULT_MARGIN_PTS) / CGFloat(numButtons)
-        let buttonW = buttonH * 5 // is an educated guess
-
-        newCompositionButton.frame = CGRect(x: centerX - buttonW / 2,
-                                            y: parent.height / 2 + DEFAULT_MARGIN_PTS,
-                                            width: buttonW,
-                                            height: buttonH)
-
-        instructionsButton.frame = CGRect(x: centerX - buttonW / 2,
-                                          y: newCompositionButton.frame.maxY + DEFAULT_MARGIN_PTS,
-                                          width: buttonW,
-                                          height: buttonH)
+        partListing.frame = view.bounds
     }
     
     func newCompositionTapped() {
@@ -91,5 +64,39 @@ class PartListingViewController: UIViewController {
             return mocks[i]
         }
         return Part()
+    }
+}
+
+extension PartListingViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let p = partFileManager.load(forIndex: indexPath.item)
+        let vc = CompositionViewController.create(part: p)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension PartListingViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.bounds.width, height: 100)
+    }
+}
+
+extension PartListingViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return partFileManager.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
+        if let cell = aCell as? PartListingCell {
+            cell.part = partFileManager.load(forIndex: indexPath.item)
+        }
+        return aCell
     }
 }
