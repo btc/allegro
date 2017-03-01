@@ -30,7 +30,6 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    //Change to dynamically set time Signature based on user selection: ppsekhar
     private let timeSignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
@@ -39,7 +38,6 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    //Change to dynamically set key signature based on user selection: ppsekhar
     private let keySignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
@@ -77,6 +75,14 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
+    private let playButton: UIButton = {
+        let v = UIButton()
+        v.setTitle(" ► ", for: .normal)
+        v.backgroundColor = .clear
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE)
+        return v
+    }()
 
     init(store: PartStore) {
         self.store = store
@@ -98,6 +104,7 @@ class SideMenuViewController: UIViewController {
         view.addSubview(editButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
+        view.addSubview(playButton)
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
@@ -120,7 +127,7 @@ class SideMenuViewController: UIViewController {
         let parent = view.bounds
 
         let verticallyStackedButtons = [NewButton, Export, instructionsButton]
-        let modeButtonBlocks = [editButton, eraseButton]
+        let modeButtonBlocks = [editButton, eraseButton, playButton]
         let signatureButtonBlocks = [keySignature, timeSignature]
 
         for (i, b) in verticallyStackedButtons.enumerated() {
