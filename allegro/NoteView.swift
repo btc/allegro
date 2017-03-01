@@ -132,13 +132,14 @@ class NoteView: NoteActionView {
         guard note.dot != .none else { return nil }
         
         let view = UIView()
-        view.frame = geometry.getDotBoundingBox(note: note)
+        let dframe = geometry.getDotBoundingBox(note: note)
+        view.frame = dframe
         let dotLayer = CAShapeLayer()
         let dotSize = CGSize(width: 2 * geometry.dotRadius, height: 2 * geometry.dotRadius)
-        let dotPath = UIBezierPath(ovalIn: CGRect(origin: view.frame.origin, size: dotSize))
+        let dotPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: dotSize))
         
         if note.dot == .double {
-            let secondDotOrigin = view.frame.origin.offset(dx: view.frame.size.width - dotSize.width, dy: 0)
+            let secondDotOrigin = CGPoint.zero.offset(dx: dframe.size.width - dotSize.width, dy: 0)
             dotPath.append(UIBezierPath(ovalIn: CGRect(origin: secondDotOrigin, size:dotSize)))
         }
         

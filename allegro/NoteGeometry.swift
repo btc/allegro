@@ -58,9 +58,11 @@ struct NoteGeometry {
     }
     
     func getDotBoundingBox(note: NoteViewModel) -> CGRect {
-        let centerY = origin.offset(dx: frame.size.width, dy: frame.size.height / 2)
+        var centerY = origin.offset(dx: frame.size.width + dotSpacing, dy: frame.size.height / 4)
+        if !note.onStaffLine {
+            centerY = centerY.offset(dx: 0, dy: frame.size.height / 4)
+        }
         let dotOrigin = centerY.offset(dx: 0, dy: -dotRadius)
-        
         var dotWidth = CGFloat(0)
         
         switch note.dot {

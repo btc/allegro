@@ -28,6 +28,10 @@ class NoteViewModel {
         return note.dot
     }
     
+    var onStaffLine: Bool {
+        return [0, 2, 4].contains(abs(pitch))
+    }
+    
     // true for notes smaller than eighth notes that should be drawn with a flag or beamed
     var hasFlag: Bool {
         return note.value.hasFlag
