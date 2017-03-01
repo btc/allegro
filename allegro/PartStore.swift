@@ -110,7 +110,6 @@ class PartStore {
         let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
         if let ap = actualPosition {
-            selectedNote = (i, ap)
             notify()
             observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
         }
