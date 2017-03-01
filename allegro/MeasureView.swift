@@ -183,10 +183,6 @@ class MeasureView: UIView {
             noteView.noteOrigin = CGPoint(x: startX, y: y)
             //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
             noteView.shouldDrawFlag = true//fals
-
-            if let a = getAccidentalLabel(noteView: noteView) {
-                addSubview(a)
-            }
         }
         
         let barPath = UIBezierPath()
@@ -242,29 +238,6 @@ class MeasureView: UIView {
         for noteView in noteViews {
             noteView.computePaths()
         }
-    }
-
-    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
-        guard noteView.note.displayAccidental else { return nil }
-        let accidental = noteView.note.accidental
-
-        let center = CGPoint(x: noteView.frame.origin.x,
-                             y: noteView.frame.origin.y + noteView.frame.size.height / 2)
-
-        let info = accidental.infos
-
-        let offset = info.1
-
-        let size = CGSize(width: 50, height: 60)
-        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
-                             y: center.y - size.height / 2 + offset.y)
-
-        let label = UILabel()
-        label.frame = CGRect(origin: origin, size: size)
-        label.text = info.0
-        label.font = UIFont(name: "DejaVu Sans", size: 70)
-        label.textAlignment = .right
-        return label
     }
 
     func longPressPan(sender: UIGestureRecognizer) {

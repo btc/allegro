@@ -116,6 +116,37 @@ class NoteView: NoteActionView {
     fileprivate var flagIterOffset = CGFloat(15)
     
     let stemLayer: CAShapeLayer = CAShapeLayer() // TODO(btc): rename to stemLayer
+    
+    var accidentalLabel: UILabel? {
+        guard note.displayAccidental else { return nil }
+        
+        let label = UILabel()
+        label.frame = geometry.getAccidentalFrame(note: note)
+        label.text = note.accidental.infos.0
+        label.font = UIFont(name: "DejaVu Sans", size: 70)
+        label.textAlignment = .right
+        return label
+    }
+    
+    var dotView: UIView? {
+        guard note.dot != .none else { return nil }
+        
+        let view = UIView()
+        view.frame = geometry.getDotBoundingBox(note: note)
+        let dotLayer = CAShapeLayer()
+        let dotSize = CGSize(width: 2 * geometry.dotRadius, height: 2 * geometry.dotRadius)
+        let dotPath = UIBezierPath(ovalIn: CGRect(origin: view.frame.origin, size: dotSize))
+        
+        if note.dot == .double {
+            let secondDotOrigin = view.frame.origin.offset(dx: view.frame.size.width - dotSize.width, dy: 0)
+            dotPath.append(UIBezierPath(ovalIn: CGRect(origin: secondDotOrigin, size:dotSize)))
+        }
+        
+        dotLayer.path = dotPath.cgPath
+        dotLayer.fillColor = UIColor.black.cgColor
+        view.layer.addSublayer(dotLayer)
+        return view
+    }
 
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
@@ -123,6 +154,14 @@ class NoteView: NoteActionView {
         isOpaque = false
 
         layer.addSublayer(stemLayer)
+        
+        if let a = accidentalLabel {
+            addSubview(a)
+        }
+        
+        if let d = dotView {
+            addSubview(d)
+        }
 
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
         Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
@@ -149,6 +188,7 @@ class NoteView: NoteActionView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     
     // drawRect is the rectangle we are drawing inside.
     // It should be correctly sized.

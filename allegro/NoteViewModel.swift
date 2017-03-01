@@ -24,6 +24,10 @@ class NoteViewModel {
         return note.accidental
     }
     
+    var dot: Note.Dot {
+        return note.dot
+    }
+    
     // true for notes smaller than eighth notes that should be drawn with a flag or beamed
     var hasFlag: Bool {
         return note.value.hasFlag
