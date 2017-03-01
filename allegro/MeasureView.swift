@@ -382,9 +382,9 @@ extension Note.Accidental {
     // the measure line
     var infos: (String, CGPoint) {
         switch self {
-        case .natural: return ("♮", CGPoint(x: -20, y: 0))
-        case .sharp: return ("♯", CGPoint(x: -20, y: 0))
-        case .flat: return ("♭", CGPoint(x: -20, y: -12))
+        case .natural: return ("♮", CGPoint(x: -20, y: -5))
+        case .sharp: return ("♯", CGPoint(x: -20, y: -5))
+        case .flat: return ("♭", CGPoint(x: -20, y: -17))
         default: return ("", .zero)
         }
     }
