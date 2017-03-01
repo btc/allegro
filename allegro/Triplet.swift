@@ -8,7 +8,6 @@
 import Rational
 
 class Triplet {
-<<<<<<< HEAD
     let notes: [Note]   // keep track of notes in the triplet
     let realDuration: Rational  //duration of each note in the triplet
     let nominalDuration: Rational
@@ -17,11 +16,6 @@ class Triplet {
         else {
             return nil
         }
-=======
-    var notes: [Note] = [Note]()
-    
-    init(notesArr: [Note]) {
->>>>>>> Implemented tie removal on Measure and Part. Need to figure out / implement
         self.notes = notesArr
         self.nominalDuration = notes[0].duration
         self.realDuration = nominalDuration * 2/3;
