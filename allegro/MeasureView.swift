@@ -155,8 +155,8 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g, store: store) }
-        noteViews.forEach {
-            $0.isSelected = $0.note.position == store.selectedNote?.position && store.selectedNote?.measure == index
+        noteViews.forEach { view in
+            view.isSelected = store.selectedNotes.contains(view.note.position) && store.currentMeasure == index
         }
         noteViews.forEach() { $0.delegate = self }
         let notesToNoteView = noteViewModels.enumerated()
@@ -274,6 +274,9 @@ class MeasureView: UIView {
         guard let store = store, let index = index else { return }
 
         if store.mode == .edit {
+            if deselectNote(sender: sender) {
+                return // without editing
+            }
             edit(sender: sender)
         }
 
@@ -288,6 +291,19 @@ class MeasureView: UIView {
         }
     }
 
+    // returns true if a note was deselected
+    private func deselectNote(sender: UIGestureRecognizer) -> Bool {
+        let location = sender.location(in: self)
+        if let nv = hitTest(location, with: nil) as? NoteActionView {
+            guard let store = store, let index = index else { return false }
+            if store.currentMeasure == index && store.selectedNotes.contains(nv.note.position) {
+                store.selectedNotes.remove(nv.note.position)
+                return true
+            }
+        }
+        return false
+    }
+
     private func edit(sender: UIGestureRecognizer) {
         guard store?.mode == .edit else {
             return
@@ -295,6 +311,7 @@ class MeasureView: UIView {
         let location = sender.location(in: self)
 
         guard let store = store, let index = index else { return }
+
         let value = store.selectedNoteValue
 
         // determine pitch
@@ -363,7 +380,7 @@ extension MeasureView: NoteActionDelegate {
                 Snackbar(message: "failed to convert note to rest", duration: .short).show()
             }
         case .select:
-            store.selectedNote = (index, pos)
+            store.selectedNotes.insert(pos)
         }
     }
 }

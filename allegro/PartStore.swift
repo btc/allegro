@@ -37,7 +37,17 @@ enum CompositionMode {
 
 class PartStore {
 
-    var selectedNote: (measure: Int, position: Rational)? {
+    var currentMeasure: Int = 0 {
+        didSet {
+            let valueChanged = oldValue != currentMeasure
+            if valueChanged {
+                // de-select notes when measure changes!
+                selectedNotes.removeAll()
+            }
+        }
+    }
+
+    var selectedNotes: Set<Rational> = [] {
         didSet {
             notify()
         }
@@ -70,6 +80,10 @@ class PartStore {
     init(part: Part, mode: CompositionMode = .edit) {
         self.part = part
         self.mode = mode
+
+        if part.measures.count == 0 {
+            part.extend() // ensures part always has at least one measure. that way `currentMeasure` always points to valid index
+        }
     }
 
     func subscribe(_ observer: PartStoreObserver) {
@@ -110,6 +124,7 @@ class PartStore {
         let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
         if let ap = actualPosition {
+            selectedNotes = [ap] // our policy is to update selected note on insert
             notify()
             observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
         }

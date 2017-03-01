@@ -66,6 +66,13 @@ extension MeasureViewCollection: UICollectionViewDelegateFlowLayout {
 }
 
 extension MeasureViewCollection: UICollectionViewDelegate {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let visibleRect = CGRect(origin: contentOffset, size: bounds.size)
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+        if let i = indexPathForItem(at: visiblePoint)?.item {
+            store.currentMeasure = i
+        }
+    }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let finalCellFrame = cell.frame
