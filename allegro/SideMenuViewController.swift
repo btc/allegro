@@ -13,6 +13,7 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
+    fileprivate let audio: Audio
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -81,11 +82,13 @@ class SideMenuViewController: UIViewController {
         v.backgroundColor = .clear
         v.setTitleColor(.black, for: .normal)
         v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE)
+        v.showsTouchWhenHighlighted = true
         return v
     }()
 
     init(store: PartStore) {
         self.store = store
+        self.audio = Audio(store: store)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -110,7 +113,7 @@ class SideMenuViewController: UIViewController {
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         timeSignature.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
         keySignature.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
-
+        playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -180,6 +183,10 @@ class SideMenuViewController: UIViewController {
     func keySignaturesTapped() {
         let vc = KeySignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func playButtonTapped() {
+        audio.playMeasure(measure: 0)
     }
 }
 
