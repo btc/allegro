@@ -227,18 +227,20 @@ struct Measure {
         return false
     }
     
+    // Takes nominal duration of single note in triplet, returns true if triplet can be added
+    func hasSpaceForTriplet(noteDuration: Rational) -> Bool {
+        return (self.freespace >= noteDuration * 2)
+    }
+    
     // adds a Triplet to this measure
     // returns true on success
-    mutating func addTriplet(notePositions: [Rational]) -> Bool {
-        guard (notePositions.isEmpty == false) else {return false}
-        guard (notePositions.count <= 3) else {return false}
-        var notes = [Note]()
-        for pos in notePositions {
-            guard let note = note(at: pos) else {return false}
-            notes.append(note)
-        }
+    mutating func addTriplet(notes: [NotePos]) -> Bool {
+        guard (notes.count != 3) else {return false}
         guard let newTriplet = Triplet(notesArr: notes) else {return false}
         triplets.append(newTriplet)
+        for notePos in notes {
+            insert(note: notePos.note, at: notePos.pos)
+        }
         return true
     }
 

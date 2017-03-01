@@ -8,17 +8,17 @@
 import Rational
 
 class Triplet {
-    let notes: [Note]   // keep track of notes in the triplet
-    let realDuration: Rational  //duration of each note in the triplet
-    let nominalDuration: Rational
-    init?(notesArr: [Note]) {
-        guard(notesArr[0].duration == notesArr[1].duration && notesArr[1].duration == notesArr[2].duration)
-        else {
-            return nil
+    var notes: [Note] = [Note]()  // keep track of notes in the triplet
+    let modifier: Rational = 2/3
+    let duration: Rational
+    init?(notesArr: [NotePos]) {
+        guard(notesArr.count == 3) else { return nil }
+        guard(notesArr[0].duration == notesArr[1].duration && notesArr[1].duration == notesArr[2].duration) else { return nil }
+        self.duration = notesArr[0].duration * 2
+        for notePos in notesArr {
+            notePos.note.triplet = self
+            notes.append(notePos.note)
         }
-        self.notes = notesArr
-        self.nominalDuration = notes[0].duration
-        self.realDuration = nominalDuration * 2/3;
     }
     
     func isEmpty() -> Bool {

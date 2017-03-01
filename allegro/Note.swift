@@ -55,8 +55,13 @@ class Note {
     
     // Gives the true duration of the note after modifiers
     var duration: Rational {
-        return self.value.nominalDuration * self.dot.modifier
-        // TODO (niklele) there will be a triplet modifier as well
+        guard self.triplet != nil
+            else { return self.value.nominalDuration * self.dot.modifier }
+        if let tripletModifier = self.triplet?.modifier {
+            return self.value.nominalDuration * tripletModifier
+        } else {
+            return self.value.nominalDuration * self.dot.modifier
+        }
     }
     
     // number of dots on the right of the note that extend the duration
