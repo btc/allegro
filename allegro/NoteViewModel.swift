@@ -8,34 +8,20 @@
 
 import Foundation
 import Rational
+import UIKit
 
 class NoteViewModel {
-
-    private let note: Note
-    var value: Note.Value {
-        return note.value
-    }
+    let note: Note
     
-    var letter: Note.Letter {
-        return note.letter
-    }
-    
-    var accidental: Note.Accidental {
-        return note.accidental
-    }
-    
-    var dot: Note.Dot {
-        return note.dot
+    // true for notes smaller than eighth notes that should be drawn with a flag or beamed
+    var hasFlag: Bool {
+        return note.value.hasFlag
     }
     
     var onStaffLine: Bool {
         return [0, 2, 4].contains(abs(pitch))
     }
     
-    // true for notes smaller than eighth notes that should be drawn with a flag or beamed
-    var hasFlag: Bool {
-        return note.value.hasFlag
-    }
     var displayAccidental: Bool = false
     
     // false for notes drawn with stem on the right of the head
@@ -43,6 +29,7 @@ class NoteViewModel {
     var flipped: Bool = false
     
     let position: Rational
+    
 
     // 0 is the center of the bars (B4 in treble clef)
     // Every increment by 1 moves up half staff height

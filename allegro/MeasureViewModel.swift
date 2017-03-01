@@ -34,7 +34,7 @@ struct MeasureViewModel {
             if i == 0 {
                 return nil
             }
-            if b[i].value != b[i-1].value {
+            if b[i].note.value != b[i-1].note.value {
                 return b.partition(index: i)
             }
             return nil
@@ -69,11 +69,21 @@ struct MeasureViewModel {
             if i == 0 {
                 return nil
             }
-            if b[i].value != b[i-1].value {
+            if b[i].note.value != b[i-1].note.value {
                 return b.partition(index: i)
             }
             return nil
-        }
+        }/*,
+        { (b, i) in
+            if i == 0 {
+                return nil
+            }
+            
+            /*
+            if b[i].note.rest or b[i - 1].note.rest {
+             
+            }*/
+        }*/
     ]
     /*
         For the current NoteViewModel, determines if accidental should be displayed or not
