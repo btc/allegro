@@ -304,6 +304,6 @@ class NoteView: NoteActionView {
         }
         
         stemLayer.path = path.cgPath
-        stemLayer.fillColor = UIColor.black.cgColor
+        stemLayer.fillColor = color.cgColor
     }
 }
