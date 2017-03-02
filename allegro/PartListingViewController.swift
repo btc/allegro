@@ -41,7 +41,18 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        let store = partFileManager.new()
+
+        var part = Part()
+        var partMetadata = PartMetadata()
+
+        if partFileManager.files.isEmpty {
+            (part, partMetadata) = partFileManager.new()
+        } else {
+            (part, partMetadata) = partFileManager.loadMostRecent()
+        }
+
+        let store = PartStore(part: part)
+        let _ = PartSaver(partStore: store, partMetadata: partMetadata)
         let vc = CompositionViewController.create(store: store)
         navigationController?.pushViewController(vc, animated: false)
     }
@@ -72,7 +83,8 @@ extension PartListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         // load part store from file manager
-        let partStore = partFileManager.load(forIndex: indexPath.item).partStore
+        let part = partFileManager.load(forIndex: indexPath.item).part
+        let partStore = PartStore(part: part)
 
         let vc = CompositionViewController.create(store: partStore)
         navigationController?.pushViewController(vc, animated: true)
