@@ -9,13 +9,9 @@
 import Rational
 
 class Part {
-    
+
     // beats per minute (bpm) eg. 120
     var tempo: Int = 120
-    
-    var composer: String?
-    var title: String?
-    var comment: String?
 
     // ordered list of measures in the piece
     var measures: [Measure] = [Measure]()

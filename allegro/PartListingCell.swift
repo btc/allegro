@@ -12,9 +12,9 @@ class PartListingCell: UICollectionViewCell {
 
     static let reuseID = "PartListingCell"
 
-    var part: Part? {
+    var partMetadata: PartMetadata? {
         didSet {
-            partTitle.text = part?.title
+            partTitle.text = partMetadata?.title
             date.text = "TODO"
         }
     }

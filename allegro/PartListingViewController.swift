@@ -41,8 +41,8 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        let p = newPart()
-        let vc = CompositionViewController.create(part: p)
+        let store = partFileManager.new()
+        let vc = CompositionViewController.create(store: store)
         navigationController?.pushViewController(vc, animated: false)
     }
 
@@ -51,13 +51,14 @@ class PartListingViewController: UIViewController {
 
         partListing.frame = view.bounds
     }
-    
+
     func newCompositionTapped() {
-        let p = newPart()
-        let vc = CompositionViewController.create(part: p)
+        let store = PartStore(part: newPart())
+        let vc = CompositionViewController.create(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }
 
+    // make a new part or use a mock from tweaks
     private func newPart() -> Part {
         let i = Tweaks.assign(Tweaks.mockPartTweak)
         if mocks.indices.contains(i) {
@@ -69,8 +70,11 @@ class PartListingViewController: UIViewController {
 
 extension PartListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let p = partFileManager.load(forIndex: indexPath.item)
-        let vc = CompositionViewController.create(part: p)
+
+        // load part store from file manager
+        let partStore = partFileManager.load(forIndex: indexPath.item).partStore
+
+        let vc = CompositionViewController.create(store: partStore)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -95,7 +99,8 @@ extension PartListingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
         let cell = aCell as? PartListingCell
-        cell?.part = partFileManager.load(forIndex: indexPath.item)
+
+        cell?.partMetadata = partFileManager.access(forIndex: indexPath.item).partMetadata
 
         return aCell
     }

@@ -21,7 +21,7 @@ class MusicXMLParser {
 
     // generate partDoc from the music model in the Store
     // traverses each Note in each Measure in the Part
-    func generate(part: Part) -> AEXMLDocument {
+    func generate(part: Part, partMetadata: PartMetadata) -> AEXMLDocument {
 
         let partDoc = AEXMLDocument()
 
@@ -34,7 +34,7 @@ class MusicXMLParser {
         
         let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
 
-        let _ = score_part.addChild(name: "part-name", value: part.title)
+        let _ = score_part.addChild(name: "part-name", value: partMetadata.title)
         // TODO comments, composer
         
         let partElem = score_partwise.addChild(name: "part", attributes: ["id": "P1"])
@@ -78,9 +78,6 @@ class MusicXMLParser {
                 // convert to ticks per quarter note, so we must convert to number of quarter notes then into ticks
                 let quarterNoteDuration = n.duration * 4
                 let duration = (quarterNoteDuration * divisionsPerQuarterNote).intApprox
-
-                print("NOTE value: \(n.value) duration: \(n.duration) durationInt: \(duration)\n")
-
 
                 let _ = note.addChild(name: "duration", value: "\(duration)")
 
@@ -173,6 +170,8 @@ class MusicXMLParser {
     private func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: Measure) {
         var measure = Measure()
 
+        // TODO parse key signature
+
         // number is the index of the measure
         // should this default to something else?
         let numberString = measureElement.attributes["number"] ?? "0"
@@ -218,17 +217,18 @@ class MusicXMLParser {
     }
 
     // parses an XML document and creates a Part with Measures and Notes
-    func parse(partDoc: AEXMLDocument) -> Part {
+    func parse(partDoc: AEXMLDocument) -> (part: Part, partMetadata: PartMetadata) {
 
         // TODO check the doctype
 
         let part = Part()
 
         // Find Part title
-        part.title = parsePartTitle(partDoc: partDoc)
+        var partMetadata = PartMetadata()
+        partMetadata.title = parsePartTitle(partDoc: partDoc)
 
         // find the part
-        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return part }
+        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return (part, partMetadata) }
 
         // loop over all measures and parse them
         let measureElements = partElem.childrenMatch(name: "measure")
@@ -242,7 +242,7 @@ class MusicXMLParser {
             part.setMeasure(measureIndex: i, measure: measure)
         }
 
-        return part
+        return (part, partMetadata)
     }
 }
 
