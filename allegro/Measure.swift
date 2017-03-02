@@ -69,7 +69,6 @@ struct Measure {
         // check if note is part of triplet or tie
         if let tie = notes[i].note.tie {
             // contains tie
-            // TODO remove the tie from the ties array
             let success = removeTie(tie: tie)
             if (success == false || notes[i].note.tie != nil) {
                 Log.error?.message("Error removing tie")
@@ -77,8 +76,13 @@ struct Measure {
         }
         if let triplet = notes[i].note.triplet {
             // contains triplet
-            // TODO turn note into rest
+            let success = triplet.removeNote(notePos: notes[i])
+            if (success == false || notes[i].note.triplet != nil) {
+                Log.error?.message("Error removing note from triplet")
+            }
             // if triplet.isEmpty(), remove it from triplets array
+            if (triplet.isEmpty()) {
+            }
         }
         return notes.remove(at: i).note
     }
@@ -239,9 +243,21 @@ struct Measure {
         guard let newTriplet = Triplet(notesArr: notes) else {return false}
         triplets.append(newTriplet)
         for notePos in notes {
-            insert(note: notePos.note, at: notePos.pos)
+            let success = insert(note: notePos.note, at: notePos.pos)
+            if (success == nil) {
+                Log.error?.message("Unable to insert note as part of triplet. Developer Error.")
+            }
         }
         return true
+    }
+    
+    mutating func removeTriplet(triplet: Triplet) -> Bool {
+        let filteredTriplets = triplets.filter { $0 == triplet }
+        if (filteredTriplets.count == triplets.count - 1) {
+            triplets = filteredTriplets
+            return true
+        }
+        return false
     }
 
     // Finds the nearest previous note with the same letter if it exists
