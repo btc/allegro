@@ -9,37 +9,50 @@
 import AEXML
 import Rational
 
-class PartFileManager {
+class PartFileManager : PartStoreObserver {
 
     private var files = [String]()
 
     fileprivate let parser = MusicXMLParser()
 
+    private var currentIndex: Int?
+    private var currentPartMetadata: PartMetadata?
+    private var currentPartStore: PartStore? {
+        didSet {
+            currentPartStore?.subscribe(self)
+        }
+    }
+
     var count: Int {
         return files.count
     }
 
+    fileprivate var currentPart: Int = 0
+
     init() {
-        // add part for testing
-        let p = Part()
-        p.title = "ExamplePart"
-        let n = Note(value: .quarter, letter: .C, octave: 5)
-        let _ = p.insert(note: n, intoMeasureIndex: 0, at: 1/4)
-        files.append("ExampleFile")
-        save(forIndex: 0, part: p)
+        findParts()
     }
 
     func findParts() {
         // TODO ls and find all .xml files in Documents and populate files
     }
 
-    // Load an XML file from Documents and then parse it as a Part
-    // Note filename should not include .xml extension
-    func load(forIndex index: Int) -> Part {
+    // make a new part, save it, and return a part store for it
+    func new() -> PartStore {
+        let partStore = PartStore(part: Part())
+        currentPartStore = partStore
+        currentIndex = 0
+        files.insert("part_\(count + 1)", at: 0)
+        save()
+        return partStore
+    }
+
+    // Access an XML file from Documents and then parse it as a Part and PartMetadata
+    func access(forIndex index: Int) -> (partStore: PartStore, partMetadata: PartMetadata) {
 
         guard files.indices.contains(index) else {
             Log.error?.message("Unable to find file at index: \(index)")
-            return Part()
+            return (PartStore(part: Part()), PartMetadata())
         }
         let filename = files[index]
 
@@ -57,25 +70,40 @@ class PartFileManager {
 
             // Parse XML
             let partDoc = try AEXMLDocument(xml: data)
-            let part = parser.parse(partDoc: partDoc)
+            let (part, partMetadata) = parser.parse(partDoc: partDoc)
 
-            return part
+            let partStore = PartStore(part: part)
+
+            return (partStore, partMetadata)
 
         } catch {
             Log.error?.message("Failed to load XML from Documents. Error: \(error)")
-            return Part()
+            return (PartStore(part: Part()), PartMetadata())
         }
     }
 
-    // attempts to load a file as XML and then parse it as a Part
-    func bundleLoad(filename: String) -> Part? {
+    // Access an XML file from Documents and then parse it as a Part and PartMetadata
+    // set current part store and index
+    func load(forIndex index: Int) -> (partStore: PartStore, partMetadata: PartMetadata) {
+
+        let (partStore, partMetadata) = access(forIndex: index)
+
+        currentPartStore = partStore
+        currentPartMetadata = partMetadata
+        currentIndex = index
+
+        return (partStore, partMetadata)
+    }
+
+    // attempts to load a file as XML and then parse it as a Part and PartMetadata
+    func bundleLoad(filename: String) -> (Part, PartMetadata) {
         Log.info?.message("reading MusicXML from \(filename).xml")
 
         do {
             // Find the file
             guard let filePath = Bundle.main.path(forResource: filename, ofType: "xml") else {
                 Log.error?.message("Unable to open file from bundle")
-                return nil
+                return (Part(), PartMetadata())
             }
 
             let fileURL = URL(fileURLWithPath: filePath)
@@ -86,17 +114,29 @@ class PartFileManager {
 
             // Parse XML
             let partDoc = try AEXMLDocument(xml: data)
-            return parser.parse(partDoc: partDoc)
+            let (partStore, partMetadata) = parser.parse(partDoc: partDoc)
+
+            return (partStore, partMetadata)
 
         } catch {
             Log.error?.message("Failed to load XML from Bundle. Error: \(error)")
-            return Part()
+            return (Part(), PartMetadata())
         }
     }
 
-    // save the Part to disk in Documents.
+    // save the current part to disk in Documents.
     // Note: filename should not include .xml extension
-    func save(forIndex index: Int, part: Part) {
+    func save() {
+
+        guard let index = currentIndex else {
+            Log.error?.message("Need to set current index!")
+            return
+        }
+
+        guard let partStore = currentPartStore else {
+            Log.error?.message("Need to set the current part store!")
+            return
+        }
 
         guard files.indices.contains(index) else {
             Log.error?.message("Unable to find file at index: \(index)")
@@ -107,7 +147,7 @@ class PartFileManager {
         Log.info?.message("Generating and saving MuscXML as \(filename).xml")
 
         // generate XML
-        let partDoc = parser.generate(part: part)
+        let partDoc = parser.generate(part: partStore.part, partMetadata: PartMetadata())
 
         do {
             let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -123,5 +163,9 @@ class PartFileManager {
             Log.error?.message("Failed to save XML. Error: \(error)")
         }
     }
-}
 
+    // save on every change to the part store
+    func partStoreChanged() {
+        save()
+    }
+}

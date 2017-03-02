@@ -41,8 +41,7 @@ class CompositionViewController: UIViewController {
     fileprivate let audio: Audio?
 
     //RHSide menu disabled for alpha
-    static func create(part: Part) -> UIViewController {
-        let store = PartStore(part: part)
+    static func create(store: PartStore) -> UIViewController {
         let vc = CompositionViewController(store: store)
         let sideMenuVC = SideMenuViewController(store: store)
 
