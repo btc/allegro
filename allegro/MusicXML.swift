@@ -17,11 +17,11 @@ class MusicXMLParser {
 
     // also called ticks per quarter note.
     // 16 because the minimum duration is a 1/64 note (from a double-dotted 1/16 note)
-    private let divisionsPerQuarterNote: Rational = 16
+    private static let divisionsPerQuarterNote: Rational = 16
 
     // generate partDoc from the music model in the Store
     // traverses each Note in each Measure in the Part
-    func generate(part: Part, partMetadata: PartMetadata) -> AEXMLDocument {
+    static func generate(part: Part, partMetadata: PartMetadata) -> AEXMLDocument {
 
         let partDoc = AEXMLDocument()
 
@@ -101,7 +101,7 @@ class MusicXMLParser {
     }
 
     // parse an AEXMLElement that represents a Note and return it
-    private func parseNote(noteElement: AEXMLElement) -> (note: Note, position: Rational) {
+    private static func parseNote(noteElement: AEXMLElement) -> (note: Note, position: Rational) {
 
         // is there some way to make this cleaner using optionals?
         // right now there are defualt values here and in the if statements
@@ -167,7 +167,7 @@ class MusicXMLParser {
     }
 
     // Parse an AEXMLElement that represents a Measure and return it
-    private func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: Measure) {
+    private static func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: Measure) {
         var measure = Measure()
 
         // TODO parse key signature
@@ -208,7 +208,7 @@ class MusicXMLParser {
         return (number, measure)
     }
 
-    func parsePartTitle(partDoc: AEXMLDocument) -> String? {
+    static func parsePartTitle(partDoc: AEXMLDocument) -> String? {
         // partDoc -> score-partwise -> part-list -> score-part -> part-name
         guard let part_list = partDoc.root.firstChildMatch(name: "part-list") else { return nil }
         guard let score_part = part_list.firstChildMatch(name: "score-part") else { return nil }
@@ -217,7 +217,7 @@ class MusicXMLParser {
     }
 
     // parses an XML document and creates a Part with Measures and Notes
-    func parse(partDoc: AEXMLDocument) -> (part: Part, partMetadata: PartMetadata) {
+    static func parse(partDoc: AEXMLDocument) -> (part: Part, partMetadata: PartMetadata) {
 
         // TODO check the doctype
 
