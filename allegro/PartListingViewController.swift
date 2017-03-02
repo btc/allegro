@@ -26,8 +26,6 @@ class PartListingViewController: UIViewController {
         return v
     }()
 
-    fileprivate let partFileManager: PartFileManager = PartFileManager()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -41,14 +39,13 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-
         var part = Part()
         var partMetadata = PartMetadata()
 
-        if partFileManager.files.isEmpty {
-            (part, partMetadata) = partFileManager.new()
+        if PartFileManager.files.isEmpty {
+            (part, partMetadata) = PartFileManager.new()
         } else {
-            (part, partMetadata) = partFileManager.loadMostRecent()
+            (part, partMetadata) = PartFileManager.loadMostRecent()
         }
 
         let store = PartStore(part: part)
@@ -83,7 +80,7 @@ extension PartListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         // load part store from file manager
-        let part = partFileManager.load(forIndex: indexPath.item).part
+        let part = PartFileManager.load(forIndex: indexPath.item).part
         let partStore = PartStore(part: part)
 
         let vc = CompositionViewController.create(store: partStore)
@@ -105,14 +102,14 @@ extension PartListingViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return partFileManager.count
+        return PartFileManager.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
         let cell = aCell as? PartListingCell
 
-        cell?.partMetadata = partFileManager.access(forIndex: indexPath.item).partMetadata
+        cell?.partMetadata = PartFileManager.access(forIndex: indexPath.item).partMetadata
 
         return aCell
     }

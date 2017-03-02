@@ -13,17 +13,15 @@ import Rational
 // Allows clients to save and open them
 class PartFileManager {
 
-    var count: Int {
+    static var count: Int {
         return files.count
     }
 
-    fileprivate var currentPart: Int = 0
-
-    func nextFilename() -> String {
+    static func nextFilename() -> String {
         return "part_\(files.count)"
     }
 
-    var files: [String] {
+    static var files: [String] {
         get {
             do {
                 let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
@@ -43,7 +41,7 @@ class PartFileManager {
     }
 
     // make a new part, save it, and return a part store for it
-    func new() -> (part: Part, partMetadata: PartMetadata) {
+    static func new() -> (part: Part, partMetadata: PartMetadata) {
         let filename = nextFilename()
 
         let part = Part()
@@ -51,16 +49,11 @@ class PartFileManager {
         partMetadata.title = filename
 
         save(part: part, partMetadata: partMetadata, as: filename)
-
-        for f in files {
-            Log.info?.message("FILE: \(f)")
-        }
-
         return (part, partMetadata)
     }
 
     // Access an XML file from Documents and then parse it as a Part and PartMetadata
-    func access(forIndex index: Int) -> (part: Part, partMetadata: PartMetadata) {
+    static func access(forIndex index: Int) -> (part: Part, partMetadata: PartMetadata) {
 
         guard files.indices.contains(index) else {
             Log.error?.message("Unable to find file at index: \(index)")
@@ -92,7 +85,7 @@ class PartFileManager {
         }
     }
 
-    func loadMostRecent() -> (part: Part, partMetadata: PartMetadata) {
+    static func loadMostRecent() -> (part: Part, partMetadata: PartMetadata) {
         if let filename = files.last {
             return load(filename: filename)
         } else {
@@ -102,13 +95,13 @@ class PartFileManager {
 
     // Access an XML file from Documents and then parse it as a Part and PartMetadata
     // set current part store and index
-    func load(forIndex index: Int) -> (part: Part, partMetadata: PartMetadata) {
+    static func load(forIndex index: Int) -> (part: Part, partMetadata: PartMetadata) {
 
         let (partStore, partMetadata) = access(forIndex: index)
         return (partStore, partMetadata)
     }
 
-    func load(filename: String) -> (part: Part, partMetadata: PartMetadata) {
+    static func load(filename: String) -> (part: Part, partMetadata: PartMetadata) {
 
         guard files.contains(filename) else {
             Log.error?.message("Unable to find file: \(filename)")
@@ -140,7 +133,7 @@ class PartFileManager {
     }
 
     // attempts to load a file as XML and then parse it as a Part and PartMetadata
-    func bundleLoad(filename: String) -> (Part, PartMetadata) {
+    static func bundleLoad(filename: String) -> (Part, PartMetadata) {
         Log.info?.message("reading MusicXML from \(filename).xml")
 
         do {
@@ -168,7 +161,7 @@ class PartFileManager {
         }
     }
 
-    func save(part: Part, partMetadata: PartMetadata, as filename: String) {
+    static func save(part: Part, partMetadata: PartMetadata, as filename: String) {
 
         Log.info?.message("Generating and saving MuscXML as \(filename).xml")
 
