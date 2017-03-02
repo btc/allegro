@@ -40,9 +40,15 @@ class PartFileManager : PartStoreObserver {
     // make a new part, save it, and return a part store for it
     func new() -> PartStore {
         let partStore = PartStore(part: Part())
+        var partMetadata = PartMetadata()
+        let title = "part_\(count + 1)"
+        partMetadata.title = title
+
         currentPartStore = partStore
         currentIndex = 0
-        files.insert("part_\(count + 1)", at: 0)
+        currentPartMetadata = partMetadata
+
+        files.insert(title, at: 0)
         save()
         return partStore
     }
@@ -138,6 +144,9 @@ class PartFileManager : PartStoreObserver {
             return
         }
 
+        // try to get metadata if it exists
+        let partMetadata = currentPartMetadata ?? PartMetadata()
+
         guard files.indices.contains(index) else {
             Log.error?.message("Unable to find file at index: \(index)")
             return
@@ -147,7 +156,7 @@ class PartFileManager : PartStoreObserver {
         Log.info?.message("Generating and saving MuscXML as \(filename).xml")
 
         // generate XML
-        let partDoc = parser.generate(part: partStore.part, partMetadata: PartMetadata())
+        let partDoc = parser.generate(part: partStore.part, partMetadata: partMetadata)
 
         do {
             let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
