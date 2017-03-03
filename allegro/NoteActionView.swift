@@ -18,6 +18,8 @@ class NoteActionView: UIView {
         didSet {
             color = isSelected ? .allegroBlue : .black
             setNeedsDisplay()
+
+            [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected }
         }
     }
     var color: UIColor = .black
