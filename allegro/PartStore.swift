@@ -124,7 +124,7 @@ class PartStore {
         let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
         if let ap = actualPosition {
-            selectedNotes = [ap] // our policy is to update selected note on insert
+            selectedNotes.removeAll() // our policy is to deselect other notes on insert
             notify()
             observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
         }
