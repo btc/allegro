@@ -42,63 +42,19 @@ class PartFileManager {
 
     // make a new part, save it, and return a part store for it
     static func new() -> (part: Part, partMetadata: PartMetadata) {
-        let filename = nextFilename()
-
         let part = Part()
-        var partMetadata = PartMetadata()
-        partMetadata.title = filename
+        let partMetadata = PartMetadata()
 
-        save(part: part, partMetadata: partMetadata, as: filename)
         return (part, partMetadata)
     }
 
-    // Access an XML file from Documents and then parse it as a Part and PartMetadata
-    static func access(forIndex index: Int) -> (part: Part, partMetadata: PartMetadata) {
-
-        guard files.indices.contains(index) else {
-            Log.error?.message("Unable to find file at index: \(index)")
-            return (Part(), PartMetadata())
-        }
-        let filename = files[index]
-
-        Log.info?.message("reading MusicXML from \(filename).xml")
-
-        do {
-            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-
-            // Find the file
-            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
-            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
-
-            // Load XML from file
-            let data = try Data(contentsOf: fileURL)
-
-            // Parse XML
-            let partDoc = try AEXMLDocument(xml: data)
-            let (part, partMetadata) = MusicXMLParser.parse(partDoc: partDoc)
-
-            return (part, partMetadata)
-
-        } catch {
-            Log.error?.message("Failed to load XML from Documents. Error: \(error)")
-            return (Part(), PartMetadata())
-        }
-    }
 
     static func loadMostRecent() -> (part: Part, partMetadata: PartMetadata) {
         if let filename = files.last {
             return load(filename: filename)
         } else {
-            return (Part(), PartMetadata())
-        }
-    }
-
-    // Access an XML file from Documents and then parse it as a Part and PartMetadata
-    // set current part store and index
-    static func load(forIndex index: Int) -> (part: Part, partMetadata: PartMetadata) {
-
-        let (partStore, partMetadata) = access(forIndex: index)
-        return (partStore, partMetadata)
+            return new()
+         }
     }
 
     static func load(filename: String) -> (part: Part, partMetadata: PartMetadata) {
