@@ -39,11 +39,14 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        let (part, partMetadata) = PartFileManager.new()
+        let part = newPart()
         let filename = PartFileManager.nextFilename()
 
         let store = PartStore(part: part)
-        let _ = PartSaver(partStore: store, partMetadata: partMetadata, filename: filename)
+        let _ = PartSaver(partStore: store, filename: filename)
+
+        // this partsaver goes out of scope and stops saving the part
+
         let vc = CompositionViewController.create(store: store)
         navigationController?.pushViewController(vc, animated: false)
     }
@@ -74,7 +77,7 @@ extension PartListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let filename = PartFileManager.files[indexPath.item]
-        let part = PartFileManager.load(filename: filename).part
+        let part = PartFileManager.load(filename: filename)
 
         let partStore = PartStore(part: part)
 
@@ -105,7 +108,7 @@ extension PartListingViewController: UICollectionViewDataSource {
         let cell = aCell as? PartListingCell
 
         let filename = PartFileManager.files[indexPath.item]
-        cell?.partMetadata = PartFileManager.load(filename: filename).partMetadata
+        cell?.part = PartFileManager.load(filename: filename)
 
         return aCell
     }
