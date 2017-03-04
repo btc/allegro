@@ -21,7 +21,7 @@ class MusicXMLParser {
 
     // generate partDoc from the music model in the Store
     // traverses each Note in each Measure in the Part
-    static func generate(part: Part, partMetadata: PartMetadata) -> AEXMLDocument {
+    static func generate(part: Part) -> AEXMLDocument {
 
         let partDoc = AEXMLDocument()
 
@@ -34,7 +34,7 @@ class MusicXMLParser {
         
         let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
 
-        let _ = score_part.addChild(name: "part-name", value: partMetadata.title)
+        let _ = score_part.addChild(name: "part-name", value: part.title)
         // TODO comments, composer
         
         let partElem = score_partwise.addChild(name: "part", attributes: ["id": "P1"])
@@ -217,18 +217,17 @@ class MusicXMLParser {
     }
 
     // parses an XML document and creates a Part with Measures and Notes
-    static func parse(partDoc: AEXMLDocument) -> (part: Part, partMetadata: PartMetadata) {
+    static func parse(partDoc: AEXMLDocument) -> Part {
 
         // TODO check the doctype
 
         let part = Part()
 
         // Find Part title
-        var partMetadata = PartMetadata()
-        partMetadata.title = parsePartTitle(partDoc: partDoc)
+        part.title = parsePartTitle(partDoc: partDoc)
 
         // find the part
-        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return (part, partMetadata) }
+        guard let partElem = partDoc.root.firstChildMatch(name: "part") else { return part }
 
         // loop over all measures and parse them
         let measureElements = partElem.childrenMatch(name: "measure")
@@ -242,7 +241,7 @@ class MusicXMLParser {
             part.setMeasure(measureIndex: i, measure: measure)
         }
 
-        return (part, partMetadata)
+        return part
     }
 }
 

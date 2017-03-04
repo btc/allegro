@@ -40,28 +40,19 @@ class PartFileManager {
         }
     }
 
-    // make a new part, save it, and return a part store for it
-    static func new() -> (part: Part, partMetadata: PartMetadata) {
-        let part = Part()
-        let partMetadata = PartMetadata()
-
-        return (part, partMetadata)
-    }
-
-
-    static func loadMostRecent() -> (part: Part, partMetadata: PartMetadata) {
+    static func loadMostRecent() -> Part {
         if let filename = files.last {
             return load(filename: filename)
         } else {
-            return new()
+            return Part()
          }
     }
 
-    static func load(filename: String) -> (part: Part, partMetadata: PartMetadata) {
+    static func load(filename: String) -> Part {
 
         guard files.contains(filename) else {
             Log.error?.message("Unable to find file: \(filename)")
-            return (Part(), PartMetadata())
+            return Part()
         }
 
         Log.info?.message("reading MusicXML from \(filename).xml")
@@ -78,25 +69,23 @@ class PartFileManager {
 
             // Parse XML
             let partDoc = try AEXMLDocument(xml: data)
-            let (part, partMetadata) = MusicXMLParser.parse(partDoc: partDoc)
-
-            return (part, partMetadata)
+            return MusicXMLParser.parse(partDoc: partDoc)
 
         } catch {
             Log.error?.message("Failed to load XML from Documents. Error: \(error)")
-            return (Part(), PartMetadata())
+            return Part()
         }
     }
 
     // attempts to load a file as XML and then parse it as a Part and PartMetadata
-    static func bundleLoad(filename: String) -> (Part, PartMetadata) {
+    static func bundleLoad(filename: String) -> Part {
         Log.info?.message("reading MusicXML from \(filename).xml")
 
         do {
             // Find the file
             guard let filePath = Bundle.main.path(forResource: filename, ofType: "xml") else {
                 Log.error?.message("Unable to open file from bundle")
-                return (Part(), PartMetadata())
+                return Part()
             }
 
             let fileURL = URL(fileURLWithPath: filePath)
@@ -107,22 +96,20 @@ class PartFileManager {
 
             // Parse XML
             let partDoc = try AEXMLDocument(xml: data)
-            let (partStore, partMetadata) = MusicXMLParser.parse(partDoc: partDoc)
-
-            return (partStore, partMetadata)
+            return MusicXMLParser.parse(partDoc: partDoc)
 
         } catch {
             Log.error?.message("Failed to load XML from Bundle. Error: \(error)")
-            return (Part(), PartMetadata())
+            return Part()
         }
     }
 
-    static func save(part: Part, partMetadata: PartMetadata, as filename: String) {
+    static func save(part: Part, as filename: String) {
 
         Log.info?.message("Generating and saving MuscXML as \(filename).xml")
 
         // generate XML
-        let partDoc = MusicXMLParser.generate(part: part, partMetadata: partMetadata)
+        let partDoc = MusicXMLParser.generate(part: part)
 
         do {
             let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)

@@ -10,6 +10,10 @@ import Rational
 
 class Part {
 
+    var composer: String?
+    var title: String?
+    var comment: String?
+
     // beats per minute (bpm) eg. 120
     var tempo: Int = 120
 
