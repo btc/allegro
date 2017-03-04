@@ -39,17 +39,11 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        var part = Part()
-        var partMetadata = PartMetadata()
-
-        if PartFileManager.files.isEmpty {
-            (part, partMetadata) = PartFileManager.new()
-        } else {
-            (part, partMetadata) = PartFileManager.loadMostRecent()
-        }
+        let (part, partMetadata) = PartFileManager.new()
+        let filename = PartFileManager.nextFilename()
 
         let store = PartStore(part: part)
-        let _ = PartSaver(partStore: store, partMetadata: partMetadata)
+        let _ = PartSaver(partStore: store, partMetadata: partMetadata, filename: filename)
         let vc = CompositionViewController.create(store: store)
         navigationController?.pushViewController(vc, animated: false)
     }
@@ -79,8 +73,9 @@ class PartListingViewController: UIViewController {
 extension PartListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        // load part store from file manager
-        let part = PartFileManager.load(forIndex: indexPath.item).part
+        let filename = PartFileManager.files[indexPath.item]
+        let part = PartFileManager.load(filename: filename).part
+
         let partStore = PartStore(part: part)
 
         let vc = CompositionViewController.create(store: partStore)
@@ -109,7 +104,8 @@ extension PartListingViewController: UICollectionViewDataSource {
         let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
         let cell = aCell as? PartListingCell
 
-        cell?.partMetadata = PartFileManager.access(forIndex: indexPath.item).partMetadata
+        let filename = PartFileManager.files[indexPath.item]
+        cell?.partMetadata = PartFileManager.load(filename: filename).partMetadata
 
         return aCell
     }
