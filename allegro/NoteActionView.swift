@@ -19,8 +19,8 @@ class NoteActionView: UIView {
             color = isSelected ? .allegroBlue : .black
             setNeedsDisplay()
 
-            [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected }
-            move.isEnabled = isSelected
+            [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected && store.mode == .edit }
+            move.isEnabled = isSelected && store.mode == .edit
         }
     }
     var color: UIColor = .black
@@ -157,7 +157,7 @@ extension NoteActionView: UIGestureRecognizerDelegate {
 
 extension NoteActionView: PartStoreObserver {
     func partStoreChanged() {
-        for r in [swipe, dot, doubleDot, select] {
+        for r in [swipe, dot, doubleDot, select, move] {
             r.isEnabled = store.mode == .edit
         }
     }

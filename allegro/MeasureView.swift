@@ -262,7 +262,7 @@ class MeasureView: UIView {
         
         let location = sender.location(in: self)
 
-        if let nv = hitTest(location, with: nil) as? NoteView {
+        if let nv = hitTest(location, with: nil) as? NoteActionView {
             guard let store = store, let index = index else { return }
             store.removeNote(fromMeasureIndex: index, at: nv.note.position)
         } else if let _ = sender as? UITapGestureRecognizer {
