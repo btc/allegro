@@ -19,8 +19,7 @@ class NoteActionView: UIView {
             color = isSelected ? .allegroBlue : .black
             setNeedsDisplay()
 
-            [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected && store.mode == .edit }
-            move.isEnabled = isSelected && store.mode == .edit
+            updateRecognizers()
         }
     }
     var color: UIColor = .black
@@ -140,6 +139,11 @@ class NoteActionView: UIView {
         let largerBounds = bounds.insetBy(dx: -widthToAdd / 2, dy: -heightToAdd / 2)
         return largerBounds.contains(point) ? self : nil
     }
+
+    func updateRecognizers() {
+        [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected && store.mode == .edit }
+        move.isEnabled = isSelected && store.mode == .edit
+    }
 }
 
 extension NoteActionView: UIGestureRecognizerDelegate {
@@ -157,8 +161,6 @@ extension NoteActionView: UIGestureRecognizerDelegate {
 
 extension NoteActionView: PartStoreObserver {
     func partStoreChanged() {
-        for r in [swipe, dot, doubleDot, select, move] {
-            r.isEnabled = store.mode == .edit
-        }
+        updateRecognizers()
     }
 }
