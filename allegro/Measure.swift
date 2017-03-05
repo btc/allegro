@@ -30,7 +30,6 @@ struct Measure {
     }
     
     private(set) var ties: [Tie] = [Tie]()
-    private(set) var triplets: [Triplet] = [Triplet]()
 
     var capacity: Rational {
         return timeSignature
@@ -66,23 +65,12 @@ struct Measure {
 
     mutating func removeAndReturnNote(at position: Rational) -> Note? {
         guard let i = index(of: position) else { return nil }
-        // check if note is part of triplet or tie
+        // check if note is part of a tie
         if let tie = notes[i].note.tie {
             // contains tie
             let success = removeTie(tie: tie)
             if (success == false || notes[i].note.tie != nil) {
                 Log.error?.message("Error removing tie")
-            }
-        }
-        if let triplet = notes[i].note.triplet {
-            // contains triplet
-            // if triplet.isEmpty(), remove it from triplets array
-            let success = triplet.removeNote(notePos: notes[i])
-            if (success == false || notes[i].note.triplet != nil) {
-                Log.error?.message("Error removing note from triplet")
-            }
-            // if triplet.isEmpty(), remove it from triplets array
-            if (triplet.isEmpty()) {
             }
         }
         return notes.remove(at: i).note
@@ -228,35 +216,6 @@ struct Measure {
                 ties.remove(at: i)
                 return true
             }
-        }
-        return false
-    }
-    
-    // Takes nominal duration of single note in triplet, returns true if triplet can be added
-    func hasSpaceForTriplet(noteDuration: Rational) -> Bool {
-        return (self.freespace >= noteDuration * 2)
-    }
-    
-    // adds a Triplet to this measure
-    // returns true on success
-    mutating func addTriplet(notes: [NotePos]) -> Bool {
-        guard (notes.count != 3) else {return false}
-        guard let newTriplet = Triplet(notesArr: notes) else {return false}
-        triplets.append(newTriplet)
-        for notePos in notes {
-            let success = insert(note: notePos.note, at: notePos.pos)
-            if (success == nil) {
-                Log.error?.message("Unable to insert note as part of triplet. Developer Error.")
-            }
-        }
-        return true
-    }
-    
-    mutating func removeTriplet(triplet: Triplet) -> Bool {
-        let filteredTriplets = triplets.filter { $0 == triplet }
-        if (filteredTriplets.count == triplets.count - 1) {
-            triplets = filteredTriplets
-            return true
         }
         return false
     }
