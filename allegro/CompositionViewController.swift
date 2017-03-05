@@ -40,9 +40,12 @@ class CompositionViewController: UIViewController {
 
     fileprivate let audio: Audio?
 
+    // observer that saves the part to disk after every change
+    private let partSaver: PartSaver
+
     //RHSide menu disabled for alpha
-    static func create(store: PartStore) -> UIViewController {
-        let vc = CompositionViewController(store: store)
+    static func create(store: PartStore, filename: String) -> UIViewController {
+        let vc = CompositionViewController(store: store, filename: filename)
         let sideMenuVC = SideMenuViewController(store: store)
 
         // NB(btc): The way the library provides customization (static options) makes it so that it's only feasible to have
@@ -54,8 +57,10 @@ class CompositionViewController: UIViewController {
         return container
     }
 
-    private init(store: PartStore) {
+    private init(store: PartStore, filename: String) {
         self.store = store
+        self.partSaver = PartSaver(partStore: store, filename: filename)
+
         editor = MeasureViewCollection(store: store)
         audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
 

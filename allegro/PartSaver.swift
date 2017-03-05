@@ -23,7 +23,6 @@ class PartSaver : PartStoreObserver {
     // TODO to allow undo we can save with different file names for the versions
     func partStoreChanged() {
         // save to disk
-        Log.info?.message("PartSaver saving \(filename).xml")
         PartFileManager.save(part: partStore.part, as: filename)
     }
 }

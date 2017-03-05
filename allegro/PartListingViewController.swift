@@ -39,15 +39,21 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        let part = newPart()
-        let filename = PartFileManager.nextFilename()
+        var part: Part
+        var filename: String
+        if let name = PartFileManager.mostRecentFilename() {
+            // use this filename
+            part = PartFileManager.load(filename: name)
+            filename = name
+        } else {
+            // use a new part
+            part = newPart()
+            filename = PartFileManager.nextFilename()
+        }
 
         let store = PartStore(part: part)
-        let _ = PartSaver(partStore: store, filename: filename)
 
-        // this partsaver goes out of scope and stops saving the part
-
-        let vc = CompositionViewController.create(store: store)
+        let vc = CompositionViewController.create(store: store, filename: filename)
         navigationController?.pushViewController(vc, animated: false)
     }
 
@@ -59,7 +65,7 @@ class PartListingViewController: UIViewController {
 
     func newCompositionTapped() {
         let store = PartStore(part: newPart())
-        let vc = CompositionViewController.create(store: store)
+        let vc = CompositionViewController.create(store: store, filename: PartFileManager.nextFilename())
         navigationController?.pushViewController(vc, animated: true)
     }
 
@@ -81,7 +87,7 @@ extension PartListingViewController: UICollectionViewDelegate {
 
         let partStore = PartStore(part: part)
 
-        let vc = CompositionViewController.create(store: partStore)
+        let vc = CompositionViewController.create(store: partStore, filename: filename)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

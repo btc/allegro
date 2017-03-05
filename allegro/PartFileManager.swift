@@ -40,12 +40,9 @@ class PartFileManager {
         }
     }
 
-    static func loadMostRecent() -> Part {
-        if let filename = files.last {
-            return load(filename: filename)
-        } else {
-            return Part()
-         }
+    static func mostRecentFilename() -> String? {
+        // TODO use last modified time
+        return files.last
     }
 
     static func load(filename: String) -> Part {
