@@ -12,7 +12,7 @@ class PartListingViewController: UIViewController {
 
     private let newCompositionButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = UIColor.gray
+        v.backgroundColor = .allegroPurple
         v.setTitle(Strings.NEW, for: .normal)
         return v
     }()
@@ -22,7 +22,7 @@ class PartListingViewController: UIViewController {
         layout.scrollDirection = .vertical
         let v = UICollectionView(frame: .zero, collectionViewLayout: layout)
         v.register(PartListingCell.self, forCellWithReuseIdentifier: PartListingCell.reuseID)
-        v.backgroundColor = .allegroBlue
+        v.backgroundColor = .white
         return v
     }()
 
@@ -45,9 +45,6 @@ class PartListingViewController: UIViewController {
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
-        // files are already sorted by modified time
-        files = PartFileManager.files
-
         var part: Part
         var filename: String
         if let name = PartFileManager.mostRecentFilename() {
@@ -66,10 +63,26 @@ class PartListingViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: false)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        // look for files from disk. files are already sorted by modified time
+        files = PartFileManager.files
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
 
-        partListing.frame = view.bounds
+        let buttonWidth: CGFloat = 100
+        let buttonHeight: CGFloat = 50
+
+        newCompositionButton.frame = CGRect(x: view.bounds.width - buttonWidth - DEFAULT_MARGIN_PTS,
+                                            y: DEFAULT_MARGIN_PTS,
+                                            width: buttonWidth,
+                                            height: buttonHeight)
+
+        partListing.frame = CGRect(x: 0,
+                                   y: newCompositionButton.frame.maxY + DEFAULT_MARGIN_PTS,
+                                   width: view.bounds.width,
+                                   height: view.bounds.height - newCompositionButton.frame.height - 2 * DEFAULT_MARGIN_PTS)
     }
 
     func newCompositionTapped() {
@@ -123,6 +136,7 @@ extension PartListingViewController: UICollectionViewDataSource {
         let cell = aCell as? PartListingCell
 
         let (filename, modified) = files[indexPath.item]
+        cell?.filename = filename
         cell?.part = PartFileManager.load(filename: filename)
         cell?.modified = modified
 
