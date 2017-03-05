@@ -100,13 +100,12 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
 
     }
     
+    
     func backButtonTapped() {
-        if !store.hasNotes() {
-            guard let numerator = Int(pickerData[0][timeSigPickerView.selectedRow(inComponent: 0)]) else {return}
-            guard let denominator = Int(pickerData[1][timeSigPickerView.selectedRow(inComponent: 1)]) else {return}
-            if let curTime = Rational(numerator, denominator) {
-                store.part.setTimeSignature(timeSignature: curTime)
-            }
+        guard let numerator = Int(pickerData[0][timeSigPickerView.selectedRow(inComponent: 0)]) else {return}
+        guard let denominator = Int(pickerData[1][timeSigPickerView.selectedRow(inComponent: 1)]) else {return}
+        if let curTime = Rational(numerator, denominator) {
+            store.setTimeSignature(timeSignature: curTime)
         }
         
         let _ = navigationController?.popViewController(animated: true)

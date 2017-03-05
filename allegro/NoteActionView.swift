@@ -14,6 +14,14 @@ class NoteActionView: UIView {
     let geometry: NoteGeometry
     let store: PartStore
 
+    var isSelected: Bool = false {
+        didSet {
+            color = isSelected ? .allegroBlue : .black
+            setNeedsDisplay()
+
+            updateRecognizers()
+        }
+    }
     var color: UIColor = .black
 
     // view's hit area is scaled by this factor
@@ -23,6 +31,11 @@ class NoteActionView: UIView {
 
     fileprivate let swipe: NoteSwipeActionGestureRecognizer = {
         let gr = NoteSwipeActionGestureRecognizer()
+        return gr
+    }()
+
+    fileprivate let move: UIPanGestureRecognizer = {
+        let gr = UIPanGestureRecognizer()
         return gr
     }()
 
@@ -40,6 +53,11 @@ class NoteActionView: UIView {
         return gr
     }()
 
+    fileprivate let select: UILongPressGestureRecognizer = {
+        let gr = UILongPressGestureRecognizer()
+        return gr
+    }()
+
     init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         self.note = note
         self.geometry = geometry
@@ -48,9 +66,11 @@ class NoteActionView: UIView {
         store.subscribe(self)
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
+            (#selector(moved), move),
             (#selector(swiped), swipe),
             (#selector(tapped), dot),
             (#selector(tapped), doubleDot),
+            (#selector(selected), select),
             ]
         for (sel, gr) in actionRecognizers {
             gr.addTarget(self, action: sel)
@@ -58,10 +78,34 @@ class NoteActionView: UIView {
             gr.delegate = self
         }
         dot.require(toFail: doubleDot)
+
+        for gr: UIGestureRecognizer in [dot, doubleDot, swipe] {
+            gr.require(toFail: select)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) not supported")
+    }
+
+    func moved(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: self)
+        if let v = sender.view, sender.state != .ended {
+            let newX = v.center.x + translation.x
+            let newY = v.center.y + translation.y
+            v.center = CGPoint(x: newX, y: newY)
+            sender.setTranslation(.zero, in: self)
+        }
+
+        if sender.state == .ended {
+            delegate?.actionRecognized(gesture: .move, by: self)
+        }
+    }
+
+    func selected(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            delegate?.actionRecognized(gesture: .select, by: self)
+        }
     }
 
     func swiped(sender: NoteSwipeActionGestureRecognizer) {
@@ -95,6 +139,11 @@ class NoteActionView: UIView {
         let largerBounds = bounds.insetBy(dx: -widthToAdd / 2, dy: -heightToAdd / 2)
         return largerBounds.contains(point) ? self : nil
     }
+
+    func updateRecognizers() {
+        [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected && store.mode == .edit }
+        move.isEnabled = isSelected && store.mode == .edit
+    }
 }
 
 extension NoteActionView: UIGestureRecognizerDelegate {
@@ -112,8 +161,6 @@ extension NoteActionView: UIGestureRecognizerDelegate {
 
 extension NoteActionView: PartStoreObserver {
     func partStoreChanged() {
-        for r in [swipe, dot, doubleDot] {
-            r.isEnabled = store.mode == .edit
-        }
+        updateRecognizers()
     }
 }

@@ -33,6 +33,10 @@ struct Key {
     }
     let mode: Key.Mode
     
+    /* Highest and lowest acceptable values for key signature fifths */
+    let maxFifth = 7
+    let minFifth = -7
+    
     /* 
         Represents the number of accidentals in the key (according to the circle of fifths starting with 0 => C Major
         (-) => number of flats
@@ -70,6 +74,7 @@ struct Key {
         7: .B
     ]
     
+    
     // default key is C Major, which has no sharps or flats
     init(mode: Key.Mode = .major, fifths: Int = 0) {
         self.mode = mode
@@ -95,6 +100,22 @@ struct Key {
             return (fifths > 0) ? .sharp : .flat
         }
         return nil
+    }
+    
+    var successor:Key {
+        if fifths == maxFifth {
+            return self
+        } else {
+            return Key(mode: mode, fifths: fifths + 1)
+        }
+    }
+    
+    var predecessor:Key {
+        if fifths == minFifth {
+            return self
+        } else {
+            return Key(mode: mode, fifths: fifths - 1)
+        }
     }
 }
 

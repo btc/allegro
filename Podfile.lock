@@ -1,3 +1,12 @@
-PODFILE CHECKSUM: 339c7a16bcbaa14b324e918581e18c0f5d22a0fa
+PODS:
+  - AnimatedCollectionViewLayout (0.1.2)
+
+DEPENDENCIES:
+  - AnimatedCollectionViewLayout
+
+SPEC CHECKSUMS:
+  AnimatedCollectionViewLayout: 2e64e4d47842a3c057943cf263fcc787bc97dcaf
+
+PODFILE CHECKSUM: 1b1f599d93713420f99aa9b8a2f595c18f466704
 
 COCOAPODS: 1.2.0

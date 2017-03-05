@@ -13,6 +13,7 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
+    fileprivate var audio: Audio
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -30,7 +31,6 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    //Change to dynamically set time Signature based on user selection: ppsekhar
     private let timeSignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
@@ -39,11 +39,11 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    //Change to dynamically set key signature based on user selection: ppsekhar
     private let keySignature: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "C# major"), for: UIControlState.normal)
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE/2)
         return v
     }()
     
@@ -76,9 +76,19 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
+    private let playButton: UIButton = {
+        let v = UIButton()
+        v.setTitle(" ► ", for: .normal)
+        v.backgroundColor = .clear
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE)
+        v.showsTouchWhenHighlighted = true
+        return v
+    }()
 
     init(store: PartStore) {
         self.store = store
+        self.audio = Audio(store: store)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -97,21 +107,24 @@ class SideMenuViewController: UIViewController {
         view.addSubview(editButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
+        view.addSubview(playButton)
         
         eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         timeSignature.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
         keySignature.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
-
+        playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
+        audio.start()
         updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         store.unsubscribe(self)
+        audio.stop()
     }
 
     override func viewDidLayoutSubviews() {
@@ -119,7 +132,7 @@ class SideMenuViewController: UIViewController {
         let parent = view.bounds
 
         let verticallyStackedButtons = [NewButton, Export, instructionsButton]
-        let modeButtonBlocks = [editButton, eraseButton]
+        let modeButtonBlocks = [editButton, eraseButton, playButton]
         let signatureButtonBlocks = [keySignature, timeSignature]
 
         for (i, b) in verticallyStackedButtons.enumerated() {
@@ -152,6 +165,7 @@ class SideMenuViewController: UIViewController {
         editButton.isSelected = store.mode == .edit
         eraseButton.isSelected = store.mode == .erase
         timeSignature.setTitle(store.part.timeSignature.description, for: .normal)
+        keySignature.setTitle(store.part.keySignature.description, for: .normal)
     }
     func eraseButtonTapped() {
         store.mode = .erase
@@ -169,8 +183,12 @@ class SideMenuViewController: UIViewController {
     }
     
     func keySignaturesTapped() {
-        let vc = KeySignatureViewController()
+        let vc = KeySignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func playButtonTapped() {
+        audio.playMeasure(measure: store.currentMeasure)
     }
 }
 
@@ -179,3 +197,44 @@ extension SideMenuViewController: PartStoreObserver {
         updateUI()
     }
 }
+
+// descriptions for the side menu
+private extension Key {
+    var description: String {
+        switch fifths {
+        case 7:
+            return "C♯"
+        case 6:
+            return "F♯"
+        case 5:
+            return "B Maj"
+        case 4:
+            return "E Maj"
+        case 3:
+            return "A Maj"
+        case 2:
+            return "D Maj"
+        case 1:
+            return "G Maj"
+        case 0:
+            return "C Maj"
+        case -1:
+            return "F Maj"
+        case -2:
+            return "B♭"
+        case -3:
+            return "E♭"
+        case -4:
+            return "A♭"
+        case -5:
+            return "D♭"
+        case -6:
+            return "G♭"
+        case -7:
+            return "C♭"
+        default: // Defaults to C Major if invalid fifth used
+            return "C"
+        }
+    }
+}
+

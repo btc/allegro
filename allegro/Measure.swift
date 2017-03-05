@@ -69,7 +69,6 @@ struct Measure {
         // check if note is part of triplet or tie
         if let tie = notes[i].note.tie {
             // contains tie
-            // TODO remove the tie from the ties array
             let success = removeTie(tie: tie)
             if (success == false || notes[i].note.tie != nil) {
                 Log.error?.message("Error removing tie")
@@ -77,8 +76,14 @@ struct Measure {
         }
         if let triplet = notes[i].note.triplet {
             // contains triplet
-            // TODO turn note into rest
             // if triplet.isEmpty(), remove it from triplets array
+            let success = triplet.removeNote(notePos: notes[i])
+            if (success == false || notes[i].note.triplet != nil) {
+                Log.error?.message("Error removing note from triplet")
+            }
+            // if triplet.isEmpty(), remove it from triplets array
+            if (triplet.isEmpty()) {
+            }
         }
         return notes.remove(at: i).note
     }
@@ -140,17 +145,17 @@ struct Measure {
         }
     }
 
-    mutating func insert(note: Note, at initialDesiredPosition: Rational) -> Bool {
+    mutating func insert(note: Note, at initialDesiredPosition: Rational) -> Rational? {
         var np = NotePos(pos: initialDesiredPosition, note: note)
 
         if np.end > end { // too late
             np.end = end
         }
         if np.start < start { // too early
-            return false
+            return nil
         }
         if note.duration > freespace { // not enough space
-            return false
+            return nil
         }
 
         let indexToInsert = self.indexToInsert(np.pos)
@@ -182,7 +187,7 @@ struct Measure {
             break
         }
         notes.insert(np, at: indexToInsert)
-        return true
+        return np.pos
     }
 
     // Changes the dot on a note in O(n)
@@ -195,13 +200,13 @@ struct Measure {
         note.dot = dot
 
         // re-insert with new dot
-        if insert(note: note, at: position) {
+        if insert(note: note, at: position) != nil {
             return true
         }
 
         // re-insert original note if we were unable to insert dotted note with nudge
         note.dot = originalDot
-        if !insert(note: note, at: position) && DEBUG {
+        if insert(note: note, at: position) == nil && DEBUG {
             Log.error?.message("Unable to re-insert note after failed dotting. Developer Error.")
         }
         return false
@@ -227,18 +232,33 @@ struct Measure {
         return false
     }
     
+    // Takes nominal duration of single note in triplet, returns true if triplet can be added
+    func hasSpaceForTriplet(noteDuration: Rational) -> Bool {
+        return (self.freespace >= noteDuration * 2)
+    }
+    
     // adds a Triplet to this measure
     // returns true on success
-    mutating func addTriplet(notePositions: [Rational]) -> Bool {
-        guard (notePositions.isEmpty == false) else {return false}
-        guard (notePositions.count <= 3) else {return false}
-        var notes = [Note]()
-        for pos in notePositions {
-            guard let note = note(at: pos) else {return false}
-            notes.append(note)
+    mutating func addTriplet(notes: [NotePos]) -> Bool {
+        guard (notes.count != 3) else {return false}
+        guard let newTriplet = Triplet(notesArr: notes) else {return false}
+        triplets.append(newTriplet)
+        for notePos in notes {
+            let success = insert(note: notePos.note, at: notePos.pos)
+            if (success == nil) {
+                Log.error?.message("Unable to insert note as part of triplet. Developer Error.")
+            }
         }
-        triplets.append(Triplet(notesArr: notes))
         return true
+    }
+    
+    mutating func removeTriplet(triplet: Triplet) -> Bool {
+        let filteredTriplets = triplets.filter { $0 == triplet }
+        if (filteredTriplets.count == triplets.count - 1) {
+            triplets = filteredTriplets
+            return true
+        }
+        return false
     }
 
     // Finds the nearest previous note with the same letter if it exists

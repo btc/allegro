@@ -18,7 +18,7 @@ class Part {
     var comment: String = ""
 
     // ordered list of measures in the piece
-    private(set) var measures: [Measure] = [Measure]()
+    var measures: [Measure] = [Measure]()
     
     // initialize with 1 empty measure
     init() {
@@ -36,8 +36,8 @@ class Part {
         measures[measureIndex] = measure
     }
 
-    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
-        guard measures.indices.contains(i) else { return false }
+    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Rational? {
+        guard measures.indices.contains(i) else { return nil }
         return measures[i].insert(note: note, at: position)
     }
 
@@ -79,7 +79,7 @@ class Part {
                 let duration = free.duration
                 if note.duration <= duration {
                     // add note
-                    if insert(note: note, intoMeasureIndex: i, at: pos) == true {
+                    if insert(note: note, intoMeasureIndex: i, at: pos) != nil {
                         return
                     }
                 }
@@ -94,10 +94,21 @@ class Part {
         }
     }
     
-    //Setters for time signatures
+    func hasNotes() -> Bool {
+        for m in measures {
+            if m.notes.count > 0 {
+                return true
+            }
+        }
+        return false
+    }
+    
+    //Setters for signatures
     func setTimeSignature(timeSignature: Rational) {
-        for i in 0..<measures.count {
-            measures[i].timeSignature = timeSignature
+        if !hasNotes() {
+            for i in 0..<measures.count {
+                measures[i].timeSignature = timeSignature
+            }
         }
     }
     
@@ -109,5 +120,9 @@ class Part {
         for i in 0..<measures.count {
             measures[i].keySignature = keySignature
         }
+    }
+    
+    var keySignature: Key {
+        return measures[0].keySignature
     }
 }

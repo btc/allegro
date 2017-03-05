@@ -15,6 +15,9 @@ struct NoteGeometry {
     fileprivate let defaultNoteWidth = CGFloat(70)
     fileprivate let defaultNoteHeight = CGFloat(55.16665)
     
+    let dotRadius = CGFloat(5)
+    fileprivate let dotSpacing = CGFloat(10)
+    
     var scale: CGFloat {
         return staffHeight / defaultNoteHeight
     }
@@ -54,7 +57,26 @@ struct NoteGeometry {
         return CGRect(origin: accidentalOrigin, size: size)
     }
     
+    func getDotBoundingBox(note: NoteViewModel) -> CGRect {
+        var centerY = origin.offset(dx: frame.size.width + dotSpacing, dy: frame.size.height / 4)
+        if !note.onStaffLine {
+            centerY = centerY.offset(dx: 0, dy: frame.size.height / 4)
+        }
+        let dotOrigin = centerY.offset(dx: 0, dy: -dotRadius)
+        var dotWidth = CGFloat(0)
+        
+        switch note.dot {
+        case .none: ()
+        case .single:
+            dotWidth = CGFloat(2) * dotRadius
+        case .double:
+            dotWidth = CGFloat(4) * dotRadius + dotSpacing
+        }
+        
+        return CGRect(origin: dotOrigin, size: CGSize(width: dotWidth, height: 2 * dotRadius))
+    }
+    
     func getBoundingBox(note: NoteViewModel) -> CGRect {
-        return frame.boundingBox(other: getAccidentalFrame(note: note))
+        return frame.boundingBox(other: getAccidentalFrame(note: note)).boundingBox(other: getDotBoundingBox(note: note))
     }
 }

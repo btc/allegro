@@ -20,16 +20,18 @@ struct MeasureGeometry {
 
     struct State {
 
+        let measure: MeasureViewModel
         let visibleSize: CGSize
         let selectedNoteDuration: Rational
 
-        init(visibleSize: CGSize, selectedNoteDuration: Rational) {
+        init(measure: MeasureViewModel, visibleSize: CGSize, selectedNoteDuration: Rational) {
+            self.measure = measure
             self.visibleSize = visibleSize
             self.selectedNoteDuration = selectedNoteDuration
         }
     }
 
-    static let zero = MeasureGeometry(state: State(visibleSize: .zero, selectedNoteDuration: 1))
+    static let zero = MeasureGeometry(state: State(measure: MeasureViewModel(Measure()), visibleSize: .zero, selectedNoteDuration: 1))
 
     let state: State
 
@@ -56,12 +58,21 @@ struct MeasureGeometry {
     // it's a lot easier to compute width than height, so they are provided independently to allow clients to minimize
     // arithmetic operations
 
+    // we're fixing totalWidth for now for testing purposes
     var totalWidth: CGFloat {
-        let minNoteWidth = Rational(Int(self.minNoteWidth))
-        let numNotesPerMeasure = 1 / state.selectedNoteDuration
-        let visibleWidth = state.visibleSize.width
-        let reservedWidth = (minNoteWidth * numNotesPerMeasure).cgFloat
-        return max(reservedWidth, visibleWidth)
+        let measure = state.measure
+        guard measure.notes.count > 0 else { return state.visibleSize.width }
+        
+        let spacing = noteStartX
+        var finalNoteEndspacing = spacing[spacing.count - 1]
+        
+        // the bbox can extend past the note frame itself for dots
+        // which we don't have for now but in the future :)
+        let bbox = noteGeometry.getBoundingBox(note: measure.notes[measure.notes.count - 1])
+        finalNoteEndspacing += bbox.origin.x - noteGeometry.frame.origin.x
+        finalNoteEndspacing += bbox.size.width
+        
+        return max(finalNoteEndspacing, state.visibleSize.width)
     }
 
     // as an optimization, this could be defined as a lazy let getter
@@ -123,55 +134,12 @@ struct MeasureGeometry {
         return arr
     }
 
-    func verticalGridlines(timeSignature: Rational, selectedNoteDuration: Rational) -> [Line] {
-
-        var arr = [Line]()
-
-        let numSlots = numGridSlots(timeSignature: timeSignature, noteDuration: selectedNoteDuration)
-        let numGridlines: Int = numSlots - 1 // number of fence posts. we ignore the two end posts.
-
-        // right now, grid lines are evenly-spaced. this will no longer be true once we expand the grid slots to
-        // provide more physical space to notes of shorter durations. 
-        // Remember, we're going to enforce a minimum slot size and right here is where it's going to happen.
-
-        let gridlineOffset = totalWidth / CGFloat(numSlots)
-
-        for i in stride(from: 0, to: numGridlines, by: 1) {
-
-            let x = gridlineOffset * CGFloat(i + 1)
-            let start = CGPoint(x: x, y: 0)
-            let end = CGPoint(x: x, y: totalHeight)
-            arr.append(Line(start, end))
-        }
-        return arr
-    }
-
-    func touchGuideRect(location: CGPoint,
-                          timeSignature: Rational,
-                          noteDuration: Rational) -> CGRect {
-
-        let spacingBetweenGridlines = verticalGridlineSpacing(timeSignature: timeSignature, noteDuration: noteDuration)
-
-        let size = CGSize(width: spacingBetweenGridlines, height: staffHeight)
-
-        let originX = location.x - location.x.truncatingRemainder(dividingBy: spacingBetweenGridlines)
-        let originY = location.y - location.y.truncatingRemainder(dividingBy: heightOfSemitone) + DEFAULT_MARGIN_PTS  - size.height / 2
-
-        let origin = CGPoint(x: originX, y: originY)
-
-        return CGRect(origin: origin, size: size)
-    }
-
-    func touchRemainedInPosition(start: CGPoint,
-                                 end: CGPoint,
-                                 timeSignature: Rational,
-                                 noteDuration: Rational) -> Bool {
-
-        let startPos = pointToPositionInTime(x: start.x,
-                                             timeSignature: timeSignature)
-        let endPos = pointToPositionInTime(x: end.x,
-                                           timeSignature: timeSignature)
-        return startPos == endPos
+    // uh this doesn't really do anything but we'll just delete some time later
+    func verticalGridlines(measure: MeasureViewModel) -> [Line] {
+        let offsets = [CGFloat]()
+        
+        let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
+        return lines
     }
 
     func noteY(pitch: Int) -> CGFloat {
@@ -191,18 +159,102 @@ struct MeasureGeometry {
         return Int(round(-(point.y - DEFAULT_MARGIN_PTS) / heightOfSemitone + numSpacesBetweenAllLines))
     }
 
-    func pointToPositionInTime(x: CGFloat,
-                               timeSignature: Rational) -> Rational {
-        let ratioOfScreenWidth: Rational = Rational(Int(x), Int(totalWidth)) ?? 0
-        return (ratioOfScreenWidth * timeSignature).lowestTerms
+    func pointToPositionInTime(x: CGFloat) -> Rational {
+        let measure = state.measure
+        var notesCenterX = noteStartX.map { $0 + noteGeometry.frame.size.width / 2 }
+        notesCenterX.insert(0, at: 0)
+        notesCenterX.append(totalWidth)
+        
+        var positions = measure.notes.map { $0.position }
+        positions.insert(Rational(0), at: 0)
+        positions.append(measure.timeSignature)
+        
+        let findIndex = notesCenterX.index { x < $0 }
+        guard let noteAfterIndex = findIndex else { return Rational(0) }
+        guard noteAfterIndex != 0 else { return Rational(0) }
+        
+        let noteBeforeX = notesCenterX[noteAfterIndex - 1]
+        let noteBeforeTime = positions[noteAfterIndex - 1]
+        
+        let noteAfterX = notesCenterX[noteAfterIndex]
+        let noteAfterTime = positions[noteAfterIndex]
+        
+        let intervalSize = noteAfterX - noteBeforeX
+        let inside = Rational(Int(x - noteBeforeX), Int(intervalSize))
+        
+        guard let percentInside = inside else { return noteBeforeTime }
+        let output = noteBeforeTime + percentInside * (noteAfterTime - noteBeforeTime)
+        return output.lowestTerms
     }
 
-    private func numGridSlots(timeSignature: Rational, noteDuration: Rational) -> Int {
-        return (timeSignature / noteDuration).intApprox
-    }
-
-    private func verticalGridlineSpacing(timeSignature: Rational, noteDuration: Rational) -> CGFloat {
-        return totalWidth / CGFloat(numGridSlots(timeSignature: timeSignature, noteDuration: noteDuration))
+    typealias Interval = (start: CGFloat, end: CGFloat)
+    
+    var noteStartX: [CGFloat] {
+        get {
+            let measure = state.measure
+            
+            // whitespace is the region between the notes that are not covered by the bounding boxes
+            var whitespace = [Interval]()
+            var blackspace = [Interval]()
+            
+            var totalBlackspace = CGFloat(0)
+            let defaultWidth = state.visibleSize.width
+            
+            guard measure.notes.count > 0 else { return [CGFloat]() }
+            let g = noteGeometry
+            var last = CGFloat(0)
+            
+            // Calculate the whitespace intervals between notes if there are any
+            // Also merges consecutive notes into contiguous interval
+            for note in measure.notes {
+                let noteCenterX = Rational(Int(defaultWidth)) * note.position / measure.timeSignature
+                let bbox = g.getBoundingBox(note: note)
+                
+                let defaultX = max(last,noteCenterX.cgFloat - bbox.size.width / 2)
+                whitespace.append(Interval(last, defaultX))
+                blackspace.append(Interval(defaultX, defaultX + bbox.width))
+                
+                last = defaultX + bbox.width
+                totalBlackspace += bbox.width
+            }
+            
+            // add the whitespace after the last note
+            if last < defaultWidth {
+                whitespace.append(Interval(last, defaultWidth))
+            }
+            
+            let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
+            
+            if totalWhitespace > 0 && totalBlackspace < defaultWidth {
+                let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
+                
+                var whitespaceBefore = CGFloat(0)
+                
+                for (i, space) in whitespace.enumerated() {
+                    let diff = (space.end - space.start) * whitespaceScaling
+                    let start = whitespaceBefore
+                    let end = space.start + diff
+                    
+                    whitespaceBefore += diff
+                    whitespace[i] = Interval(start, end)
+                }
+                
+                blackspace = zip(whitespace, blackspace).map {
+                    Interval(
+                        $0.end,
+                        $0.end + $1.end - $1.start
+                    )
+                }
+            }
+            
+            // right now blackspace includes the necessary space for an accidental if it exists
+            // we now remove that to get the start position of the note frame by itself
+            let startX = zip(blackspace, measure.notes).map {
+                $0.start + g.frame.origin.x - g.getBoundingBox(note: $1).origin.x
+            }
+            
+            return startX
+        }
     }
 }
 

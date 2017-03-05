@@ -37,6 +37,22 @@ enum CompositionMode {
 
 class PartStore {
 
+    var currentMeasure: Int = 0 {
+        didSet {
+            let valueChanged = oldValue != currentMeasure
+            if valueChanged {
+                // de-select notes when measure changes!
+                selectedNotes.removeAll()
+            }
+        }
+    }
+
+    var selectedNotes: Set<Rational> = [] {
+        didSet {
+            notify()
+        }
+    }
+
     var mode: CompositionMode {
         didSet {
             notify()
@@ -64,6 +80,10 @@ class PartStore {
     init(part: Part, mode: CompositionMode = .edit) {
         self.part = part
         self.mode = mode
+
+        if part.measures.count == 0 {
+            part.extend() // ensures part always has at least one measure. that way `currentMeasure` always points to valid index
+        }
     }
 
     func subscribe(_ observer: PartStoreObserver) {
@@ -87,9 +107,9 @@ class PartStore {
         }
     }
 
-    private func extendIfNecessary(toAccessMeasureAtIndex i: Int) {
+    private func extendIfNecessaryToAccessMeasure(at index: Int) {
         var extended = false
-        while part.measures.count <= i + 1 {
+        while part.measures.count <= index + 1 {
             part.extend()
             extended = true
         }
@@ -98,16 +118,17 @@ class PartStore {
         }
     }
 
-    func insert(note: Note, intoMeasureIndex i: Int, at position: Rational) -> Bool {
-        extendIfNecessary(toAccessMeasureAtIndex: i)
-        Log.info?.message("insert \(note.duration.description) into measure \(i) at \(position.lowestTerms)")
-        let succeeded = part.insert(note: note, intoMeasureIndex: i, at: position)
+    func insert(note: Note, intoMeasureIndex i: Int, at desiredPosition: Rational) -> Rational? {
+        extendIfNecessaryToAccessMeasure(at: i)
+        Log.info?.message("insert \(note.duration.description) into measure \(i) at \(desiredPosition.lowestTerms)")
+        let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
-        if succeeded {
+        if let ap = actualPosition {
+            selectedNotes.removeAll() // our policy is to deselect other notes on insert
             notify()
-            observers.forEach { $0.value?.noteAdded(in: i, at: position) }
+            observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
         }
-        return succeeded
+        return actualPosition
     }
 
     func removeNote(fromMeasureIndex i: Int, at position: Rational) {
@@ -115,6 +136,12 @@ class PartStore {
             notify()
             Log.info?.message("removed note at \(position.lowestTerms)")
         }
+    }
+
+    func removeAndReturnNote(fromMeasure index: Int, at position: Rational) -> Note? {
+        let note = part.measures[index].removeAndReturnNote(at: position)
+        notify()
+        return note
     }
 
     func toggleDot(inMeasure index: Int, at position: Rational, action: NoteAction) -> Bool {
@@ -146,7 +173,7 @@ class PartStore {
     }
 
     func measure(at index: Int) -> MeasureViewModel {
-        extendIfNecessary(toAccessMeasureAtIndex: index)
+        extendIfNecessaryToAccessMeasure(at: index)
         return MeasureViewModel(part.measures[index])
     }
     
@@ -176,4 +203,17 @@ class PartStore {
         notify()
         return true
     }
+    
+    func setKeySignature(keySignature: Key) {
+        part.setKeySignature(keySignature: keySignature)
+        notify()
+    }
+    
+    func setTimeSignature(timeSignature: Rational) {
+        if !hasNotes() {
+            part.setTimeSignature(timeSignature: timeSignature)
+        }
+        notify()
+    }
+    
 }

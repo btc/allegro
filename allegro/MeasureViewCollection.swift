@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AnimatedCollectionViewLayout
 
 class MeasureViewCollection: UICollectionView {
 
@@ -28,8 +29,10 @@ class MeasureViewCollection: UICollectionView {
     }
     
     init(store: PartStore) {
-        let layout = UICollectionViewFlowLayout()
+        let layout = AnimatedCollectionViewLayout()
+        let animator = PageAttributeAnimator(scaleRate: 0.8)
         layout.scrollDirection = .horizontal
+        layout.animator = animator
         self.store = store
         measureCount = store.measureCount
         super.init(frame: .zero, collectionViewLayout: layout)
@@ -39,7 +42,7 @@ class MeasureViewCollection: UICollectionView {
         panGestureRecognizer.minimumNumberOfTouches = 1
         panGestureRecognizer.maximumNumberOfTouches = 2
         isPagingEnabled = true
-        backgroundColor = .lightGray
+        backgroundColor = .allegroBlue
         register(MeasureViewCollectionCell.self, forCellWithReuseIdentifier: MeasureViewCollectionCell.reuseID)
         dataSource = self
         delegate = self
@@ -66,17 +69,11 @@ extension MeasureViewCollection: UICollectionViewDelegateFlowLayout {
 }
 
 extension MeasureViewCollection: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let finalCellFrame = cell.frame
-        let translation: CGPoint = panGestureRecognizer.translation(in: superview)
-        if translation.x > 0 {
-            cell.frame = CGRect(x: finalCellFrame.origin.x - 1000, y: -500, width: 0, height: 0)
-        } else {
-            cell.frame = CGRect(x: finalCellFrame.origin.x + 1000, y: -500, width: 0, height: 0)
-        }
-        UIView.animate(withDuration: 0.5) {
-            cell.frame = finalCellFrame
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let visibleRect = CGRect(origin: contentOffset, size: bounds.size)
+        let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
+        if let i = indexPathForItem(at: visiblePoint)?.item {
+            store.currentMeasure = i
         }
     }
 }

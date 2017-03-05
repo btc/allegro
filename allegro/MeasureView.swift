@@ -128,8 +128,7 @@ class MeasureView: UIView {
 
         let measure = store.measure(at: index)
 
-        let lines = geometry.verticalGridlines(timeSignature: measure.timeSignature,
-                                               selectedNoteDuration: store.selectedNoteValue.nominalDuration)
+        let lines = geometry.verticalGridlines(measure: measure)
         let path = UIBezierPath()
 
         for (start, end) in lines {
@@ -156,6 +155,9 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels.map { NoteView(note: $0, geometry: g, store: store) }
+        noteViews.forEach { view in
+            view.isSelected = store.selectedNotes.contains(view.note.position) && store.currentMeasure == index
+        }
         noteViews.forEach() { $0.delegate = self }
         let notesToNoteView = noteViewModels.enumerated()
             .map{return ($1, noteViews[$0])}
@@ -171,23 +173,16 @@ class MeasureView: UIView {
             addSubview(v)
         }
         
-
         // we're barring all the notes for now
-        for noteView in noteViews {
+        for (noteView, startX) in zip(noteViews, geometry.noteStartX) {
             // TODO(btc): render note in correct position in time, taking into consideration:
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
-            let x = geometry.noteX(position: noteView.note.position,
-                                   timeSignature: measureVM.timeSignature)
             let y = geometry.noteY(pitch: noteView.note.pitch)
             
-            noteView.noteOrigin = CGPoint(x: x, y: y)
+            noteView.noteOrigin = CGPoint(x: startX, y: y)
             //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
-            noteView.shouldDrawFlag = true//false
-
-            if let a = getAccidentalLabel(noteView: noteView) {
-                addSubview(a)
-            }
+            noteView.shouldDrawFlag = true//fals
         }
         
         let barPath = UIBezierPath()
@@ -245,29 +240,6 @@ class MeasureView: UIView {
         }
     }
 
-    func getAccidentalLabel(noteView: NoteView) -> UILabel? {
-        guard noteView.note.displayAccidental else { return nil }
-        let accidental = noteView.note.accidental
-
-        let center = CGPoint(x: noteView.frame.origin.x,
-                             y: noteView.frame.origin.y + noteView.frame.size.height / 2)
-
-        let info = accidental.infos
-
-        let offset = info.1
-
-        let size = CGSize(width: 50, height: 60)
-        let origin = CGPoint(x: center.x - size.width / 2 + offset.x,
-                             y: center.y - size.height / 2 + offset.y)
-
-        let label = UILabel()
-        label.frame = CGRect(origin: origin, size: size)
-        label.text = info.0
-        label.font = UIFont(name: "DejaVu Sans", size: 70)
-        label.textAlignment = .right
-        return label
-    }
-
     func longPressPan(sender: UIGestureRecognizer) {
         guard let store = store, let index = index else { return }
 
@@ -290,7 +262,7 @@ class MeasureView: UIView {
         
         let location = sender.location(in: self)
 
-        if let nv = hitTest(location, with: nil) as? NoteView {
+        if let nv = hitTest(location, with: nil) as? NoteActionView {
             guard let store = store, let index = index else { return }
             store.removeNote(fromMeasureIndex: index, at: nv.note.position)
         } else if let _ = sender as? UITapGestureRecognizer {
@@ -302,18 +274,34 @@ class MeasureView: UIView {
         guard let store = store, let index = index else { return }
 
         if store.mode == .edit {
+            if deselectNote(sender: sender) {
+                return // without editing
+            }
             edit(sender: sender)
+        }
 
-        } else if store.mode == .erase {
+        if store.mode == .erase {
 
             if store.measure(at: index).notes.isEmpty {
                 store.mode = .edit
                 Snackbar(message: "switched to edit mode", duration: .short).show()
                 return
             }
-
             erase(sender: sender)
         }
+    }
+
+    // returns true if a note was deselected
+    private func deselectNote(sender: UIGestureRecognizer) -> Bool {
+        let location = sender.location(in: self)
+        if let nv = hitTest(location, with: nil) as? NoteActionView {
+            guard let store = store, let index = index else { return false }
+            if store.currentMeasure == index && store.selectedNotes.contains(nv.note.position) {
+                store.selectedNotes.remove(nv.note.position)
+                return true
+            }
+        }
+        return false
     }
 
     private func edit(sender: UIGestureRecognizer) {
@@ -323,24 +311,23 @@ class MeasureView: UIView {
         let location = sender.location(in: self)
 
         guard let store = store, let index = index else { return }
+
         let value = store.selectedNoteValue
 
         // determine pitch
         let pitchRelativeToCenterLine = geometry.pointToPitch(location)
 
         // determine position
-        let measure = store.measure(at: index)
-        let position = geometry.pointToPositionInTime(x: location.x,
-                                                      timeSignature: measure.timeSignature)
+        let position = geometry.pointToPositionInTime(x: location.x)
 
         // instantiate note
         let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
         let note = Note(value: value, letter: letter, octave: octave)
 
         // attempt to insert
-        let succeeded = store.insert(note: note, intoMeasureIndex: index, at: position)
+        let actualPosition = store.insert(note: note, intoMeasureIndex: index, at: position)
 
-        if !succeeded {
+        if actualPosition == nil {
             Snackbar(message: "no space for note", duration: .short).show()
         }
     }
@@ -349,12 +336,6 @@ class MeasureView: UIView {
 extension MeasureView: PartStoreObserver {
     func partStoreChanged() {
         guard let store = store else { return }
-
-        if geometry.state.visibleSize != .zero {
-            let state = MeasureGeometry.State(visibleSize: geometry.state.visibleSize,
-                                              selectedNoteDuration: store.selectedNoteValue.nominalDuration)
-            geometry = MeasureGeometry(state: state)
-        }
 
         // NB(btc): we adjust minimum press duration to allow erase panning to function properly.
         // one alternative is to have a separate pan gesture recognizer for erase panning and use the long press only for
@@ -377,33 +358,42 @@ extension MeasureView: UIGestureRecognizerDelegate {
 extension MeasureView: NoteActionDelegate {
     func actionRecognized(gesture: NoteAction, by view: UIView) {
 
-        guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
+        guard store?.mode == .edit else { return }
 
-        guard store.mode == .edit else {
-            if store.mode == .erase{ // i.e. the user tapped on note
-
-                // TODO: btc remove this case
-                store.removeNote(fromMeasureIndex: index, at: pos)
-            }
-            return
-        }
+        guard let store = store, let index = index, let note = (view as? NoteActionView)?.note else { return }
 
         switch gesture {
 
         case .toggleDot, .toggleDoubleDot:
-            if !store.toggleDot(inMeasure: index, at: pos, action: gesture) {
+            if !store.toggleDot(inMeasure: index, at: note.position, action: gesture) {
                 Snackbar(message: "not enough space to dot note", duration: .short).show()
             }
 
         case .sharp, .natural, .flat:
             let acc: Note.Accidental = gesture == .sharp ? .sharp : gesture == .flat ? .flat : .natural
-            if !store.setAccidental(acc, inMeasure: index, at: pos) {
+            if !store.setAccidental(acc, inMeasure: index, at: note.position) {
                 Snackbar(message: "failed to \(gesture) the note", duration: .short).show()
             }
 
         case .rest:
-            if !store.changeNoteToRest(inMeasure: index, at: pos) {
+            if !store.changeNoteToRest(inMeasure: index, at: note.position) {
                 Snackbar(message: "failed to convert note to rest", duration: .short).show()
+            }
+        case .select:
+            store.selectedNotes.insert(note.position)
+
+        case .move:
+            guard let moved = store.removeAndReturnNote(fromMeasure: index, at: note.position) else { return }
+            let location = view.center
+
+            let pitchRelativeToCenterLine = geometry.pointToPitch(location)
+            let position = geometry.pointToPositionInTime(x: location.x)
+            let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
+
+            moved.letter = letter
+            moved.octave = octave
+            if let insertedPosition = store.insert(note: moved, intoMeasureIndex: index, at: position) {
+                store.selectedNotes.insert(insertedPosition)
             }
         }
     }
@@ -416,9 +406,9 @@ extension Note.Accidental {
     // the measure line
     var infos: (String, CGPoint) {
         switch self {
-        case .natural: return ("♮", CGPoint(x: -20, y: 0))
-        case .sharp: return ("♯", CGPoint(x: -20, y: 0))
-        case .flat: return ("♭", CGPoint(x: -20, y: -12))
+        case .natural: return ("♮", CGPoint(x: -20, y: -5))
+        case .sharp: return ("♯", CGPoint(x: -20, y: -5))
+        case .flat: return ("♭", CGPoint(x: -20, y: -17))
         default: return ("", .zero)
         }
     }

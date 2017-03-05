@@ -55,8 +55,13 @@ class Note {
     
     // Gives the true duration of the note after modifiers
     var duration: Rational {
-        return self.value.nominalDuration * self.dot.modifier
-        // TODO (niklele) there will be a triplet modifier as well
+        guard self.triplet != nil
+            else { return self.value.nominalDuration * self.dot.modifier }
+        if let tripletModifier = self.triplet?.modifier {
+            return self.value.nominalDuration * tripletModifier
+        } else {
+            return self.value.nominalDuration * self.dot.modifier
+        }
     }
     
     // number of dots on the right of the note that extend the duration
@@ -78,8 +83,8 @@ class Note {
 
     let value: Value
     var dot: Dot
-    let letter: Letter
-    let octave: Int
+    var letter: Letter
+    var octave: Int
     var accidental: Accidental
     var rest: Bool // true if the Note is a rest
     weak var tie: Tie? // holds a reference to a Tie if this Note belongs to one

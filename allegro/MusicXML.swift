@@ -17,8 +17,9 @@ class MusicXMLParser : PartStoreObserver {
     var store: PartStore
     var partDoc: AEXMLDocument = AEXMLDocument()
 
-    // also called ticks per quarter note. 4 because the minimum note is 1/16
-    private let divisionsPerQuarterNote: Rational = 4
+    // also called ticks per quarter note.
+    // 16 because the minimum duration is a 1/64 note (from a double-dotted 1/16 note)
+    private let divisionsPerQuarterNote: Rational = 16
 
     // generate partDoc from the music model in the Store
     // traverses each Note in each Measure in the Part
@@ -34,9 +35,14 @@ class MusicXMLParser : PartStoreObserver {
         let part_list = score_partwise.addChild(name: "part-list")
         
         let score_part = part_list.addChild(name: "score-part", attributes: ["id": "P1"])
-        let _ = score_part.addChild(name: "part-name", value: "\(store.part.title)")
+
+        if !store.part.title.isEmpty {
+            let _ = score_part.addChild(name: "part-name", value: "\(store.part.title)")
+        } else {
+            let _ = score_part.addChild(name: "part-name")
+        }
         
-        let part = score_partwise.addChild(name: "part", attributes: ["id:": "P1"])
+        let part = score_partwise.addChild(name: "part", attributes: ["id": "P1"])
 
         // TODO: beams, flipped, triplets, ties
         // TODO: don't include last measure if it is empty
@@ -48,7 +54,7 @@ class MusicXMLParser : PartStoreObserver {
             let attributes = measure.addChild(name: "attributes")
 
             // NB. divisions per quarter note. 4 because the minimum note is 1/16
-            let _ = attributes.addChild(name: "divisions", value: "\(divisionsPerQuarterNote.numerator)")
+            let _ = attributes.addChild(name: "divisions", value: "\(divisionsPerQuarterNote.intApprox)")
 
             let key = attributes.addChild(name: "key")
             let _ = key.addChild(name: "fifths", value: "\(m.keySignature.fifths)")
@@ -74,7 +80,13 @@ class MusicXMLParser : PartStoreObserver {
                 
                 let _ = pitch.addChild(name: "octave", value: "\(n.octave)" )
 
-                let duration = (n.duration * divisionsPerQuarterNote).numerator
+                // convert to ticks per quarter note, so we must convert to number of quarter notes then into ticks
+                let quarterNoteDuration = n.duration * 4
+                let duration = (quarterNoteDuration * divisionsPerQuarterNote).intApprox
+
+                print("NOTE value: \(n.value) duration: \(n.duration) durationInt: \(duration)\n")
+
+
                 let _ = note.addChild(name: "duration", value: "\(duration)")
 
                 let _ = note.addChild(name: "type", value: "\(n.value.type)")
@@ -138,7 +150,7 @@ class MusicXMLParser : PartStoreObserver {
         // create note
         let note = Note(value: value, letter: letter, octave: octave, accidental: accidental, rest: rest)
 
-        // TODO dots
+        // TODO dots. maybe use duration?
 
         // set the rational position
         var position: Rational = 0
@@ -191,7 +203,7 @@ class MusicXMLParser : PartStoreObserver {
         let noteElements = measureElement.childrenMatch(name: "note")
         for noteElem in noteElements {
             let (note, position) = parseNote(noteElement: noteElem)
-            guard measure.insert(note: note, at: position) else {
+            guard let _ = measure.insert(note: note, at: position) else {
                 Log.error?.message("parseMeasure: unable to insert note: \(note) at \(position)")
                 continue
             }
@@ -232,18 +244,57 @@ class MusicXMLParser : PartStoreObserver {
         return part
     }
 
+    // save the Part to disk in Documents.
+    // Note: filename should not include .xml extension
     func save(filename: String) {
-        // TODO write to disk
+        Log.info?.message("saving MusicXML to \(filename).xml")
 
-        Log.info?.message("saving MusicXML to \(filename)")
+        do {
+            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
-        let msg: String = "\n" + partDoc.xml + "\n"
-        Log.info?.message(msg)
+            // Find the file
+            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
+            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
+
+            // Write XML to the file
+            try partDoc.xml.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
+
+        } catch {
+            Log.error?.message("Failed to save XML to Documents. Error: \(error)")
+        }
+    }
+
+    // Load an XML file from Documents and then parse it as a Part
+    // Note filename should not include .xml extension
+    func load(filename: String) -> Part? {
+        Log.info?.message("reading MusicXML from \(filename).xml")
+
+        do {
+            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+
+            // Find the file
+            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
+            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
+
+            // Load XML from file
+            let data = try Data(contentsOf: fileURL)
+
+            // Parse XML
+            let newPartDoc = try AEXMLDocument(xml: data)
+            let newPart = parse(partDoc: newPartDoc)
+            partDoc = newPartDoc
+
+            return newPart
+
+        } catch {
+            Log.error?.message("Failed to load XML from Documents. Error: \(error)")
+            return nil
+        }
     }
 
     // attempts to load a file as XML and then parse it as a Part
-    func load(filename: String) -> Part? {
-        Log.info?.message("reading MusicXML from \(filename)")
+    func bundleLoad(filename: String) -> Part? {
+        Log.info?.message("reading MusicXML from \(filename).xml")
 
         // TODO do we have to do something for the path for when we save parts on the phone?
         guard

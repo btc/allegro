@@ -115,17 +115,55 @@ class NoteView: NoteActionView {
     fileprivate var flagThickness = CGFloat(10)
     fileprivate var flagIterOffset = CGFloat(15)
     
-    let drawLayer: CAShapeLayer = CAShapeLayer()
-    let noteLayer: CAShapeLayer = CAShapeLayer()
+    let stemLayer: CAShapeLayer = CAShapeLayer() // TODO(btc): rename to stemLayer
+    
+    var accidentalLabel: UILabel? {
+        guard note.displayAccidental else { return nil }
+        
+        let label = UILabel()
+        label.frame = geometry.getAccidentalFrame(note: note)
+        label.text = note.accidental.infos.0
+        label.font = UIFont(name: "DejaVu Sans", size: 70)
+        label.textAlignment = .right
+        return label
+    }
+    
+    var dotView: UIView? {
+        guard note.dot != .none else { return nil }
+        
+        let view = UIView()
+        let dframe = geometry.getDotBoundingBox(note: note)
+        view.frame = dframe
+        let dotLayer = CAShapeLayer()
+        let dotSize = CGSize(width: 2 * geometry.dotRadius, height: 2 * geometry.dotRadius)
+        let dotPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: dotSize))
+        
+        if note.dot == .double {
+            let secondDotOrigin = CGPoint.zero.offset(dx: dframe.size.width - dotSize.width, dy: 0)
+            dotPath.append(UIBezierPath(ovalIn: CGRect(origin: secondDotOrigin, size:dotSize)))
+        }
+        
+        dotLayer.path = dotPath.cgPath
+        dotLayer.fillColor = UIColor.black.cgColor
+        view.layer.addSublayer(dotLayer)
+        return view
+    }
 
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
         // makes it transparent so we see the lines behind
         isOpaque = false
+
+        layer.addSublayer(stemLayer)
         
-        layer.addSublayer(drawLayer)
-        //layer.addSublayer(noteLayer)
+        if let a = accidentalLabel {
+            addSubview(a)
+        }
         
+        if let d = dotView {
+            addSubview(d)
+        }
+
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
         Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
             guard let `self` = self else { return }
@@ -151,6 +189,7 @@ class NoteView: NoteActionView {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     
     // drawRect is the rectangle we are drawing inside.
     // It should be correctly sized.
@@ -295,8 +334,7 @@ class NoteView: NoteActionView {
     func computePaths() {
         let path = UIBezierPath()
         let notePath = getNoteHeadPath(rect: bounds)
-        //noteLayer.path = notePath.cgPath
-        
+
         if (note.value.nominalDuration < Note.Value.whole.nominalDuration) {
             path.append(getStemPath(notePath: notePath))
         }
@@ -306,7 +344,7 @@ class NoteView: NoteActionView {
             path.append(getFlagPath())
         }
         
-        drawLayer.path = path.cgPath
-        drawLayer.fillColor = color.cgColor
+        stemLayer.path = path.cgPath
+        stemLayer.fillColor = color.cgColor
     }
 }
