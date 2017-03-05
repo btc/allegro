@@ -360,27 +360,27 @@ extension MeasureView: NoteActionDelegate {
 
         guard store?.mode == .edit else { return }
 
-        guard let store = store, let index = index, let pos = (view as? NoteActionView)?.note.position else { return }
+        guard let store = store, let index = index, let note = (view as? NoteActionView)?.note else { return }
 
         switch gesture {
 
         case .toggleDot, .toggleDoubleDot:
-            if !store.toggleDot(inMeasure: index, at: pos, action: gesture) {
+            if !store.toggleDot(inMeasure: index, at: note.position, action: gesture) {
                 Snackbar(message: "not enough space to dot note", duration: .short).show()
             }
 
         case .sharp, .natural, .flat:
             let acc: Note.Accidental = gesture == .sharp ? .sharp : gesture == .flat ? .flat : .natural
-            if !store.setAccidental(acc, inMeasure: index, at: pos) {
+            if !store.setAccidental(acc, inMeasure: index, at: note.position) {
                 Snackbar(message: "failed to \(gesture) the note", duration: .short).show()
             }
 
         case .rest:
-            if !store.changeNoteToRest(inMeasure: index, at: pos) {
+            if !store.changeNoteToRest(inMeasure: index, at: note.position) {
                 Snackbar(message: "failed to convert note to rest", duration: .short).show()
             }
         case .select:
-            store.selectedNotes.insert(pos)
+            store.selectedNotes.insert(note.position)
         }
     }
 }
