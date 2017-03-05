@@ -12,9 +12,15 @@ class PartListingCell: UICollectionViewCell {
 
     static let reuseID = "PartListingCell"
 
+    var filename: String = "" {
+        didSet {
+            partTitle.text = part?.title ?? "Untitled Part (\(filename).xml)"
+        }
+    }
+
     var part: Part? {
         didSet {
-            partTitle.text = part?.title ?? "Untitled Part"
+            partTitle.text = part?.title ?? "Untitled Part (\(filename).xml)"
         }
     }
 
@@ -27,14 +33,14 @@ class PartListingCell: UICollectionViewCell {
     private let partTitle: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT, size: 14)
-        v.backgroundColor = .green
+        v.backgroundColor = .allegroBlue
         return v
     }()
 
     private let date: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT, size: 14)
-        v.backgroundColor = .blue
+        v.backgroundColor = .allegroBlue
         return v
     }()
 
