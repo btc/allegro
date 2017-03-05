@@ -81,7 +81,9 @@ extension Audio: PartStoreObserver {
             let akpos = AKDuration(beats: Double(curBeat))
             let akdur = AKDuration(beats: note.duration.double)
             let pitch = midiPitch(for: note)
-            sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
+            if !note.rest {
+                sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
+            }
             curBeat += 1
         }
         
