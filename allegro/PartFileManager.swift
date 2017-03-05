@@ -8,10 +8,13 @@
 
 import AEXML
 import Rational
+import Foundation
 
 // This class organizes the part files on disk
 // Allows clients to save and open them
 class PartFileManager {
+
+    private static let fileManager = FileManager.default
 
     static var count: Int {
         return files.count
@@ -21,33 +24,51 @@ class PartFileManager {
         return "part_\(files.count)"
     }
 
-    static var files: [String] {
+    // return all the .xml files in the Documents folder, sorted by last modified time (most recent first)
+    static var files: [(filename: String, modified: Date)] {
         get {
             do {
-                let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                let documentDirURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
                 // Get the directory contents urls (including subfolders urls)
-                let directoryContents = try FileManager.default.contentsOfDirectory(at: documentDirURL,
+                let directoryContents = try fileManager.contentsOfDirectory(at: documentDirURL,
                                                                                     includingPropertiesForKeys: nil, options: [])
 
                 let xmlFiles = directoryContents.filter{ $0.pathExtension == "xml" }
-                return xmlFiles.map{ $0.deletingPathExtension().lastPathComponent }
+
+                var files = [(filename: String, modified: Date)]()
+                for fileURL in xmlFiles {
+
+                    let filename = fileURL.deletingPathExtension().lastPathComponent
+
+                    let filePath = fileURL.pathComponents.joined(separator: "/")
+
+                    let attributes = try fileManager.attributesOfItem(atPath: filePath) as NSDictionary
+                    let modified = attributes.fileModificationDate() ?? Date()
+
+                    Log.debug?.message("Found file: \(filename).xml, modified: \(modified)")
+
+                    files.append((filename, modified))
+                }
+                
+                // sort files by modified time. > bc we want larger dates (most recent ones) first
+                return files.sorted(by: { (e1, e2) -> Bool in e1.modified > e2.modified })
 
             } catch {
                 Log.error?.message("Failed to search for XML files in Documents. Error: \(error)")
-                return [String]()
+                return [(String, Date)]()
             }
         }
     }
 
     static func mostRecentFilename() -> String? {
-        // TODO use last modified time
-        return files.last
+//        return files.sorted(by: { (e1, e2) -> Bool in e1.modified < e2.modified }).first?.filename
+        return files.first?.filename
     }
 
     static func load(filename: String) -> Part {
 
-        guard files.contains(filename) else {
+        guard files.contains(where: { $0.filename == filename } ) else {
             Log.error?.message("Unable to find file: \(filename)")
             return Part()
         }
@@ -55,7 +76,7 @@ class PartFileManager {
         Log.info?.message("reading MusicXML from \(filename).xml")
 
         do {
-            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let documentDirURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
             // Find the file
             let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
@@ -109,7 +130,7 @@ class PartFileManager {
         let partDoc = MusicXMLParser.generate(part: part)
 
         do {
-            let documentDirURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let documentDirURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
             // Find the file
             let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")

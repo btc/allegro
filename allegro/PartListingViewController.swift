@@ -26,6 +26,12 @@ class PartListingViewController: UIViewController {
         return v
     }()
 
+    fileprivate var files = [(filename: String, modified: Date)]() {
+        didSet {
+            partListing.reloadData()
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,6 +44,9 @@ class PartListingViewController: UIViewController {
         view.addSubview(newCompositionButton)
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
+
+        // files are already sorted by modified time
+        files = PartFileManager.files
 
         var part: Part
         var filename: String
@@ -82,7 +91,7 @@ class PartListingViewController: UIViewController {
 extension PartListingViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        let filename = PartFileManager.files[indexPath.item]
+        let filename = PartFileManager.files[indexPath.item].filename
         let part = PartFileManager.load(filename: filename)
 
         let partStore = PartStore(part: part)
@@ -113,8 +122,9 @@ extension PartListingViewController: UICollectionViewDataSource {
         let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
         let cell = aCell as? PartListingCell
 
-        let filename = PartFileManager.files[indexPath.item]
+        let (filename, modified) = files[indexPath.item]
         cell?.part = PartFileManager.load(filename: filename)
+        cell?.modified = modified
 
         return aCell
     }
