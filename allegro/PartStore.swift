@@ -138,6 +138,12 @@ class PartStore {
         }
     }
 
+    func removeAndReturnNote(fromMeasure index: Int, at position: Rational) -> Note? {
+        let note = part.measures[index].removeAndReturnNote(at: position)
+        notify()
+        return note
+    }
+
     func toggleDot(inMeasure index: Int, at position: Rational, action: NoteAction) -> Bool {
         guard let note = part.measures[index].note(at: position) else { return false }
         let currentDot = note.dot
