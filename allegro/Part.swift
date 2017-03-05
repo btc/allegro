@@ -18,7 +18,7 @@ class Part {
     var comment: String = ""
 
     // ordered list of measures in the piece
-    private(set) var measures: [Measure] = [Measure]()
+    var measures: [Measure] = [Measure]()
     
     // initialize with 1 empty measure
     init() {
