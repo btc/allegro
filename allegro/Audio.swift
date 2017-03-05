@@ -15,7 +15,6 @@ class Audio {
 
     let mixer = AKMixer()
     let sequence = AKSequencer()
-    var curBeat = 0
 
     init(store: PartStore) {
         self.store = store
@@ -74,6 +73,8 @@ extension Audio: PartStoreObserver {
     func playMeasure(measure: Int) {
         sequence.tracks[0].clear()
         
+        var curBeat = 0
+        
         let m = store.part.measures[measure]
         let sequenceLength = AKDuration(beats: Double(m.timeSignature.numerator), tempo: Double(store.part.tempo))
         sequence.setLength(sequenceLength)
@@ -93,7 +94,6 @@ extension Audio: PartStoreObserver {
         sequence.play()
         
         sequence.rewind()
-        curBeat = 0
     }
 
     private func midiPitch(for note: Note) -> Int {
