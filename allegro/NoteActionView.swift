@@ -157,7 +157,7 @@ extension NoteActionView: UIGestureRecognizerDelegate {
 
 extension NoteActionView: PartStoreObserver {
     func partStoreChanged() {
-        for r in [swipe, dot, doubleDot] {
+        for r in [swipe, dot, doubleDot, select] {
             r.isEnabled = store.mode == .edit
         }
     }
