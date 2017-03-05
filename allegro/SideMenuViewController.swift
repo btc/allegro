@@ -13,7 +13,7 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
-    fileprivate let audio: Audio
+    fileprivate var audio: Audio
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -118,11 +118,13 @@ class SideMenuViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
+        audio.start()
         updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         store.unsubscribe(self)
+        audio.stop()
     }
 
     override func viewDidLayoutSubviews() {
