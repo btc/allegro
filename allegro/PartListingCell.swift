@@ -15,7 +15,12 @@ class PartListingCell: UICollectionViewCell {
     var part: Part? {
         didSet {
             partTitle.text = part?.title ?? "Untitled Part"
-            date.text = "TODO"
+        }
+    }
+
+    var modified = Date() {
+        didSet {
+            date.text = modified.description
         }
     }
 
