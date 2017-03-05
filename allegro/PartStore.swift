@@ -71,11 +71,7 @@ class PartStore {
 
     let part: Part
 
-    private var observers: [Weak] = [Weak]() {
-        didSet {
-            Log.info?.message("part store has \(observers.count) observers")
-        }
-    }
+    private var observers: [Weak] = [Weak]()
 
     init(part: Part, mode: CompositionMode = .edit) {
         self.part = part
