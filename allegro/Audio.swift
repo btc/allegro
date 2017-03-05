@@ -54,6 +54,8 @@ extension Audio: PartStoreObserver {
 
         guard let note = m.note(at: position) else { return }
 
+        if note.rest { return } // don't play rests
+
         // let akpos = AKDuration(beats: Double(m.timeSignature.numerator) * position.double)
         let akpos = AKDuration(beats: 0)
         let akdur = AKDuration(beats: note.duration.double)
