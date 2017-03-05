@@ -6,6 +6,7 @@ target 'allegro' do
   use_frameworks!
 
   # Pods for allegro
+  pod 'AnimatedCollectionViewLayout'
 
   target 'allegroTests' do
     inherit! :search_paths
