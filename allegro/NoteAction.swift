@@ -16,6 +16,7 @@ enum NoteAction: String {
     case toggleDot
     case toggleDoubleDot
     case select
+    case move
 }
 
 protocol NoteActionDelegate: class {

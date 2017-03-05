@@ -20,6 +20,7 @@ class NoteActionView: UIView {
             setNeedsDisplay()
 
             [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected }
+            move.isEnabled = isSelected
         }
     }
     var color: UIColor = .black
@@ -31,6 +32,11 @@ class NoteActionView: UIView {
 
     fileprivate let swipe: NoteSwipeActionGestureRecognizer = {
         let gr = NoteSwipeActionGestureRecognizer()
+        return gr
+    }()
+
+    fileprivate let move: UIPanGestureRecognizer = {
+        let gr = UIPanGestureRecognizer()
         return gr
     }()
 
@@ -61,6 +67,7 @@ class NoteActionView: UIView {
         store.subscribe(self)
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [
+            (#selector(moved), move),
             (#selector(swiped), swipe),
             (#selector(tapped), dot),
             (#selector(tapped), doubleDot),
@@ -80,6 +87,20 @@ class NoteActionView: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) not supported")
+    }
+
+    func moved(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: self)
+        if let v = sender.view, sender.state != .ended {
+            let newX = v.center.x + translation.x
+            let newY = v.center.y + translation.y
+            v.center = CGPoint(x: newX, y: newY)
+            sender.setTranslation(.zero, in: self)
+        }
+
+        if sender.state == .ended {
+            delegate?.actionRecognized(gesture: .move, by: self)
+        }
     }
 
     func selected(sender: UILongPressGestureRecognizer) {

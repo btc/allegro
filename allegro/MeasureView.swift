@@ -381,6 +381,20 @@ extension MeasureView: NoteActionDelegate {
             }
         case .select:
             store.selectedNotes.insert(note.position)
+
+        case .move:
+            guard let moved = store.removeAndReturnNote(fromMeasure: index, at: note.position) else { return }
+            let location = view.center
+
+            let pitchRelativeToCenterLine = geometry.pointToPitch(location)
+            let position = geometry.pointToPositionInTime(x: location.x)
+            let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
+
+            moved.letter = letter
+            moved.octave = octave
+            if let insertedPosition = store.insert(note: moved, intoMeasureIndex: index, at: position) {
+                store.selectedNotes.insert(insertedPosition)
+            }
         }
     }
 }
