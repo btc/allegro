@@ -490,6 +490,7 @@
 				84B0A79678CCABA9C190EA01 /* [CP] Embed Pods Frameworks */,
 				DA42C8FAD02770EFCC9A5FF6 /* [CP] Copy Pods Resources */,
 				6B6E271E1E2897A400F9CF66 /* ShellScript */,
+				6BE1E92F1E6C848000B01790 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -660,6 +661,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		6BE1E92F1E6C848000B01790 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/AudioKit.framework/fix-framework.sh";
 		};
 		8328071F08C6972560FF5516 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
