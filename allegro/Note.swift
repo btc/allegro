@@ -78,8 +78,8 @@ class Note {
 
     let value: Value
     var dot: Dot
-    let letter: Letter
-    let octave: Int
+    var letter: Letter
+    var octave: Int
     var accidental: Accidental
     var rest: Bool // true if the Note is a rest
 
