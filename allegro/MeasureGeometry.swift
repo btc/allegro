@@ -141,9 +141,13 @@ struct MeasureGeometry {
         let lines = offsets.map { Line(CGPoint(x: $0, y: 0), CGPoint(x: $0, y: totalHeight))}
         return lines
     }
+    
+    func staffY(pitch: Int) -> CGFloat {
+        return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch)
+    }
 
     func noteY(pitch: Int) -> CGFloat {
-        return staffDrawStart + staffHeight * 2 - staffHeight / 2 * CGFloat(pitch) - noteHeight / 2
+        return staffY(pitch: pitch) - noteHeight / 2
     }
 
     func noteX(position: Rational, timeSignature: Rational) -> CGFloat {

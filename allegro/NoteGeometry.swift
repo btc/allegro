@@ -34,7 +34,14 @@ struct NoteGeometry {
         )
     }
     
-    let restWidth = CGFloat(50)
+    let restBoxWidth = CGFloat(30)
+    let restSize = [
+        Note.Value.whole: CGSize(width: 60, height: 10),
+        Note.Value.half: CGSize(width: 60, height: 10),
+        Note.Value.quarter: CGSize(width: 40, height: 125),
+        Note.Value.eighth: CGSize(width: 80, height: 160),
+        Note.Value.sixteenth: CGSize(width: 80, height: 240)
+    ]
     
     init(staffHeight: CGFloat) {
         self.staffHeight = staffHeight
@@ -80,9 +87,9 @@ struct NoteGeometry {
     
     func getBoundingBox(note: NoteViewModel) -> CGRect {
         if note.note.rest {
-            // we're just using some default height since this is only used for layout
-            // in the horizontal direction.
-            return CGRect(origin: .zero, size: CGSize(width: restWidth, height: 10))
+            if let size = restSize[note.note.value] {
+                return CGRect(origin: .zero, size: size)
+            }
         }
         return frame.boundingBox(other: getAccidentalFrame(note: note)).boundingBox(other: getDotBoundingBox(note: note))
     }
