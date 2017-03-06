@@ -11,6 +11,7 @@ import UIKit
 
 class PartListingViewController: UIViewController {
 
+    // TODO(btc/nlele): replace with X
     fileprivate static let deletionView = UIImageView(image: #imageLiteral(resourceName: "whole"))
 
     private let newCompositionButton: UIButton = {
