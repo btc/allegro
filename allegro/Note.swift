@@ -19,13 +19,24 @@ class Note {
         case A, B, C, D, E, F, G
     }
 
-    enum Accidental {
+    enum Accidental: CustomStringConvertible {
         case doubleFlat     // unicode ♭♭
         case flat           // unicode ♭
         case natural        // unicode ♮
         case sharp          // unicode ♯
         case doubleSharp    // unicode ♯♯
+
+        var description: String {
+            switch self {
+            case .doubleFlat: return "double flat"
+            case .flat: return "flat"
+            case .natural: return "natural"
+            case .sharp: return "sharp"
+            case .doubleSharp: return "double sharp"
+            }
+        }
     }
+
 
     // Value represents the glyph that is drawn on screen, not the true duration of the note.
     // The true duration may be modified by dots or triplets, but the glyph is the same.

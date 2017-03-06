@@ -393,10 +393,13 @@ extension MeasureView: NoteActionDelegate {
 
         case .sharp, .natural, .flat:
             let acc: Note.Accidental = gesture == .sharp ? .sharp : gesture == .flat ? .flat : .natural
+            if !note.displayAccidental && acc == note.note.accidental {
+                Snackbar(message: "note is already \(acc.description)", duration: .short).show()
+                break
+            }
             if !store.setAccidental(acc, inMeasure: index, at: note.position) {
                 Snackbar(message: "failed to \(gesture) the note", duration: .short).show()
             }
-
         case .rest:
             if !store.toggleRest(inMeasure: index, at: note.position) {
                 Snackbar(message: "strange... failed to toggle rest", duration: .short).show()
