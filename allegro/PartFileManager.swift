@@ -124,8 +124,6 @@ class PartFileManager {
 
     static func save(part: Part, as filename: String) {
 
-        Log.info?.message("Generating and saving MuscXML as \(filename).xml")
-
         // generate XML
         let partDoc = MusicXMLParser.generate(part: part)
 
