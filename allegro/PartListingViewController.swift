@@ -77,10 +77,7 @@ class PartListingViewController: UIViewController {
                                             width: buttonWidth,
                                             height: buttonHeight)
 
-        partListing.frame = CGRect(x: 0,
-                                   y: newCompositionButton.frame.maxY + DEFAULT_MARGIN_PTS,
-                                   width: view.bounds.width,
-                                   height: view.bounds.height - newCompositionButton.frame.height - 2 * DEFAULT_MARGIN_PTS)
+        partListing.frame = view.bounds
     }
 
     func newCompositionTapped() {
