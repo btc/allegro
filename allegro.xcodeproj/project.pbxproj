@@ -274,12 +274,12 @@
 			name = ViewModels;
 			sourceTree = "<group>";
 		};
-		6B096E5D1E342D2000615723 /* Stores */ = {
+		6B096E5D1E342D2000615723 /* State */ = {
 			isa = PBXGroup;
 			children = (
 				6B096E5E1E342D6300615723 /* PartStore.swift */,
 			);
-			name = Stores;
+			name = State;
 			sourceTree = "<group>";
 		};
 		6B096E651E3737CF00615723 /* Recognizers */ = {
@@ -366,7 +366,7 @@
 				6B6774A11E2D7FAE00399BDC /* Views */,
 				6B096E541E313B5B00615723 /* ViewModels */,
 				6B6E27251E289F5000F9CF66 /* Controllers */,
-				6B096E5D1E342D2000615723 /* Stores */,
+				6B096E5D1E342D2000615723 /* State */,
 				6B096E651E3737CF00615723 /* Recognizers */,
 				B96BCCC41E3D5FE50006A047 /* IO */,
 				6B3290EF1E3C463200AE693B /* Audio */,
