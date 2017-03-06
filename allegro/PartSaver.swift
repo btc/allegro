@@ -12,6 +12,9 @@ class PartSaver : PartStoreObserver {
 
     private let partStore: PartStore
 
+    private let queue = DispatchQueue(label: "PartSaver", qos: .userInitiated)
+
+
     private(set) var filename: String
 
     init(partStore: PartStore, filename: String) {
@@ -26,7 +29,8 @@ class PartSaver : PartStoreObserver {
     func partStoreChanged() {
         if partStore.part.isEmpty { return }
         // save to disk
-        DispatchQueue.global(qos: .background).async {
+
+        queue.sync {
             PartFileManager.save(part: self.partStore.part, as: self.filename)
         }
     }

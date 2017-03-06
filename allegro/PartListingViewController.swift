@@ -26,11 +26,7 @@ class PartListingViewController: UIViewController {
         return v
     }()
 
-    fileprivate var files = [(filename: String, modified: Date)]() {
-        didSet {
-            partListing.reloadData()
-        }
-    }
+    fileprivate var files = [(filename: String, modified: Date)]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,9 +60,11 @@ class PartListingViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        // look for files from disk. files are already sorted by modified time
-        DispatchQueue.main.async { [weak self] in
-            self?.files = PartFileManager.files
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.files = PartFileManager.files // look for files from disk. files are already sorted by modified time
+            DispatchQueue.main.async {
+                self.partListing.reloadData() // must happen on main thread
+            }
         }
     }
 
