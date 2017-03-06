@@ -183,7 +183,7 @@ class allegroTests: XCTestCase {
         for measure in dMajorScale.measures {
             let mvm = MeasureViewModel(measure)
             for noteViewModel in mvm.notes {
-                if(noteViewModel.letter == Note.Letter.F || noteViewModel.letter == Note.Letter.C) {
+                if(noteViewModel.note.letter == Note.Letter.F || noteViewModel.note.letter == Note.Letter.C) {
                     XCTAssert(noteViewModel.displayAccidental == true)
                 }
                 else {
