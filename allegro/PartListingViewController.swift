@@ -6,9 +6,12 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
+import SwipyCell
 import UIKit
 
 class PartListingViewController: UIViewController {
+
+    fileprivate static let deletionView = UIImageView(image: #imageLiteral(resourceName: "whole"))
 
     private let newCompositionButton: UIButton = {
         let v = UIButton()
@@ -17,7 +20,7 @@ class PartListingViewController: UIViewController {
         return v
     }()
 
-    private let partListing: UITableView = {
+    fileprivate let partListing: UITableView = {
         let v = UITableView(frame: .zero, style: UITableViewStyle.plain)
         v.backgroundColor = .white
         v.register(PartListingCell.self, forCellReuseIdentifier: PartListingCell.reuseID)
@@ -124,6 +127,25 @@ extension PartListingViewController: UITableViewDelegate {
             DispatchQueue.main.async {
                 c.part = part
             }
+        }
+
+
+        (cell as? SwipyCell)?.setSwipeGesture(type(of: self).deletionView,
+                                              color: .red,
+                                              mode: .exit,
+                                              state: .state1,
+                                              completionHandler: deleteCell)
+    }
+
+    private func deleteCell(cell: SwipyCell, state: SwipyCellState, mode: SwipyCellMode) {
+
+        // TODO(nlele): uncomment the following lines when deletion is implemented.
+
+        // guard let indexPath = partListing.indexPath(for: cell) else { return }
+        // partListing.deleteRows(at: [indexPath], with: .fade)
+
+        DispatchQueue.global(qos: .background).async {
+            // TODO(nlele): delete part file here
         }
     }
 

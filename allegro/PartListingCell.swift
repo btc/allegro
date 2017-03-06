@@ -8,8 +8,9 @@
 
 import DateToolsSwift
 import UIKit
+import SwipyCell
 
-class PartListingCell: UITableViewCell {
+class PartListingCell: SwipyCell {
 
     static let reuseID = "PartListingCell"
     static let height: CGFloat = 100

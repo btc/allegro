@@ -4,5 +4,6 @@ github "audiokit/AudioKit"
 github "benzguo/MusicKit"
 github "dekatotoro/SlideMenuControllerSwift"
 github "emaloney/CleanroomLogger" ~> 5.0.0
+github "moritzsternemann/SwipyCell"
 github "tadija/AEXML"
 github "zekunyan/TTGSnackbar"
