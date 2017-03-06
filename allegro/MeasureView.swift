@@ -156,14 +156,10 @@ class MeasureView: UIView {
         let g = geometry.noteGeometry
         let noteViews = noteViewModels
             .map { $0.note.rest ? RestView(note: $0, geometry: g, store: store) : NoteView(note: $0, geometry: g, store: store) }
-        let nonRestViews = noteViews.filter { $0 is NoteView }
-        
-        if let nonRestViews = nonRestViews as? [NoteView] {
-            nonRestViews.forEach {
-                    $0.isSelected = $0.note.position == store.selectedNote?.position && store.selectedNote?.measure == index
-            }
-            nonRestViews.forEach() { $0.delegate = self }
+        noteViews.forEach {
+                $0.isSelected = store.selectedNotes.contains($0.note.position)
         }
+        noteViews.forEach() { $0.delegate = self }
         
         let notesToNoteView = zip(noteViewModels, noteViews)
             .reduce([Int: UIView]()) {
