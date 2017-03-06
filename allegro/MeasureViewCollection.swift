@@ -27,17 +27,35 @@ class MeasureViewCollection: UICollectionView {
 
         }
     }
+
+    var visibleMeasure: IndexPath? {
+        didSet {
+            guard let visibleMeasure = visibleMeasure else { return }
+            store.currentMeasure = visibleMeasure.item
+        }
+    }
+
+    let overviewPinchRecognizer: UIGestureRecognizer = {
+        let gr = UIPinchGestureRecognizer()
+        return gr
+    }()
     
     init(store: PartStore) {
+
         let layout = AnimatedCollectionViewLayout()
         let animator = PageAttributeAnimator(scaleRate: 0.8)
         layout.scrollDirection = .horizontal
         layout.animator = animator
+
         self.store = store
         measureCount = store.measureCount
+
         super.init(frame: .zero, collectionViewLayout: layout)
 
         store.subscribe(self)
+
+        addGestureRecognizer(overviewPinchRecognizer)
+        overviewPinchRecognizer.addTarget(self, action: #selector(pinched))
 
         panGestureRecognizer.minimumNumberOfTouches = 1
         panGestureRecognizer.maximumNumberOfTouches = 2
@@ -50,6 +68,12 @@ class MeasureViewCollection: UICollectionView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) not supported")
+    }
+
+    func pinched(sender: UIPinchGestureRecognizer) {
+        if sender.scale < 0.5 {
+            store.view = .overview
+        }
     }
 }
 
@@ -72,8 +96,8 @@ extension MeasureViewCollection: UICollectionViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let visibleRect = CGRect(origin: contentOffset, size: bounds.size)
         let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-        if let i = indexPathForItem(at: visiblePoint)?.item {
-            store.currentMeasure = i
+        if let i = indexPathForItem(at: visiblePoint) {
+            visibleMeasure = i
         }
     }
 }
@@ -104,6 +128,10 @@ extension MeasureViewCollection: PartStoreObserver {
             panGestureRecognizer.minimumNumberOfTouches = 1
         case .erase:
             panGestureRecognizer.minimumNumberOfTouches = 2
+        }
+        if store.view == .measure && visibleMeasure != nil && store.currentMeasure != visibleMeasure?.item {
+            Log.info?.trace()
+            scrollToItem(at: IndexPath(item: store.currentMeasure, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
 }

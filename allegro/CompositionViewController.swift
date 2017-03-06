@@ -36,7 +36,9 @@ class CompositionViewController: UIViewController {
 
     fileprivate let store: PartStore
 
-    fileprivate var editor: MeasureViewCollection
+    fileprivate let measureViewCollection: MeasureViewCollection
+
+    fileprivate let overviewView: UIView
 
     fileprivate let audio: Audio?
 
@@ -61,7 +63,9 @@ class CompositionViewController: UIViewController {
         self.store = store
         self.partSaver = PartSaver(partStore: store, filename: filename)
 
-        editor = MeasureViewCollection(store: store)
+        measureViewCollection = MeasureViewCollection(store: store)
+        overviewView = OverviewView(store: store)
+
         audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
 
         super.init(nibName: nil, bundle: nil)
@@ -79,10 +83,11 @@ class CompositionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        view.addSubview(editor)
+        view.addSubview(measureViewCollection)
         view.addSubview(noteSelectorMenu)
         view.addSubview(modeToggle)
         //view.addSubview(menuIndicator) Not being used in Alpha
+        view.addSubview(overviewView)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -112,7 +117,7 @@ class CompositionViewController: UIViewController {
         modeToggle.imageEdgeInsets = UIEdgeInsetsMake((modeToggle.imageView?.frame.size.height)!*0.2, (modeToggle.imageView?.frame.size.width)!*0.2, (modeToggle.imageView?.frame.size.height)!*0.2, (modeToggle.imageView?.frame.size.width)!*0.2)
 
         // occupies space to the right of the menu
-        editor.frame = CGRect(x: noteSelectorMenu.frame.maxX,
+        measureViewCollection.frame = CGRect(x: noteSelectorMenu.frame.maxX,
                                   y: 0,
                                   width: view.bounds.width - noteSelectorMenu.frame.width,
                                   height: view.bounds.height)
@@ -125,6 +130,8 @@ class CompositionViewController: UIViewController {
                                      y: -DEFAULT_MARGIN_PTS/2,
                                      width: buttonW,
                                      height: view.bounds.height)
+
+        overviewView.frame = view.bounds
     }
 
     func toggled() {
@@ -145,6 +152,8 @@ extension CompositionViewController: PartStoreObserver {
         case .erase:
             modeToggle.isSelected = true
         }
+
+        overviewView.isHidden = store.view != .overview // TODO: animate this transition
     }
 }
 

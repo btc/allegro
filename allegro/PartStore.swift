@@ -35,6 +35,10 @@ enum CompositionMode {
     case edit, erase
 }
 
+enum CompositionView {
+    case measure, overview
+}
+
 class PartStore {
 
     var currentMeasure: Int = 0 {
@@ -54,6 +58,12 @@ class PartStore {
     }
 
     var mode: CompositionMode {
+        didSet {
+            notify()
+        }
+    }
+
+    var view: CompositionView = .measure {
         didSet {
             notify()
         }
