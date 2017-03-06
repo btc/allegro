@@ -334,7 +334,7 @@ class MeasureView: UIView {
 
         guard let store = store, let index = index else { return }
 
-        let value = store.selectedNoteValue
+        let value = store.newNote
 
         // determine pitch
         let pitchRelativeToCenterLine = geometry.pointToPitch(location)

@@ -73,7 +73,7 @@ class PartStore {
         return part.measures.count
     }
 
-    var selectedNoteValue: Note.Value = .whole {
+    var newNote: Note.Value = .whole {
         didSet {
             notify()
         }

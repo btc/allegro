@@ -71,7 +71,7 @@ class CompositionViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         noteSelectorMenu.selectorDelegate = self
-        store.selectedNoteValue = noteSelectorMenu.selectedNoteValue
+        store.newNote = noteSelectorMenu.selectedNoteValue
         store.subscribe(self)
     }
     
@@ -159,7 +159,7 @@ extension CompositionViewController: PartStoreObserver {
 
 extension CompositionViewController: NoteSelectorDelegate {
     func didChangeSelection(value: Note.Value) {
-        store.selectedNoteValue = value
+        store.newNote = value
         store.mode = .edit
         Log.info?.message("user selected \(value) value")
     }
