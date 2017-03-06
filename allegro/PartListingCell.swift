@@ -35,14 +35,12 @@ class PartListingCell: UITableViewCell {
     private let partTitle: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT, size: 14)
-        v.backgroundColor = .allegroBlue
         return v
     }()
 
     private let date: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT, size: 14)
-        v.backgroundColor = .allegroBlue
         return v
     }()
 
