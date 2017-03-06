@@ -8,7 +8,7 @@
 
 import Rational
 
-struct MeasureViewModel {
+class MeasureViewModel {
 
     // Beams are the lines that connect groups of eighth notes, sixteenth notes, etc
     // We just store a collection of notes that should be beamed together by MeasureView
