@@ -410,10 +410,13 @@ extension MeasureView: NoteActionDelegate {
 
             let pitchRelativeToCenterLine = geometry.pointToPitch(location)
             let position = geometry.pointToPositionInTime(x: location.x)
-            let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
 
-            moved.letter = letter
-            moved.octave = octave
+            if !moved.rest {
+                let (letter, octave) = NoteViewModel.pitchToLetterAndOffset(pitch: pitchRelativeToCenterLine)
+                moved.letter = letter
+                moved.octave = octave
+            }
+
             if let insertedPosition = store.insert(note: moved, intoMeasureIndex: index, at: position) {
                 store.selectedNote = insertedPosition
             }
