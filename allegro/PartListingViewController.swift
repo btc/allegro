@@ -35,7 +35,7 @@ class PartListingViewController: UIViewController {
         view.backgroundColor = UIColor.white
 
         view.addSubview(partListing)
-        view.addSubview(newCompositionButton)
+        view.addSubview(newCompositionButton) // on top of part listing
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
 
