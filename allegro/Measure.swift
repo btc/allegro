@@ -82,6 +82,10 @@ struct Measure {
             }
             // if triplet.isEmpty(), remove it from triplets array
             if (triplet.isEmpty()) {
+                let removeSuccess = removeTriplet(triplet: triplet)
+                if (removeSuccess == false) {
+                    Log.error?.message("Error removing triplet from model")
+                }
             }
         }
         return notes.remove(at: i).note
@@ -222,11 +226,10 @@ struct Measure {
     
     // removes a Tie from this measure
     mutating func removeTie(tie: Tie) -> Bool {
-        for (i, member) in ties.enumerated() {
-            if(member == tie) {
-                ties.remove(at: i)
-                return true
-            }
+        let filteredTies = ties.filter { $0 != tie }
+        if (filteredTies.count < ties.count) {
+            ties = filteredTies
+            return true
         }
         return false
     }
@@ -239,21 +242,20 @@ struct Measure {
     // adds a Triplet to this measure
     // returns true on success
     mutating func addTriplet(notes: [NotePos]) -> Bool {
-        guard (notes.count != 3) else {return false}
         guard let newTriplet = Triplet(notesArr: notes) else {return false}
         triplets.append(newTriplet)
-        for notePos in notes {
-            let success = insert(note: notePos.note, at: notePos.pos)
-            if (success == nil) {
-                Log.error?.message("Unable to insert note as part of triplet. Developer Error.")
-            }
-        }
         return true
     }
     
+    // adds a note to a triplet in the measure
+    mutating func addNoteToTriplet(notePos: NotePos, triplet: Triplet) -> Bool {
+        return triplet.addNote(notePos: notePos)
+    }
+    
+    // remove a triplet object from the measure
     mutating func removeTriplet(triplet: Triplet) -> Bool {
-        let filteredTriplets = triplets.filter { $0 == triplet }
-        if (filteredTriplets.count == triplets.count - 1) {
+        let filteredTriplets = triplets.filter { $0 != triplet }
+        if (filteredTriplets.count < triplets.count) {
             triplets = filteredTriplets
             return true
         }

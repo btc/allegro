@@ -62,6 +62,16 @@ class Part {
         return measures[i].removeTie(tie: tie)
     }
     
+    func addTriplet(atMeasureIndex i: Int, notes: [NotePos]) -> Bool {
+        guard measures.indices.contains(i) else { return false }
+        return measures[i].addTriplet(notes: notes)
+    }
+    
+    func removeTriplet(atMeasureIndex i: Int, triplet: Triplet) -> Bool {
+        guard measures.indices.contains(i) else { return false }
+        return measures[i].removeTriplet(triplet: triplet)
+    }
+    
     // Adds the note to first freespace of any measure available.
     // If it doesn't fit, the next free space is tried, then a new measure is created
     // If the note's duration is longer than the time signature, the note is not added

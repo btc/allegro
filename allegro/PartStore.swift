@@ -164,10 +164,34 @@ class PartStore {
         return succeeded
     }
     
+    func addTie(atMeasureIndex i: Int, at startPos: Rational, at endPos: Rational) -> Bool {
+        let success = part.addTie(atMeasureIndex: i, at: startPos, at: endPos)
+        if success {
+            notify()
+        }
+        return success
+    }
+    
     func removeTie(atMeasureIndex i: Int, tie: Tie) -> Bool {
         let success = part.removeTie(atMeasureIndex: i, tie: tie)
         if success {
-            notify ()
+            notify()
+        }
+        return success
+    }
+    
+    func addTriplet(atMeasureIndex i: Int, notes: [NotePos]) -> Bool {
+        let success = part.addTriplet(atMeasureIndex: i, notes: notes)
+        if success {
+            notify()
+        }
+        return success
+    }
+    
+    func removeTriplet(atMeasureIndex i: Int, triplet: Triplet) -> Bool {
+        let success = part.removeTriplet(atMeasureIndex: i, triplet: triplet)
+        if success {
+            notify()
         }
         return success
     }

@@ -7,7 +7,7 @@
 //
 import Rational
 
-class Triplet {
+class Triplet: Equatable {
     var notes: [Note] = [Note]()  // keep track of notes in the triplet
     let modifier: Rational = 2/3
     let duration: Rational
