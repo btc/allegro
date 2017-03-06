@@ -59,6 +59,7 @@ class MeasureViewCollection: UICollectionView {
 
         panGestureRecognizer.minimumNumberOfTouches = 1
         panGestureRecognizer.maximumNumberOfTouches = 2
+        panGestureRecognizer.delegate = self
         isPagingEnabled = true
         backgroundColor = .allegroBlue
         register(MeasureViewCollectionCell.self, forCellWithReuseIdentifier: MeasureViewCollectionCell.reuseID)
@@ -132,5 +133,12 @@ extension MeasureViewCollection: PartStoreObserver {
         if store.view == .measure && visibleMeasure != nil && store.currentMeasure != visibleMeasure?.item {
             scrollToItem(at: IndexPath(item: store.currentMeasure, section: 0), at: .centeredHorizontally, animated: true)
         }
+    }
+}
+
+extension MeasureViewCollection: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer == panGestureRecognizer && otherGestureRecognizer as? UIScreenEdgePanGestureRecognizer != nil
     }
 }
