@@ -140,13 +140,20 @@ extension PartListingViewController: UITableViewDelegate {
 
     private func deleteCell(cell: SwipyCell, state: SwipyCellState, mode: SwipyCellMode) {
 
-        // TODO(nlele): uncomment the following lines when deletion is implemented.
-
-        // guard let indexPath = partListing.indexPath(for: cell) else { return }
-        // partListing.deleteRows(at: [indexPath], with: .fade)
+        guard let indexPath = partListing.indexPath(for: cell) else { return }
 
         DispatchQueue.global(qos: .background).async {
-            // TODO(nlele): delete part file here
+            // delete the file
+            let filename = self.files[indexPath.item].filename
+            PartFileManager.delete(filename: filename)
+
+            // update cached files
+            self.files = PartFileManager.files
+
+            // delete the row
+            DispatchQueue.main.async {
+                self.partListing.deleteRows(at: [indexPath], with: .fade)
+            }
         }
     }
 

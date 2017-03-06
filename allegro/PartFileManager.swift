@@ -62,10 +62,31 @@ class PartFileManager {
     }
 
     static func mostRecentFilename() -> String? {
-//        return files.sorted(by: { (e1, e2) -> Bool in e1.modified < e2.modified }).first?.filename
+        // already in sorted order
         return files.first?.filename
     }
 
+    // delete a file from disk
+    static func delete(filename: String) {
+
+        Log.info?.message("Deleting file: \(filename).xml")
+
+        do {
+            let documentDirURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+
+            // Find the file
+            let fileURL = documentDirURL.appendingPathComponent(filename).appendingPathExtension("xml")
+            Log.debug?.message("fileURL: \(fileURL.absoluteString)")
+
+            // delete the file
+            try fileManager.removeItem(at: fileURL)
+
+        } catch {
+            Log.error?.message("Failed to delete file from Documents. Error: \(error)")
+        }
+    }
+
+    // load a part XML from disk, parse it, and return it
     static func load(filename: String) -> Part {
 
         guard files.contains(where: { $0.filename == filename } ) else {
@@ -122,6 +143,7 @@ class PartFileManager {
         }
     }
 
+    // generate XML for a part and save it to disk
     static func save(part: Part, as filename: String) {
 
         // generate XML
