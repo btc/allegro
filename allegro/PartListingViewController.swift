@@ -106,19 +106,27 @@ extension PartListingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let aCell = tableView.dequeueReusableCell(withIdentifier: PartListingCell.reuseID, for: indexPath)
-        let cell = aCell as? PartListingCell
-
-        let (filename, modified) = files[indexPath.item]
-        cell?.filename = filename
-        cell?.part = PartFileManager.load(filename: filename)
-        cell?.modified = modified
-
-        return aCell
+        return tableView.dequeueReusableCell(withIdentifier: PartListingCell.reuseID, for: indexPath)
     }
 }
 
 extension PartListingViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let c = cell as? PartListingCell else { return }
+
+        let (filename, modified) = files[indexPath.item]
+        c.filename = filename
+        c.modified = modified
+
+        DispatchQueue.global(qos: .userInteractive).async {
+            let part = PartFileManager.load(filename: filename)
+            DispatchQueue.main.async {
+                c.part = part
+            }
+        }
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let filename = PartFileManager.files[indexPath.item].filename
         let part = PartFileManager.load(filename: filename)
