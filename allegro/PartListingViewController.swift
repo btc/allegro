@@ -11,8 +11,15 @@ import UIKit
 
 class PartListingViewController: UIViewController {
 
-    // TODO(btc/nlele): replace with X
-    fileprivate static let deletionView = UIImageView(image: #imageLiteral(resourceName: "whole"))
+    fileprivate static let deletionLabel: UILabel = {
+        let v = UILabel()
+        v.text = "Delete"
+        v.font = UIFont(name: DEFAULT_FONT, size: 14)
+        v.textColor = .white
+        v.textAlignment = .right
+        v.sizeToFit()
+        return v
+    }()
 
     private let newCompositionButton: UIButton = {
         let v = UIButton()
@@ -130,8 +137,7 @@ extension PartListingViewController: UITableViewDelegate {
             }
         }
 
-
-        (cell as? SwipyCell)?.setSwipeGesture(type(of: self).deletionView,
+        (cell as? SwipyCell)?.setSwipeGesture(type(of: self).deletionLabel,
                                               color: .red,
                                               mode: .exit,
                                               state: .state1,
