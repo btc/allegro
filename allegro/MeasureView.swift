@@ -398,8 +398,8 @@ extension MeasureView: NoteActionDelegate {
             }
 
         case .rest:
-            if !store.changeNoteToRest(inMeasure: index, at: note.position) {
-                Snackbar(message: "failed to convert note to rest", duration: .short).show()
+            if !store.toggleRest(inMeasure: index, at: note.position) {
+                Snackbar(message: "strange... failed to toggle rest", duration: .short).show()
             }
         case .select:
             store.selectedNote = note.position

@@ -194,10 +194,10 @@ class PartStore {
     }
 
     // returns false if no note exists at the given measure and position
-    func changeNoteToRest(inMeasure index: Int, at position: Rational) -> Bool {
-        Log.info?.message("change note to rest at \(position)")
+    func toggleRest(inMeasure index: Int, at position: Rational) -> Bool {
+        Log.info?.message("toggle rest at \(position)")
         guard let n = part.measures[index].note(at: position) else { return false }
-        n.rest = true
+        n.rest = !n.rest
         notify()
         return true
     }
