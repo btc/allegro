@@ -48,43 +48,7 @@ struct MeasureViewModel {
     var timeSignature: Rational {
         return measure.timeSignature
     }
-    
-    private let rules: [(Beam, Int) -> (left: Beam, right: Beam)?] = [
-        { (b, i) in // discard if the beam has only 1 element
-            b.count <= 1 ? ([], []) : nil
-        },
-        { (b: Beam, i) in // split when the beam has more than 2 elements
-            i >= 2 ? b.partition(index: i) : nil
-        },
-        { (b, i) in // discard when the note has no flag
-            if b[i].hasFlag {
-                return nil
-            }
-            if b.indices.contains(i+1) {
-                return ([], b.partition(index: i+1).right)
-            }
-            return ([], [])
-        },
-        { (b, i) in // split when value changes
-            if i == 0 {
-                return nil
-            }
-            if b[i].note.value != b[i-1].note.value {
-                return b.partition(index: i)
-            }
-            return nil
-        }/*,
-        { (b, i) in
-            if i == 0 {
-                return nil
-            }
-            
-            /*
-            if b[i].note.rest or b[i - 1].note.rest {
-             
-            }*/
-        }*/
-    ]
+
     /*
         For the current NoteViewModel, determines if accidental should be displayed or not
         return true: accidental should be displayed (default)
@@ -219,7 +183,9 @@ struct MeasureViewModel {
         for np in measure.notes {
             let position = np.pos
             let note = np.note
+
             let newNoteViewModel = NoteViewModel(note: note, position: position)
+            newNoteViewModel.flipped = newNoteViewModel.pitch > 0
             newNoteViewModel.displayAccidental = checkAccidentalDisplay(note: note, position: position)
             notes.append(newNoteViewModel)
         }
