@@ -95,12 +95,12 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
                                          y:parent.height * 0.1,
                                          width: parent.width * 0.8,
                                          height: parent.height * 0.8)
-        setTimeSigPickerLabel()
+        setTimeSigPickerValues()
         
 
     }
     
-    private func setTimeSigPickerLabel() {
+    private func setTimeSigPickerValues() {
         let numerator = store.part.timeSignature.numerator
         let denominator = store.part.timeSignature.denominator
         if let numIndex = pickerData[0].index(of: String(numerator)) {
