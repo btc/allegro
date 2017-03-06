@@ -8,9 +8,10 @@
 
 import UIKit
 
-class PartListingCell: UICollectionViewCell {
+class PartListingCell: UITableViewCell {
 
     static let reuseID = "PartListingCell"
+    static let height: CGFloat = 100
 
     var filename: String = "" {
         didSet {
@@ -44,8 +45,8 @@ class PartListingCell: UICollectionViewCell {
         return v
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(partTitle)
         addSubview(date)
     }

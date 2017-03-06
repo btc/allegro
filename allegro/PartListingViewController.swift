@@ -17,12 +17,10 @@ class PartListingViewController: UIViewController {
         return v
     }()
 
-    private let partListing: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        let v = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        v.register(PartListingCell.self, forCellWithReuseIdentifier: PartListingCell.reuseID)
+    private let partListing: UITableView = {
+        let v = UITableView(frame: .zero, style: UITableViewStyle.plain)
         v.backgroundColor = .white
+        v.register(PartListingCell.self, forCellReuseIdentifier: PartListingCell.reuseID)
         return v
     }()
 
@@ -101,38 +99,17 @@ class PartListingViewController: UIViewController {
     }
 }
 
-extension PartListingViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        let filename = PartFileManager.files[indexPath.item].filename
-        let part = PartFileManager.load(filename: filename)
-
-        let partStore = PartStore(part: part)
-
-        let vc = CompositionViewController.create(store: partStore, filename: filename)
-        navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension PartListingViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.bounds.width, height: 100)
-    }
-}
-
-extension PartListingViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+extension PartListingViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return files.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let aCell = collectionView.dequeueReusableCell(withReuseIdentifier: PartListingCell.reuseID, for: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let aCell = tableView.dequeueReusableCell(withIdentifier: PartListingCell.reuseID, for: indexPath)
         let cell = aCell as? PartListingCell
 
         let (filename, modified) = files[indexPath.item]
@@ -141,5 +118,21 @@ extension PartListingViewController: UICollectionViewDataSource {
         cell?.modified = modified
 
         return aCell
+    }
+}
+
+extension PartListingViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let filename = PartFileManager.files[indexPath.item].filename
+        let part = PartFileManager.load(filename: filename)
+
+        let partStore = PartStore(part: part)
+
+        let vc = CompositionViewController.create(store: partStore, filename: filename)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return PartListingCell.height
     }
 }
