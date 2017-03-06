@@ -156,9 +156,13 @@ class MeasureView: UIView {
         let g = geometry.noteGeometry
         let noteViews = noteViewModels
             .map { $0.note.rest ? RestView(note: $0, geometry: g, store: store) : NoteView(note: $0, geometry: g, store: store) }
+
+
         noteViews.forEach {
-                $0.isSelected = store.selectedNotes.contains($0.note.position)
+                $0.isSelected = store.selectedNote == $0.note.position
         }
+
+
         noteViews.forEach() { $0.delegate = self }
         
         let notesToNoteView = zip(noteViewModels, noteViews)
@@ -308,15 +312,16 @@ class MeasureView: UIView {
         }
     }
 
-    // returns true if a note was deselected
+    // returns true if a note was actually deselected
     private func deselectNote(sender: UIGestureRecognizer) -> Bool {
         let location = sender.location(in: self)
-        if let nv = hitTest(location, with: nil) as? NoteActionView {
-            guard let store = store, let index = index else { return false }
-            if store.currentMeasure == index && store.selectedNotes.contains(nv.note.position) {
-                store.selectedNotes.remove(nv.note.position)
-                return true
-            }
+        guard let nv = hitTest(location, with: nil) as? NoteActionView else {
+            return false
+        }
+        guard let store = store, let index = index else { return false }
+        if store.currentMeasure == index && nv.note.position == store.selectedNote {
+            store.selectedNote = nil
+            return true
         }
         return false
     }
@@ -397,7 +402,7 @@ extension MeasureView: NoteActionDelegate {
                 Snackbar(message: "failed to convert note to rest", duration: .short).show()
             }
         case .select:
-            store.selectedNotes.insert(note.position)
+            store.selectedNote = note.position
 
         case .move:
             guard let moved = store.removeAndReturnNote(fromMeasure: index, at: note.position) else { return }
@@ -410,7 +415,7 @@ extension MeasureView: NoteActionDelegate {
             moved.letter = letter
             moved.octave = octave
             if let insertedPosition = store.insert(note: moved, intoMeasureIndex: index, at: position) {
-                store.selectedNotes.insert(insertedPosition)
+                store.selectedNote = insertedPosition
             }
         }
     }

@@ -46,12 +46,12 @@ class PartStore {
             let valueChanged = oldValue != currentMeasure
             if valueChanged {
                 // de-select notes when measure changes!
-                selectedNotes.removeAll()
+                selectedNote = nil
             }
         }
     }
 
-    var selectedNotes: Set<Rational> = [] {
+    var selectedNote: Rational? {
         didSet {
             notify()
         }
@@ -130,7 +130,7 @@ class PartStore {
         let actualPosition = part.insert(note: note, intoMeasureIndex: i, at: desiredPosition)
 
         if let ap = actualPosition {
-            selectedNotes.removeAll() // our policy is to deselect other notes on insert
+            selectedNote = nil // our policy is to deselect notes on insert
             notify()
             observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
         }
