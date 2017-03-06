@@ -19,13 +19,15 @@ class PartListingCell: SwipyCell {
 
     var filename: String = "" {
         didSet {
-            partTitle.text = part?.title ?? "Untitled Part (\(filename).xml)"
+            let partNumber: String = filename.components(separatedBy: "_").last ?? "X"
+            partTitle.text = part?.title ?? "Untitled Part \(partNumber)"
         }
     }
 
     var part: Part? {
         didSet {
-            partTitle.text = part?.title ?? "Untitled Part (\(filename).xml)"
+            let partNumber: String = filename.components(separatedBy: "_").last ?? "X"
+            partTitle.text = part?.title ?? "Untitled Part \(partNumber)"
         }
     }
 
