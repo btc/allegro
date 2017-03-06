@@ -14,8 +14,8 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
     fileprivate let store: PartStore
     
     private let pickerData = [
-        ["2","3","4","6","8"],
-        ["2","3","4","6","8"]
+        ["2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"],
+        ["2","4","8"]
     ]
     
     private let timeSigTitle: UIView = {
@@ -67,8 +67,6 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         view.addSubview(timeSigPickerView)
         timeSigPickerView.delegate = self
         timeSigPickerView.dataSource = self
-        timeSigPickerView.selectRow(2, inComponent: 0, animated: false)
-        timeSigPickerView.selectRow(2, inComponent: 1, animated: false)
         
         view.addSubview(toolBar)
         toolBar.setItems([doneButton], animated: false)
@@ -97,7 +95,20 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
                                          y:parent.height * 0.1,
                                          width: parent.width * 0.8,
                                          height: parent.height * 0.8)
+        setTimeSigPickerLabel()
+        
 
+    }
+    
+    private func setTimeSigPickerLabel() {
+        let numerator = store.part.timeSignature.numerator
+        let denominator = store.part.timeSignature.denominator
+        if let numIndex = pickerData[0].index(of: String(numerator)) {
+            timeSigPickerView.selectRow(numIndex, inComponent: 0, animated: false)
+        }
+        if let denomIndex = pickerData[1].index(of: String(denominator)) {
+            timeSigPickerView.selectRow(denomIndex, inComponent: 1, animated: false)
+        }
     }
     
     
