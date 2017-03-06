@@ -6,6 +6,7 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
+import DateToolsSwift
 import UIKit
 
 class PartListingCell: UITableViewCell {
@@ -27,7 +28,7 @@ class PartListingCell: UITableViewCell {
 
     var modified = Date() {
         didSet {
-            date.text = modified.description
+            date.text = Date.timeAgo(since: modified)
         }
     }
 
