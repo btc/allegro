@@ -14,6 +14,8 @@ class PartListingCell: UITableViewCell {
     static let reuseID = "PartListingCell"
     static let height: CGFloat = 100
 
+    let margin: CGFloat = 3
+
     var filename: String = "" {
         didSet {
             partTitle.text = part?.title ?? "Untitled Part (\(filename).xml)"
@@ -55,13 +57,13 @@ class PartListingCell: UITableViewCell {
     }
 
     override func layoutSubviews() {
-        partTitle.frame = CGRect(x: DEFAULT_MARGIN_PTS,
-                                 y: DEFAULT_MARGIN_PTS,
-                                 width: bounds.width - 2 * DEFAULT_MARGIN_PTS,
+        partTitle.frame = CGRect(x: margin,
+                                 y: margin,
+                                 width: bounds.width - 2 * margin,
                                  height: bounds.height / 2)
-        date.frame = CGRect(x: DEFAULT_MARGIN_PTS,
+        date.frame = CGRect(x: margin,
                             y: partTitle.frame.maxY,
-                            width: bounds.width - 2 * DEFAULT_MARGIN_PTS,
+                            width: bounds.width - 2 * margin,
                             height: bounds.height / 2)
 
     }
