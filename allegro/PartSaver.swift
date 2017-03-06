@@ -24,6 +24,7 @@ class PartSaver : PartStoreObserver {
     // save on every change to the part store
     // TODO to allow undo we can save with different file names for the versions
     func partStoreChanged() {
+        if partStore.part.isEmpty { return }
         // save to disk
         DispatchQueue.global(qos: .background).async {
             PartFileManager.save(part: self.partStore.part, as: self.filename)

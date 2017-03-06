@@ -19,6 +19,10 @@ class Part {
 
     // ordered list of measures in the piece
     var measures: [Measure] = [Measure]()
+
+    var isEmpty: Bool {
+        return !hasNotes()
+    }
     
     // initialize with 1 empty measure
     init() {
