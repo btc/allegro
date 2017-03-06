@@ -6,6 +6,8 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
+import Foundation
+
 class PartSaver : PartStoreObserver {
 
     private let partStore: PartStore
@@ -23,6 +25,8 @@ class PartSaver : PartStoreObserver {
     // TODO to allow undo we can save with different file names for the versions
     func partStoreChanged() {
         // save to disk
-        PartFileManager.save(part: partStore.part, as: filename)
+        DispatchQueue.global(qos: .background).async {
+            PartFileManager.save(part: self.partStore.part, as: self.filename)
+        }
     }
 }

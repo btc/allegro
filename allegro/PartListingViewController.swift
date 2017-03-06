@@ -65,7 +65,9 @@ class PartListingViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         // look for files from disk. files are already sorted by modified time
-        files = PartFileManager.files
+        DispatchQueue.main.async { [weak self] in
+            self?.files = PartFileManager.files
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -128,7 +130,7 @@ extension PartListingViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return PartFileManager.count
+        return files.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
