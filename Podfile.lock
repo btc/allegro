@@ -1,12 +1,15 @@
 PODS:
   - AnimatedCollectionViewLayout (0.1.2)
+  - DateToolsSwift (2.0.0)
 
 DEPENDENCIES:
   - AnimatedCollectionViewLayout
+  - DateToolsSwift
 
 SPEC CHECKSUMS:
   AnimatedCollectionViewLayout: 2e64e4d47842a3c057943cf263fcc787bc97dcaf
+  DateToolsSwift: 27336736d877c8734159da1f37afbda2aa704649
 
-PODFILE CHECKSUM: 1b1f599d93713420f99aa9b8a2f595c18f466704
+PODFILE CHECKSUM: 349b32d6d62b2171f21b0c3a0664c070638ef6bc
 
 COCOAPODS: 1.2.0
