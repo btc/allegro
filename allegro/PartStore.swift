@@ -12,6 +12,7 @@ import Rational
 protocol PartStoreObserver: class {
     func partStoreChanged()
     func noteAdded(in measure: Int, at position: Rational)
+    func noteModified(in measure: Int, at position: Rational)
 }
 
 extension PartStoreObserver {
@@ -19,6 +20,9 @@ extension PartStoreObserver {
         // default impl
     }
     func noteAdded(in measure: Int, at position: Rational) {
+        // default impl
+    }
+    func noteModified(in measure: Int, at position: Rational) {
         // default impl
     }
 }
@@ -104,6 +108,7 @@ class PartStore {
         }
     }
 
+    // general notification must always be sent to observers
     private func notify() {
         // prunes released objects as it iterates
         observers = observers.filter {
@@ -111,6 +116,14 @@ class PartStore {
             value.partStoreChanged()
             return true
         }
+    }
+
+    private func notify(addedNoteInMeasure index: Int, at position: Rational) {
+        observers.forEach { $0.value?.noteAdded(in: index, at: position) }
+    }
+
+    private func notify(modifiedNoteInMeasure index: Int, at position: Rational) {
+        observers.forEach { $0.value?.noteModified(in: index, at: position) }
     }
 
     private func extendIfNecessaryToAccessMeasure(at index: Int) {
@@ -132,7 +145,7 @@ class PartStore {
         if let ap = actualPosition {
             selectedNote = nil // our policy is to deselect notes on insert
             notify()
-            observers.forEach { $0.value?.noteAdded(in: i, at: ap) }
+            notify(addedNoteInMeasure: i, at: ap)
         }
         return actualPosition
     }
@@ -166,6 +179,7 @@ class PartStore {
         let succeeded = part.dotNote(at: position, dot: newDot, atMeasureIndex: index)
         if succeeded {
             notify()
+            notify(modifiedNoteInMeasure: index, at: position)
         }
         return succeeded
     }
@@ -190,6 +204,7 @@ class PartStore {
         guard let n = part.measures[index].note(at: position) else { return false }
         n.accidental = accidental
         notify()
+        notify(modifiedNoteInMeasure: index, at: position)
         return true
     }
 
@@ -199,6 +214,7 @@ class PartStore {
         guard let n = part.measures[index].note(at: position) else { return false }
         n.rest = !n.rest
         notify()
+        notify(modifiedNoteInMeasure: index, at: position)
         return true
     }
     
