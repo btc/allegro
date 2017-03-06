@@ -22,16 +22,14 @@ struct MeasureGeometry {
 
         let measure: MeasureViewModel
         let visibleSize: CGSize
-        let selectedNoteDuration: Rational
 
-        init(measure: MeasureViewModel, visibleSize: CGSize, selectedNoteDuration: Rational) {
+        init(measure: MeasureViewModel, visibleSize: CGSize) {
             self.measure = measure
             self.visibleSize = visibleSize
-            self.selectedNoteDuration = selectedNoteDuration
         }
     }
 
-    static let zero = MeasureGeometry(state: State(measure: MeasureViewModel(Measure()), visibleSize: .zero, selectedNoteDuration: 1))
+    static let zero = MeasureGeometry(state: State(measure: MeasureViewModel(Measure()), visibleSize: .zero))
 
     let state: State
 

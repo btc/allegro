@@ -61,8 +61,7 @@ class MeasureViewContainer: UIScrollView {
         guard let store = store, let index = index else { return }
         let measure = store.measure(at: index)
         let s = MeasureGeometry.State(measure: measure,
-                                      visibleSize: bounds.size,
-                                      selectedNoteDuration: store.newNote.nominalDuration)
+                                      visibleSize: bounds.size)
         measureView.geometry = MeasureGeometry(state: s)
         contentSize = measureView.bounds.size
     }
@@ -71,8 +70,7 @@ class MeasureViewContainer: UIScrollView {
         guard let store = store, let index = index else { return }
         let measure = store.measure(at: index)
         let s = MeasureGeometry.State(measure: measure,
-                                      visibleSize: bounds.size,
-                                      selectedNoteDuration: store.newNote.nominalDuration)
+                                      visibleSize: bounds.size)
         let g = MeasureGeometry(state: s) // because measureView doesn't have a geometry until layoutSubviews
         let point = CGPoint(x: 0, y: g.totalHeight / 2 - g.state.visibleSize.height / 2)
         setContentOffset(point, animated: false)
@@ -85,8 +83,7 @@ extension MeasureViewContainer: PartStoreObserver {
         if measureView.geometry.state.visibleSize != .zero {
             let measure = store.measure(at: index)
             let state = MeasureGeometry.State(measure: measure,
-                                              visibleSize: measureView.geometry.state.visibleSize,
-                                              selectedNoteDuration: store.newNote.nominalDuration)
+                                              visibleSize: measureView.geometry.state.visibleSize)
             measureView.geometry = MeasureGeometry(state: state)
         }
         
