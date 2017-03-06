@@ -130,7 +130,6 @@ extension MeasureViewCollection: PartStoreObserver {
             panGestureRecognizer.minimumNumberOfTouches = 2
         }
         if store.view == .measure && visibleMeasure != nil && store.currentMeasure != visibleMeasure?.item {
-            Log.info?.trace()
             scrollToItem(at: IndexPath(item: store.currentMeasure, section: 0), at: .centeredHorizontally, animated: true)
         }
     }
