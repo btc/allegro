@@ -395,7 +395,7 @@ extension MeasureView: NoteActionDelegate {
             let acc: Note.Accidental = gesture == .sharp ? .sharp : gesture == .flat ? .flat : .natural
             if !note.displayAccidental && acc == note.note.accidental {
                 Snackbar(message: "note is already \(acc.description)", duration: .short).show()
-                break
+                // we still set the accidental though. we want sound to play!
             }
             if !store.setAccidental(acc, inMeasure: index, at: note.position) {
                 Snackbar(message: "failed to \(gesture) the note", duration: .short).show()
