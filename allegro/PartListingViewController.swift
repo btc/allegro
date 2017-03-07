@@ -84,7 +84,7 @@ class PartListingViewController: UIViewController {
         let buttonHeight: CGFloat = 50
 
         newCompositionButton.frame = CGRect(x: view.bounds.width - buttonWidth - DEFAULT_MARGIN_PTS,
-                                            y: DEFAULT_MARGIN_PTS,
+                                            y: 15,
                                             width: buttonWidth,
                                             height: buttonHeight)
 
