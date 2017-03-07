@@ -14,7 +14,9 @@ class PartListingCell: SwipyCell {
 
     static let reuseID = "PartListingCell"
     static let height: CGFloat = 80
-    static let margin: CGFloat = 3
+    static let xMargin: CGFloat = 20
+    static let yMargin: CGFloat = 10
+    static let titleWidth: CGFloat = 200
 
     var filename: String? {
         didSet {
@@ -51,6 +53,7 @@ class PartListingCell: SwipyCell {
     private let partTitle: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT, size: 14)
+        v.lineBreakMode = .byTruncatingTail
         v.backgroundColor = .white
         return v
     }()
@@ -58,6 +61,7 @@ class PartListingCell: SwipyCell {
     private let date: UILabel = {
         let v = UILabel()
         v.font = UIFont(name: DEFAULT_FONT, size: 12)
+        v.lineBreakMode = .byTruncatingTail
         v.backgroundColor = .white
         return v
     }()
@@ -74,14 +78,16 @@ class PartListingCell: SwipyCell {
     }
 
     override func layoutSubviews() {
-        partTitle.frame = CGRect(x: PartListingCell.margin,
-                                 y: PartListingCell.margin,
-                                 width: bounds.width - 2 * PartListingCell.margin,
-                                 height: bounds.height / 2 - 20)
-        date.frame = CGRect(x: PartListingCell.margin,
+        super.layoutSubviews()
+        partTitle.frame = CGRect(x: PartListingCell.xMargin,
+                                 y: PartListingCell.yMargin,
+                                 width: PartListingCell.titleWidth,
+                                 height: bounds.height / 3)
+        
+        date.frame = CGRect(x: PartListingCell.xMargin,
                             y: partTitle.frame.maxY,
-                            width: bounds.width - 2 * PartListingCell.margin,
-                            height: bounds.height / 2 - 20)
+                            width: PartListingCell.titleWidth,
+                            height: bounds.height / 2)
     }
 
     override func prepareForReuse() {
