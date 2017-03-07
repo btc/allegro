@@ -8,15 +8,17 @@
 
 import DateToolsSwift
 import UIKit
-import SwipyCell
+import MGSwipeTableCell
 
-class PartListingCell: SwipyCell {
+class PartListingCell: MGSwipeTableCell {
 
     static let reuseID = "PartListingCell"
     static let height: CGFloat = 80
     static let xMargin: CGFloat = 20
     static let yMargin: CGFloat = 10
     static let titleWidth: CGFloat = 200
+
+    // TODO try detailTextLabel
 
     var filename: String? {
         didSet {

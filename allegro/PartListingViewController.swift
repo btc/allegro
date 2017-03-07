@@ -6,11 +6,10 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
-import SwipyCell
 import UIKit
+import MGSwipeTableCell
 
 class PartListingViewController: UIViewController {
-    
     let audio: Audio?
     
     fileprivate static let deletionLabel: UILabel = {
@@ -149,16 +148,25 @@ extension PartListingViewController: UITableViewDelegate {
             }
         }
 
-        (cell as? SwipyCell)?.setSwipeGesture(type(of: self).deletionLabel,
-                                              color: .red,
-                                              mode: .exit,
-                                              state: .state1,
-                                              completionHandler: deleteCell)
+        let deleteButton = MGSwipeButton(title: "Delete", backgroundColor: .red) {
+            (sender: MGSwipeTableCell!) -> Bool in
+            self.deleteCell(indexPath: indexPath)
+            return true
+        }
+
+        let moreButton = MGSwipeButton(title: "More", backgroundColor: .lightGray) {
+            (sender: MGSwipeTableCell!) -> Bool in
+            // TODO more button callback
+            Log.info?.message("More on cell with index: \(indexPath.item)")
+            return true
+        }
+
+        c.rightButtons = [deleteButton, moreButton]
+        c.rightSwipeSettings.transition = .border // TODO experiment with different transitions
+
     }
 
-    private func deleteCell(cell: SwipyCell, state: SwipyCellState, mode: SwipyCellMode) {
-
-        guard let indexPath = partListing.indexPath(for: cell) else { return }
+    private func deleteCell(indexPath: IndexPath) {
 
         DispatchQueue.global(qos: .background).async {
             // delete the file
