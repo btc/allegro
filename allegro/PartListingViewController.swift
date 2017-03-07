@@ -161,9 +161,8 @@ extension PartListingViewController: UITableViewDelegate {
             return true
         }
 
-        c.rightButtons = [deleteButton, moreButton]
-        c.rightSwipeSettings.transition = .border // TODO experiment with different transitions
-
+        c.leftButtons = [deleteButton, moreButton]
+        c.rightSwipeSettings.transition = .border
     }
 
     private func deleteCell(indexPath: IndexPath) {
