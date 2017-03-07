@@ -34,6 +34,13 @@ class CompositionViewController: UIViewController {
         return v
     }()
 
+    fileprivate let measureNumberLabel: UILabel = {
+        let v = UILabel()
+        v.textColor = .lightGray
+        v.font = UIFont(name: DEFAULT_FONT, size: 18) // TODO standardize size
+        return v
+    }()
+
     fileprivate let store: PartStore
 
     fileprivate let measureViewCollection: MeasureViewCollection
@@ -86,6 +93,7 @@ class CompositionViewController: UIViewController {
         view.addSubview(measureViewCollection)
         view.addSubview(noteSelectorMenu)
         view.addSubview(modeToggle)
+        view.addSubview(measureNumberLabel)
         //view.addSubview(menuIndicator) Not being used in Alpha
         view.addSubview(overviewView)
     }
@@ -132,6 +140,9 @@ class CompositionViewController: UIViewController {
                                      height: view.bounds.height)
 
         overviewView.frame = view.bounds
+
+        measureNumberLabel.frame.origin = CGPoint(x: noteSelectorMenu.frame.maxX + DEFAULT_MARGIN_PTS,
+                                                  y: view.bounds.height - DEFAULT_MARGIN_PTS - measureNumberLabel.bounds.height)
     }
 
     func toggled() {
@@ -154,6 +165,9 @@ extension CompositionViewController: PartStoreObserver {
         }
 
         overviewView.isHidden = store.view != .overview // TODO: animate this transition
+
+        measureNumberLabel.text = "\(store.currentMeasure)"
+        measureNumberLabel.sizeToFit()
     }
 }
 
