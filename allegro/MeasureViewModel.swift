@@ -41,6 +41,17 @@ class MeasureViewModel {
         }
     ]
 
+    // BeamRule determines what we do when we evaluate two adjacent notes
+    enum BeamRule {
+        case split // separate them
+        case drop // drop both
+        case keep // keep together
+    }
+
+    private static let beamRulesV2: [(NoteViewModel, NoteViewModel) -> BeamRule] = [
+        { $0.note.rest || $1.note.rest ? .split : .keep },
+    ]
+
     private let measure: Measure
     private(set) var notes = [NoteViewModel]()
     private(set) var beams: [Beam] = []
@@ -172,6 +183,18 @@ class MeasureViewModel {
             for rule in MeasureViewModel.beamRules {
                 if let split = rule(beam, i) {
                     return split
+                }
+            }
+
+            if i != 0 {
+                for rule in type(of: self).beamRulesV2 {
+                    switch rule(beam[i-1], beam[i]) {
+                    case .keep: continue
+                    case .split:
+                        return beam.partition(index: i)
+                    case .drop:
+                        return ([], [])
+                    }
                 }
             }
         }
