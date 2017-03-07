@@ -136,7 +136,7 @@ struct Measure {
             return nil
         }
 
-        let indexToInsert = self.indexToInsert(np.pos)
+        let indexToInsert = self.indexToInsert(initialDesiredPosition)
 
         while (true) {
             let bumpsIntoNoteOnTheLeft = notes.indices.contains(indexToInsert - 1) && notes[indexToInsert-1].overlaps(with: np)
