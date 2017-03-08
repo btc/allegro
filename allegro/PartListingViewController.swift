@@ -154,15 +154,43 @@ extension PartListingViewController: UITableViewDelegate {
             return true
         }
 
-        let moreButton = MGSwipeButton(title: "More", backgroundColor: .lightGray) {
+        let renameButton = MGSwipeButton(title: "Rename", backgroundColor: .allegroPurple) {
             (sender: MGSwipeTableCell!) -> Bool in
-            // TODO more button callback
-            Log.info?.message("More on cell with index: \(indexPath.item)")
+            self.renameCell(indexPath: indexPath)
             return true
         }
 
-        c.leftButtons = [deleteButton, moreButton]
+        c.leftButtons = [deleteButton, renameButton]
         c.rightSwipeSettings.transition = .border
+    }
+
+    // set the part's title, this doesn't rename the file on disk!
+    private func renameCell(indexPath: IndexPath) {
+
+        let filename = self.files[indexPath.item].filename
+        let part = PartFileManager.load(filename: filename)
+
+        // open an alert
+        let alert = UIAlertController(title: "Part Title", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addTextField { (textField: UITextField) -> Void in
+            if let title = part.title {
+                textField.text = title
+            } else {
+                textField.placeholder = "Enter Part Title"
+            }
+        }
+
+        let setTitle = { (action: UIAlertAction) -> Void in
+            let newTitle = alert.textFields?[0].text
+            part.title = newTitle
+            PartFileManager.save(part: part, as: filename)
+            self.partListing.reloadData()
+        }
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: setTitle))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     private func deleteCell(indexPath: IndexPath) {
