@@ -9,7 +9,7 @@
 import UIKit
 import MGSwipeTableCell
 
-class PartListingViewController: UIViewController {
+class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
     let audio: Audio?
     
     fileprivate static let deletionLabel: UILabel = {
@@ -141,6 +141,8 @@ extension PartListingViewController: UITableViewDelegate {
         c.filename = filename
         c.modified = modified
 
+        c.delegate = self
+
         DispatchQueue.global(qos: .userInteractive).async {
             let part = PartFileManager.load(filename: filename)
             DispatchQueue.main.async {
@@ -148,20 +150,28 @@ extension PartListingViewController: UITableViewDelegate {
             }
         }
 
-        let deleteButton = MGSwipeButton(title: "Delete", backgroundColor: .red) {
-            (sender: MGSwipeTableCell!) -> Bool in
-            self.deleteCell(indexPath: indexPath)
-            return true
-        }
-
-        let renameButton = MGSwipeButton(title: "Rename", backgroundColor: .allegroPurple) {
-            (sender: MGSwipeTableCell!) -> Bool in
-            self.renameCell(indexPath: indexPath)
-            return true
-        }
+        let deleteButton = MGSwipeButton(title: "Delete", backgroundColor: .red)
+        let renameButton = MGSwipeButton(title: "Rename", backgroundColor: .allegroPurple)
 
         c.leftButtons = [deleteButton, renameButton]
         c.rightSwipeSettings.transition = .border
+    }
+
+    func swipeTableCell(_ cell: MGSwipeTableCell, tappedButtonAt index: Int, direction: MGSwipeDirection, fromExpansion: Bool) -> Bool {
+
+        guard let indexPath = partListing.indexPath(for: cell) else { return true }
+
+        switch index {
+        case 0:
+            deleteCell(indexPath: indexPath)
+            return false // dont autohide
+        case 1:
+            renameCell(indexPath: indexPath)
+        default:
+            break
+        }
+
+        return true
     }
 
     // set the part's title, this doesn't rename the file on disk!
