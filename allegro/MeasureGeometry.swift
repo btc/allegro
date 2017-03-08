@@ -52,6 +52,8 @@ struct MeasureGeometry {
     var heightOfSemitone: CGFloat {
         return staffHeight / 2
     }
+    
+    let margin = CGFloat(30)
 
     // it's a lot easier to compute width than height, so they are provided independently to allow clients to minimize
     // arithmetic operations
@@ -69,6 +71,7 @@ struct MeasureGeometry {
         let bbox = noteGeometry.getBoundingBox(note: measure.notes[measure.notes.count - 1])
         finalNoteEndspacing += bbox.origin.x - noteGeometry.frame.origin.x
         finalNoteEndspacing += bbox.size.width
+        finalNoteEndspacing += margin
         
         return max(finalNoteEndspacing, state.visibleSize.width)
     }
@@ -176,17 +179,16 @@ struct MeasureGeometry {
         guard noteAfterIndex != 0 else { return Rational(0) }
         
         let noteBeforeX = notesCenterX[noteAfterIndex - 1]
-        let noteBeforeTime = positions[noteAfterIndex - 1]
+        let noteBeforeTime = positions[noteAfterIndex - 1].cgFloat
         
         let noteAfterX = notesCenterX[noteAfterIndex]
-        let noteAfterTime = positions[noteAfterIndex]
+        let noteAfterTime = positions[noteAfterIndex].cgFloat
         
         let intervalSize = noteAfterX - noteBeforeX
-        let inside = Rational(Int(x - noteBeforeX), Int(intervalSize))
+        let percentInside = CGFloat((x - noteBeforeX) / intervalSize)
         
-        guard let percentInside = inside else { return noteBeforeTime }
         let output = noteBeforeTime + percentInside * (noteAfterTime - noteBeforeTime)
-        return output.lowestTerms
+        return output.round(denom: 1000)
     }
 
     typealias Interval = (start: CGFloat, end: CGFloat)
@@ -200,11 +202,11 @@ struct MeasureGeometry {
             var blackspace = [Interval]()
             
             var totalBlackspace = CGFloat(0)
-            let defaultWidth = state.visibleSize.width
+            let defaultWidth = state.visibleSize.width - 2 * margin
             
             guard measure.notes.count > 0 else { return [CGFloat]() }
             let g = noteGeometry
-            var last = CGFloat(0)
+            var last = margin
             
             // Calculate the whitespace intervals between notes if there are any
             // Also merges consecutive notes into contiguous interval
@@ -230,7 +232,7 @@ struct MeasureGeometry {
             if totalWhitespace > 0 && totalBlackspace < defaultWidth {
                 let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
                 
-                var whitespaceBefore = CGFloat(0)
+                var whitespaceBefore = margin
                 
                 for (i, space) in whitespace.enumerated() {
                     let diff = (space.end - space.start) * whitespaceScaling
