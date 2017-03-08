@@ -61,23 +61,25 @@ class Audio {
         sequence.rewind()
     }
 
+
     func playFromCurrentMeasure(part: Part, measure: Int) {
         let numMeasures = part.measures.count - measure
         let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
         sequence.setLength(sequenceLength)
-        var curBeat = 0
+        var curPos = 0.0
         
         for index in stride(from: measure, through: part.measures.count - 1, by: 1) {
             let m = part.measures[index]
             for notePos in m.notes {
                 guard let note = m.note(at: notePos.pos) else { return }
-                let akpos = AKDuration(beats: Double(curBeat))
+                print(curPos)
+                let akpos = AKDuration(beats: curPos)
                 let akdur = AKDuration(beats: note.duration.double)
                 let pitch = midiPitch(for: note)
                 if !note.rest {
-                    sequence.tracks[0].add(noteNumber: pitch, velocity: 100, position: akpos, duration: akdur)
+                    sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
                 }
-                curBeat += 1
+                curPos = curPos + notePos.duration.double * m.timeSignature.numerator
             }
         }
 
@@ -108,7 +110,7 @@ class Audio {
 
         let pitch = midiPitch(for: note)
 
-        sequence.tracks[0].add(noteNumber: pitch, velocity: 100, position: akpos, duration: akdur)
+        sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
         sequence.setTempo(Double(part.tempo))
         sequence.play()
         
