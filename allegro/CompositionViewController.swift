@@ -53,7 +53,7 @@ class CompositionViewController: UIViewController {
     private let partSaver: PartSaver
 
     //RHSide menu disabled for alpha
-    static func create(store: PartStore, audio: Audio, filename: String) -> UIViewController {
+    static func create(store: PartStore, audio: Audio?, filename: String) -> UIViewController {
         let vc = CompositionViewController(store: store, audio: audio, filename: filename)
         let sideMenuVC = SideMenuViewController(store: store, audio: audio)
 
@@ -66,7 +66,7 @@ class CompositionViewController: UIViewController {
         return container
     }
 
-    private init(store: PartStore, audio: Audio, filename: String) {
+    private init(store: PartStore, audio: Audio?, filename: String) {
         self.store = store
         self.audio = audio
         self.partSaver = PartSaver(partStore: store, filename: filename)
@@ -169,6 +169,14 @@ extension CompositionViewController: PartStoreObserver {
 
         measureNumberLabel.text = "\(store.currentMeasure)"
         measureNumberLabel.sizeToFit()
+    }
+
+    func noteAdded(in measure: Int, at position: Rational) {
+        audio?.playNote(part: store.part, measure: measure, position: position)
+    }
+
+    func noteModified(in measure: Int, at position: Rational) {
+        audio?.playNote(part: store.part, measure: measure, position: position)
     }
 }
 

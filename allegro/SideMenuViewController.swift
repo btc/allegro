@@ -13,7 +13,7 @@ import UIKit
 class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
-    fileprivate var audio: Audio
+    fileprivate var audio: Audio?
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -86,7 +86,7 @@ class SideMenuViewController: UIViewController {
         return v
     }()
 
-    init(store: PartStore, audio: Audio) {
+    init(store: PartStore, audio: Audio?) {
         self.store = store
         self.audio = audio
         super.init(nibName: nil, bundle: nil)
@@ -186,7 +186,7 @@ class SideMenuViewController: UIViewController {
     }
     
     func playButtonTapped() {
-        audio.playMeasure(measure: store.currentMeasure)
+        audio?.playMeasure(part: store.part, measure: store.currentMeasure)
         slideMenuController()?.closeRight()
     }
 }

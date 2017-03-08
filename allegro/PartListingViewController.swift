@@ -11,7 +11,7 @@ import UIKit
 
 class PartListingViewController: UIViewController {
     
-    let audio: Audio
+    let audio: Audio?
     
     fileprivate static let deletionLabel: UILabel = {
         let v = UILabel()
@@ -39,7 +39,7 @@ class PartListingViewController: UIViewController {
 
     fileprivate var files = [(filename: String, modified: Date)]()
     
-    init(audio: Audio) {
+    init(audio: Audio?) {
         self.audio = audio
         super.init(nibName: nil, bundle: nil)
     }
@@ -74,7 +74,6 @@ class PartListingViewController: UIViewController {
         }
 
         let store = PartStore(part: part)
-        audio.store = store
 
         let vc = CompositionViewController.create(store: store, audio: audio, filename: filename)
         navigationController?.pushViewController(vc, animated: false)
@@ -105,7 +104,6 @@ class PartListingViewController: UIViewController {
 
     func newCompositionTapped() {
         let store = PartStore(part: newPart())
-        audio.store = store
         let vc = CompositionViewController.create(store: store, audio: audio, filename: PartFileManager.nextFilename())
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -182,7 +180,6 @@ extension PartListingViewController: UITableViewDelegate {
         let part = PartFileManager.load(filename: filename)
 
         let partStore = PartStore(part: part)
-        audio.store = partStore
 
         let vc = CompositionViewController.create(store: partStore, audio: audio, filename: filename)
         navigationController?.pushViewController(vc, animated: true)

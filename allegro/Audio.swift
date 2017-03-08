@@ -11,14 +11,6 @@ import Rational
 import MusicKit
 
 class Audio {
-    var store: PartStore? {
-        didSet {
-            store?.subscribe(self)
-        }
-        willSet {
-            store?.unsubscribe(self)
-        }
-    }
 
     let mixer = AKMixer()
     let sequence = AKSequencer()
@@ -43,18 +35,16 @@ class Audio {
         AudioKit.stop()
     }
 
-    func playMeasure(measure: Int) {
-        guard let store = store else { return }
+    func playMeasure(part: Part, measure: Int) {
         sequence.tracks[0].clear()
 
-        //let m = store.part.measures[measure]
-        let numMeasures = store.measureCount - measure
-        let sequenceLength = AKDuration(beats: Double(store.part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(store.part.tempo))
+        let numMeasures = part.measures.count - measure
+        let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
         sequence.setLength(sequenceLength)
         var curBeat = 0
         
-        for index in stride(from: measure, through: store.measureCount-1, by: 1) {
-            let m = store.part.measures[index]
+        for index in stride(from: measure, through: part.measures.count - 1, by: 1) {
+            let m = part.measures[index]
             for notePos in m.notes {
                 guard let note = m.note(at: notePos.pos) else { return }
                 let akpos = AKDuration(beats: Double(curBeat))
@@ -67,13 +57,38 @@ class Audio {
             }
         }
 
-        sequence.setTempo(Double(store.part.tempo))
+        sequence.setTempo(Double(part.tempo))
         sequence.play()
 
         sequence.rewind()
     }
-    
 
+    func playNote(part: Part, measure: Int, position: Rational) {
+
+        sequence.tracks[0].clear()
+
+        let m = part.measures[measure]
+
+        let sequenceLength = AKDuration(beats: Double(m.timeSignature.numerator), tempo: Double(part.tempo))
+        sequence.setLength(sequenceLength)
+
+        guard let note = m.note(at: position) else { return }
+
+        if note.rest { return } // don't play rests
+
+        // let akpos = AKDuration(beats: Double(m.timeSignature.numerator) * position.double)
+        let akpos = AKDuration(beats: 0)
+        let akdur = AKDuration(beats: note.duration.double)
+
+        let pitch = midiPitch(for: note)
+
+        sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
+        sequence.setTempo(Double(part.tempo))
+        sequence.play()
+        
+        sequence.rewind()
+    }
+    
     fileprivate func midiPitch(for note: Note) -> Int {
         var chroma: Chroma = .c
         switch note.accidental {
@@ -134,37 +149,5 @@ class Audio {
         }
 
         return Int(Pitch(chroma: chroma, octave: UInt(note.octave)).midi)
-    }
-}
-
-extension Audio: PartStoreObserver {
-    func noteAdded(in measure: Int, at position: Rational) {
-        guard let store = store else { return }
-        sequence.tracks[0].clear()
-
-        let m = store.part.measures[measure]
-
-        let sequenceLength = AKDuration(beats: Double(m.timeSignature.numerator), tempo: Double(store.part.tempo))
-        sequence.setLength(sequenceLength)
-
-        guard let note = m.note(at: position) else { return }
-
-        if note.rest { return } // don't play rests
-
-        // let akpos = AKDuration(beats: Double(m.timeSignature.numerator) * position.double)
-        let akpos = AKDuration(beats: 0)
-        let akdur = AKDuration(beats: note.duration.double)
-
-        let pitch = midiPitch(for: note)
-
-        sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
-        sequence.setTempo(Double(store.part.tempo))
-        sequence.play()
-
-        sequence.rewind()
-    }
-
-    func noteModified(in measure: Int, at position: Rational) {
-        noteAdded(in: measure, at: position)
     }
 }
