@@ -10,18 +10,22 @@ import UIKit
 
 class RestView: NoteActionView {
     fileprivate var images = [UIImageView()]
+    static let restImages = [
+        "quarter": #imageLiteral(resourceName: "quarterrest"),
+        "eighth": #imageLiteral(resourceName: "eighthrest")
+    ]
     
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
         let image = images[0]
         
         if note.note.value == .quarter {
-            image.image = #imageLiteral(resourceName: "quarterrest")
+            image.image = RestView.restImages["quarter"]
         } else if note.note.value.nominalDuration <= Note.Value.eighth.nominalDuration {
-            image.image = #imageLiteral(resourceName: "eighthrest")
+            image.image = RestView.restImages["eighth"]
             if note.note.value == .sixteenth {
                 let secondImage = UIImageView()
-                secondImage.image = #imageLiteral(resourceName: "eighthrest")
+                secondImage.image = RestView.restImages["eighth"]
                 images.append(secondImage)
             }
         } else {
