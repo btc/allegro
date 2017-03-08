@@ -29,6 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = RootNavigationViewController(rootViewController: PartListingViewController(audio: audio))
         window?.makeKeyAndVisible()
         Log.info?.message("App launched!")
+        DispatchQueue.main.async {
+            self.audio?.start()
+        }
         return true
     }
 

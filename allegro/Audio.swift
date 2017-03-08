@@ -34,8 +34,9 @@ class Audio {
     }
 
     func playMeasure(part: Part, measure: Int) {
-        sequence.tracks[0].clear()
-
+        if !sequence.tracks[0].isEmpty {
+            sequence.tracks[0].clear()
+        }
         let numMeasures = part.measures.count - measure
         let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
         sequence.setLength(sequenceLength)
@@ -63,7 +64,9 @@ class Audio {
 
     func playNote(part: Part, measure: Int, position: Rational) {
 
-        sequence.tracks[0].clear()
+        if !sequence.tracks[0].isEmpty {
+            sequence.tracks[0].clear()
+        }
 
         let m = part.measures[measure]
 
