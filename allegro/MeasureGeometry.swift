@@ -209,7 +209,6 @@ struct MeasureGeometry {
             var last = margin
             
             // Calculate the whitespace intervals between notes if there are any
-            // Also merges consecutive notes into contiguous interval
             for note in measure.notes {
                 let noteCenterX = defaultWidth * note.position.cgFloat / measure.timeSignature.cgFloat
                 let bbox = g.getBoundingBox(note: note)
@@ -223,8 +222,8 @@ struct MeasureGeometry {
             }
             
             // add the whitespace after the last note
-            if last < defaultWidth {
-                whitespace.append(Interval(last, defaultWidth))
+            if last - margin < defaultWidth {
+                whitespace.append(Interval(last, defaultWidth + margin))
             }
             
             let totalWhitespace = whitespace.reduce(0) {$0 + $1.end - $1.start}
@@ -233,14 +232,20 @@ struct MeasureGeometry {
                 let whitespaceScaling = (defaultWidth - totalBlackspace) / totalWhitespace
                 
                 var whitespaceBefore = margin
+                var blackspaceBefore = CGFloat(0)
                 
                 for (i, space) in whitespace.enumerated() {
                     let diff = (space.end - space.start) * whitespaceScaling
-                    let start = whitespaceBefore
-                    let end = space.start + diff
+                    let start = whitespaceBefore + blackspaceBefore
+                    let end = start + diff
+                    
+                    whitespace[i] = Interval(start, end)
                     
                     whitespaceBefore += diff
-                    whitespace[i] = Interval(start, end)
+                    
+                    if i < blackspace.count {
+                        blackspaceBefore += blackspace[i].end - blackspace[i].start
+                    }
                 }
                 
                 blackspace = zip(whitespace, blackspace).map {
@@ -248,6 +253,17 @@ struct MeasureGeometry {
                         $0.end,
                         $0.end + $1.end - $1.start
                     )
+                }
+            } else {
+                // even if we shrink all the notes we can't fit all of them in
+                // so we remove all the whitespace
+                var blackspaceBefore = CGFloat(margin)
+                for (i, space) in blackspace.enumerated() {
+                    let start = blackspaceBefore
+                    let end = start + space.end - space.start
+                    blackspace[i] = Interval(start, end)
+                    
+                    blackspaceBefore += space.end - space.start
                 }
             }
             
