@@ -13,6 +13,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    let audio = Audio()
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         Log.enable() // as early as possible
@@ -25,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             window = UIWindow(frame: UIScreen.main.bounds)
         }
-        window?.rootViewController = RootNavigationViewController(rootViewController: PartListingViewController())
+        window?.rootViewController = RootNavigationViewController(rootViewController: PartListingViewController(audio: audio))
         window?.makeKeyAndVisible()
         Log.info?.message("App launched!")
         return true
