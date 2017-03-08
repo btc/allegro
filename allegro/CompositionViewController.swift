@@ -141,7 +141,7 @@ class CompositionViewController: UIViewController {
 
         overviewView.frame = view.bounds
 
-        measureNumberLabel.frame.origin = CGPoint(x: noteSelectorMenu.frame.maxX + DEFAULT_MARGIN_PTS,
+        measureNumberLabel.frame.origin = CGPoint(x: view.bounds.width - measureNumberLabel.bounds.width - DEFAULT_MARGIN_PTS,
                                                   y: view.bounds.height - DEFAULT_MARGIN_PTS - measureNumberLabel.bounds.height)
     }
 
