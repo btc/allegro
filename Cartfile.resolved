@@ -1,5 +1,5 @@
 github "tadija/AEXML" "4.0.1"
-github "audiokit/AudioKit" "v3.5.1"
+github "audiokit/AudioKit" "v3.5.3"
 github "emaloney/CleanroomLogger" "5.0.0"
 github "MortimerGoro/MGSwipeTableCell" "1.5.6"
 github "benzguo/MusicKit" "0.3"
