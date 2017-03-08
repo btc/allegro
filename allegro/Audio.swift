@@ -32,11 +32,36 @@ class Audio {
         sequence.stop()
         AudioKit.stop()
     }
-
+    
     func playMeasure(part: Part, measure: Int) {
         if !sequence.tracks[0].isEmpty {
             sequence.tracks[0].clear()
         }
+        
+        var curBeat = 0
+        
+        let m = part.measures[measure]
+        let sequenceLength = AKDuration(beats: Double(m.timeSignature.numerator), tempo: Double(part.tempo))
+        sequence.setLength(sequenceLength)
+        
+        for notePos in m.notes {
+            guard let note = m.note(at: notePos.pos) else { return }
+            let akpos = AKDuration(beats: Double(curBeat))
+            let akdur = AKDuration(beats: note.duration.double)
+            let pitch = midiPitch(for: note)
+            if !note.rest {
+                sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
+            }
+            curBeat += 1
+        }
+        
+        sequence.setTempo(Double(part.tempo))
+        sequence.play()
+        
+        sequence.rewind()
+    }
+
+    func playFromCurrentMeasure(part: Part, measure: Int) {
         let numMeasures = part.measures.count - measure
         let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
         sequence.setLength(sequenceLength)
