@@ -86,9 +86,9 @@ class SideMenuViewController: UIViewController {
         return v
     }()
 
-    init(store: PartStore) {
+    init(store: PartStore, audio: Audio) {
         self.store = store
-        self.audio = Audio(store: store)
+        self.audio = audio
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -118,13 +118,11 @@ class SideMenuViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
-        audio.start()
         updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         store.unsubscribe(self)
-        audio.stop()
     }
 
     override func viewDidLayoutSubviews() {
@@ -189,6 +187,7 @@ class SideMenuViewController: UIViewController {
     
     func playButtonTapped() {
         audio.playMeasure(measure: store.currentMeasure)
+        slideMenuController()?.closeRight()
     }
 }
 
