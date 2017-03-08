@@ -40,7 +40,6 @@ class NoteSelectorMenu: UICollectionView {
         dataSource = self
         delegate = self // to get selected note callback
         isPagingEnabled = true // snaps the menu
-        alwaysBounceVertical = true
         selectItem(at: IndexPath(row: selectedNote, section: 0), animated: true, scrollPosition: .top)
         backgroundColor = NoteSelectorCell.unselectedCellColor // to match the unselected color of the cell
     }
