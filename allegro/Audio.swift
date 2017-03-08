@@ -11,17 +11,19 @@ import Rational
 import MusicKit
 
 class Audio {
-    var store: PartStore
+    var store: PartStore? {
+        didSet {
+            store?.subscribe(self)
+        }
+        willSet {
+            store?.unsubscribe(self)
+        }
+    }
 
     let mixer = AKMixer()
     let sequence = AKSequencer()
 
-    init(store: PartStore) {
-        self.store = store
-        store.subscribe(self)
-
-
-
+    init() {
         let oscillator = AKFMOscillatorBank()
         oscillator.modulatingMultiplier = 3
         oscillator.modulationIndex = 0.3
@@ -42,6 +44,7 @@ class Audio {
     }
 
     func playMeasure(measure: Int) {
+        guard let store = store else { return }
         sequence.tracks[0].clear()
 
         //let m = store.part.measures[measure]
@@ -136,7 +139,7 @@ class Audio {
 
 extension Audio: PartStoreObserver {
     func noteAdded(in measure: Int, at position: Rational) {
-
+        guard let store = store else { return }
         sequence.tracks[0].clear()
 
         let m = store.part.measures[measure]

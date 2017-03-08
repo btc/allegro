@@ -11,6 +11,8 @@ import UIKit
 
 class PartListingViewController: UIViewController {
     
+    let audio: Audio
+    
     fileprivate static let deletionLabel: UILabel = {
         let v = UILabel()
         v.text = "Delete"
@@ -36,7 +38,16 @@ class PartListingViewController: UIViewController {
     }()
 
     fileprivate var files = [(filename: String, modified: Date)]()
-
+    
+    init(audio: Audio) {
+        self.audio = audio
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) not supported")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -63,7 +74,7 @@ class PartListingViewController: UIViewController {
         }
 
         let store = PartStore(part: part)
-        let audio = Audio(store: store)
+        audio.store = store
 
         let vc = CompositionViewController.create(store: store, audio: audio, filename: filename)
         navigationController?.pushViewController(vc, animated: false)
@@ -94,7 +105,7 @@ class PartListingViewController: UIViewController {
 
     func newCompositionTapped() {
         let store = PartStore(part: newPart())
-        let audio = Audio(store: store)
+        audio.store = store
         let vc = CompositionViewController.create(store: store, audio: audio, filename: PartFileManager.nextFilename())
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -171,7 +182,7 @@ extension PartListingViewController: UITableViewDelegate {
         let part = PartFileManager.load(filename: filename)
 
         let partStore = PartStore(part: part)
-        let audio = Audio(store: partStore)
+        audio.store = partStore
 
         let vc = CompositionViewController.create(store: partStore, audio: audio, filename: filename)
         navigationController?.pushViewController(vc, animated: true)
