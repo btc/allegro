@@ -12,7 +12,6 @@ import MusicKit
 
 class Audio {
 
-    let mixer = AKMixer()
     let sequence = AKSequencer()
 
     init() {
@@ -22,8 +21,7 @@ class Audio {
         let melody = AKMIDINode(node: oscillator)
         _ = sequence.newTrack()
         sequence.tracks[0].setMIDIOutput(melody.midiIn)
-        mixer.connect(melody)
-        AudioKit.output = mixer
+        AudioKit.output = melody
     }
 
     func start() {
@@ -51,7 +49,7 @@ class Audio {
                 let akdur = AKDuration(beats: note.duration.double)
                 let pitch = midiPitch(for: note)
                 if !note.rest {
-                    sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
+                    sequence.tracks[0].add(noteNumber: pitch, velocity: 100, position: akpos, duration: akdur)
                 }
                 curBeat += 1
             }
@@ -82,14 +80,14 @@ class Audio {
 
         let pitch = midiPitch(for: note)
 
-        sequence.tracks[0].add(noteNumber: Int(pitch), velocity: 100, position: akpos, duration: akdur)
+        sequence.tracks[0].add(noteNumber: pitch, velocity: 100, position: akpos, duration: akdur)
         sequence.setTempo(Double(part.tempo))
         sequence.play()
         
         sequence.rewind()
     }
     
-    fileprivate func midiPitch(for note: Note) -> Int {
+    fileprivate func midiPitch(for note: Note) -> UInt8 {
         var chroma: Chroma = .c
         switch note.accidental {
         case .sharp:
@@ -148,6 +146,6 @@ class Audio {
         default: break // doubles
         }
 
-        return Int(Pitch(chroma: chroma, octave: UInt(note.octave)).midi)
+        return UInt8(Pitch(chroma: chroma, octave: UInt(note.octave)).midi)
     }
 }
