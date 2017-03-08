@@ -184,7 +184,7 @@ class MeasureView: UIView {
             // * note should be in the center of the spot available to it
             // * there should be a minimum spacing between notes
             if let noteView = view as? NoteView {
-                    let y = geometry.noteY(pitch: noteView.note.pitch)
+                let y = geometry.noteY(pitch: noteView.note.pitch)
                     
                 noteView.noteOrigin = CGPoint(x: startX, y: y)
                 //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
