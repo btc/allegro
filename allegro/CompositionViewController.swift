@@ -53,9 +53,9 @@ class CompositionViewController: UIViewController {
     private let partSaver: PartSaver
 
     //RHSide menu disabled for alpha
-    static func create(store: PartStore, filename: String) -> UIViewController {
-        let vc = CompositionViewController(store: store, filename: filename)
-        let sideMenuVC = SideMenuViewController(store: store)
+    static func create(store: PartStore, audio: Audio, filename: String) -> UIViewController {
+        let vc = CompositionViewController(store: store, audio: audio, filename: filename)
+        let sideMenuVC = SideMenuViewController(store: store, audio: audio)
 
         // NB(btc): The way the library provides customization (static options) makes it so that it's only feasible to have
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
@@ -66,14 +66,15 @@ class CompositionViewController: UIViewController {
         return container
     }
 
-    private init(store: PartStore, filename: String) {
+    private init(store: PartStore, audio: Audio, filename: String) {
         self.store = store
+        self.audio = audio
         self.partSaver = PartSaver(partStore: store, filename: filename)
 
         measureViewCollection = MeasureViewCollection(store: store)
         overviewView = OverviewView(store: store)
 
-        audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
+        //audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
 
         super.init(nibName: nil, bundle: nil)
 

@@ -10,7 +10,7 @@ import SwipyCell
 import UIKit
 
 class PartListingViewController: UIViewController {
-
+    
     fileprivate static let deletionLabel: UILabel = {
         let v = UILabel()
         v.text = "Delete"
@@ -63,8 +63,9 @@ class PartListingViewController: UIViewController {
         }
 
         let store = PartStore(part: part)
+        let audio = Audio(store: store)
 
-        let vc = CompositionViewController.create(store: store, filename: filename)
+        let vc = CompositionViewController.create(store: store, audio: audio, filename: filename)
         navigationController?.pushViewController(vc, animated: false)
     }
 
@@ -93,7 +94,8 @@ class PartListingViewController: UIViewController {
 
     func newCompositionTapped() {
         let store = PartStore(part: newPart())
-        let vc = CompositionViewController.create(store: store, filename: PartFileManager.nextFilename())
+        let audio = Audio(store: store)
+        let vc = CompositionViewController.create(store: store, audio: audio, filename: PartFileManager.nextFilename())
         navigationController?.pushViewController(vc, animated: true)
     }
 
@@ -105,6 +107,7 @@ class PartListingViewController: UIViewController {
         }
         return Part()
     }
+    
 }
 
 extension PartListingViewController: UITableViewDataSource {
@@ -168,8 +171,9 @@ extension PartListingViewController: UITableViewDelegate {
         let part = PartFileManager.load(filename: filename)
 
         let partStore = PartStore(part: part)
+        let audio = Audio(store: partStore)
 
-        let vc = CompositionViewController.create(store: partStore, filename: filename)
+        let vc = CompositionViewController.create(store: partStore, audio: audio, filename: filename)
         navigationController?.pushViewController(vc, animated: true)
     }
 
