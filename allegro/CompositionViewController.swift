@@ -167,7 +167,7 @@ extension CompositionViewController: PartStoreObserver {
 
         overviewView.isHidden = store.view != .overview // TODO: animate this transition
 
-        measureNumberLabel.text = "\(store.currentMeasure)"
+        measureNumberLabel.text = "\(store.currentMeasure + 1)"
         measureNumberLabel.sizeToFit()
     }
 
