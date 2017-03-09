@@ -59,23 +59,6 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
         view.addSubview(newCompositionButton) // on top of part listing
 
         newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
-
-        var part: Part
-        var filename: String
-        if let name = PartFileManager.mostRecentFilename() {
-            // use this filename
-            part = PartFileManager.load(filename: name)
-            filename = name
-        } else {
-            // use a new part
-            part = newPart()
-            filename = PartFileManager.nextFilename()
-        }
-
-        let store = PartStore(part: part)
-
-        let vc = CompositionViewController.create(store: store, audio: audio, filename: filename)
-        navigationController?.pushViewController(vc, animated: false)
     }
 
     override func viewWillAppear(_ animated: Bool) {
