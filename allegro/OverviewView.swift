@@ -35,6 +35,9 @@ class OverviewView: UIView {
     init(store: PartStore) {
         self.store = store
         super.init(frame: .zero)
+
+        store.subscribe(self)
+
         backgroundColor = .allegroPurple
 
         for v in [measures] {
@@ -93,5 +96,12 @@ extension OverviewView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let widthReservedForContent = bounds.width - 3 * type(of: self).margin
         return CGSize(width: widthReservedForContent / 2, height: 150)
+    }
+}
+
+
+extension OverviewView: PartStoreObserver {
+    func partStoreChanged() {
+        measures.reloadData()
     }
 }
