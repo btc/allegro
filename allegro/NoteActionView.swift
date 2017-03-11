@@ -13,6 +13,8 @@ class NoteActionView: UIView {
     let note: NoteViewModel
     let geometry: NoteGeometry
     let store: PartStore
+    
+    var dotView: UIView?
 
     var isSelected: Bool = false {
         didSet {
@@ -57,12 +59,39 @@ class NoteActionView: UIView {
         let gr = UILongPressGestureRecognizer()
         return gr
     }()
+    
+    func createDotView() -> UIView? {
+        guard note.note.dot != .none else { return nil }
+        
+        let view = UIView()
+        let dframe = geometry.getDotBoundingBox(note: note)
+        view.frame = dframe
+        let dotLayer = CAShapeLayer()
+        let dotSize = CGSize(width: 2 * geometry.dotRadius, height: 2 * geometry.dotRadius)
+        let dotPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: dotSize))
+        
+        if note.note.dot == .double {
+            let secondDotOrigin = CGPoint.zero.offset(dx: dframe.size.width - dotSize.width, dy: 0)
+            dotPath.append(UIBezierPath(ovalIn: CGRect(origin: secondDotOrigin, size:dotSize)))
+        }
+        
+        dotLayer.path = dotPath.cgPath
+        dotLayer.fillColor = UIColor.black.cgColor
+        view.layer.addSublayer(dotLayer)
+        return view
+    }
 
     init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         self.note = note
         self.geometry = geometry
         self.store = store
         super.init(frame: .zero)
+        
+        dotView = createDotView()
+        if let d = dotView {
+            addSubview(d)
+        }
+        
         store.subscribe(self)
         clipsToBounds = false
         let actionRecognizers: [(Selector, UIGestureRecognizer)] = [

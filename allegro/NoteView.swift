@@ -127,27 +127,6 @@ class NoteView: NoteActionView {
         label.textAlignment = .right
         return label
     }
-    
-    var dotView: UIView? {
-        guard note.note.dot != .none else { return nil }
-        
-        let view = UIView()
-        let dframe = geometry.getDotBoundingBox(note: note)
-        view.frame = dframe
-        let dotLayer = CAShapeLayer()
-        let dotSize = CGSize(width: 2 * geometry.dotRadius, height: 2 * geometry.dotRadius)
-        let dotPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: dotSize))
-        
-        if note.note.dot == .double {
-            let secondDotOrigin = CGPoint.zero.offset(dx: dframe.size.width - dotSize.width, dy: 0)
-            dotPath.append(UIBezierPath(ovalIn: CGRect(origin: secondDotOrigin, size:dotSize)))
-        }
-        
-        dotLayer.path = dotPath.cgPath
-        dotLayer.fillColor = UIColor.black.cgColor
-        view.layer.addSublayer(dotLayer)
-        return view
-    }
 
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
@@ -158,10 +137,6 @@ class NoteView: NoteActionView {
         
         if let a = accidentalLabel {
             addSubview(a)
-        }
-        
-        if let d = dotView {
-            addSubview(d)
         }
 
         let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]

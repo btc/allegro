@@ -91,6 +91,7 @@ struct NoteGeometry {
                 return CGRect(origin: .zero, size: size)
             }
         }
+        
         return frame.boundingBox(other: getAccidentalFrame(note: note)).boundingBox(other: getDotBoundingBox(note: note))
     }
 }
