@@ -26,13 +26,6 @@ struct NoteGeometry {
         return CGSize(width: defaultNoteWidth * scale, height: defaultNoteHeight * scale)
     }
     
-    // origin of the note head in the parent coordinate frame
-    var frame: CGRect {
-        return CGRect(
-            origin: origin,
-            size: size
-        )
-    }
     
     let restBoxWidth = CGFloat(30)
     let restSize = [
@@ -48,6 +41,7 @@ struct NoteGeometry {
     }
     
     func getAccidentalFrame(note: NoteViewModel) -> CGRect {
+        let frame = getFrame(note: note)
         if !note.displayAccidental {
             return CGRect(origin: origin, size: .zero)
         }
@@ -66,7 +60,22 @@ struct NoteGeometry {
         return CGRect(origin: accidentalOrigin, size: size)
     }
     
+    
+    func getFrame(note: NoteViewModel) -> CGRect {
+        if note.note.rest {
+            if let size = restSize[note.note.value] {
+                return CGRect(origin: origin, size: size)
+            }
+        }
+        
+        return CGRect(
+            origin: origin,
+            size: size
+        )
+    }
+    
     func getDotBoundingBox(note: NoteViewModel) -> CGRect {
+        let frame = getFrame(note: note)
         var centerY = origin.offset(dx: frame.size.width + dotSpacing, dy: frame.size.height / 4)
         if !note.onStaffLine {
             centerY = centerY.offset(dx: 0, dy: frame.size.height / 4)
@@ -86,12 +95,6 @@ struct NoteGeometry {
     }
     
     func getBoundingBox(note: NoteViewModel) -> CGRect {
-        if note.note.rest {
-            if let size = restSize[note.note.value] {
-                return CGRect(origin: .zero, size: size)
-            }
-        }
-        
-        return frame.boundingBox(other: getAccidentalFrame(note: note)).boundingBox(other: getDotBoundingBox(note: note))
+        return getFrame(note: note).boundingBox(other: getAccidentalFrame(note: note)).boundingBox(other: getDotBoundingBox(note: note))
     }
 }
