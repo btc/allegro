@@ -130,8 +130,10 @@ extension MeasureViewCollection: PartStoreObserver {
         case .erase:
             panGestureRecognizer.minimumNumberOfTouches = 2
         }
-        if store.view == .measure && visibleMeasure != nil && store.currentMeasure != visibleMeasure?.item {
-            scrollToItem(at: IndexPath(item: store.currentMeasure, section: 0), at: .centeredHorizontally, animated: true)
+        if visibleMeasure != nil && store.currentMeasure != visibleMeasure?.item {
+            let item = IndexPath(item: store.currentMeasure, section: 0)
+            visibleMeasure = item
+            scrollToItem(at: item, at: .centeredHorizontally, animated: false)
         }
     }
 }
