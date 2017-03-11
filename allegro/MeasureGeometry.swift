@@ -69,7 +69,6 @@ struct MeasureGeometry {
         // the bbox can extend past the note frame itself for dots
         // which we don't have for now but in the future :)
         let bbox = noteGeometry.getBoundingBox(note: measure.notes[measure.notes.count - 1])
-        finalNoteEndspacing += bbox.origin.x - noteGeometry.frame.origin.x
         finalNoteEndspacing += bbox.size.width
         finalNoteEndspacing += margin
         
@@ -167,7 +166,7 @@ struct MeasureGeometry {
 
     func pointToPositionInTime(x: CGFloat) -> Rational {
         let measure = state.measure
-        var notesCenterX = noteStartX.map { $0 + noteGeometry.frame.size.width / 2 }
+        var notesCenterX = zip(noteStartX, measure.notes).map { $0 + noteGeometry.getFrame(note: $1).size.width / 2 }
         notesCenterX.insert(0, at: 0)
         notesCenterX.append(totalWidth)
         
@@ -271,7 +270,7 @@ struct MeasureGeometry {
             // right now blackspace includes the necessary space for an accidental if it exists
             // we now remove that to get the start position of the note frame by itself
             let startX = zip(blackspace, measure.notes).map {
-                $0.start + g.frame.origin.x - g.getBoundingBox(note: $1).origin.x
+                $0.start + g.getFrame(note: $1).origin.x - g.getBoundingBox(note: $1).origin.x
             }
             
             return startX
