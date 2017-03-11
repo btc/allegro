@@ -92,7 +92,25 @@ class MusicXMLParser {
                 let _ = position.addChild(name: "numerator", value: "\(notePos.pos.numerator)")
                 let _ = position.addChild(name: "denominator", value: "\(notePos.pos.denominator)")
 
-                // TODO dots
+                // make a NoteViewModel to check dot position
+                let nvm = NoteViewModel(note: n, position: notePos.pos)
+                switch n.dot {
+                case .single:
+                    if nvm.onStaffLine {
+                        let _ = note.addChild(name: "dot", attributes: ["placement": "above"])
+                    } else {
+                        let _ = note.addChild(name: "dot")
+                    }
+                case .double:
+                    if nvm.onStaffLine {
+                        let _ = note.addChild(name: "dot", attributes: ["placement": "above"])
+                        let _ = note.addChild(name: "dot", attributes: ["placement": "above"])
+                    } else {
+                        let _ = note.addChild(name: "dot")
+                        let _ = note.addChild(name: "dot")
+                    }
+                case .none: break // do nothing
+                }
 
             }
         }
@@ -144,7 +162,16 @@ class MusicXMLParser {
         // create note
         let note = Note(value: value, letter: letter, octave: octave, accidental: accidental, rest: rest)
 
-        // TODO dots. maybe use duration?
+        // check for dots
+        let dots = noteElement.childrenMatch(name: "dot")
+        switch dots.count {
+        case 2:
+            note.dot = .double
+        case 1:
+            note.dot = .single
+        default:
+            note.dot = .none
+        }
 
         // set the rational position
         var position: Rational = 0
