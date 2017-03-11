@@ -202,6 +202,8 @@ class MeasureView: UIView {
                         let y = geometry.staffY(pitch: 0) - size.height / 2
                         restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
                     }
+                    
+                    restView.setDotPosition(geometry: geometry)
                 }
             }
         }

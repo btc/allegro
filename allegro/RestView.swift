@@ -15,6 +15,8 @@ class RestView: NoteActionView {
         "eighth": #imageLiteral(resourceName: "eighthrest")
     ]
     
+    let sixteenthSecondImageOffset = CGPoint(x: -14.5, y: 45)
+    
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
         let image = images[0]
@@ -57,11 +59,19 @@ class RestView: NoteActionView {
             // because we can't find an actual sixteenth rest that fits with the eighth rest
             let center = bounds.origin.offset(dx: bounds.size.width / 2, dy: bounds.size.height / 2)
             guard let size = geometry.restSize[Note.Value.eighth] else { return }
-            let origin1 = center.offset(dx: -size.width / 2, dy: -size.height / 2)
-            images[0].frame = CGRect(origin: origin1, size: size)
-            let origin2 = origin1.offset(dx: -14.5, dy: 45)
+            let origin1 = center.offset(dx: -sixteenthSecondImageOffset.x - size.width / 2, dy: -size.height / 2)
+            let origin2 = origin1.offset(dx: sixteenthSecondImageOffset.x, dy: sixteenthSecondImageOffset.y)
             
+            
+            images[0].frame = CGRect(origin: origin1, size: size)
             images[1].frame = CGRect(origin: origin2, size: size)
         }
     }
+    
+    func setDotPosition(geometry: MeasureGeometry) {
+        guard let view = dotView else { return }
+        let y = geometry.staffY(pitch: 1) - view.frame.height / 2
+        view.frame.origin.y = y - frame.origin.y
+    }
+    
 }
