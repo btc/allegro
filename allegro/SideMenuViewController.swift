@@ -196,12 +196,12 @@ class SideMenuViewController: UIViewController {
     }
 
     func exportButtonTapped() {
-        // text to share
-        let text = "This is some text that I want to share."
+        let part = PartFileManager.load(filename: filename)
+        let xml = MusicXMLParser.generate(part: part).xml
 
         // set up activity view controller
-        let textToShare = [ text ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        let items = [ xml ]
+        let activityViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
 
         // present the view controller
