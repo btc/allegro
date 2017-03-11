@@ -15,23 +15,33 @@ class RestView: NoteActionView {
         "eighth": #imageLiteral(resourceName: "eighthrest")
     ]
     
+    static let selectedRestImages = [
+        "quarter": #imageLiteral(resourceName: "selectedquarterrest"),
+        "eighth": #imageLiteral(resourceName: "selectedeighthrest")
+    ]
+    
     let sixteenthSecondImageOffset = CGPoint(x: -14.5, y: 45)
     
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
         let image = images[0]
+        if (isSelected) {
+            print("I'm selected!")
+        }
+        
+        let imageDict = isSelected ? RestView.selectedRestImages : RestView.restImages
         
         if note.note.value == .quarter {
-            image.image = RestView.restImages["quarter"]
+            image.image = imageDict["quarter"]
         } else if note.note.value.nominalDuration <= Note.Value.eighth.nominalDuration {
-            image.image = RestView.restImages["eighth"]
+            image.image = imageDict["eighth"]
             if note.note.value == .sixteenth {
                 let secondImage = UIImageView()
-                secondImage.image = RestView.restImages["eighth"]
+                secondImage.image = imageDict["eighth"]
                 images.append(secondImage)
             }
         } else {
-            image.backgroundColor = UIColor.black
+            image.backgroundColor = isSelected ? .allegroBlue : .black
         }
         
         for image in images {
