@@ -83,6 +83,8 @@ class MusicXMLParser {
 
                 let _ = note.addChild(name: "type", value: "\(n.value.type)")
 
+                Log.info?.message("GENERATE TYPE: \(n.value.type)")
+
                 if n.rest {
                     note.addChild(name: "rest")
                 }
@@ -151,6 +153,7 @@ class MusicXMLParser {
 
         // check for note type, also called value. eg. quarter, eighth, etc
         if let typeElem = noteElement.firstChildMatch(name: "type") {
+            Log.info?.message("PARSE TYPE: \(typeElem.value)")
             value = typeElem.safeValue(parse: Note.Value.init, fallback: .quarter)
         }
 
@@ -330,6 +333,7 @@ extension Note.Value {
         case "half": self = .half
         case "quarter": self = .quarter
         case "eighth": self = .eighth
+        case "sixteenth": self = .sixteenth
         default: self = .quarter
         }
     }
