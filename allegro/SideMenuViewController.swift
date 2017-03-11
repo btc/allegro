@@ -14,6 +14,7 @@ class SideMenuViewController: UIViewController {
 
     fileprivate let store: PartStore
     fileprivate var audio: Audio?
+    fileprivate let filename: String
 
     private let NewButton: UIView = {
         let v = UIButton()
@@ -47,12 +48,14 @@ class SideMenuViewController: UIViewController {
         return v
     }()
     
-    private let Export: UIView = {
-        let v = UILabel() // TODO: ppsekhar make this a button
-        v.text = "Export"
-        v.textAlignment = .center
-        v.textColor = .white
-        v.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
+    private let exportButton: UIButton = {
+        let v = UIButton()
+        v.setTitle("Export", for: .normal)
+        v.backgroundColor = .clear
+        v.titleLabel?.textAlignment = .center
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
+        v.showsTouchWhenHighlighted = true
         return v
     }()
 
@@ -86,9 +89,10 @@ class SideMenuViewController: UIViewController {
         return v
     }()
 
-    init(store: PartStore, audio: Audio?) {
+    init(store: PartStore, audio: Audio?, filename: String) {
         self.store = store
         self.audio = audio
+        self.filename = filename
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -101,7 +105,7 @@ class SideMenuViewController: UIViewController {
         
         view.backgroundColor = UIColor.allegroPurple
         view.addSubview(NewButton)
-        view.addSubview(Export)
+        view.addSubview(exportButton)
         view.addSubview(instructionsButton)
         view.addSubview(eraseButton)
         view.addSubview(editButton)
@@ -114,6 +118,7 @@ class SideMenuViewController: UIViewController {
         timeSignature.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
         keySignature.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
+        exportButton.addTarget(self, action: #selector(exportButtonTapped), for: .touchUpInside)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -129,7 +134,7 @@ class SideMenuViewController: UIViewController {
         //refernece values
         let parent = view.bounds
 
-        let verticallyStackedButtons = [NewButton, Export, instructionsButton]
+        let verticallyStackedButtons = [NewButton, exportButton, instructionsButton]
         let modeButtonBlocks = [editButton, eraseButton, playButton]
         let signatureButtonBlocks = [keySignature, timeSignature]
 
@@ -188,6 +193,19 @@ class SideMenuViewController: UIViewController {
     func playButtonTapped() {
         audio?.playMeasure(part: store.part, measure: store.currentMeasure)
         slideMenuController()?.closeRight()
+    }
+
+    func exportButtonTapped() {
+        // text to share
+        let text = "This is some text that I want to share."
+
+        // set up activity view controller
+        let textToShare = [ text ]
+        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+
+        // present the view controller
+        present(activityViewController, animated: true, completion: nil)
     }
 }
 

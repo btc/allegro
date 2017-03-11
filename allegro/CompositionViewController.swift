@@ -55,7 +55,7 @@ class CompositionViewController: UIViewController {
     //RHSide menu disabled for alpha
     static func create(store: PartStore, audio: Audio?, filename: String) -> UIViewController {
         let vc = CompositionViewController(store: store, audio: audio, filename: filename)
-        let sideMenuVC = SideMenuViewController(store: store, audio: audio)
+        let sideMenuVC = SideMenuViewController(store: store, audio: audio, filename: filename)
 
         // NB(btc): The way the library provides customization (static options) makes it so that it's only feasible to have
         // one sidemenu controller in the project. If we decide we need another, with different options, fork the repo
