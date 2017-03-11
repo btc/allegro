@@ -118,6 +118,7 @@ struct MeasureGeometry {
 
     var ledgerLineGuides: [Line] {
         var arr = [Line]()
+        if staffHeight < 30 { return arr }
         for i in stride(from: 0, to: numLedgerLinesAbove, by: 1) {
             let y = DEFAULT_MARGIN_PTS + staffHeight * CGFloat(i)
             let start = CGPoint(x: 0, y: y)
