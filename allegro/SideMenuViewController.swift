@@ -15,19 +15,11 @@ class SideMenuViewController: UIViewController {
     fileprivate let store: PartStore
     fileprivate var audio: Audio?
     fileprivate let filename: String
-
-    private let NewButton: UIView = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "new-page"), for: UIControlState.normal)
-        v.imageView?.contentMode = .scaleAspectFit
-        return v
-    }()
     
     private let instructionsButton: UIView = {
         let v = UIButton()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "question"), for: UIControlState.normal)
+        v.setImage(#imageLiteral(resourceName: "help"), for: .normal)
         v.imageView?.contentMode = .scaleAspectFit
         return v
     }()
@@ -50,21 +42,16 @@ class SideMenuViewController: UIViewController {
     
     private let exportButton: UIButton = {
         let v = UIButton()
-        v.setTitle("Export", for: .normal)
         v.backgroundColor = .clear
-        v.titleLabel?.textAlignment = .center
-        v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT_BOLD, size: 20)
+        v.setImage(#imageLiteral(resourceName: "share"), for: .normal)
         v.showsTouchWhenHighlighted = true
         return v
     }()
 
     private let playButton: UIButton = {
         let v = UIButton()
-        v.setTitle(" ► ", for: .normal)
         v.backgroundColor = .clear
-        v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE)
+        v.setImage(#imageLiteral(resourceName: "play"), for: .normal)
         v.showsTouchWhenHighlighted = true
         return v
     }()
@@ -84,7 +71,6 @@ class SideMenuViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.allegroPurple
-        view.addSubview(NewButton)
         view.addSubview(exportButton)
         view.addSubview(instructionsButton)
         view.addSubview(timeSignature)
@@ -110,7 +96,7 @@ class SideMenuViewController: UIViewController {
         //refernece values
         let parent = view.bounds
 
-        let verticallyStackedButtons = [NewButton, exportButton, instructionsButton]
+        let verticallyStackedButtons = [exportButton, instructionsButton]
         let modeButtonBlocks = [playButton]
         let signatureButtonBlocks = [keySignature, timeSignature]
 
