@@ -59,26 +59,6 @@ class SideMenuViewController: UIViewController {
         return v
     }()
 
-    //TODO: ppsekhar make these highlight upon selection/toggle
-    private let editButton: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "note mode"), for: UIControlState.normal)
-        v.imageView?.layer.minificationFilter = kCAFilterTrilinear
-        v.showsTouchWhenHighlighted = true
-        v.imageView?.contentMode = .scaleAspectFit
-        return v
-    }()
-
-    private let eraseButton: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "eraser"), for: UIControlState.normal)
-        v.showsTouchWhenHighlighted = true
-        v.imageView?.contentMode = .scaleAspectFit
-        return v
-    }()
-    
     private let playButton: UIButton = {
         let v = UIButton()
         v.setTitle(" ► ", for: .normal)
@@ -107,14 +87,10 @@ class SideMenuViewController: UIViewController {
         view.addSubview(NewButton)
         view.addSubview(exportButton)
         view.addSubview(instructionsButton)
-        view.addSubview(eraseButton)
-        view.addSubview(editButton)
         view.addSubview(timeSignature)
         view.addSubview(keySignature)
         view.addSubview(playButton)
-        
-        eraseButton.addTarget(self, action: #selector(eraseButtonTapped), for: .touchUpInside)
-        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+
         timeSignature.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
         keySignature.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
@@ -135,7 +111,7 @@ class SideMenuViewController: UIViewController {
         let parent = view.bounds
 
         let verticallyStackedButtons = [NewButton, exportButton, instructionsButton]
-        let modeButtonBlocks = [editButton, eraseButton, playButton]
+        let modeButtonBlocks = [playButton]
         let signatureButtonBlocks = [keySignature, timeSignature]
 
         for (i, b) in verticallyStackedButtons.enumerated() {
@@ -165,19 +141,8 @@ class SideMenuViewController: UIViewController {
     }
 
     func updateUI() {
-        editButton.isSelected = store.mode == .edit
-        eraseButton.isSelected = store.mode == .erase
         timeSignature.setTitle(store.part.timeSignature.description, for: .normal)
         keySignature.setTitle(store.part.keySignature.description, for: .normal)
-    }
-    func eraseButtonTapped() {
-        store.mode = .erase
-        slideMenuController()?.closeRight()
-    }
-
-    func editButtonTapped() {
-        store.mode = .edit
-        slideMenuController()?.closeRight()
     }
     
     func timeSignaturesTapped() {
