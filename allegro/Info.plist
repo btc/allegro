@@ -32,6 +32,8 @@
 	</array>
 	<key>UIAppFonts</key>
 	<array>
+		<string>MontSerrat-ExtraLight.otf</string>
+		<string>MontSerrat-Light.otf</string>
 		<string>DejaVuSans.ttf</string>
 		<string>Montserrat-Bold.ttf</string>
 		<string>Montserrat-Regular.ttf</string>

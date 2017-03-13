@@ -141,9 +141,9 @@ private extension Key {
     var description: String {
         switch fifths {
         case 7:
-            return "C♯"
+            return "C♯ Maj"
         case 6:
-            return "F♯"
+            return "F♯ Maj"
         case 5:
             return "B Maj"
         case 4:
@@ -159,19 +159,19 @@ private extension Key {
         case -1:
             return "F Maj"
         case -2:
-            return "B♭"
+            return "B♭ Maj"
         case -3:
-            return "E♭"
+            return "E♭ Maj"
         case -4:
-            return "A♭"
+            return "A♭ Maj"
         case -5:
-            return "D♭"
+            return "D♭ Maj"
         case -6:
-            return "G♭"
+            return "G♭ Maj"
         case -7:
-            return "C♭"
+            return "C♭ Maj"
         default: // Defaults to C Major if invalid fifth used
-            return "C"
+            return "C Maj"
         }
     }
 }
