@@ -144,6 +144,7 @@ class SideMenuViewController: UIViewController {
         keyButton.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
         exportButton.addTarget(self, action: #selector(exportButtonTapped), for: .touchUpInside)
+        helpButton.addTarget(self, action: #selector(helpButtonTapped), for: .touchUpInside)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -223,6 +224,11 @@ class SideMenuViewController: UIViewController {
 
         // present the view controller
         present(activityViewController, animated: true, completion: nil)
+    }
+
+    func helpButtonTapped() {
+        // TODO
+        Log.info?.message("Help Button Tapped. TODO open a help page or tutorial")
     }
 }
 
