@@ -12,39 +12,40 @@ import UIKit
 
 class SideMenuViewController: UIViewController {
 
+    private static let leftXMargin: CGFloat = 30
+    private static let leftYMargin: CGFloat = 10
+    private static let rightXMargin: CGFloat = 40
+    private static let rightYMargin: CGFloat = 10
+    private static let labelHeight: CGFloat = 50
+    private static let labelFontSize: CGFloat = 16
+
     fileprivate let store: PartStore
     fileprivate var audio: Audio?
     fileprivate let filename: String
-    
-    private let instructionsButton: UIView = {
-        let v = UIButton()
+
+
+    private let exportLabel: UILabel = {
+        let v = UILabel()
         v.backgroundColor = .clear
-        v.setImage(#imageLiteral(resourceName: "help"), for: .normal)
-        v.imageView?.contentMode = .scaleAspectFit
+        v.text = "Export"
+        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
         return v
     }()
-    
-    private let timeSignature: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE)
-        return v
-    }()
-    
-    private let keySignature: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: DEFAULT_TAP_TARGET_SIZE/2)
-        return v
-    }()
-    
+
     private let exportButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "share"), for: .normal)
+        v.imageView?.contentMode = .scaleAspectFit
         v.showsTouchWhenHighlighted = true
+        return v
+    }()
+
+    private let playLabel: UILabel = {
+        let v = UILabel()
+        v.backgroundColor = .clear
+        v.text = "Play"
+        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
         return v
     }()
 
@@ -52,9 +53,62 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+        v.imageView?.contentMode = .scaleAspectFit
         v.showsTouchWhenHighlighted = true
         return v
     }()
+
+    private let helpLabel: UILabel = {
+        let v = UILabel()
+        v.backgroundColor = .clear
+        v.text = "Help"
+        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        return v
+    }()
+
+    private let helpButton: UIButton = {
+        let v = UIButton()
+        v.backgroundColor = .clear
+        v.setImage(#imageLiteral(resourceName: "help"), for: .normal)
+        v.imageView?.contentMode = .scaleAspectFit
+        v.showsTouchWhenHighlighted = true
+        return v
+    }()
+
+    private let keyLabel: UILabel = {
+        let v = UILabel()
+        v.backgroundColor = .clear
+        v.text = "Key"
+        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        return v
+    }()
+
+    private let keyButton: UIButton = {
+        let v = UIButton()
+        v.backgroundColor = .clear
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 18)
+        v.showsTouchWhenHighlighted = true
+        return v
+    }()
+
+    private let timeLabel: UILabel = {
+        let v = UILabel()
+        v.backgroundColor = .clear
+        v.text = "Time"
+        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        return v
+    }()
+    
+    private let timeButton: UIButton = {
+        let v = UIButton()
+        v.backgroundColor = .clear
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 18)
+        v.showsTouchWhenHighlighted = true
+        return v
+    }()
+
 
     init(store: PartStore, audio: Audio?, filename: String) {
         self.store = store
@@ -71,14 +125,23 @@ class SideMenuViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.allegroPurple
+        view.addSubview(exportLabel)
         view.addSubview(exportButton)
-        view.addSubview(instructionsButton)
-        view.addSubview(timeSignature)
-        view.addSubview(keySignature)
+
+        view.addSubview(playLabel)
         view.addSubview(playButton)
 
-        timeSignature.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
-        keySignature.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
+        view.addSubview(helpLabel)
+        view.addSubview(helpButton)
+
+        view.addSubview(keyLabel)
+        view.addSubview(keyButton)
+
+        view.addSubview(timeLabel)
+        view.addSubview(timeButton)
+
+        timeButton.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
+        keyButton.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
         exportButton.addTarget(self, action: #selector(exportButtonTapped), for: .touchUpInside)
     }
@@ -92,43 +155,46 @@ class SideMenuViewController: UIViewController {
         store.unsubscribe(self)
     }
 
+    private func layoutLeftLabelButton(label: UILabel, button: UIButton, lastY: CGFloat) {
+
+        label.frame = CGRect(x: view.bounds.minX + SideMenuViewController.leftXMargin,
+                             y: lastY + SideMenuViewController.leftYMargin,
+                             width: (view.bounds.width / 2) - (2 * SideMenuViewController.leftXMargin),
+                             height: SideMenuViewController.labelHeight)
+
+        button.frame = CGRect(x: view.bounds.minX + SideMenuViewController.leftXMargin,
+                              y: lastY + SideMenuViewController.leftYMargin + SideMenuViewController.labelHeight,
+                              width: (view.bounds.width / 2) - (2 * SideMenuViewController.leftXMargin),
+                              height: (view.bounds.height / 3) - (2 * SideMenuViewController.leftYMargin) - SideMenuViewController.labelHeight )
+    }
+
+    private func layoutRightLabelButton(label: UILabel, button: UIButton, lastY: CGFloat) {
+
+        label.frame = CGRect(x: (view.bounds.width / 2) + SideMenuViewController.leftXMargin,
+                             y: lastY + SideMenuViewController.rightYMargin,
+                             width: (view.bounds.width / 2) - (2 * SideMenuViewController.rightXMargin),
+                             height: SideMenuViewController.labelHeight)
+
+        button.frame = CGRect(x: (view.bounds.width / 2) + SideMenuViewController.rightXMargin,
+                              y: lastY + SideMenuViewController.rightYMargin + SideMenuViewController.labelHeight,
+                              width: (view.bounds.width / 2) - (2 * SideMenuViewController.rightXMargin),
+                              height: (view.bounds.height / 2) - (2 * SideMenuViewController.rightYMargin) - SideMenuViewController.labelHeight )
+    }
+
     override func viewDidLayoutSubviews() {
-        //refernece values
-        let parent = view.bounds
 
-        let verticallyStackedButtons = [exportButton, instructionsButton]
-        let modeButtonBlocks = [playButton]
-        let signatureButtonBlocks = [keySignature, timeSignature]
+        layoutLeftLabelButton(label: exportLabel, button: exportButton, lastY: view.bounds.minY)
+        layoutLeftLabelButton(label: playLabel, button: playButton, lastY: view.bounds.height / 3)
+        layoutLeftLabelButton(label: helpLabel, button: helpButton, lastY: view.bounds.height * (2/3))
 
-        for (i, b) in verticallyStackedButtons.enumerated() {
-            let heightOfVerticallyStacked: CGFloat = parent.height / 2 / CGFloat(verticallyStackedButtons.count)
-            b.frame = CGRect(x: 0,
-                             y: CGFloat(i) * heightOfVerticallyStacked,
-                             width: parent.width,
-                             height: heightOfVerticallyStacked)
-        }
-        guard let verticallyStackedMaxY = verticallyStackedButtons.last?.frame.maxY else { return }
+        layoutRightLabelButton(label: keyLabel, button: keyButton, lastY: view.bounds.minY)
+        layoutRightLabelButton(label: timeLabel, button: timeButton, lastY: view.bounds.height / 2)
 
-        let buttonBlocksHeight = (parent.height - verticallyStackedMaxY) / 2
-        for (i, b) in modeButtonBlocks.enumerated() {
-            b.frame = CGRect(x: CGFloat(i) * parent.width / CGFloat(modeButtonBlocks.count),
-                             y: verticallyStackedMaxY,
-                             width: parent.width / CGFloat(modeButtonBlocks.count),
-                             height: buttonBlocksHeight)
-        }
-
-        for (i, b) in signatureButtonBlocks.enumerated() {
-            b.frame = CGRect(x: CGFloat(i) * parent.width / CGFloat(signatureButtonBlocks.count),
-                             y: verticallyStackedMaxY + buttonBlocksHeight,
-                             width: parent.width / CGFloat(signatureButtonBlocks.count),
-                             height: buttonBlocksHeight)
-        }
-        
     }
 
     func updateUI() {
-        timeSignature.setTitle(store.part.timeSignature.description, for: .normal)
-        keySignature.setTitle(store.part.keySignature.description, for: .normal)
+        timeButton.setTitle(store.part.timeSignature.description, for: .normal)
+        keyButton.setTitle(store.part.keySignature.description, for: .normal)
     }
     
     func timeSignaturesTapped() {
