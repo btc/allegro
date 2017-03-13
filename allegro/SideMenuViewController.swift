@@ -6,29 +6,27 @@
 //  Copyright © 2017 gigaunicorn. All rights reserved.
 //
 
-//TODO: Add all menu items, link to actions, resize menu
-
 import UIKit
 
 class SideMenuViewController: UIViewController {
 
-    private static let leftXMargin: CGFloat = 20
-    private static let leftYMargin: CGFloat = 10
-    private static let rightXMargin: CGFloat = 20
-    private static let rightYMargin: CGFloat = 10
-    private static let labelHeight: CGFloat = 50
-    private static let labelFontSize: CGFloat = 16
+    private static let leftXMargin: CGFloat = 10
+    private static let leftYMargin: CGFloat = 5
+    private static let rightXMargin: CGFloat = 10
+    private static let rightYMargin: CGFloat = 5
+    private static let labelHeight: CGFloat = 40
+    private static let labelFontSize: CGFloat = 24
 
     fileprivate let store: PartStore
     fileprivate var audio: Audio?
     fileprivate let filename: String
 
-
     private let exportLabel: UILabel = {
         let v = UILabel()
         v.backgroundColor = .clear
         v.text = "Export"
-        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: SideMenuViewController.labelFontSize)
+        v.textAlignment = .center
         return v
     }()
 
@@ -45,7 +43,8 @@ class SideMenuViewController: UIViewController {
         let v = UILabel()
         v.backgroundColor = .clear
         v.text = "Play"
-        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: SideMenuViewController.labelFontSize)
+        v.textAlignment = .center
         return v
     }()
 
@@ -62,7 +61,8 @@ class SideMenuViewController: UIViewController {
         let v = UILabel()
         v.backgroundColor = .clear
         v.text = "Help"
-        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: SideMenuViewController.labelFontSize)
+        v.textAlignment = .center
         return v
     }()
 
@@ -79,7 +79,8 @@ class SideMenuViewController: UIViewController {
         let v = UILabel()
         v.backgroundColor = .clear
         v.text = "Key"
-        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: SideMenuViewController.labelFontSize)
+        v.textAlignment = .center
         return v
     }()
 
@@ -87,7 +88,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 18)
+        v.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 28)
         v.showsTouchWhenHighlighted = true
         v.layer.borderColor = UIColor.black.cgColor
         v.layer.borderWidth = 1
@@ -99,7 +100,8 @@ class SideMenuViewController: UIViewController {
         let v = UILabel()
         v.backgroundColor = .clear
         v.text = "Time"
-        v.font = UIFont(name: DEFAULT_FONT, size: SideMenuViewController.labelFontSize)
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: SideMenuViewController.labelFontSize)
+        v.textAlignment = .center
         return v
     }()
     
@@ -107,7 +109,7 @@ class SideMenuViewController: UIViewController {
         let v = UIButton()
         v.backgroundColor = .clear
         v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 18)
+        v.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 30)
         v.showsTouchWhenHighlighted = true
         v.layer.borderColor = UIColor.black.cgColor
         v.layer.borderWidth = 1
@@ -249,9 +251,9 @@ private extension Key {
     var description: String {
         switch fifths {
         case 7:
-            return "C♯"
+            return "C♯ Maj"
         case 6:
-            return "F♯"
+            return "F♯ Maj"
         case 5:
             return "B Maj"
         case 4:
@@ -267,19 +269,19 @@ private extension Key {
         case -1:
             return "F Maj"
         case -2:
-            return "B♭"
+            return "B♭ Maj"
         case -3:
-            return "E♭"
+            return "E♭ Maj"
         case -4:
-            return "A♭"
+            return "A♭ Maj"
         case -5:
-            return "D♭"
+            return "D♭ Maj"
         case -6:
-            return "G♭"
+            return "G♭ Maj"
         case -7:
-            return "C♭"
+            return "C♭ Maj"
         default: // Defaults to C Major if invalid fifth used
-            return "C"
+            return "C Maj"
         }
     }
 }
