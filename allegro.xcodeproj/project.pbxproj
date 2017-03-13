@@ -68,6 +68,7 @@
 		6BED4ABC1E49698100DD2E19 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4ABB1E49698100DD2E19 /* Array.swift */; };
 		6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BED4ABD1E496A7900DD2E19 /* Rational.swift */; };
 		6BF02FAA1E3D9A2200F9B7B9 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */; };
+		825430001E77412A00EE32E6 /* SwiftyTimer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82542FFF1E77412A00EE32E6 /* SwiftyTimer.framework */; };
 		8280ADAD1E4295AB00DFE061 /* TimeSignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */; };
 		8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */; };
 		82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */; };
@@ -181,6 +182,7 @@
 		6BED4ABB1E49698100DD2E19 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		6BED4ABD1E496A7900DD2E19 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
 		6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = SOURCE_ROOT; };
+		82542FFF1E77412A00EE32E6 /* SwiftyTimer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyTimer.framework; path = Carthage/Build/iOS/SwiftyTimer.framework; sourceTree = SOURCE_ROOT; };
 		8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSignatureViewController.swift; sourceTree = "<group>"; };
 		8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySignatureViewController.swift; sourceTree = "<group>"; };
 		82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				825430001E77412A00EE32E6 /* SwiftyTimer.framework in Frameworks */,
 				6B3290F31E3C4DD900AE693B /* AudioKit.framework in Frameworks */,
 				6B3290F51E3C5BFB00AE693B /* MusicKit.framework in Frameworks */,
 				6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */,
@@ -403,6 +406,7 @@
 		6B6E271B1E28978100F9CF66 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				82542FFF1E77412A00EE32E6 /* SwiftyTimer.framework */,
 				6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */,
 				6B3290F21E3C4DD900AE693B /* AudioKit.framework */,
 				6B6E271C1E28979100F9CF66 /* CleanroomLogger.framework */,
@@ -652,6 +656,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/MusicKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwipyCell.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MGSwipeTableCell.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftyTimer.framework",
 			);
 			outputPaths = (
 			);

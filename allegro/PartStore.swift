@@ -13,6 +13,7 @@ protocol PartStoreObserver: class {
     func partStoreChanged()
     func noteAdded(in measure: Int, at position: Rational)
     func noteModified(in measure: Int, at position: Rational)
+    func didChangeMeasure(oldValue: Int, currentMeasure: Int)
 }
 
 extension PartStoreObserver {
@@ -23,6 +24,9 @@ extension PartStoreObserver {
         // default impl
     }
     func noteModified(in measure: Int, at position: Rational) {
+        // default impl
+    }
+    func didChangeMeasure(oldValue: Int, currentMeasure: Int) {
         // default impl
     }
 }
@@ -51,6 +55,8 @@ class PartStore {
             if valueChanged {
                 // de-select notes when measure changes!
                 selectedNote = nil
+                
+                notifyDidChangeMeasure(oldValue, currentMeasure)
             }
         }
     }
@@ -124,6 +130,10 @@ class PartStore {
 
     private func notify(modifiedNoteInMeasure index: Int, at position: Rational) {
         observers.forEach { $0.value?.noteModified(in: index, at: position) }
+    }
+
+    private func notifyDidChangeMeasure(_ oldValue: Int, _ currentMeasure: Int) {
+        observers.forEach { $0.value?.didChangeMeasure(oldValue: oldValue, currentMeasure: currentMeasure) }
     }
 
     private func extendIfNecessaryToAccessMeasure(at index: Int) {

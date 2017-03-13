@@ -8,3 +8,4 @@ github "emaloney/CleanroomLogger" ~> 5.0.0
 github "moritzsternemann/SwipyCell"
 github "tadija/AEXML"
 github "zekunyan/TTGSnackbar"
+github "radex/SwiftyTimer"
