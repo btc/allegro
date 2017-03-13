@@ -124,6 +124,5 @@ extension OverviewView: UICollectionViewDelegateFlowLayout {
 
 extension OverviewView: PartStoreObserver {
     func partStoreChanged() {
-        measures.reloadData()
     }
 }

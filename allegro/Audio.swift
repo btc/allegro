@@ -9,6 +9,7 @@
 import AudioKit
 import Rational
 import MusicKit
+import SwiftyTimer
 
 class Audio {
 
@@ -62,7 +63,8 @@ class Audio {
     }
 
 
-    func playFromCurrentMeasure(part: Part, measure: Int) {
+    func playFromCurrentMeasure(part: Part, measure: Int, block: @escaping (Int) -> Void) {
+        let endMeasure = findEndMeasure(part: part)
         let numMeasures = part.measures.count - measure
         let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
         sequence.setLength(sequenceLength)
@@ -87,6 +89,31 @@ class Audio {
         sequence.play()
 
         sequence.rewind()
+        
+        Timer.every(0.1.seconds) { (timer: Timer) -> Void in
+            guard self.sequence.isPlaying else {
+                timer.invalidate()
+                return
+            }
+            let beatsPerMeasure = part.measures[0].timeSignature.numerator
+            let currentMeasure = floor(self.sequence.currentPosition.beats/beatsPerMeasure)
+            if currentMeasure >= Double(endMeasure) {
+                self.sequence.stop()
+            }
+            block(Int(currentMeasure))
+            Log.info?.value(part.measures.count)
+        }
+    }
+    
+    func findEndMeasure(part: Part) -> Int {
+        var endMeasure = part.measures.count - 1
+        for index in stride(from: part.measures.count - 2, through: 0, by: -1) {
+            let noteCount = part.measures[index].notes.count
+            if noteCount == 0 {
+                endMeasure = index + 1
+            }
+        }
+        return endMeasure
     }
 
     func playNote(part: Part, measure: Int, position: Rational) {
@@ -178,4 +205,5 @@ class Audio {
 
         return UInt8(Pitch(chroma: chroma, octave: UInt(note.octave)).midi)
     }
+    
 }

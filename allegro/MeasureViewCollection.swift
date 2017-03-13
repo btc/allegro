@@ -28,13 +28,6 @@ class MeasureViewCollection: UICollectionView {
         }
     }
 
-    var visibleMeasure: IndexPath? {
-        didSet {
-            guard let visibleMeasure = visibleMeasure else { return }
-            store.currentMeasure = visibleMeasure.item
-        }
-    }
-
     let overviewPinchRecognizer: UIGestureRecognizer = {
         let gr = UIPinchGestureRecognizer()
         return gr
@@ -98,7 +91,7 @@ extension MeasureViewCollection: UICollectionViewDelegate {
         let visibleRect = CGRect(origin: contentOffset, size: bounds.size)
         let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
         if let i = indexPathForItem(at: visiblePoint) {
-            visibleMeasure = i
+            store.currentMeasure = i.item
         }
     }
 }
@@ -131,11 +124,12 @@ extension MeasureViewCollection: PartStoreObserver {
         case .erase:
             panGestureRecognizer.minimumNumberOfTouches = 2
         }
-        if visibleMeasure != nil && store.currentMeasure != visibleMeasure?.item {
-            let item = IndexPath(item: store.currentMeasure, section: 0)
-            visibleMeasure = item
-            scrollToItem(at: item, at: .centeredHorizontally, animated: false)
-        }
+    }
+    
+    func didChangeMeasure(oldValue: Int, currentMeasure: Int) {
+        Log.warning?.value(store.currentMeasure)
+        let item = IndexPath(item: store.currentMeasure, section: 0)
+        scrollToItem(at: item, at: .centeredHorizontally, animated: true)
     }
 }
 
