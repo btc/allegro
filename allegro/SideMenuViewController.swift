@@ -12,9 +12,9 @@ import UIKit
 
 class SideMenuViewController: UIViewController {
 
-    private static let leftXMargin: CGFloat = 30
+    private static let leftXMargin: CGFloat = 20
     private static let leftYMargin: CGFloat = 10
-    private static let rightXMargin: CGFloat = 40
+    private static let rightXMargin: CGFloat = 20
     private static let rightYMargin: CGFloat = 10
     private static let labelHeight: CGFloat = 50
     private static let labelFontSize: CGFloat = 16
@@ -89,6 +89,9 @@ class SideMenuViewController: UIViewController {
         v.setTitleColor(.black, for: .normal)
         v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 18)
         v.showsTouchWhenHighlighted = true
+        v.layer.borderColor = UIColor.black.cgColor
+        v.layer.borderWidth = 1
+        v.layer.cornerRadius = 3
         return v
     }()
 
@@ -106,6 +109,9 @@ class SideMenuViewController: UIViewController {
         v.setTitleColor(.black, for: .normal)
         v.titleLabel?.font = UIFont(name: DEFAULT_FONT, size: 18)
         v.showsTouchWhenHighlighted = true
+        v.layer.borderColor = UIColor.black.cgColor
+        v.layer.borderWidth = 1
+        v.layer.cornerRadius = 3
         return v
     }()
 
