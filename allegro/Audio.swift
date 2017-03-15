@@ -41,26 +41,28 @@ class Audio {
             sequence.tracks[0].clear()
         }
         let endMeasure = findEndMeasure(part: part)
-        Log.info?.value("End Measure: " + String(endMeasure)
-        )
         let numMeasures = part.measures.count - measure
         let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
         sequence.setLength(sequenceLength)
         var curPos = 0.0
+        var curMeasure = 0
         
         for index in stride(from: measure, through: part.measures.count - 1, by: 1) {
             let m = part.measures[index]
             for notePos in m.notes {
                 guard let note = m.note(at: notePos.pos) else { return }
-                print(curPos)
+                curPos = (curMeasure + notePos.pos.double) * m.timeSignature.numerator
                 let akpos = AKDuration(beats: curPos)
                 let akdur = AKDuration(beats: note.duration.double)
                 let pitch = midiPitch(for: note)
                 if !note.rest {
                     sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
                 }
-                curPos = curPos + notePos.duration.double * m.timeSignature.numerator
+                Log.info?.value(curPos)
+                Log.warning?.value(notePos.pos)
             }
+            curMeasure += 1
+
         }
 
         sequence.setTempo(Double(part.tempo))
@@ -89,6 +91,9 @@ class Audio {
         var endMeasure = part.measures.count - 1
         for index in stride(from: part.measures.count - 1, through: 0, by: -1) {
             let noteCount = part.measures[index].notes.count
+            if noteCount > 0 {
+                return endMeasure
+            }
             if noteCount == 0 {
                 endMeasure = index
             }
