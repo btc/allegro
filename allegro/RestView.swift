@@ -46,7 +46,6 @@ class RestView: NoteActionView {
         }
     }
     
-    let sixteenthSecondImageOffset = CGPoint(x: -14.5, y: 45)
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -63,9 +62,10 @@ class RestView: NoteActionView {
             // we draw sixteenth rests as two images stacked on top of each other
             // because we can't find an actual sixteenth rest that fits with the eighth rest
             let center = bounds.origin.offset(dx: bounds.size.width / 2, dy: bounds.size.height / 2)
-            guard let size = geometry.restSize[Note.Value.eighth] else { return }
-            let origin1 = center.offset(dx: -sixteenthSecondImageOffset.x - size.width / 2, dy: -size.height / 2)
-            let origin2 = origin1.offset(dx: sixteenthSecondImageOffset.x, dy: sixteenthSecondImageOffset.y)
+            
+            let size = geometry.getRestSize(value: Note.Value.eighth)
+            let origin1 = center.offset(dx: -geometry.sixteenthSecondImageOffset.x - size.width / 2, dy: -size.height / 2)
+            let origin2 = origin1.offset(dx: geometry.sixteenthSecondImageOffset.x, dy: geometry.sixteenthSecondImageOffset.y)
             
             
             images[0].frame = CGRect(origin: origin1, size: size)
