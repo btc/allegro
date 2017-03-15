@@ -10,7 +10,9 @@ import UIKit
 
 class OverviewView: UIView {
 
-    static let margin = DEFAULT_MARGIN_PTS
+//    static let margin = DEFAULT_MARGIN_PTS
+    static let margin: CGFloat = 15
+    static let whitespace: CGFloat = 20
 
     let store: PartStore
 
@@ -24,7 +26,8 @@ class OverviewView: UIView {
 
         let v = UICollectionView(frame: .zero, collectionViewLayout: layout)
         v.register(MeasureViewCollectionCell.self, forCellWithReuseIdentifier: MeasureViewCollectionCell.reuseID)
-        v.backgroundColor = .allegroBlue
+        v.backgroundColor = .white
+        
         return v
     }()
 
@@ -72,6 +75,24 @@ extension OverviewView: UICollectionViewDataSource {
         cell.store = store
         cell.index = indexPath.item
         cell.subviews.forEach { $0.isUserInteractionEnabled = false } // to prevent user from interacting with the measures
+        
+        let leftWhitespace = UIView(frame: CGRect(x: cell.bounds.minX,
+                                                  y: cell.bounds.minY,
+                                                  width: OverviewView.whitespace,
+                                                  height: cell.bounds.height))
+        leftWhitespace.backgroundColor = .white
+        cell.addSubview(leftWhitespace)
+        
+        let rightWhitespace = UIView(frame: CGRect(x: cell.bounds.width - OverviewView.whitespace,
+                                                   y: cell.bounds.minY,
+                                                   width: OverviewView.whitespace,
+                                                   height: cell.bounds.height))
+        rightWhitespace.backgroundColor = .white
+        cell.addSubview(rightWhitespace)
+        
+        cell.layer.borderColor = UIColor.allegroDarkGray.cgColor
+        cell.layer.borderWidth = 1
+        cell.layer.cornerRadius = 8
         return cell
     }
 
@@ -95,7 +116,8 @@ extension OverviewView: UICollectionViewDelegate {
 extension OverviewView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let widthReservedForContent = bounds.width - 3 * type(of: self).margin
-        return CGSize(width: widthReservedForContent / 2, height: 150)
+        let heightReservedForContent = bounds.height - 3 * type(of: self).margin
+        return CGSize(width: widthReservedForContent / 2, height: heightReservedForContent / 2)
     }
 }
 

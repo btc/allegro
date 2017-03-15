@@ -52,6 +52,7 @@ class MeasureViewCollectionCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         subviews.forEach { $0.removeFromSuperview() }
         measureViewContainer = MeasureViewContainer()
         addSubview(measureViewContainer)

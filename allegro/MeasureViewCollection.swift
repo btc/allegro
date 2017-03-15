@@ -61,7 +61,7 @@ class MeasureViewCollection: UICollectionView {
         panGestureRecognizer.maximumNumberOfTouches = 2
         panGestureRecognizer.delegate = self
         isPagingEnabled = true
-        backgroundColor = .allegroBlue
+        backgroundColor = .white
         register(MeasureViewCollectionCell.self, forCellWithReuseIdentifier: MeasureViewCollectionCell.reuseID)
         dataSource = self
         delegate = self
