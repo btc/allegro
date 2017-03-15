@@ -127,7 +127,6 @@ extension MeasureViewCollection: PartStoreObserver {
     }
     
     func didChangeMeasure(oldValue: Int, currentMeasure: Int) {
-        Log.warning?.value(store.currentMeasure)
         let item = IndexPath(item: store.currentMeasure, section: 0)
         scrollToItem(at: item, at: .centeredHorizontally, animated: true)
     }
