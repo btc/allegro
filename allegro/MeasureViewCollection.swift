@@ -116,6 +116,7 @@ extension MeasureViewCollection: UICollectionViewDataSource {
         if let c = cell as? MeasureViewCollectionCell {
             c.store = store
             c.index = indexPath.row
+            c.isExtendEnabled = true
         }
         return cell
     }

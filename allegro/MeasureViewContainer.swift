@@ -29,6 +29,15 @@ class MeasureViewContainer: UIScrollView {
         }
     }
 
+    var isExtendEnabled: Bool {
+        set {
+            measureView.isExtendEnabled = newValue
+        }
+        get {
+            return measureView.isExtendEnabled
+        }
+    }
+
     let measureView: MeasureView = {
         let v = MeasureView()
         return v
@@ -59,7 +68,7 @@ class MeasureViewContainer: UIScrollView {
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let store = store, let index = index else { return }
-        let measure = store.measure(at: index)
+        let measure = store.measure(at: index, extend: isExtendEnabled)
         let s = MeasureGeometry.State(measure: measure,
                                       visibleSize: bounds.size)
         measureView.geometry = MeasureGeometry(state: s)
@@ -68,7 +77,7 @@ class MeasureViewContainer: UIScrollView {
 
     func scrollToCenterOfStaffLines() {
         guard let store = store, let index = index else { return }
-        let measure = store.measure(at: index)
+        let measure = store.measure(at: index, extend: isExtendEnabled)
         let s = MeasureGeometry.State(measure: measure,
                                       visibleSize: bounds.size)
         let g = MeasureGeometry(state: s) // because measureView doesn't have a geometry until layoutSubviews
@@ -81,7 +90,7 @@ extension MeasureViewContainer: PartStoreObserver {
     func partStoreChanged() {
         guard let store = store, let index = index else { return }
         if measureView.geometry.state.visibleSize != .zero {
-            let measure = store.measure(at: index)
+            let measure = store.measure(at: index, extend: isExtendEnabled)
             let state = MeasureGeometry.State(measure: measure,
                                               visibleSize: measureView.geometry.state.visibleSize)
             measureView.geometry = MeasureGeometry(state: state)

@@ -29,6 +29,15 @@ class MeasureViewCollectionCell: UICollectionViewCell {
         }
     }
 
+    var isExtendEnabled: Bool {
+        set {
+            measureViewContainer.isExtendEnabled = newValue
+        }
+        get {
+            return measureViewContainer.isExtendEnabled
+        }
+    }
+
     var measureViewContainer: MeasureViewContainer = {
         let v = MeasureViewContainer()
         return v

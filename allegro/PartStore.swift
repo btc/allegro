@@ -184,8 +184,10 @@ class PartStore {
         return succeeded
     }
 
-    func measure(at index: Int) -> MeasureViewModel {
-        extendIfNecessaryToAccessMeasure(at: index)
+    func measure(at index: Int, extend: Bool) -> MeasureViewModel {
+        if extend {
+            extendIfNecessaryToAccessMeasure(at: index)
+        }
         return MeasureViewModel(part.measures[index])
     }
     

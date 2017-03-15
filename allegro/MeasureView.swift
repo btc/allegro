@@ -29,6 +29,8 @@ class MeasureView: UIView {
 
     var index: Int?
 
+    var isExtendEnabled: Bool = false
+
     fileprivate let staffLineThickness: CGFloat = 2
 
     fileprivate let barThickness: CGFloat = 5
@@ -126,7 +128,7 @@ class MeasureView: UIView {
     private func drawVerticalGridlines(rect: CGRect) {
         guard let store = store, let index = index else { return }
 
-        let measure = store.measure(at: index)
+        let measure = store.measure(at: index, extend: isExtendEnabled)
 
         let lines = geometry.verticalGridlines(measure: measure)
         let path = UIBezierPath()
@@ -151,7 +153,7 @@ class MeasureView: UIView {
 
         guard let store = store, let index = index else { return }
 
-        let measureVM = store.measure(at: index)
+        let measureVM = store.measure(at: index, extend: isExtendEnabled)
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels
@@ -271,7 +273,7 @@ class MeasureView: UIView {
         }
 
         if store.mode == .erase {
-            if sender.state == .ended && store.measure(at: index).notes.isEmpty {
+            if sender.state == .ended && store.measure(at: index, extend: isExtendEnabled).notes.isEmpty {
                 store.mode = .edit
                 Snackbar(message: "switched to edit mode", duration: .short).show()
                 return
@@ -305,7 +307,7 @@ class MeasureView: UIView {
 
         if store.mode == .erase {
 
-            if store.measure(at: index).notes.isEmpty {
+            if store.measure(at: index, extend: isExtendEnabled).notes.isEmpty {
                 store.mode = .edit
                 Snackbar(message: "switched to edit mode", duration: .short).show()
                 return
