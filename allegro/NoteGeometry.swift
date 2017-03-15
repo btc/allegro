@@ -15,8 +15,13 @@ struct NoteGeometry {
     fileprivate let defaultNoteWidth = CGFloat(70)
     fileprivate let defaultNoteHeight = CGFloat(55.16665)
     
-    let dotRadius = CGFloat(5)
-    fileprivate let dotSpacing = CGFloat(10)
+    var dotRadius: CGFloat {
+        return CGFloat(scale * 5)
+    }
+    
+    var dotSpacing: CGFloat {
+        return CGFloat(scale * 10)
+    }
     
     var scale: CGFloat {
         return staffHeight / defaultNoteHeight
