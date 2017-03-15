@@ -36,8 +36,8 @@ class CompositionViewController: UIViewController {
 
     fileprivate let measureNumberLabel: UILabel = {
         let v = UILabel()
-        v.textColor = .lightGray
-        v.font = UIFont(name: DEFAULT_FONT, size: 18) // TODO standardize size
+        v.textColor = .allegroGray
+        v.font = UIFont(name: DEFAULT_FONT, size: 14) // TODO standardize size
         return v
     }()
 
@@ -167,7 +167,7 @@ extension CompositionViewController: PartStoreObserver {
 
         overviewView.isHidden = store.view != .overview // TODO: animate this transition
 
-        measureNumberLabel.text = "\(store.currentMeasure + 1)"
+        measureNumberLabel.text = "\(store.currentMeasure + 1)/\(store.measureCount)"
         measureNumberLabel.sizeToFit()
     }
 
