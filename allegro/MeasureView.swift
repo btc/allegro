@@ -192,21 +192,19 @@ class MeasureView: UIView {
                 //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
                 noteView.shouldDrawFlag = true//fals
             } else if let restView = view as? RestView {
-                let size = restView.geometry.restSize[restView.note.note.value]
-                if let size = size {
-                    if restView.note.note.value == Note.Value.whole {
-                        let y = geometry.staffY(pitch: 2)
-                        restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
-                    } else if restView.note.note.value == Note.Value.half {
-                        let y = geometry.staffY(pitch: 0)
-                        restView.frame = CGRect(origin: CGPoint(x: startX, y: y - size.height), size: size)
-                    } else {
-                        let y = geometry.staffY(pitch: 0) - size.height / 2
-                        restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
-                    }
-                    
-                    restView.setDotPosition(geometry: geometry)
+                let size = restView.geometry.getRestSize(value: restView.note.note.value)
+                if restView.note.note.value == Note.Value.whole {
+                    let y = geometry.staffY(pitch: 2)
+                    restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
+                } else if restView.note.note.value == Note.Value.half {
+                    let y = geometry.staffY(pitch: 0)
+                    restView.frame = CGRect(origin: CGPoint(x: startX, y: y - size.height), size: size)
+                } else {
+                    let y = geometry.staffY(pitch: 0) - size.height / 2
+                    restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
                 }
+                
+                restView.setDotPosition(geometry: geometry)
             }
         }
         

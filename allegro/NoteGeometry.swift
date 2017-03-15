@@ -28,13 +28,22 @@ struct NoteGeometry {
     
     
     let restBoxWidth = CGFloat(30)
-    let restSize = [
+    let restSizeDict = [
         Note.Value.whole: CGSize(width: 60, height: 10),
         Note.Value.half: CGSize(width: 60, height: 10),
         Note.Value.quarter: CGSize(width: 40, height: 125),
         Note.Value.eighth: CGSize(width: 80, height: 160),
         Note.Value.sixteenth: CGSize(width: 80, height: 240)
     ]
+    
+    var sixteenthSecondImageOffset: CGPoint {
+        return CGPoint(x: -14.5 * scale, y: 45 * scale)
+    }
+    
+    func getRestSize(value: Note.Value) -> CGSize {
+        guard let unscaledSize = restSizeDict[value] else { return CGSize.zero }
+        return CGSize(width: unscaledSize.width * scale, height: unscaledSize.height * scale)
+    }
     
     init(staffHeight: CGFloat) {
         self.staffHeight = staffHeight
@@ -63,9 +72,8 @@ struct NoteGeometry {
     
     func getFrame(note: NoteViewModel) -> CGRect {
         if note.note.rest {
-            if let size = restSize[note.note.value] {
-                return CGRect(origin: origin, size: size)
-            }
+            let size = getRestSize(value: note.note.value)
+            return CGRect(origin: origin, size: size)
         }
         
         return CGRect(
