@@ -14,9 +14,7 @@ class RootNavigationViewController: UINavigationController {
     private var ipr: InteractivePopRecognizer?
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        setNavigationBarHidden(true, animated: true)
-        
+        super.viewDidLoad()        
         ipr = InteractivePopRecognizer(self)
         interactivePopGestureRecognizer?.delegate = ipr
         interactivePopGestureRecognizer?.delaysTouchesBegan = false
