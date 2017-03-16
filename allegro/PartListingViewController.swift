@@ -22,13 +22,6 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
         return v
     }()
 
-    private let newCompositionButton: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = .allegroPurple
-        v.setTitle(Strings.NEW, for: .normal)
-        return v
-    }()
-
     fileprivate let partListing: UITableView = {
         let v = UITableView(frame: .zero, style: UITableViewStyle.plain)
         v.backgroundColor = .white
@@ -56,9 +49,10 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
         view.backgroundColor = UIColor.white
 
         view.addSubview(partListing)
-        view.addSubview(newCompositionButton) // on top of part listing
-
-        newCompositionButton.addTarget(self, action: #selector(newCompositionTapped), for: .touchUpInside)
+        
+        let newButton = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(newCompositionTapped))
+        newButton.tintColor = .allegroPurple
+        navigationController?.navigationBar.topItem?.rightBarButtonItem = newButton
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -79,15 +73,6 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
-
-        let buttonWidth: CGFloat = 100
-        let buttonHeight: CGFloat = 50
-
-        newCompositionButton.frame = CGRect(x: view.bounds.width - buttonWidth - DEFAULT_MARGIN_PTS,
-                                            y: 15,
-                                            width: buttonWidth,
-                                            height: buttonHeight)
-
         partListing.frame = view.bounds
     }
 
