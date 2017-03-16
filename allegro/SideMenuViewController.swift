@@ -157,11 +157,15 @@ class SideMenuViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         updateUI()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         store.unsubscribe(self)
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
     private func layoutLeftLabelButton(label: UILabel, button: UIButton, lastY: CGFloat) {

@@ -57,10 +57,14 @@ class KeySignatureViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         store.subscribe(self)
         updateUI()
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         store.unsubscribe(self)
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
     override func viewDidLoad() {
