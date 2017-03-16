@@ -12,14 +12,6 @@ class KeySignatureViewController: UIViewController {
     
     fileprivate let store: PartStore
     
-    private let backButton: UIButton = {
-        let v = UIButton()
-        v.backgroundColor = .clear
-        v.setTitleColor(.allegroPurple, for: .normal)
-        v.setTitle("Key Sig: Back", for: UIControlState.normal)
-        return v
-    }()
-    
     private let sharpButton: UIButton = {
         let v = UIButton()
         v.backgroundColor = .clear
@@ -71,40 +63,33 @@ class KeySignatureViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
         
-        view.addSubview(backButton)
         view.addSubview(sharpButton)
         view.addSubview(flatButton)
         view.addSubview(keySigLabel)
         
-        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         sharpButton.addTarget(self, action: #selector(sharpButtonTapped), for: .touchUpInside)
         flatButton.addTarget(self, action: #selector(flatButtonTapped), for: .touchUpInside)
+        
+        navigationController?.navigationBar.topItem?.title = "Key Signature"
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
-        
+        let navbarHeight = navigationController?.navigationBar.frame.height ?? DEFAULT_MARGIN_PTS
         let parent = view.bounds
         
-        let buttonH: CGFloat = DEFAULT_TAP_TARGET_SIZE
-        let buttonW = buttonH * 3 // is an educated guess
-        
         // All placeholder locations
-        // TODO: Make visually pleasing 
-        backButton.frame = CGRect(x: parent.width - buttonW,
-                                  y: parent.height - buttonH,
-                                  width: buttonW,
-                                  height: buttonH)
+        // TODO: Make visually pleasing
         
-        sharpButton.frame = CGRect(x: DEFAULT_MARGIN_PTS,
-                                   y: DEFAULT_MARGIN_PTS,
+        sharpButton.frame = CGRect(x: parent.width - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
+                                   y: navbarHeight + DEFAULT_MARGIN_PTS,
                                    width: DEFAULT_TAP_TARGET_SIZE,
                                    height: DEFAULT_TAP_TARGET_SIZE)
         
-        flatButton.frame = CGRect(x: DEFAULT_MARGIN_PTS,
-                                   y: parent.height - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
-                                   width: DEFAULT_TAP_TARGET_SIZE,
-                                   height: DEFAULT_TAP_TARGET_SIZE)
+        flatButton.frame = CGRect(x: parent.width - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
+                                  y: parent.height - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
+                                  width: DEFAULT_TAP_TARGET_SIZE,
+                                  height: DEFAULT_TAP_TARGET_SIZE)
         
         keySigLabel.frame = CGRect(x: parent.width/2,
                                    y: parent.height/2,
@@ -116,10 +101,6 @@ class KeySignatureViewController: UIViewController {
     func updateUI() {
         // TODO: Modify to reveal sharps and flat on screen as appropriate
         keySigLabel.text = store.part.keySignature.description
-    }
-    
-    func backButtonTapped() {
-        let _ = navigationController?.popViewController(animated: true)
     }
     
     func sharpButtonTapped() {

@@ -53,6 +53,7 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
         let newButton = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(newCompositionTapped))
         newButton.tintColor = .allegroPurple
         navigationController?.navigationBar.topItem?.rightBarButtonItem = newButton
+        navigationController?.navigationBar.topItem?.title = "Parts"
     }
 
     override func viewWillAppear(_ animated: Bool) {
