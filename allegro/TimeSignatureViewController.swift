@@ -18,37 +18,10 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         ["2","4","8"]
     ]
     
-    private let timeSigTitle: UIView = {
-        let v = UILabel()
-        v.text = "Select Time Signature"
-        v.textAlignment = .center
-        v.textColor = .white
-        v.backgroundColor = UIColor.allegroPurple
-        v.font = UIFont(name: DEFAULT_FONT, size: 20)
-        return v
-    }()
-    
-    
     private var timeSigPickerView: UIPickerView = {
         var v = UIPickerView()
         return v
     } ()
-    
-    private let doneButton:UIBarButtonItem =  {
-        let b = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(backButtonTapped))
-        return b
-    }()
-    
-    private let toolBar:UIToolbar =  {
-        let tb = UIToolbar()
-        tb.barStyle = UIBarStyle.default
-        tb.setBackgroundImage(UIImage(), forToolbarPosition: .any, barMetrics: .default)
-        tb.setShadowImage(UIImage(), forToolbarPosition: .any)
-        tb.tintColor = UIColor.allegroPurple
-        tb.sizeToFit()
-        tb.isUserInteractionEnabled = true
-        return tb
-    }()
     
     init(store: PartStore) {
         self.store = store
@@ -62,15 +35,12 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
-        view.addSubview(timeSigTitle)
         
         view.addSubview(timeSigPickerView)
         timeSigPickerView.delegate = self
         timeSigPickerView.dataSource = self
         
-        view.addSubview(toolBar)
-        toolBar.setItems([doneButton], animated: false)
-        
+        navigationController?.navigationBar.topItem?.title = "Time Signature"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +49,7 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        storeSetTimeSignature()
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
     }
@@ -87,18 +58,6 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         super.viewDidLayoutSubviews()
         
         let parent = view.bounds
-        let buttonH: CGFloat = (parent.height / 3 - 3 * DEFAULT_MARGIN_PTS)
-        let buttonW = buttonH * THE_GOLDEN_RATIO // is an educated guess
-        
-        timeSigTitle.frame = CGRect(x: 0,
-                                    y: 0,
-                                    width: parent.width,
-                                    height: buttonH)
-        
-        toolBar.frame = CGRect(x: parent.width - buttonW - DEFAULT_MARGIN_PTS,
-                              y: parent.height - buttonH - DEFAULT_MARGIN_PTS,
-                              width: buttonW,
-                              height: buttonH)
         
         timeSigPickerView.frame = CGRect(x:parent.width * 0.1,
                                          y:parent.height * 0.1,
@@ -120,15 +79,12 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
         }
     }
     
-    
-    func backButtonTapped() {
+    private func storeSetTimeSignature() {
         guard let numerator = Int(pickerData[0][timeSigPickerView.selectedRow(inComponent: 0)]) else {return}
         guard let denominator = Int(pickerData[1][timeSigPickerView.selectedRow(inComponent: 1)]) else {return}
         if let curTime = Rational(numerator, denominator) {
             store.setTimeSignature(timeSignature: curTime)
         }
-        
-        let _ = navigationController?.popViewController(animated: true)
     }
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
