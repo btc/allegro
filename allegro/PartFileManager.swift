@@ -94,8 +94,6 @@ class PartFileManager {
             return Part()
         }
 
-        Log.info?.message("reading MusicXML from \(filename).xml")
-
         do {
             let documentDirURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
@@ -118,7 +116,6 @@ class PartFileManager {
 
     // attempts to load a file as XML and then parse it as a Part and PartMetadata
     static func bundleLoad(filename: String) -> Part {
-        Log.info?.message("reading MusicXML from \(filename).xml")
 
         do {
             // Find the file
