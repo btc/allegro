@@ -16,6 +16,13 @@ class CompositionViewController: UIViewController {
         let v = NoteSelectorMenu()
         return v
     }()
+    
+    fileprivate let screenCover: UIButton = {
+        let v = UIButton()
+        v.backgroundColor = .allegroPurple
+        v.alpha = 0.3
+        return v
+    }()
 
     fileprivate let modeToggle: CompositionModeToggleButton = {
         let v = CompositionModeToggleButton()
@@ -102,6 +109,9 @@ class CompositionViewController: UIViewController {
         view.addSubview(measureNumberLabel)
         //view.addSubview(menuIndicator) Not being used in Alpha
         view.addSubview(overviewView)
+        view.addSubview(screenCover)
+        
+        screenCover.addTarget(self, action: #selector(screenCoverTapped), for: .touchUpInside)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -147,6 +157,12 @@ class CompositionViewController: UIViewController {
 
         measureNumberLabel.frame.origin = CGPoint(x: view.bounds.width - measureNumberLabel.bounds.width - DEFAULT_MARGIN_PTS,
                                                   y: view.bounds.height - DEFAULT_MARGIN_PTS - measureNumberLabel.bounds.height)
+        
+        screenCover.frame = view.bounds
+    }
+    
+    func screenCoverTapped() {
+        screenCover.isHidden = true
     }
 
     func pinched() {
