@@ -151,7 +151,6 @@ class MusicXMLParser {
 
         // check for note type, also called value. eg. quarter, eighth, etc
         if let typeElem = noteElement.firstChildMatch(name: "type") {
-            Log.info?.message("PARSE TYPE: \(typeElem.value)")
             value = typeElem.safeValue(parse: Note.Value.init, fallback: .quarter)
         }
 
