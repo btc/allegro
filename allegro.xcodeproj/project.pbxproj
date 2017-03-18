@@ -80,6 +80,7 @@
 		B96902F01E6246E6006CF8D1 /* example0.xml in Resources */ = {isa = PBXBuildFile; fileRef = B96902EF1E6246E6006CF8D1 /* example0.xml */; };
 		B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96BCCC51E3D60650006A047 /* MusicXML.swift */; };
 		B978F8421E7DDE8C001EE49C /* KeySignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */; };
+		B978F8441E7DF0EB001EE49C /* Pages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B978F8431E7DF0EB001EE49C /* Pages.framework */; };
 		B988BE0D1E68D9E5007BB32A /* PartSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B988BE0C1E68D9E5007BB32A /* PartSaver.swift */; };
 		B98BF2801E58FBEB000CCF3E /* MusicXMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */; };
 		B9A0A68E1E774AC900F362B5 /* Montserrat-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */; };
@@ -200,6 +201,7 @@
 		B96902EF1E6246E6006CF8D1 /* example0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = example0.xml; path = allegro/exampleMusicXML/example0.xml; sourceTree = "<group>"; };
 		B96BCCC51E3D60650006A047 /* MusicXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXML.swift; sourceTree = "<group>"; };
 		B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySignatureView.swift; sourceTree = "<group>"; };
+		B978F8431E7DF0EB001EE49C /* Pages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pages.framework; path = Carthage/Build/iOS/Pages.framework; sourceTree = SOURCE_ROOT; };
 		B988BE0C1E68D9E5007BB32A /* PartSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartSaver.swift; sourceTree = "<group>"; };
 		B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXMLTests.swift; sourceTree = "<group>"; };
 		B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraLight.otf"; path = "fonts/Montserrat-ExtraLight.otf"; sourceTree = "<group>"; };
@@ -216,6 +218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B978F8441E7DF0EB001EE49C /* Pages.framework in Frameworks */,
 				825430001E77412A00EE32E6 /* SwiftyTimer.framework in Frameworks */,
 				6B3290F31E3C4DD900AE693B /* AudioKit.framework in Frameworks */,
 				6B3290F51E3C5BFB00AE693B /* MusicKit.framework in Frameworks */,
@@ -419,6 +422,7 @@
 		6B6E271B1E28978100F9CF66 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B978F8431E7DF0EB001EE49C /* Pages.framework */,
 				82542FFF1E77412A00EE32E6 /* SwiftyTimer.framework */,
 				6BF02FA91E3D9A2200F9B7B9 /* AEXML.framework */,
 				6B3290F21E3C4DD900AE693B /* AudioKit.framework */,
@@ -674,6 +678,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SwipyCell.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MGSwipeTableCell.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyTimer.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Pages.framework",
 			);
 			outputPaths = (
 			);
