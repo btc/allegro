@@ -58,8 +58,6 @@ class Audio {
                 if !note.rest {
                     sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
                 }
-                Log.info?.value(curPos)
-                Log.warning?.value(notePos.pos)
             }
             curMeasure += 1
 
