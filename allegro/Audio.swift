@@ -129,6 +129,7 @@ class Audio {
     
     fileprivate func midiPitch(for note: Note) -> UInt8 {
         var chroma: Chroma = .c
+        var octave = note.octave
         switch note.accidental {
         case .sharp:
             switch note.letter {
@@ -136,6 +137,7 @@ class Audio {
                 chroma = .as
             case .B:
                 chroma = .c
+                octave = note.octave + 1
             case .C:
                 chroma = .cs
             case .D:
@@ -186,7 +188,7 @@ class Audio {
         default: break // doubles
         }
 
-        return UInt8(Pitch(chroma: chroma, octave: UInt(note.octave)).midi)
+        return UInt8(Pitch(chroma: chroma, octave: UInt(octave)).midi)
     }
     
 }
