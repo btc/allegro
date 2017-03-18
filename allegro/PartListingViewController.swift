@@ -126,10 +126,15 @@ extension PartListingViewController: UITableViewDelegate {
             }
         }
 
-        let deleteButton = MGSwipeButton(title: "Delete", backgroundColor: .red)
-        let renameButton = MGSwipeButton(title: "Rename", backgroundColor: .allegroPurple)
+        let deleteButtonLeft = MGSwipeButton(title: "Delete", backgroundColor: .red)
+        let deleteButtonRight = MGSwipeButton(title: "Delete", backgroundColor: .red)
 
-        c.leftButtons = [deleteButton, renameButton]
+        let renameButtonLeft = MGSwipeButton(title: "Rename", backgroundColor: .allegroPurple)
+        let renameButtonRight = MGSwipeButton(title: "Rename", backgroundColor: .allegroPurple)
+
+        c.leftButtons = [deleteButtonLeft, renameButtonLeft]
+        c.leftSwipeSettings.transition = .border
+        c.rightButtons = [deleteButtonRight, renameButtonRight]
         c.rightSwipeSettings.transition = .border
     }
 
