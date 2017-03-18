@@ -83,8 +83,6 @@ class MusicXMLParser {
 
                 let _ = note.addChild(name: "type", value: "\(n.value.type)")
 
-                Log.info?.message("GENERATE TYPE: \(n.value.type)")
-
                 if n.rest {
                     note.addChild(name: "rest")
                 }
