@@ -29,6 +29,10 @@ class Audio {
         AudioKit.start()
     }
 
+    func stop() {
+        sequence.stop()
+    }
+    
     func playFromCurrentMeasure(part: Part, measure: Int, block: @escaping (Int) -> Void) {
         if !sequence.tracks[0].isEmpty {
             sequence.tracks[0].clear()
