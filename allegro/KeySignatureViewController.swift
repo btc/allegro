@@ -36,6 +36,11 @@ class KeySignatureViewController: UIViewController {
         v.adjustsFontSizeToFitWidth = true
         return v
     }()
+    
+    private let keySignatureView: KeySignatureView = {
+        let v = KeySignatureView()
+        return v
+    }()
 
     init(store: PartStore) {
         self.store = store
@@ -65,12 +70,13 @@ class KeySignatureViewController: UIViewController {
         
         view.addSubview(sharpButton)
         view.addSubview(flatButton)
-        view.addSubview(keySigLabel)
+        view.addSubview(keySignatureView)
         
         sharpButton.addTarget(self, action: #selector(sharpButtonTapped), for: .touchUpInside)
         flatButton.addTarget(self, action: #selector(flatButtonTapped), for: .touchUpInside)
         
-        navigationController?.navigationBar.topItem?.title = "Key Signature"
+        let keySig = store.part.keySignature
+        navigationController?.navigationBar.topItem?.title = "Key Signature: \(keySig.description)"
     }
     
     override func viewDidLayoutSubviews() {
@@ -82,7 +88,7 @@ class KeySignatureViewController: UIViewController {
         // TODO: Make visually pleasing
         
         sharpButton.frame = CGRect(x: parent.width - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
-                                   y: navbarHeight + DEFAULT_MARGIN_PTS,
+                                   y: parent.minY + navbarHeight + DEFAULT_MARGIN_PTS,
                                    width: DEFAULT_TAP_TARGET_SIZE,
                                    height: DEFAULT_TAP_TARGET_SIZE)
         
@@ -91,26 +97,27 @@ class KeySignatureViewController: UIViewController {
                                   width: DEFAULT_TAP_TARGET_SIZE,
                                   height: DEFAULT_TAP_TARGET_SIZE)
         
-        keySigLabel.frame = CGRect(x: parent.width/2,
-                                   y: parent.height/2,
-                                   width: DEFAULT_TAP_TARGET_SIZE,
-                                   height: DEFAULT_TAP_TARGET_SIZE)
+        keySignatureView.frame = CGRect(x: parent.minX + DEFAULT_MARGIN_PTS,
+                                        y: parent.minY + navbarHeight + DEFAULT_MARGIN_PTS,
+                                        width: parent.width / 2,
+                                        height: parent.height - navbarHeight - (2 * DEFAULT_MARGIN_PTS))
         
     }
     
     func updateUI() {
         // TODO: Modify to reveal sharps and flat on screen as appropriate
-        keySigLabel.text = store.part.keySignature.description
+        let keySig = store.part.keySignature
+        keySignatureView.key = keySig
+        keySigLabel.text = keySig.description
+        navigationItem.title = "Key Signature: \(keySig.description)"
     }
     
     func sharpButtonTapped() {
-        let curSig = store.part.keySignature
-        store.setKeySignature(keySignature: curSig.successor)
+        store.setKeySignature(keySignature: store.part.keySignature.successor)
     }
     
     func flatButtonTapped() {
-        let curSig = store.part.keySignature
-        store.setKeySignature(keySignature: curSig.predecessor)
+        store.setKeySignature(keySignature: store.part.keySignature.predecessor)
     }
     
 }
