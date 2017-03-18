@@ -162,6 +162,7 @@ class CompositionViewController: UIViewController {
     }
     
     func screenCoverTapped() {
+        audio?.stop()
         screenCover.isHidden = true
     }
 
