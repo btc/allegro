@@ -79,6 +79,7 @@
 		B90F77971E3680C1009F0CA3 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90F77961E3680C1009F0CA3 /* Mocks.swift */; };
 		B96902F01E6246E6006CF8D1 /* example0.xml in Resources */ = {isa = PBXBuildFile; fileRef = B96902EF1E6246E6006CF8D1 /* example0.xml */; };
 		B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96BCCC51E3D60650006A047 /* MusicXML.swift */; };
+		B978F8421E7DDE8C001EE49C /* KeySignatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */; };
 		B988BE0D1E68D9E5007BB32A /* PartSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B988BE0C1E68D9E5007BB32A /* PartSaver.swift */; };
 		B98BF2801E58FBEB000CCF3E /* MusicXMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */; };
 		B9A0A68E1E774AC900F362B5 /* Montserrat-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */; };
@@ -198,6 +199,7 @@
 		B90F77961E3680C1009F0CA3 /* Mocks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		B96902EF1E6246E6006CF8D1 /* example0.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = example0.xml; path = allegro/exampleMusicXML/example0.xml; sourceTree = "<group>"; };
 		B96BCCC51E3D60650006A047 /* MusicXML.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXML.swift; sourceTree = "<group>"; };
+		B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeySignatureView.swift; sourceTree = "<group>"; };
 		B988BE0C1E68D9E5007BB32A /* PartSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartSaver.swift; sourceTree = "<group>"; };
 		B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXMLTests.swift; sourceTree = "<group>"; };
 		B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraLight.otf"; path = "fonts/Montserrat-ExtraLight.otf"; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 				6B80D7EA1E466F30003996CF /* SideMenuButton.swift */,
 				6B3290F81E3D4FEB00AE693B /* Snackbar.swift */,
 				6BA99CF11E66423100CE8D19 /* PartListingCell.swift */,
+				B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -826,6 +829,7 @@
 				6BED4ABE1E496A7900DD2E19 /* Rational.swift in Sources */,
 				6B4CFB5D1E4C241B0087CEA8 /* NoteAction.swift in Sources */,
 				6B5C3A3F1E5260E60088414C /* CGFloat.swift in Sources */,
+				B978F8421E7DDE8C001EE49C /* KeySignatureView.swift in Sources */,
 				3217F85F1E4BD99E002A894C /* CGRect.swift in Sources */,
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
