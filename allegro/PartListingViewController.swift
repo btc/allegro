@@ -58,7 +58,7 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         DispatchQueue.global(qos: .userInteractive).async {
             self.files = PartFileManager.files // look for files from disk. files are already sorted by modified time
             DispatchQueue.main.async {
@@ -69,7 +69,7 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     override func viewDidLayoutSubviews() {
