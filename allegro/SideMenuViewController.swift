@@ -83,12 +83,10 @@ class SideMenuViewController: UIViewController {
         v.textAlignment = .center
         return v
     }()
-
-    private let keyButton: UIButton = {
-        let v = UIButton()
+    
+    private let keyButton: KeySignatureButton = {
+        let v = KeySignatureButton()
         v.backgroundColor = .clear
-        v.setTitleColor(.black, for: .normal)
-        v.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 28)
         v.showsTouchWhenHighlighted = true
         v.layer.borderColor = UIColor.black.cgColor
         v.layer.borderWidth = 1
@@ -207,7 +205,7 @@ class SideMenuViewController: UIViewController {
 
     func updateUI() {
         timeButton.setTitle(store.part.timeSignature.description, for: .normal)
-        keyButton.setTitle(store.part.keySignature.description, for: .normal)
+        keyButton.keySigView.key = store.part.keySignature
     }
     
     func timeSignaturesTapped() {
@@ -252,43 +250,18 @@ extension SideMenuViewController: PartStoreObserver {
     }
 }
 
-// descriptions for the side menu
-private extension Key {
-    var description: String {
-        switch fifths {
-        case 7:
-            return "C♯ Maj"
-        case 6:
-            return "F♯ Maj"
-        case 5:
-            return "B Maj"
-        case 4:
-            return "E Maj"
-        case 3:
-            return "A Maj"
-        case 2:
-            return "D Maj"
-        case 1:
-            return "G Maj"
-        case 0:
-            return "C Maj"
-        case -1:
-            return "F Maj"
-        case -2:
-            return "B♭ Maj"
-        case -3:
-            return "E♭ Maj"
-        case -4:
-            return "A♭ Maj"
-        case -5:
-            return "D♭ Maj"
-        case -6:
-            return "G♭ Maj"
-        case -7:
-            return "C♭ Maj"
-        default: // Defaults to C Major if invalid fifth used
-            return "C Maj"
-        }
+// adds KeySignatureView subview to display image of Key
+fileprivate class KeySignatureButton: UIButton {
+    var keySigView: KeySignatureView = {
+        let v = KeySignatureView()
+        v.contentMode = .scaleAspectFit
+        return v
+    }()
+    
+    fileprivate override func layoutSubviews() {
+        super.layoutSubviews()
+        addSubview(keySigView)
+        keySigView.frame = bounds
     }
 }
 
