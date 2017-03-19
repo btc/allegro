@@ -37,6 +37,7 @@ class KeySignatureViewController: UIViewController {
         return v
     }()
     
+    // subclass of UIImageView that handles which image to set based on Key Signature
     private let keySignatureView: KeySignatureView = {
         let v = KeySignatureView()
         return v
@@ -76,6 +77,7 @@ class KeySignatureViewController: UIViewController {
         flatButton.addTarget(self, action: #selector(flatButtonTapped), for: .touchUpInside)
         
         let keySig = store.part.keySignature
+        keySignatureView.key = keySig
         navigationController?.navigationBar.topItem?.title = "Key Signature: \(keySig.description)"
     }
     
