@@ -429,17 +429,3 @@ extension MeasureView: NoteActionDelegate {
     }
 }
 
-extension Note.Accidental {
-    // We draw the accidentals relate the the head of the note.
-    // The offset specifies a small delta since we need the flat
-    // to be slightly higher than the other accidentals to align with
-    // the measure line
-    var infos: (String, CGPoint) {
-        switch self {
-        case .natural: return ("♮", CGPoint(x: -20, y: -5))
-        case .sharp: return ("♯", CGPoint(x: -20, y: -5))
-        case .flat: return ("♭", CGPoint(x: -20, y: -17))
-        default: return ("", .zero)
-        }
-    }
-}
