@@ -239,8 +239,8 @@ class SideMenuViewController: UIViewController {
     }
 
     func helpButtonTapped() {
-        // TODO
-        Log.info?.message("Help Button Tapped. TODO open a help page or tutorial")
+        let vc = HelpViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
