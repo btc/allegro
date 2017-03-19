@@ -31,7 +31,6 @@ struct NoteGeometry {
         return CGSize(width: defaultNoteWidth * scale, height: defaultNoteHeight * scale)
     }
     
-    
     let restBoxWidth = CGFloat(30)
     let restSizeDict = [
         Note.Value.whole: CGSize(width: 60, height: 10),
@@ -54,6 +53,28 @@ struct NoteGeometry {
         self.staffHeight = staffHeight
     }
     
+    // We draw the accidentals relate the the head of the note.
+    // The offset specifies a small delta since we need the flat
+    // to be slightly higher than the other accidentals to align with
+    // the measure line
+    func getAccidentalPlacementOffset(accidental: Note.Accidental) -> CGPoint {
+        switch accidental {
+            case .natural: return CGPoint(x: -20 * scale, y: -5 * scale)
+            case .sharp: return CGPoint(x: -20 * scale, y: -5 * scale)
+            case .flat: return CGPoint(x: -20 * scale, y: -17 * scale)
+            default: return .zero
+        }
+    }
+    
+    func getAccidentalSymbol(accidental: Note.Accidental) -> String {
+        switch accidental {
+            case .natural: return "♮"
+            case .sharp: return "♯"
+            case .flat: return "♭"
+            default: return ""
+        }
+    }
+    
     func getAccidentalFrame(note: NoteViewModel) -> CGRect {
         let frame = getFrame(note: note)
         if !note.displayAccidental {
@@ -62,12 +83,10 @@ struct NoteGeometry {
         
         let center = CGPoint(x: origin.x,
                              y: origin.y + frame.size.width / 2)
+        
+        let offset = getAccidentalPlacementOffset(accidental: note.note.accidental)
 
-        let info = note.note.accidental.infos
-
-        let offset = info.1
-
-        let size = CGSize(width: 50, height: 60)
+        let size = CGSize(width: 50 * scale, height: 60 * scale)
         let accidentalOrigin = CGPoint(x: center.x - size.width / 2 + offset.x,
                              y: center.y - size.height / 2 + offset.y)
 
