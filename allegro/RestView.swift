@@ -20,13 +20,10 @@ class RestView: NoteActionView {
         "eighth": #imageLiteral(resourceName: "selectedeighthrest")
     ]
     
+    // we can only call this once
+    // but it should be fine since we are regenerating the ui every time
     override var isSelected: Bool {
-        get {
-            return super.isSelected
-        }
-        set {
-            super.isSelected = newValue
-            
+        didSet {
             let image = images[0]
             let imageDict = isSelected ? RestView.selectedRestImages : RestView.restImages
             
@@ -41,6 +38,10 @@ class RestView: NoteActionView {
                 }
             } else {
                 image.backgroundColor = isSelected ? .allegroBlue : .black
+            }
+            
+            for image in images {
+                addSubview(image)
             }
         }
     }
@@ -69,10 +70,6 @@ class RestView: NoteActionView {
             
             images[0].frame = CGRect(origin: origin1, size: size)
             images[1].frame = CGRect(origin: origin2, size: size)
-        }
-        
-        for image in images {
-            addSubview(image)
         }
     }
     
