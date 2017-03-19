@@ -43,7 +43,7 @@ class CompositionViewController: UIViewController {
 
     fileprivate let store: PartStore
 
-    fileprivate let measureViewCollection: MeasureViewCollection
+    fileprivate let measureViewCollection: MeasureCollectionViewController
 
     fileprivate let overviewView: UIView
 
@@ -71,7 +71,7 @@ class CompositionViewController: UIViewController {
         self.audio = audio
         self.partSaver = PartSaver(partStore: store, filename: filename)
 
-        measureViewCollection = MeasureViewCollection(store: store)
+        measureViewCollection = MeasureCollectionViewController(store: store)
         overviewView = OverviewView(store: store)
 
         //audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
@@ -91,7 +91,9 @@ class CompositionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        view.addSubview(measureViewCollection)
+        addChildViewController(measureViewCollection)
+
+        view.addSubview(measureViewCollection.view)
         view.addSubview(noteSelectorMenu)
         view.addSubview(modeToggle)
         view.addSubview(measureNumberLabel)
@@ -128,10 +130,10 @@ class CompositionViewController: UIViewController {
         modeToggle.imageEdgeInsets = UIEdgeInsetsMake((modeToggle.imageView?.frame.size.height)!*0.2, (modeToggle.imageView?.frame.size.width)!*0.2, (modeToggle.imageView?.frame.size.height)!*0.2, (modeToggle.imageView?.frame.size.width)!*0.2)
 
         // occupies space to the right of the menu
-        measureViewCollection.frame = CGRect(x: noteSelectorMenu.frame.maxX,
-                                  y: 0,
-                                  width: view.bounds.width - noteSelectorMenu.frame.width,
-                                  height: view.bounds.height)
+        measureViewCollection.view.frame = CGRect(x: noteSelectorMenu.frame.maxX,
+                                                  y: 0,
+                                                  width: view.bounds.width - noteSelectorMenu.frame.width,
+                                                  height: view.bounds.height)
         
         let buttonW = view.bounds.width/30
         

@@ -37,6 +37,8 @@
 		6B4CFB571E4ACD900087CEA8 /* allegroExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4CFB561E4ACD900087CEA8 /* allegroExtensionTests.swift */; };
 		6B4CFB5D1E4C241B0087CEA8 /* NoteAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B4CFB5C1E4C241B0087CEA8 /* NoteAction.swift */; };
 		6B5C3A3F1E5260E60088414C /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C3A3E1E5260E60088414C /* CGFloat.swift */; };
+		6B5C99E61E7E3049004A739F /* MeasureCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */; };
+		6B5C99E81E7E43FB004A739F /* MeasureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A71E2D7FE600399BDC /* Part.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A61E2D7FE600399BDC /* Part.swift */; };
 		6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A81E2D7FEF00399BDC /* Tie.swift */; };
@@ -149,6 +151,8 @@
 		6B4CFB561E4ACD900087CEA8 /* allegroExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = allegroExtensionTests.swift; sourceTree = "<group>"; };
 		6B4CFB5C1E4C241B0087CEA8 /* NoteAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteAction.swift; sourceTree = "<group>"; };
 		6B5C3A3E1E5260E60088414C /* CGFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloat.swift; sourceTree = "<group>"; };
+		6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureCollectionViewController.swift; sourceTree = "<group>"; };
+		6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewController.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A61E2D7FE600399BDC /* Part.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part.swift; sourceTree = "<group>"; };
 		6B6774A81E2D7FEF00399BDC /* Tie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tie.swift; sourceTree = "<group>"; };
@@ -436,6 +440,8 @@
 				82FC8E9F1E3049B300C59B7E /* SideMenuViewController.swift */,
 				8280ADAC1E4295AB00DFE061 /* TimeSignatureViewController.swift */,
 				8280ADAE1E4298F400DFE061 /* KeySignatureViewController.swift */,
+				6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */,
+				6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -838,6 +844,7 @@
 				82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */,
 				6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */,
 				6B6E27271E28B05100F9CF66 /* CompositionViewController.swift in Sources */,
+				6B5C99E61E7E3049004A739F /* MeasureCollectionViewController.swift in Sources */,
 				6BA99CF21E66423100CE8D19 /* PartListingCell.swift in Sources */,
 				32B8678C1E3062C60029F946 /* NoteView.swift in Sources */,
 				6B92BE631E308A6A00CE2C9F /* MeasureViewCollectionCell.swift in Sources */,
@@ -850,6 +857,7 @@
 				6B6774A71E2D7FE600399BDC /* Part.swift in Sources */,
 				6BED4ABA1E49695F00DD2E19 /* CGPoint.swift in Sources */,
 				B96BCCC61E3D60650006A047 /* MusicXML.swift in Sources */,
+				6B5C99E81E7E43FB004A739F /* MeasureViewController.swift in Sources */,
 				6B6E27241E289DE000F9CF66 /* RootNavigationViewController.swift in Sources */,
 				8280ADAF1E4298F400DFE061 /* KeySignatureViewController.swift in Sources */,
 				6B3797FE1E42EC3A001F9246 /* MeasureGeometry.swift in Sources */,
