@@ -15,33 +15,38 @@ class RestView: NoteActionView {
         "eighth": #imageLiteral(resourceName: "eighthrest")
     ]
     
-    let sixteenthSecondImageOffset = CGPoint(x: -14.5, y: 45)
+    static let selectedRestImages = [
+        "quarter": #imageLiteral(resourceName: "selectedquarterrest"),
+        "eighth": #imageLiteral(resourceName: "selectedeighthrest")
+    ]
     
-    override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
-        super.init(note: note, geometry: geometry, store: store)
-        let image = images[0]
-        
-        if note.note.value == .quarter {
-            image.image = RestView.restImages["quarter"]
-        } else if note.note.value.nominalDuration <= Note.Value.eighth.nominalDuration {
-            image.image = RestView.restImages["eighth"]
-            if note.note.value == .sixteenth {
-                let secondImage = UIImageView()
-                secondImage.image = RestView.restImages["eighth"]
-                images.append(secondImage)
+    // we can only call this once
+    // but it should be fine since we are regenerating the ui every time
+    override var isSelected: Bool {
+        didSet {
+            let image = images[0]
+            let imageDict = isSelected ? RestView.selectedRestImages : RestView.restImages
+            
+            if note.note.value == .quarter {
+                image.image = imageDict["quarter"]
+            } else if note.note.value.nominalDuration <= Note.Value.eighth.nominalDuration {
+                image.image = imageDict["eighth"]
+                if note.note.value == .sixteenth {
+                    let secondImage = UIImageView()
+                    secondImage.image = imageDict["eighth"]
+                    images.append(secondImage)
+                }
+            } else {
+                image.backgroundColor = isSelected ? .allegroBlue : .black
             }
-        } else {
-            image.backgroundColor = UIColor.black
-        }
-        
-        for image in images {
-            addSubview(image)
+            
+            for image in images {
+                addSubview(image)
+            }
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    let sixteenthSecondImageOffset = CGPoint(x: -14.5, y: 45)
     
     override func layoutSubviews() {
         super.layoutSubviews()
