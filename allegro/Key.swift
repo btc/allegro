@@ -34,8 +34,8 @@ struct Key {
     let mode: Key.Mode
     
     /* Highest and lowest acceptable values for key signature fifths */
-    let maxFifth = 7
-    let minFifth = -7
+    static let maxFifth = 7
+    static let minFifth = -7
     
     /* 
         Represents the number of accidentals in the key (according to the circle of fifths starting with 0 => C Major
@@ -103,7 +103,7 @@ struct Key {
     }
     
     var successor:Key {
-        if fifths == maxFifth {
+        if fifths == Key.maxFifth {
             return self
         } else {
             return Key(mode: mode, fifths: fifths + 1)
@@ -111,7 +111,7 @@ struct Key {
     }
     
     var predecessor:Key {
-        if fifths == minFifth {
+        if fifths == Key.minFifth {
             return self
         } else {
             return Key(mode: mode, fifths: fifths - 1)

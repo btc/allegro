@@ -14,32 +14,34 @@ class KeySignatureViewController: UIViewController {
     
     private let sharpButton: UIButton = {
         let v = UIButton()
-        v.backgroundColor = .clear
         v.setTitleColor(.black, for: .normal)
+        v.setTitleColor(.lightGray, for: .disabled)
         v.setTitle("♯", for: UIControlState.normal)
-        v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 60)
+        v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 64)
+        v.layer.borderColor = UIColor.black.cgColor
+        v.layer.borderWidth = 1
+        v.layer.cornerRadius = 5
+        v.showsTouchWhenHighlighted = true
         return v
     }()
     
     private let flatButton: UIButton = {
         let v = UIButton()
         v.setTitleColor(.black, for: .normal)
+        v.setTitleColor(.lightGray, for: .disabled)
         v.setTitle("♭", for: UIControlState.normal)
-        v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 60)
-        return v
-    }()
-    
-    // This is a placeholder for the functionality in the demo where sharps are added to the screen as needed
-    private let keySigLabel: UILabel = {
-        let v = UILabel()
-        v.textColor = .gray
-        v.adjustsFontSizeToFitWidth = true
+        v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 64)
+        v.layer.borderColor = UIColor.black.cgColor
+        v.layer.borderWidth = 1
+        v.layer.cornerRadius = 5
+        v.showsTouchWhenHighlighted = true
         return v
     }()
     
     // subclass of UIImageView that handles which image to set based on Key Signature
     private let keySignatureView: KeySignatureView = {
         let v = KeySignatureView()
+        v.contentMode = .scaleAspectFit
         return v
     }()
 
@@ -86,32 +88,51 @@ class KeySignatureViewController: UIViewController {
         let navbarHeight = navigationController?.navigationBar.frame.height ?? DEFAULT_MARGIN_PTS
         let parent = view.bounds
         
-        // All placeholder locations
-        // TODO: Make visually pleasing
-        
-        sharpButton.frame = CGRect(x: parent.width - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
+        sharpButton.frame = CGRect(x: (3/4) * parent.width + DEFAULT_MARGIN_PTS,
                                    y: parent.minY + navbarHeight + DEFAULT_MARGIN_PTS,
-                                   width: DEFAULT_TAP_TARGET_SIZE,
-                                   height: DEFAULT_TAP_TARGET_SIZE)
+                                   width: parent.width / 4 - (2 * DEFAULT_MARGIN_PTS),
+                                   height: (parent.height - navbarHeight - 3 * DEFAULT_MARGIN_PTS) / 2)
         
-        flatButton.frame = CGRect(x: parent.width - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
-                                  y: parent.height - DEFAULT_TAP_TARGET_SIZE - DEFAULT_MARGIN_PTS,
-                                  width: DEFAULT_TAP_TARGET_SIZE,
-                                  height: DEFAULT_TAP_TARGET_SIZE)
+        flatButton.frame = CGRect(x: (3/4) * parent.width + DEFAULT_MARGIN_PTS,
+                                  y: sharpButton.frame.maxY + DEFAULT_MARGIN_PTS,
+                                  width: parent.width / 4 - (2 * DEFAULT_MARGIN_PTS),
+                                  height: (parent.height - navbarHeight - 3 * DEFAULT_MARGIN_PTS) / 2)
         
         keySignatureView.frame = CGRect(x: parent.minX + DEFAULT_MARGIN_PTS,
                                         y: parent.minY + navbarHeight + DEFAULT_MARGIN_PTS,
-                                        width: parent.width / 2,
+                                        width: (3/4) * parent.width,
                                         height: parent.height - navbarHeight - (2 * DEFAULT_MARGIN_PTS))
         
     }
     
-    func updateUI() {
-        // TODO: Modify to reveal sharps and flat on screen as appropriate
+    private func enableButton(button: UIButton) {
+        button.isEnabled = true
+        button.showsTouchWhenHighlighted = true
+        button.layer.borderColor = UIColor.black.cgColor
+    }
+    
+    private func disableButton(button: UIButton) {
+        button.isEnabled = false
+        button.showsTouchWhenHighlighted = false
+        button.layer.borderColor = UIColor.lightGray.cgColor
+    }
+    
+    fileprivate func updateUI() {
         let keySig = store.part.keySignature
         keySignatureView.key = keySig
-        keySigLabel.text = keySig.description
         navigationItem.title = "Key Signature: \(keySig.description)"
+        
+        if keySig.fifths >= Key.maxFifth {
+            disableButton(button: sharpButton)
+        } else {
+            enableButton(button: sharpButton)
+        }
+        
+        if keySig.fifths <= Key.minFifth {
+            disableButton(button: flatButton)
+        } else {
+            enableButton(button: flatButton)
+        }
     }
     
     func sharpButtonTapped() {
@@ -135,37 +156,37 @@ private extension Key {
     var description: String {
         switch fifths {
         case 7:
-            return "C♯ Maj"
+            return "C♯ Major"
         case 6:
-            return "F♯ Maj"
+            return "F♯ Major"
         case 5:
-            return "B Maj"
+            return "B Major"
         case 4:
-            return "E Maj"
+            return "E Major"
         case 3:
-            return "A Maj"
+            return "A Major"
         case 2:
-            return "D Maj"
+            return "D Major"
         case 1:
-            return "G Maj"
+            return "G Major"
         case 0:
-            return "C Maj"
+            return "C Major"
         case -1:
-            return "F Maj"
+            return "F Major"
         case -2:
-            return "B♭ Maj"
+            return "B♭ Major"
         case -3:
-            return "E♭ Maj"
+            return "E♭ Major"
         case -4:
-            return "A♭ Maj"
+            return "A♭ Major"
         case -5:
-            return "D♭ Maj"
+            return "D♭ Major"
         case -6:
-            return "G♭ Maj"
+            return "G♭ Major"
         case -7:
-            return "C♭ Maj"
+            return "C♭ Major"
         default: // Defaults to C Major if invalid fifth used
-            return "C Maj"
+            return "C Major"
         }
     }
 }
