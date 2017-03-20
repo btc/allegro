@@ -252,7 +252,6 @@ class MeasureView: UIView {
             }
         }
         
-        // don't draw bars for now since its extremely buggy
         barLayer.path = barPath.cgPath
         barLayer.fillColor = UIColor.black.cgColor
 
