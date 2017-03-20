@@ -190,11 +190,9 @@ extension CompositionViewController: PartStoreObserver {
 
 extension CompositionViewController: AudioObserver {
     func audioChanged() {
-        guard audio?.isPlaying() == true else {
-            screenCover.isHidden = true
-            return
+        if let audio = audio {
+            screenCover.isHidden = !audio.isPlaying()
         }
-        screenCover.isHidden = false
     }
     
 }
