@@ -9,7 +9,7 @@
 import UIKit
 
 class RestView: NoteActionView {
-    fileprivate var images = [UIImageView()]
+    fileprivate var images = [UIImageView(), UIImageView()]
     static let restImages = [
         "quarter": #imageLiteral(resourceName: "quarterrest"),
         "eighth": #imageLiteral(resourceName: "eighthrest")
@@ -20,10 +20,16 @@ class RestView: NoteActionView {
         "eighth": #imageLiteral(resourceName: "selectedeighthrest")
     ]
     
-    // we can only call this once
-    // but it should be fine since we are regenerating the ui every time
     override var isSelected: Bool {
         didSet {
+            for image in images {
+                // gotta check if an image is a descendant since 16th rest is made of 
+                // two images
+                if image.isDescendant(of: self) {
+                    image.removeFromSuperview()
+                }
+            }
+            
             let image = images[0]
             let imageDict = isSelected ? RestView.selectedRestImages : RestView.restImages
             
@@ -32,17 +38,15 @@ class RestView: NoteActionView {
             } else if note.note.value.nominalDuration <= Note.Value.eighth.nominalDuration {
                 image.image = imageDict["eighth"]
                 if note.note.value == .sixteenth {
-                    let secondImage = UIImageView()
+                    let secondImage = images[1]
                     secondImage.image = imageDict["eighth"]
-                    images.append(secondImage)
+                    addSubview(secondImage)
                 }
             } else {
                 image.backgroundColor = isSelected ? .allegroBlue : .black
             }
             
-            for image in images {
-                addSubview(image)
-            }
+            addSubview(image)
         }
     }
     
@@ -56,7 +60,7 @@ class RestView: NoteActionView {
             return
         }
         
-        if images.count == 1 {
+        if note.note.value.nominalDuration > Note.Value.sixteenth.nominalDuration {
             images[0].frame = bounds
         } else {
             // we draw sixteenth rests as two images stacked on top of each other
