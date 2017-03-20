@@ -11,9 +11,30 @@ import Rational
 import MusicKit
 import SwiftyTimer
 
+protocol AudioObserver: class {
+    func audioChanged()
+}
+
+extension AudioObserver {
+    func audioChanged() {
+        //default impl
+    }
+}
+
+private class Weak {
+    private(set) weak var value: AudioObserver?
+    
+    init(_ value: AudioObserver?) {
+        self.value = value
+    }
+}
+
+
 class Audio {
 
     let sequence = AKSequencer()
+    
+    private var observers: [Weak] = [Weak]()
 
     init() {
         let oscillator = AKFMOscillatorBank()
@@ -31,6 +52,32 @@ class Audio {
 
     func stop() {
         sequence.stop()
+    }
+    
+    func isPlaying() -> Bool {
+        return sequence.isPlaying
+    }
+    
+    func subscribe(_ observer: AudioObserver) {
+        observers.append(Weak(observer))
+        observer.audioChanged()
+    }
+    
+    func unsubscribe(_ observer: AudioObserver) {
+        observers = observers.filter {
+            guard let value = $0.value else { return false } // prune released objects
+            return value !== observer
+        }
+    }
+    
+    // general notification must always be sent to observers
+    private func notify() {
+        // prunes released objects as it iterates
+        observers = observers.filter {
+            guard let value = $0.value else { return false }
+            value.audioChanged()
+            return true
+        }
     }
     
     func playFromCurrentMeasure(part: Part, measure: Int, block: @escaping (Int) -> Void) {
@@ -62,6 +109,7 @@ class Audio {
 
         sequence.setTempo(Double(part.tempo))
         sequence.play()
+        notify()
 
         sequence.rewind()
         
@@ -73,6 +121,7 @@ class Audio {
             let currentMeasure = floor(self.sequence.currentRelativePosition.beats/beatsPerMeasure) + measure
             if currentMeasure >= Double(endMeasure) {
                 self.sequence.stop()
+                self.notify()
             }
             guard self.sequence.isPlaying else {
                 timer.invalidate()
