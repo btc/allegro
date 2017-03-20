@@ -49,6 +49,14 @@ struct NoteGeometry {
         return CGSize(width: unscaledSize.width * scale, height: unscaledSize.height * scale)
     }
     
+    var barThickness: CGFloat {
+        return 10 * scale
+    }
+    
+    var barOffset: CGFloat {
+        return 15 * scale
+    }
+    
     init(staffHeight: CGFloat) {
         self.staffHeight = staffHeight
     }
