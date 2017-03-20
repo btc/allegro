@@ -69,7 +69,7 @@ struct NoteGeometry {
         switch accidental {
             case .natural: return CGPoint(x: -20 * scale, y: -5 * scale)
             case .sharp: return CGPoint(x: -20 * scale, y: -5 * scale)
-            case .flat: return CGPoint(x: -20 * scale, y: -17 * scale)
+            case .flat: return CGPoint(x: -20 * scale, y: -18 * scale)
             default: return .zero
         }
     }
@@ -90,11 +90,11 @@ struct NoteGeometry {
         }
         
         let center = CGPoint(x: origin.x,
-                             y: origin.y + scale * frame.size.width / 2)
+                             y: origin.y + frame.size.width / 2)
         
         let offset = getAccidentalPlacementOffset(accidental: note.note.accidental)
 
-        let size = CGSize(width: 50 * scale, height: 60 * scale)
+        let size = CGSize(width: 40 * scale, height: 80 * scale)
         let accidentalOrigin = CGPoint(x: center.x - size.width / 2 + offset.x,
                              y: center.y - size.height / 2 + offset.y)
 

@@ -123,7 +123,9 @@ class NoteView: NoteActionView {
         let label = UILabel()
         label.frame = geometry.getAccidentalFrame(note: note)
         label.text = geometry.getAccidentalSymbol(accidental: note.note.accidental)
-        label.font = UIFont(name: "DejaVu Sans", size: 70)
+        label.font = UIFont(name: "DejaVu Sans", size: 200)
+        label.adjustsFontSizeToFitWidth = true
+        label.baselineAdjustment = .alignCenters
         label.textAlignment = .right
         return label
     }
