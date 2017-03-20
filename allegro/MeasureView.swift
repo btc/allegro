@@ -287,7 +287,7 @@ class MeasureView: UIView {
         if let nv = hitTest(location, with: nil) as? NoteActionView {
             guard let store = store, let index = index else { return }
             store.removeNote(fromMeasureIndex: index, at: nv.note.position)
-        } else if let _ = sender as? UITapGestureRecognizer {
+        } else if sender is UITapGestureRecognizer {
             Snackbar(message: "you're in erase mode", duration: .short).show()
         }
     }
