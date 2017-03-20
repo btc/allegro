@@ -82,7 +82,7 @@ struct NoteGeometry {
         }
         
         let center = CGPoint(x: origin.x,
-                             y: origin.y + frame.size.width / 2)
+                             y: origin.y + scale * frame.size.width / 2)
         
         let offset = getAccidentalPlacementOffset(accidental: note.note.accidental)
 
