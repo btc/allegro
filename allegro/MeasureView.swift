@@ -234,15 +234,19 @@ class MeasureView: UIView {
                         barPath.move(to: next)
                         next = barEnd
                         barPath.addLine(to: next)
-                        next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
+                        
+                        let thicknessOffset = noteViewModel.flipped ? -barThickness : barThickness
+                        
+                        next = CGPoint(x: barEnd.x, y: barEnd.y + thicknessOffset)
                         barPath.addLine(to: next)
-                        next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
+                        next = CGPoint(x: barStart.x, y: barStart.y + thicknessOffset)
                         barPath.addLine(to: next)
                         barPath.close()
                     }
                     barEnd = flagStart.offset(dx: noteView.stemThickness, dy: 0)
                     drawBar(barStart: barStart, barEnd: barEnd, barPath: barPath)
                     
+                    /*
                     if noteViewModel.note.value == .sixteenth {
                         let offset = noteViewModel.flipped ? -barOffset: barOffset
                         barStart = barStart.offset(dx: 0, dy: offset)
@@ -250,6 +254,7 @@ class MeasureView: UIView {
                         
                         drawBar(barStart: barStart, barEnd: barEnd, barPath: barPath)
                     }
+                    */
                 }
             }
         }
