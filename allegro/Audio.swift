@@ -52,6 +52,7 @@ class Audio {
 
     func stop() {
         sequence.stop()
+        notify()
     }
     
     func isPlaying() -> Bool {
