@@ -23,6 +23,11 @@ class MeasureCollectionViewController: UIPageViewController {
         let measureOne = MeasureViewController(store: store, index: store.currentMeasure)
         let vcs = [measureOne]
         setViewControllers(vcs, direction: .forward, animated: false, completion: nil)
+
+        // this is a hacky way to enable two-finger measure changing. if the functionality breaks, this is where we should look.
+        if let pan = gestureRecognizers.first as? UIPanGestureRecognizer {
+            pan.maximumNumberOfTouches = 2
+        }
     }
     
     required init?(coder: NSCoder) {
