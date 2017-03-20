@@ -33,9 +33,6 @@ class MeasureView: UIView {
 
     fileprivate let staffLineThickness: CGFloat = 2
 
-    fileprivate let barThickness: CGFloat = 5
-    fileprivate let barOffset: CGFloat = 10
-
     fileprivate let barLayer: CAShapeLayer = {
         return CAShapeLayer()
     }()
@@ -232,9 +229,12 @@ class MeasureView: UIView {
                         barPath.move(to: next)
                         next = barEnd
                         barPath.addLine(to: next)
-                        next = CGPoint(x: barEnd.x, y: barEnd.y + barThickness)
+                        
+                        let barThicknessOffset = noteViewModel.flipped ? -g.barThickness : g.barThickness
+                        
+                        next = CGPoint(x: barEnd.x, y: barEnd.y + barThicknessOffset)
                         barPath.addLine(to: next)
-                        next = CGPoint(x: barStart.x, y: barStart.y + barThickness)
+                        next = CGPoint(x: barStart.x, y: barStart.y + barThicknessOffset)
                         barPath.addLine(to: next)
                         barPath.close()
                     }
@@ -242,7 +242,7 @@ class MeasureView: UIView {
                     drawBar(barStart: barStart, barEnd: barEnd, barPath: barPath)
                     
                     if noteViewModel.note.value == .sixteenth {
-                        let offset = noteViewModel.flipped ? -barOffset: barOffset
+                        let offset = noteViewModel.flipped ? -g.barOffset: g.barOffset
                         barStart = barStart.offset(dx: 0, dy: offset)
                         barEnd = barEnd.offset(dx: 0, dy: offset)
                         
