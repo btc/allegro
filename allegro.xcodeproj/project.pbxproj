@@ -39,6 +39,7 @@
 		6B5C3A3F1E5260E60088414C /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C3A3E1E5260E60088414C /* CGFloat.swift */; };
 		6B5C99E61E7E3049004A739F /* MeasureCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */; };
 		6B5C99E81E7E43FB004A739F /* MeasureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */; };
+		6B5C9A111E80478B004A739F /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C9A101E80478B004A739F /* TutorialViewController.swift */; };
 		6B5C9A131E804BEF004A739F /* CompositionModeToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C9A121E804BEF004A739F /* CompositionModeToggleButton.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A71E2D7FE600399BDC /* Part.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A61E2D7FE600399BDC /* Part.swift */; };
@@ -157,6 +158,7 @@
 		6B5C3A3E1E5260E60088414C /* CGFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloat.swift; sourceTree = "<group>"; };
 		6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureCollectionViewController.swift; sourceTree = "<group>"; };
 		6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewController.swift; sourceTree = "<group>"; };
+		6B5C9A101E80478B004A739F /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		6B5C9A121E804BEF004A739F /* CompositionModeToggleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositionModeToggleButton.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A61E2D7FE600399BDC /* Part.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part.swift; sourceTree = "<group>"; };
@@ -455,6 +457,7 @@
 				6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */,
 				6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */,
 				B978F8491E7EF852001EE49C /* HelpViewController.swift */,
+				6B5C9A101E80478B004A739F /* TutorialViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -845,6 +848,7 @@
 				6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */,
 				6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */,
 				6BC598171E56294200F3677E /* Measure.swift in Sources */,
+				6B5C9A111E80478B004A739F /* TutorialViewController.swift in Sources */,
 				6BA99CF61E6649CD00CE8D19 /* PartFileManager.swift in Sources */,
 				B9AEF2831E60BF9200B0910E /* AEXMLElement.swift in Sources */,
 				32B8678A1E2D79F80029F946 /* MeasureView.swift in Sources */,

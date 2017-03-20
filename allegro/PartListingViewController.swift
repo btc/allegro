@@ -49,7 +49,10 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
         view.backgroundColor = UIColor.white
 
         view.addSubview(partListing)
-        
+
+        let tutorialButton = UIBarButtonItem(title: "Tutorial", style: .plain, target: self, action: #selector(tutorialTapped))
+        tutorialButton.tintColor = .allegroPurple
+        navigationController?.navigationBar.topItem?.leftBarButtonItem = tutorialButton
         let newButton = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(newCompositionTapped))
         newButton.tintColor = .allegroPurple
         navigationController?.navigationBar.topItem?.rightBarButtonItem = newButton
@@ -75,6 +78,10 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // NB: does nothing
         partListing.frame = view.bounds
+    }
+
+    func tutorialTapped() {
+        navigationController?.pushViewController(TutorialViewController(), animated: true)
     }
 
     func newCompositionTapped() {

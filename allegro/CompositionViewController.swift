@@ -17,9 +17,8 @@ class CompositionViewController: UIViewController {
         return v
     }()
 
-    fileprivate let modeToggle: UIButton = {
+    fileprivate let modeToggle: CompositionModeToggleButton = {
         let v = CompositionModeToggleButton()
-        v.addTarget(self, action: #selector(toggled), for: .touchUpInside)
         return v
     }()
     
@@ -81,8 +80,9 @@ class CompositionViewController: UIViewController {
         view.addGestureRecognizer(pinchRecognizer)
         pinchRecognizer.addTarget(self, action: #selector(pinched))
 
-        noteSelectorMenu.selectorDelegate = self
-        store.newNote = noteSelectorMenu.selectedNoteValue
+        modeToggle.store = store
+        noteSelectorMenu.store = store
+
         store.subscribe(self)
     }
     
@@ -152,26 +152,10 @@ class CompositionViewController: UIViewController {
     func pinched() {
         store.view = .overview
     }
-
-    func toggled() {
-        switch store.mode {
-        case .edit:
-            store.mode = .erase
-        case .erase:
-            store.mode = .edit
-        }
-    }
 }
 
 extension CompositionViewController: PartStoreObserver {
     func partStoreChanged() {
-        switch store.mode {
-        case .edit:
-            modeToggle.isSelected = false
-        case .erase:
-            modeToggle.isSelected = true
-        }
-
         overviewView.isHidden = store.view != .overview
 
         measureNumberLabel.text = "\(store.currentMeasure + 1)/\(store.measureCount)"
@@ -184,13 +168,5 @@ extension CompositionViewController: PartStoreObserver {
 
     func noteModified(in measure: Int, at position: Rational) {
         audio?.playNote(part: store.part, measure: measure, position: position)
-    }
-}
-
-extension CompositionViewController: NoteSelectorDelegate {
-    func didChangeSelection(value: Note.Value) {
-        store.newNote = value
-        store.mode = .edit
-        Log.info?.message("user selected \(value) value")
     }
 }

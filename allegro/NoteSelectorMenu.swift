@@ -8,11 +8,13 @@
 
 import UIKit
 
-protocol NoteSelectorDelegate: class {
-    func didChangeSelection(value: Note.Value)
-}
-
 class NoteSelectorMenu: UICollectionView {
+
+    var store: PartStore? {
+        didSet {
+            store?.newNote = selectedNoteValue
+        }
+    }
 
     var selectedNoteValue: Note.Value {
         get {
@@ -20,11 +22,10 @@ class NoteSelectorMenu: UICollectionView {
         }
     }
 
-    weak var selectorDelegate: NoteSelectorDelegate?
-
     fileprivate var selectedNote = 2 { // quarter is default selection
         didSet {
-            selectorDelegate?.didChangeSelection(value: selectedNoteValue)
+            store?.newNote = selectedNoteValue
+            store?.mode = .edit
         }
     }
 
