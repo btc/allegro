@@ -208,9 +208,15 @@ struct MeasureGeometry {
             let g = noteGeometry
             var last = margin
             
+            // we need to subtract half the width of a note from both ends of the measure
+            // to get the total width we can place things in
+            let noteFrame = g.getFrame(note: measure.notes[0])
+            let avaliableWidth = defaultWidth - noteFrame.width
+            let avaliableTime = measure.timeSignature.cgFloat - measure.notes[measure.notes.count - 1].position.cgFloat
+            
             // Calculate the whitespace intervals between notes if there are any
             for note in measure.notes {
-                let noteCenterX = defaultWidth * note.position.cgFloat / measure.timeSignature.cgFloat
+                let noteCenterX = avaliableWidth * note.position.cgFloat / avaliableTime + noteFrame.width / 2
                 let bbox = g.getBoundingBox(note: note)
                 
                 let defaultX = max(last,noteCenterX - bbox.size.width / 2)
