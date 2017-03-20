@@ -39,6 +39,7 @@
 		6B5C3A3F1E5260E60088414C /* CGFloat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C3A3E1E5260E60088414C /* CGFloat.swift */; };
 		6B5C99E61E7E3049004A739F /* MeasureCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */; };
 		6B5C99E81E7E43FB004A739F /* MeasureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */; };
+		6B5C9A131E804BEF004A739F /* CompositionModeToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C9A121E804BEF004A739F /* CompositionModeToggleButton.swift */; };
 		6B6774A31E2D7FC600399BDC /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A21E2D7FC600399BDC /* Note.swift */; };
 		6B6774A71E2D7FE600399BDC /* Part.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A61E2D7FE600399BDC /* Part.swift */; };
 		6B6774A91E2D7FEF00399BDC /* Tie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6774A81E2D7FEF00399BDC /* Tie.swift */; };
@@ -156,6 +157,7 @@
 		6B5C3A3E1E5260E60088414C /* CGFloat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloat.swift; sourceTree = "<group>"; };
 		6B5C99E51E7E3049004A739F /* MeasureCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureCollectionViewController.swift; sourceTree = "<group>"; };
 		6B5C99E71E7E43FB004A739F /* MeasureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasureViewController.swift; sourceTree = "<group>"; };
+		6B5C9A121E804BEF004A739F /* CompositionModeToggleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompositionModeToggleButton.swift; sourceTree = "<group>"; };
 		6B6774A21E2D7FC600399BDC /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		6B6774A61E2D7FE600399BDC /* Part.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Part.swift; sourceTree = "<group>"; };
 		6B6774A81E2D7FEF00399BDC /* Tie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tie.swift; sourceTree = "<group>"; };
@@ -333,6 +335,8 @@
 		6B6774A11E2D7FAE00399BDC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6B5C9A121E804BEF004A739F /* CompositionModeToggleButton.swift */,
+				B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */,
 				6B3797FD1E42EC3A001F9246 /* MeasureGeometry.swift */,
 				6B1B8E7F1E48F3EB00851D02 /* MeasureTouchGuide.swift */,
 				32B867891E2D79F80029F946 /* MeasureView.swift */,
@@ -345,11 +349,10 @@
 				6BE02B4A1E2DD33F0073D06F /* NoteSelectorMenu.swift */,
 				32B8678B1E3062C60029F946 /* NoteView.swift */,
 				6BE165D91E6CD925000471A4 /* OverviewView.swift */,
+				6BA99CF11E66423100CE8D19 /* PartListingCell.swift */,
 				6BBD4D1F1E3FF0EB00F0B50E /* RestView.swift */,
 				6B80D7EA1E466F30003996CF /* SideMenuButton.swift */,
 				6B3290F81E3D4FEB00AE693B /* Snackbar.swift */,
-				6BA99CF11E66423100CE8D19 /* PartListingCell.swift */,
-				B978F8411E7DDE8C001EE49C /* KeySignatureView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -853,6 +856,7 @@
 				6B096E561E313B7200615723 /* NoteViewModel.swift in Sources */,
 				6B6774A31E2D7FC600399BDC /* Note.swift in Sources */,
 				B988BE0D1E68D9E5007BB32A /* PartSaver.swift in Sources */,
+				6B5C9A131E804BEF004A739F /* CompositionModeToggleButton.swift in Sources */,
 				82FC8EA01E3049B300C59B7E /* SideMenuViewController.swift in Sources */,
 				6B6E26EE1E288F8200F9CF66 /* AppDelegate.swift in Sources */,
 				6B6E27271E28B05100F9CF66 /* CompositionViewController.swift in Sources */,

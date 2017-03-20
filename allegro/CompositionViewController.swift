@@ -18,11 +18,8 @@ class CompositionViewController: UIViewController {
     }()
 
     fileprivate let modeToggle: UIButton = {
-        let v = UIButton()
+        let v = CompositionModeToggleButton()
         v.addTarget(self, action: #selector(toggled), for: .touchUpInside)
-        v.backgroundColor = .allegroPurple
-        v.setImage(#imageLiteral(resourceName: "note mode"), for: .normal)
-        v.setImage(#imageLiteral(resourceName: "eraser"), for: .selected)
         return v
     }()
     
@@ -131,11 +128,8 @@ class CompositionViewController: UIViewController {
                                   y: noteSelectorMenu.frame.maxY,
                                   width: leftMenuWidth,
                                   height: toggleHeight)
-        //Added insets for button images. Added here instead of closure initalizer 
-        //because the frame size is set above.
-        modeToggle.imageEdgeInsets = UIEdgeInsetsMake((modeToggle.imageView?.frame.size.height)!*0.2, (modeToggle.imageView?.frame.size.width)!*0.2, (modeToggle.imageView?.frame.size.height)!*0.2, (modeToggle.imageView?.frame.size.width)!*0.2)
-
-        // occupies space to the right of the menu
+                // occupies space to the right of the menu
+        
         measureViewCollection.view.frame = CGRect(x: noteSelectorMenu.frame.maxX,
                                                   y: 0,
                                                   width: view.bounds.width - noteSelectorMenu.frame.width,
