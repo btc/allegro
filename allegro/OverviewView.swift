@@ -10,7 +10,6 @@ import UIKit
 
 class OverviewView: UIView {
 
-//    static let margin = DEFAULT_MARGIN_PTS
     static let margin: CGFloat = 15
     static let whitespace: CGFloat = 20
 
@@ -31,10 +30,6 @@ class OverviewView: UIView {
         return v
     }()
 
-    let tap: UITapGestureRecognizer = {
-        return UITapGestureRecognizer()
-    }()
-
     init(store: PartStore) {
         self.store = store
         super.init(frame: .zero)
@@ -49,9 +44,6 @@ class OverviewView: UIView {
         measures.dataSource = self
         measures.delegate = self
         measures.allowsSelection = true
-
-        addGestureRecognizer(tap)
-        tap.addTarget(self, action: #selector(tapped))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -60,10 +52,6 @@ class OverviewView: UIView {
 
     override func layoutSubviews() {
         measures.frame = bounds
-    }
-
-    func tapped(sender: UITapGestureRecognizer) {
-        
     }
 }
 
@@ -106,8 +94,7 @@ extension OverviewView: UICollectionViewDataSource {
 }
 
 extension OverviewView: UICollectionViewDelegate {
-
-    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         store.currentMeasure = indexPath.item
         store.view = .measure
     }

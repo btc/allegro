@@ -47,6 +47,11 @@ class CompositionViewController: UIViewController {
 
     fileprivate let overviewView: UIView
 
+    fileprivate let pinchRecognizer: UIPinchGestureRecognizer = {
+        let gr = UIPinchGestureRecognizer()
+        return gr
+    }()
+
     fileprivate let audio: Audio?
 
     // observer that saves the part to disk after every change
@@ -74,9 +79,10 @@ class CompositionViewController: UIViewController {
         measureViewCollection = MeasureCollectionViewController(store: store)
         overviewView = OverviewView(store: store)
 
-        //audio = Tweaks.assign(Tweaks.audio) ? Audio(store: store) : nil
-
         super.init(nibName: nil, bundle: nil)
+
+        view.addGestureRecognizer(pinchRecognizer)
+        pinchRecognizer.addTarget(self, action: #selector(pinched))
 
         noteSelectorMenu.selectorDelegate = self
         store.newNote = noteSelectorMenu.selectedNoteValue
@@ -150,6 +156,10 @@ class CompositionViewController: UIViewController {
                                                   y: view.bounds.height - DEFAULT_MARGIN_PTS - measureNumberLabel.bounds.height)
     }
 
+    func pinched() {
+        store.view = .overview
+    }
+
     func toggled() {
         switch store.mode {
         case .edit:
@@ -169,7 +179,7 @@ extension CompositionViewController: PartStoreObserver {
             modeToggle.isSelected = true
         }
 
-        overviewView.isHidden = store.view != .overview // TODO: animate this transition
+        overviewView.isHidden = store.view != .overview
 
         measureNumberLabel.text = "\(store.currentMeasure + 1)/\(store.measureCount)"
         measureNumberLabel.sizeToFit()
