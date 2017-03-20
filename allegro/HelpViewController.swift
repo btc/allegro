@@ -12,7 +12,12 @@ class HelpViewController: PagesController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        if let pan = gestureRecognizers.first as? UIPanGestureRecognizer {
+            navigationController?.interactivePopGestureRecognizer?.require(toFail: pan)
+        }
+
+
         navigationController?.navigationBar.topItem?.title = "Help"
         navigationController?.navigationBar.backgroundColor = .white
         
