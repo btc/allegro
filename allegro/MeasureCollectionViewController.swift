@@ -38,7 +38,12 @@ class MeasureCollectionViewController: UIPageViewController {
         super.viewDidLoad()
     }
 }
-
+extension MeasureCollectionViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer == gestureRecognizers.first && otherGestureRecognizer is UIScreenEdgePanGestureRecognizer
+    }
+}
 extension MeasureCollectionViewController: PartStoreObserver {
     func didChangeMeasure(oldValue: Int, currentMeasure: Int) {
         guard !changedMeasureMyself else {
