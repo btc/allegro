@@ -160,11 +160,13 @@ class PartStore {
         return actualPosition
     }
 
-    func removeNote(fromMeasureIndex i: Int, at position: Rational) {
+    func removeNote(fromMeasureIndex i: Int, at position: Rational) -> Bool {
         if part.removeNote(fromMeasureIndex: i, at: position) {
             notify()
             Log.info?.message("removed note at \(position.lowestTerms)")
+            return true
         }
+        return false
     }
 
     func removeAndReturnNote(fromMeasure index: Int, at position: Rational) -> Note? {

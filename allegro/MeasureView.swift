@@ -74,8 +74,8 @@ class MeasureView: UIView {
             gr.addTarget(self, action: sel)
             addGestureRecognizer(gr)
             gr.require(toFail: screenEdgeGR) // so user can open side menu without accidentally erasing, etc.
-            gr.delegate = self
         }
+        longPressPanGestureRecognizer.require(toFail: tapGestureRecognizer)
         addGestureRecognizer(screenEdgeGR)
     }
 
@@ -263,37 +263,33 @@ class MeasureView: UIView {
     }
 
     func longPressPan(sender: UIGestureRecognizer) {
-        guard let store = store, let index = index else { return }
+        guard let store = store else { return }
 
         if store.mode == .edit && sender.state == .ended {
             edit(sender: sender)
         }
 
         if store.mode == .erase {
-            if sender.state == .ended && store.measure(at: index, extend: isExtendEnabled).notes.isEmpty {
-                store.mode = .edit
-                Snackbar(message: "switched to edit mode", duration: .short).show()
-                return
-            }
-            erase(sender: sender)
+            _ = erase(sender: sender)
         }
     }
 
-    private func erase(sender: UIGestureRecognizer) {
-        guard store?.mode == .erase else { return }
+    private func erase(sender: UIGestureRecognizer) -> Bool {
+        guard store?.mode == .erase else { return false }
         
         let location = sender.location(in: self)
 
         if let nv = hitTest(location, with: nil) as? NoteActionView {
-            guard let store = store, let index = index else { return }
-            store.removeNote(fromMeasureIndex: index, at: nv.note.position)
+            guard let store = store, let index = index else { return false }
+            return store.removeNote(fromMeasureIndex: index, at: nv.note.position)
         } else if sender is UITapGestureRecognizer {
             Snackbar(message: "you're in erase mode", duration: .short).show()
         }
+        return false
     }
 
     func tap(sender: UIGestureRecognizer) {
-        guard let store = store, let index = index else { return }
+        guard let store = store else { return }
 
         if store.mode == .edit {
             if deselectNote(sender: sender) {
@@ -304,14 +300,14 @@ class MeasureView: UIView {
 
         if store.mode == .erase {
 
-            if store.measure(at: index, extend: isExtendEnabled).notes.isEmpty {
-                store.mode = .edit
-                Snackbar(message: "switched to edit mode", duration: .short).show()
+            if erase(sender: sender) {
                 return
             }
-            erase(sender: sender)
+            store.mode = .edit
+            Snackbar(message: "switched to edit mode", duration: .short).show()
         }
     }
+
 
     // returns true if a note was actually deselected
     private func deselectNote(sender: UIGestureRecognizer) -> Bool {
@@ -373,9 +369,6 @@ extension MeasureView: PartStoreObserver {
         setNeedsDisplay() // TODO(btc): perf: only re-draw when changing note selection
         setNeedsLayout()
     }
-}
-
-extension MeasureView: UIGestureRecognizerDelegate {
 }
 
 extension MeasureView: NoteActionDelegate {
