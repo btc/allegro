@@ -112,7 +112,6 @@ class CompositionViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-        audio?.stop()
     }
 
     override func viewDidLayoutSubviews() {
