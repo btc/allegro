@@ -164,6 +164,7 @@ class CompositionViewController: UIViewController {
     
     func screenCoverTapped() {
         audio?.stop()
+        Snackbar(message: "Audio playback stopped", duration: .short).show()
     }
 
     func pinched() {
