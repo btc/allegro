@@ -19,8 +19,8 @@ class CompositionViewController: UIViewController {
     
     fileprivate let screenCover: UIButton = {
         let v = UIButton()
-        v.backgroundColor = .allegroPurple
-        v.alpha = 0.3
+        v.backgroundColor = .clear
+        v.isHidden = true
         return v
     }()
 
@@ -91,6 +91,7 @@ class CompositionViewController: UIViewController {
         noteSelectorMenu.store = store
 
         store.subscribe(self)
+        audio?.subscribe(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -186,4 +187,15 @@ extension CompositionViewController: PartStoreObserver {
     func noteModified(in measure: Int, at position: Rational) {
         audio?.playNote(part: store.part, measure: measure, position: position)
     }
+}
+
+extension CompositionViewController: AudioObserver {
+    func audioChanged() {
+        guard audio?.isPlaying() == true else {
+            screenCover.isHidden = true
+            return
+        }
+        screenCover.isHidden = false
+    }
+    
 }
