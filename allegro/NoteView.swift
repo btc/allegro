@@ -129,6 +129,20 @@ class NoteView: NoteActionView {
         label.textAlignment = .right
         return label
     }
+    
+    // all subviews were removed in the super call
+    // i feel like that is kinda bad actually but w/e
+    override var note: NoteViewModel {
+        didSet {
+            if stemLayer.superlayer == nil {
+                layer.addSublayer(stemLayer)
+            }
+        
+            if let a = accidentalLabel {
+                addSubview(a)
+            }
+        }
+    }
 
     override init(note: NoteViewModel, geometry: NoteGeometry, store: PartStore) {
         super.init(note: note, geometry: geometry, store: store)
@@ -139,6 +153,27 @@ class NoteView: NoteActionView {
         
         if let a = accidentalLabel {
             addSubview(a)
+
+        let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
+        Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
+            guard let `self` = self else { return }
+            self.flagIterOffset = Tweaks.assign(Tweaks.flagIterOffset)
+            self.flagOffset = Tweaks.assign(Tweaks.flagOffset)
+            self.flagThickness = Tweaks.assign(Tweaks.flagThickness)
+            self._flagEndOffset = CGPoint(
+                x: Tweaks.assign(Tweaks.flagEndOffsetX),
+                y: Tweaks.assign(Tweaks.flagEndOffsetY)
+            )
+            
+            self.setNeedsLayout()
+            
+            // tweaks calls this on initialization
+            // but the frame is sized to zero with causes all sorts of weird NaN errors
+            // so we have to skip
+            if self.frame.size != .zero {
+                self.computePaths()
+            }
+>>>>>>> we can now change the noteviewmodel
         }
     }
     

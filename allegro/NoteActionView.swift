@@ -10,7 +10,19 @@ import UIKit
 
 class NoteActionView: UIView {
 
-    let note: NoteViewModel
+    var note: NoteViewModel {
+        didSet {
+            for view in subviews {
+                view.removeFromSuperview()
+            }
+            
+            dotView = createDotView()
+            if let d = dotView {
+                addSubview(d)
+            }
+        }
+    }
+    
     let geometry: NoteGeometry
     let store: PartStore
     
@@ -86,11 +98,6 @@ class NoteActionView: UIView {
         self.geometry = geometry
         self.store = store
         super.init(frame: .zero)
-        
-        dotView = createDotView()
-        if let d = dotView {
-            addSubview(d)
-        }
         
         store.subscribe(self)
         clipsToBounds = false
