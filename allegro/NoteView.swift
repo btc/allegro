@@ -140,27 +140,6 @@ class NoteView: NoteActionView {
         if let a = accidentalLabel {
             addSubview(a)
         }
-
-        let tweaksToWatch = [Tweaks.flagIterOffset, Tweaks.flagOffset, Tweaks.flagThickness, Tweaks.flagEndOffsetX, Tweaks.flagEndOffsetY]
-        Tweaks.bindMultiple(tweaksToWatch) { [weak self] in
-            guard let `self` = self else { return }
-            self.flagIterOffset = Tweaks.assign(Tweaks.flagIterOffset)
-            self.flagOffset = Tweaks.assign(Tweaks.flagOffset)
-            self.flagThickness = Tweaks.assign(Tweaks.flagThickness)
-            self._flagEndOffset = CGPoint(
-                x: Tweaks.assign(Tweaks.flagEndOffsetX),
-                y: Tweaks.assign(Tweaks.flagEndOffsetY)
-            )
-            
-            self.setNeedsLayout()
-            
-            // tweaks calls this on initialization
-            // but the frame is sized to zero with causes all sorts of weird NaN errors
-            // so we have to skip
-            if self.frame.size != .zero {
-                self.computePaths()
-            }
-        }
     }
     
     required init?(coder aDecoder: NSCoder) {

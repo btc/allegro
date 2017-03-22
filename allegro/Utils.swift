@@ -43,20 +43,13 @@ struct Tweaks: TweakLibraryType {
     static let actionCost = Tweak<Int>("General", "Gestures", "Action Cost", defaultValue: 1, min: 0)
     static let actionDelta = Tweak<Double>("General", "Gestures", "Delta", defaultValue: 22, min: 0)
 
-    
-    static let flagThickness = Tweak<CGFloat>("UI", "Flags", "Thickness", defaultValue: 10, min: 1)
-    static let flagOffset = Tweak<CGFloat>("UI", "Flags", "Offset for the stem to prevent it from poking out", defaultValue: 5, min: 1)
-    static let flagIterOffset = Tweak<CGFloat>("UI", "Flags", "Distance between flags", defaultValue: 15, min: 1)
-    static let flagEndOffsetX = Tweak<CGFloat>("UI", "Flags", "Flag length X", defaultValue: 40, min: 1)
-    static let flagEndOffsetY = Tweak<CGFloat>("UI", "Flags", "Flag length Y", defaultValue: 70, min: 1)
-
     // -1 disables the tweak
     static let mockPartTweak = Tweak<Int>("Data", "Mocks", "Mock Index", defaultValue: -1, min: -1, max: mocks.count - 1, stepSize: 1)
 
     static let audio = Tweak<Bool>("General", "Audio", "Audio Enabled", false)
 
     static let defaultStore: TweakStore = {
-        let allTweaks: [TweakClusterType] = [actionCost, actionDelta, flagThickness, flagOffset, flagIterOffset, flagEndOffsetX, flagEndOffsetY, mockPartTweak, audio]
+        let allTweaks: [TweakClusterType] = [actionCost, actionDelta, mockPartTweak, audio]
         
         return TweakStore(tweaks: allTweaks, enabled: DEBUG)
     }()
