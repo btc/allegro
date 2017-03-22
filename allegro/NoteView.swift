@@ -141,6 +141,8 @@ class NoteView: NoteActionView {
             if let a = accidentalLabel {
                 addSubview(a)
             }
+            
+            computePaths()
         }
     }
 

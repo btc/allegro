@@ -118,6 +118,11 @@ class NoteActionView: UIView {
         for gr: UIGestureRecognizer in [dot, doubleDot, swipe] {
             gr.require(toFail: select)
         }
+        
+        // call didSet
+        defer {
+            self.note = note
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
