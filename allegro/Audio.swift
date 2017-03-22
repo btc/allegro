@@ -205,6 +205,7 @@ class Audio {
                 chroma = .as
             case .C:
                 chroma = .b
+                octave = note.octave - 1
             case .D:
                 chroma = .cs
             case .E:
