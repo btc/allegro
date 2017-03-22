@@ -16,6 +16,13 @@ class SideMenuViewController: UIViewController {
     private static let rightYMargin: CGFloat = 5
     private static let labelHeight: CGFloat = 40
     private static let labelFontSize: CGFloat = 24
+    
+    /* ######## NEW CODE ########### */
+    private static let xmargin: CGFloat = 10
+    private static let ymargin: CGFloat = 10
+    private static let midmargin: CGFloat = 14
+    private static let padding: CGFloat = 2
+    /* ######## NEW CODE ########### */
 
     fileprivate let store: PartStore
     fileprivate var audio: Audio?
@@ -114,8 +121,31 @@ class SideMenuViewController: UIViewController {
         v.layer.cornerRadius = 3
         return v
     }()
+    
+    /* ######## NEW CODE ########### */
+    private let tempoLabel: UILabel = {
+        let v = UILabel()
+        v.backgroundColor = .clear
+        v.text = "Tempo"
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: SideMenuViewController.labelFontSize)
+        v.textAlignment = .center
+        return v
+    }()
 
+    private let tempoButton: UIButton = {
+       let v = UIButton()
+        v.backgroundColor = .clear
+        v.setTitleColor(.black, for: .normal)
+        v.titleLabel?.font = UIFont(name: "Montserrat-Regular", size: 30)
+        v.showsTouchWhenHighlighted = true
+        v.layer.borderColor = UIColor.black.cgColor
+        v.layer.borderWidth = 1
+        v.layer.cornerRadius = 3
+        return v
+    }()
+    /* ######## NEW CODE ########### */
 
+    
     init(store: PartStore, audio: Audio?, filename: String) {
         self.store = store
         self.audio = audio
@@ -145,12 +175,23 @@ class SideMenuViewController: UIViewController {
 
         view.addSubview(timeLabel)
         view.addSubview(timeButton)
+        
+        /* ######## NEW CODE ########### */
+        view.addSubview(tempoLabel)
+        view.addSubview(tempoButton)
+        /* ######## NEW CODE ########### */
+
 
         timeButton.addTarget(self, action: #selector(timeSignaturesTapped), for: .touchUpInside)
         keyButton.addTarget(self, action: #selector(keySignaturesTapped), for: .touchUpInside)
         playButton.addTarget(self, action: #selector(playButtonTapped), for: .touchUpInside)
         exportButton.addTarget(self, action: #selector(exportButtonTapped), for: .touchUpInside)
         helpButton.addTarget(self, action: #selector(helpButtonTapped), for: .touchUpInside)
+        
+        /* ######## NEW CODE ########### */
+        tempoButton.addTarget(self, action: #selector(tempoButtonTapped), for: .touchUpInside)
+        /* ######## NEW CODE ########### */
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -177,6 +218,7 @@ class SideMenuViewController: UIViewController {
                               y: lastY + SideMenuViewController.leftYMargin + SideMenuViewController.labelHeight,
                               width: (view.bounds.width / 2) - (2 * SideMenuViewController.leftXMargin),
                               height: (view.bounds.height / 3) - (2 * SideMenuViewController.leftYMargin) - SideMenuViewController.labelHeight )
+
     }
 
     private func layoutRightLabelButton(label: UILabel, button: UIButton, lastY: CGFloat) {
@@ -191,20 +233,62 @@ class SideMenuViewController: UIViewController {
                               width: (view.bounds.width / 2) - (2 * SideMenuViewController.rightXMargin),
                               height: (view.bounds.height / 2) - (2 * SideMenuViewController.rightYMargin) - SideMenuViewController.labelHeight )
     }
+    
+    /* ######## NEW CODE ########### */
+    private func layoutLabelsButtons(label: UILabel, button: UIButton, lastY: CGFloat, lastX: CGFloat) {
+        
+        label.frame = CGRect(x: lastX,
+                             y: lastY + SideMenuViewController.padding,
+                             width: (view.bounds.width / 2) - (SideMenuViewController.midmargin / 2) - SideMenuViewController.xmargin -
+                                (SideMenuViewController.padding / 2),
+                             height: SideMenuViewController.labelHeight
+        )
+        
+        button.frame = CGRect(x: lastX,
+                              y: lastY + SideMenuViewController.padding + SideMenuViewController.labelHeight,
+                              width: (view.bounds.width / 2) - (SideMenuViewController.midmargin / 2) - SideMenuViewController.xmargin -
+                                (SideMenuViewController.padding / 2),
+                              height: ((view.bounds.height - (SideMenuViewController.ymargin * 2)) / 3) - (SideMenuViewController.padding * 2) -
+                                SideMenuViewController.labelHeight
+        )
+    }
+    /* ######## NEW CODE ########### */
 
     override func viewDidLayoutSubviews() {
 
+        /* OLD CODE ########
+         
         layoutLeftLabelButton(label: exportLabel, button: exportButton, lastY: view.bounds.minY)
         layoutLeftLabelButton(label: playLabel, button: playButton, lastY: view.bounds.height / 3)
         layoutLeftLabelButton(label: helpLabel, button: helpButton, lastY: view.bounds.height * (2/3))
 
         layoutRightLabelButton(label: keyLabel, button: keyButton, lastY: view.bounds.minY)
         layoutRightLabelButton(label: timeLabel, button: timeButton, lastY: view.bounds.height / 2)
+         
+         OLD CODE #########
+        */
 
+        /* ######## NEW CODE ########### */
+        let height = (view.bounds.height - (SideMenuViewController.ymargin * 2)) / 3
+        let start = view.bounds.minY + SideMenuViewController.ymargin
+        let leftX = view.bounds.minX + SideMenuViewController.xmargin + SideMenuViewController.padding
+        let rightX = (view.bounds.width / 2) + (SideMenuViewController.midmargin / 2)
+        
+        // left side
+        layoutLabelsButtons(label: exportLabel, button: exportButton, lastY: start, lastX: leftX)
+        layoutLabelsButtons(label: playLabel, button: playButton, lastY: start + height, lastX: leftX)
+        layoutLabelsButtons(label: helpLabel, button: helpButton, lastY: start + height * 2, lastX: leftX)
+        
+        // right side
+        layoutLabelsButtons(label: keyLabel, button: keyButton, lastY: start, lastX: rightX)
+        layoutLabelsButtons(label: tempoLabel, button: tempoButton, lastY: start + height, lastX: rightX)
+        layoutLabelsButtons(label: timeLabel, button: timeButton, lastY: start + height * 2, lastX: rightX)
+        /* ######## NEW CODE ########### */
     }
 
     func updateUI() {
         timeButton.setTitle(store.part.timeSignature.description, for: .normal)
+        tempoButton.setTitle(store.part.tempo.description, for: .normal)
         keyButton.keySigView.key = store.part.keySignature
     }
     
@@ -242,6 +326,13 @@ class SideMenuViewController: UIViewController {
         let vc = HelpViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    /* ######## NEW CODE ########### */
+    func tempoButtonTapped() {
+        // TODO
+    }
+    /* ######## NEW CODE ########### */
+
 }
 
 extension SideMenuViewController: PartStoreObserver {
