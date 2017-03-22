@@ -212,7 +212,7 @@ struct MeasureGeometry {
             // to get the total width we can place things in
             let noteFrame = g.getFrame(note: measure.notes[0])
             let avaliableWidth = defaultWidth - noteFrame.width
-            let avaliableTime = measure.timeSignature.cgFloat - measure.notes[measure.notes.count - 1].position.cgFloat
+            let avaliableTime = measure.timeSignature.cgFloat - measure.notes[measure.notes.count - 1].note.value.nominalDuration.cgFloat
             
             // Calculate the whitespace intervals between notes if there are any
             for note in measure.notes {
