@@ -28,6 +28,8 @@ class MeasureView: UIView {
     }
 
     var index: Int?
+    
+    var noteIdToNoteActionViews = [Int: NoteActionView]()
 
     var isExtendEnabled: Bool = false
 
@@ -154,7 +156,17 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
         let noteViews = noteViewModels
-            .map { $0.note.rest ? RestView(note: $0, geometry: g, store: store) : NoteView(note: $0, geometry: g, store: store) }
+            .map {
+                (nvm: NoteViewModel) -> NoteActionView in
+                if let existingView = noteIdToNoteActionViews[ObjectIdentifier(nvm.note).hashValue] {
+                    if existingView.note.note.rest == nvm.note.rest {
+                        existingView.note = nvm
+                        return existingView
+                    }
+                }
+                
+                return nvm.note.rest ? RestView(note: nvm, geometry: g, store: store) : NoteView(note: nvm, geometry: g, store: store)
+            }
 
 
         noteViews.forEach {
@@ -164,11 +176,11 @@ class MeasureView: UIView {
 
         noteViews.forEach() { $0.delegate = self }
         
-        let notesToNoteView = zip(noteViewModels, noteViews)
-            .reduce([Int: UIView]()) {
-                (dict: [Int:UIView], kv: (NoteViewModel, UIView)) -> [Int:UIView]  in
+        noteIdToNoteActionViews = zip(noteViewModels, noteViews)
+            .reduce([Int: NoteActionView]()) {
+                (dict: [Int: NoteActionView], kv: (NoteViewModel, NoteActionView)) -> [Int: NoteActionView]  in
                 var out = dict
-                out[ObjectIdentifier(kv.0).hashValue] = kv.1
+                out[ObjectIdentifier(kv.0.note).hashValue] = kv.1
                 return out
             }
 
@@ -212,7 +224,7 @@ class MeasureView: UIView {
             var barEnd = CGPoint.zero
             
             for (i, noteViewModel) in beam.enumerated() {
-                guard let beamNoteView = notesToNoteView[ObjectIdentifier(noteViewModel).hashValue] else { continue }
+                guard let beamNoteView = noteIdToNoteActionViews[ObjectIdentifier(noteViewModel.note).hashValue] else { continue }
                 guard let noteView = beamNoteView as? NoteView else { continue }
                 noteView.shouldDrawFlag = false
                 
