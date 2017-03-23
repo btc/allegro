@@ -11,11 +11,10 @@ import UIKit
 class NoteActionView: UIView {
 
     var note: NoteViewModel {
+        willSet {
+            dotView?.removeFromSuperview()
+        }
         didSet {
-            for view in subviews {
-                view.removeFromSuperview()
-            }
-            
             dotView = createDotView()
             if let d = dotView {
                 addSubview(d)
