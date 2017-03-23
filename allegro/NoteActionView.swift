@@ -146,6 +146,12 @@ class NoteActionView: UIView {
         if sender.state == .began {
             delegate?.actionRecognized(gesture: .select, by: self)
         }
+        if sender.state == .changed {
+            center = sender.location(in: superview)
+        }
+        if sender.state == .ended {
+            delegate?.actionRecognized(gesture: .move, by: self)
+        }
     }
 
     func swiped(sender: NoteSwipeActionGestureRecognizer) {
@@ -180,7 +186,7 @@ class NoteActionView: UIView {
     }
 
     func updateRecognizers() {
-        [swipe, dot, doubleDot, select].forEach { $0.isEnabled = !isSelected && store.mode == .edit }
+        [swipe, dot, doubleDot].forEach { $0.isEnabled = !isSelected && store.mode == .edit }
         move.isEnabled = isSelected && store.mode == .edit
     }
 }
