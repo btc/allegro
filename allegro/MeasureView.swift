@@ -155,6 +155,7 @@ class MeasureView: UIView {
         let measureVM = store.measure(at: index, extend: isExtendEnabled)
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
+
         let noteViews = noteViewModels
             .map {
                 (nvm: NoteViewModel) -> NoteActionView in
