@@ -68,6 +68,7 @@ class NoteActionView: UIView {
 
     fileprivate let select: UILongPressGestureRecognizer = {
         let gr = UILongPressGestureRecognizer()
+        gr.minimumPressDuration = 0.2
         return gr
     }()
     
