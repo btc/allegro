@@ -185,7 +185,6 @@ class MeasureView: UIView {
                 return out
             }
 
-        // TODO(btc): size the notes based on noteHeight
         for v in noteViews {
             addSubview(v)
         }
