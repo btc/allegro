@@ -52,7 +52,10 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
 
         let tutorialButton = UIBarButtonItem(title: "Tutorial", style: .plain, target: self, action: #selector(tutorialTapped))
         tutorialButton.tintColor = .allegroPurple
-        navigationController?.navigationBar.topItem?.leftBarButtonItem = tutorialButton
+
+        // TUTORIAL DISABLED UNTIL FURTHER NOTICE
+        // navigationController?.navigationBar.topItem?.leftBarButtonItem = tutorialButton
+
         let newButton = UIBarButtonItem(title: "New", style: .plain, target: self, action: #selector(newCompositionTapped))
         newButton.tintColor = .allegroPurple
         navigationController?.navigationBar.topItem?.rightBarButtonItem = newButton
