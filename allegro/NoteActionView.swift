@@ -164,7 +164,6 @@ class NoteActionView: UIView {
             default: break
             }
         }
-        Log.warning?.value(sender.numberOfTapsRequired)
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
