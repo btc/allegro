@@ -142,7 +142,10 @@ class NoteView: NoteActionView {
                 addSubview(a)
             }
             
-            computePaths()
+            // wooo messy fix i don't care
+            if bounds.size != CGSize.zero {
+                computePaths()
+            }
         }
     }
 
