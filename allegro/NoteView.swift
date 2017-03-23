@@ -117,7 +117,9 @@ class NoteView: NoteActionView {
     
     let stemLayer: CAShapeLayer = CAShapeLayer() // TODO(btc): rename to stemLayer
     
-    var accidentalLabel: UILabel? {
+    var accidentalLabel: UILabel?
+
+    func createAccidentalLabel() -> UILabel? {
         guard note.displayAccidental else { return nil }
         
         let label = UILabel()
@@ -133,11 +135,15 @@ class NoteView: NoteActionView {
     // all subviews were removed in the super call
     // i feel like that is kinda bad actually but w/e
     override var note: NoteViewModel {
+        willSet {
+            accidentalLabel?.removeFromSuperview()
+        }
         didSet {
             if stemLayer.superlayer == nil {
                 layer.addSublayer(stemLayer)
             }
-        
+
+            accidentalLabel = createAccidentalLabel()
             if let a = accidentalLabel {
                 addSubview(a)
             }

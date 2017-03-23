@@ -29,7 +29,7 @@ class MeasureView: UIView {
 
     var index: Int?
     
-    var noteIdToNoteActionViews = [Int: NoteActionView]()
+    var noteIdToNoteActionViews = [ ObjectIdentifier : NoteActionView ]()
 
     var isExtendEnabled: Bool = false
 
@@ -147,8 +147,6 @@ class MeasureView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        subviews.forEach { $0.removeFromSuperview() }
 
         guard let store = store, let index = index else { return }
 
@@ -156,64 +154,69 @@ class MeasureView: UIView {
         let noteViewModels = measureVM.notes
         let g = geometry.noteGeometry
 
+        var viewsToRemove = Set<UIView>(subviews)
+        var viewsToAdd = Set<UIView>()
         let noteViews = noteViewModels
             .map {
                 (nvm: NoteViewModel) -> NoteActionView in
-                if let existingView = noteIdToNoteActionViews[ObjectIdentifier(nvm.note).hashValue] {
-                    if existingView.note.note.rest == nvm.note.rest {
+                if let existingView = noteIdToNoteActionViews[ObjectIdentifier(nvm.note)] {
+                    if existingView is RestView && nvm.note.rest || existingView is NoteView && !nvm.note.rest {
                         existingView.note = nvm
+                        viewsToRemove.remove(existingView)
                         return existingView
                     }
                 }
-                
-                return nvm.note.rest ? RestView(note: nvm, geometry: g, store: store) : NoteView(note: nvm, geometry: g, store: store)
+
+                let newView = nvm.note.rest ? RestView(note: nvm, geometry: g, store: store) : NoteView(note: nvm, geometry: g, store: store)
+                viewsToAdd.insert(newView)
+                return newView
             }
 
+        viewsToRemove.forEach { $0.removeFromSuperview() }
+        viewsToAdd.forEach { addSubview($0) }
 
         noteViews.forEach {
                 $0.isSelected = store.selectedNote == $0.note.position
         }
 
-
         noteViews.forEach() { $0.delegate = self }
         
         noteIdToNoteActionViews = zip(noteViewModels, noteViews)
-            .reduce([Int: NoteActionView]()) {
-                (dict: [Int: NoteActionView], kv: (NoteViewModel, NoteActionView)) -> [Int: NoteActionView]  in
+            .reduce([ ObjectIdentifier : NoteActionView ]()) {
+                (dict: [ ObjectIdentifier : NoteActionView ], kv: (NoteViewModel, NoteActionView)) -> [ ObjectIdentifier : NoteActionView ]  in
                 var out = dict
-                out[ObjectIdentifier(kv.0.note).hashValue] = kv.1
+                out[ObjectIdentifier(kv.0.note)] = kv.1
                 return out
             }
 
-        for v in noteViews {
-            addSubview(v)
-        }
-        
-        // we're barring all the notes for now
-        for (view, startX) in zip(noteViews, geometry.noteStartX) {
-            // TODO(btc): render note in correct position in time, taking into consideration:
-            // * note should be in the center of the spot available to it
-            // * there should be a minimum spacing between notes
-            if let noteView = view as? NoteView {
-                let y = geometry.noteY(pitch: noteView.note.pitch)
-                    
-                noteView.noteOrigin = CGPoint(x: startX, y: y)
-                //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
-                noteView.shouldDrawFlag = true//fals
-            } else if let restView = view as? RestView {
-                let size = restView.geometry.getRestSize(value: restView.note.note.value)
-                if restView.note.note.value == Note.Value.whole {
-                    let y = geometry.staffY(pitch: 2)
-                    restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
-                } else if restView.note.note.value == Note.Value.half {
-                    let y = geometry.staffY(pitch: 0)
-                    restView.frame = CGRect(origin: CGPoint(x: startX, y: y - size.height), size: size)
-                } else {
-                    let y = geometry.staffY(pitch: 0) - size.height / 2
-                    restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
+        UIView.animate(withDuration: 0.25) {
+            let geometry = self.geometry
+            // we're barring all the notes for now
+            for (view, startX) in zip(noteViews, geometry.noteStartX) {
+
+                UIView.setAnimationsEnabled(!viewsToAdd.contains(view))
+
+                if let noteView = view as? NoteView {
+                    let y = geometry.noteY(pitch: noteView.note.pitch)
+
+                    noteView.noteOrigin = CGPoint(x: startX, y: y)
+                    //noteView.stemEndY = geometry.noteStemEnd(pitch: noteView.note.pitch, originY: y)
+                    noteView.shouldDrawFlag = true//fals
+                } else if let restView = view as? RestView {
+                    let size = restView.geometry.getRestSize(value: restView.note.note.value)
+                    if restView.note.note.value == Note.Value.whole {
+                        let y = geometry.staffY(pitch: 2)
+                        restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
+                    } else if restView.note.note.value == Note.Value.half {
+                        let y = geometry.staffY(pitch: 0)
+                        restView.frame = CGRect(origin: CGPoint(x: startX, y: y - size.height), size: size)
+                    } else {
+                        let y = geometry.staffY(pitch: 0) - size.height / 2
+                        restView.frame = CGRect(origin: CGPoint(x: startX, y: y), size: size)
+                    }
+
+                    restView.setDotPosition(geometry: geometry)
                 }
-                
-                restView.setDotPosition(geometry: geometry)
             }
         }
         
@@ -224,7 +227,7 @@ class MeasureView: UIView {
             var barEnd = CGPoint.zero
             
             for (i, noteViewModel) in beam.enumerated() {
-                guard let beamNoteView = noteIdToNoteActionViews[ObjectIdentifier(noteViewModel.note).hashValue] else { continue }
+                guard let beamNoteView = noteIdToNoteActionViews[ObjectIdentifier(noteViewModel.note)] else { continue }
                 guard let noteView = beamNoteView as? NoteView else { continue }
                 noteView.shouldDrawFlag = false
                 
