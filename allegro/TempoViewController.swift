@@ -10,8 +10,8 @@ import UIKit
 
 class TempoViewController: UIViewController {
     
-    private static let BPM_MIN: Float = 60
-    private static let BPM_MAX: Float = 160
+    private static let BPM_MIN: Float = 30
+    private static let BPM_MAX: Float = 300
     
     private let store: PartStore
     
