@@ -147,7 +147,6 @@ class Audio {
     }
 
     func playNote(part: Part, measure: Int, position: Rational) {
-
         if !sequence.tracks[0].isEmpty {
             sequence.tracks[0].clear()
         }
