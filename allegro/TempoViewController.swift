@@ -17,6 +17,24 @@ class TempoViewController: UIViewController {
     
     private var tempoLabel: UILabel = {
         let v = UILabel()
+        v.font = UIFont(name: "Montserrat-Light", size: 48)
+        v.textAlignment = .center
+        return v
+    }()
+    
+    private var minTempoLabel: UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: 28)
+        v.textAlignment = .right
+        v.text = "\(Int(TempoViewController.BPM_MIN))"
+        return v
+    }()
+    
+    private var maxTempoLabel: UILabel = {
+        let v = UILabel()
+        v.font = UIFont(name: "Montserrat-ExtraLight", size: 28)
+        v.textAlignment = .left
+        v.text = "\(Int(TempoViewController.BPM_MAX))"
         return v
     }()
     
@@ -43,8 +61,10 @@ class TempoViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(tempoLabel)
         view.addSubview(tempoSlider)
+        view.addSubview(minTempoLabel)
+        view.addSubview(maxTempoLabel)
         
-        tempoSlider.addTarget(self, action: #selector(tempoDidChange), for: .valueChanged)
+        tempoSlider.addTarget(self, action: #selector(tempoDidChange), for: .touchDragInside)
         navigationController?.navigationBar.topItem?.title = "Tempo"
         
         tempoSlider.value = Float(store.tempo)
@@ -65,23 +85,37 @@ class TempoViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let parent = view.bounds
+        let navbarHeight = navigationController?.navigationBar.frame.height ?? DEFAULT_MARGIN_PTS
         
+        let labelWidth: CGFloat = 60
         
         tempoLabel.frame = CGRect(x: parent.minX + DEFAULT_MARGIN_PTS,
-                                  y: parent.minY + DEFAULT_MARGIN_PTS,
+                                  y: navbarHeight + DEFAULT_MARGIN_PTS,
                                   width: parent.width - 2 * DEFAULT_MARGIN_PTS,
                                   height: DEFAULT_TAP_TARGET_SIZE)
         
-        tempoSlider.frame = CGRect(x: parent.minX + DEFAULT_MARGIN_PTS,
-                                   y: parent.height / 2,
-                                   width: parent.width - 2 * DEFAULT_MARGIN_PTS,
+        minTempoLabel.frame = CGRect(x: parent.minX + DEFAULT_MARGIN_PTS,
+                                     y: tempoLabel.frame.maxY + DEFAULT_MARGIN_PTS,
+                                     width: labelWidth,
+                                     height: DEFAULT_TAP_TARGET_SIZE)
+        
+        maxTempoLabel.frame = CGRect(x: parent.maxX - DEFAULT_MARGIN_PTS - labelWidth,
+                                     y: tempoLabel.frame.maxY + DEFAULT_MARGIN_PTS,
+                                     width: labelWidth,
+                                     height: DEFAULT_TAP_TARGET_SIZE)
+        
+        tempoSlider.frame = CGRect(x: minTempoLabel.frame.maxX + DEFAULT_MARGIN_PTS,
+                                   y: tempoLabel.frame.maxY + DEFAULT_MARGIN_PTS,
+                                   width: parent.width - (4 * DEFAULT_MARGIN_PTS + 2 * labelWidth),
                                    height: DEFAULT_TAP_TARGET_SIZE)
+        
 
     }
     
     // can we remove the @objc?
     @objc private func tempoDidChange() {
-        tempoLabel.text = "\(tempoSlider.value)"
+        let tempo = Int(tempoSlider.value)
+        tempoLabel.text = "\(tempo) BPM"
     }
     
     private func storeSetTempo() {
