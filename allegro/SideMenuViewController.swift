@@ -270,7 +270,8 @@ class SideMenuViewController: UIViewController {
     }
     
     func tempoButtonTapped() {
-        // TODO
+        let vc = TempoViewController(store: store)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
