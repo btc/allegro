@@ -92,6 +92,7 @@ class CompositionViewController: UIViewController {
 
         store.subscribe(self)
         audio?.subscribe(self)
+        audio?.stop()
     }
     
     required init?(coder aDecoder: NSCoder) {
