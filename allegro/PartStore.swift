@@ -96,6 +96,7 @@ class PartStore {
     init(part: Part, mode: CompositionMode = .edit) {
         self.part = part
         self.mode = mode
+        self.tempo = part.tempo
 
         if part.measures.count == 0 {
             part.extend() // ensures part always has at least one measure. that way `currentMeasure` always points to valid index
@@ -242,6 +243,18 @@ class PartStore {
             part.setTimeSignature(timeSignature: timeSignature)
         }
         notify()
+    }
+    
+//    func setTempo(tempo: Int) {
+//        part.tempo = tempo
+//        notify()
+//    }
+    
+    var tempo: Int {
+        didSet {
+            part.tempo = tempo
+            notify()
+        }
     }
     
 }
