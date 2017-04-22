@@ -11,7 +11,7 @@ import UIKit
 
 extension CGFloat {
     var degrees: CGFloat {
-        return self * CGFloat(180.0 / M_PI)
+        return self * CGFloat(180.0 / .pi)
     }
     
     func round(denom: Int) -> Rational {
