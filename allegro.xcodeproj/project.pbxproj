@@ -86,6 +86,8 @@
 		B978F84A1E7EF852001EE49C /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B978F8491E7EF852001EE49C /* HelpViewController.swift */; };
 		B978F8541E85AEAD001EE49C /* TempoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B978F8531E85AEAD001EE49C /* TempoViewController.swift */; };
 		B988BE0D1E68D9E5007BB32A /* PartSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B988BE0C1E68D9E5007BB32A /* PartSaver.swift */; };
+		B988E8061EAC378C00D32247 /* Bell.wav in Resources */ = {isa = PBXBuildFile; fileRef = B988E8041EAC378C00D32247 /* Bell.wav */; };
+		B988E8071EAC378C00D32247 /* FM Piano.wav in Resources */ = {isa = PBXBuildFile; fileRef = B988E8051EAC378C00D32247 /* FM Piano.wav */; };
 		B98BF2801E58FBEB000CCF3E /* MusicXMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */; };
 		B9A0A68E1E774AC900F362B5 /* Montserrat-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */; };
 		B9A0A68F1E774AC900F362B5 /* Montserrat-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9A0A68D1E774AC900F362B5 /* Montserrat-Light.otf */; };
@@ -211,6 +213,8 @@
 		B978F8491E7EF852001EE49C /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		B978F8531E85AEAD001EE49C /* TempoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempoViewController.swift; sourceTree = "<group>"; };
 		B988BE0C1E68D9E5007BB32A /* PartSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartSaver.swift; sourceTree = "<group>"; };
+		B988E8041EAC378C00D32247 /* Bell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Bell.wav; sourceTree = "<group>"; };
+		B988E8051EAC378C00D32247 /* FM Piano.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "FM Piano.wav"; sourceTree = "<group>"; };
 		B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXMLTests.swift; sourceTree = "<group>"; };
 		B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraLight.otf"; path = "fonts/Montserrat-ExtraLight.otf"; sourceTree = "<group>"; };
 		B9A0A68D1E774AC900F362B5 /* Montserrat-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Light.otf"; path = "fonts/Montserrat-Light.otf"; sourceTree = "<group>"; };
@@ -490,6 +494,7 @@
 		B96902ED1E6246B9006CF8D1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B988E8031EAC377A00D32247 /* Audio Samples */,
 				324C87A41E3972A2006F974D /* Fonts */,
 				B96902EC1E62469A006CF8D1 /* Example MusicXML */,
 			);
@@ -505,6 +510,15 @@
 				B988BE0C1E68D9E5007BB32A /* PartSaver.swift */,
 			);
 			name = IO;
+			sourceTree = "<group>";
+		};
+		B988E8031EAC377A00D32247 /* Audio Samples */ = {
+			isa = PBXGroup;
+			children = (
+				B988E8041EAC378C00D32247 /* Bell.wav */,
+				B988E8051EAC378C00D32247 /* FM Piano.wav */,
+			);
+			name = "Audio Samples";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -633,9 +647,11 @@
 				B9A0A68F1E774AC900F362B5 /* Montserrat-Light.otf in Resources */,
 				6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */,
 				6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */,
+				B988E8061EAC378C00D32247 /* Bell.wav in Resources */,
 				324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */,
 				B96902F01E6246E6006CF8D1 /* example0.xml in Resources */,
 				6B80D7E81E457CD8003996CF /* Montserrat-Bold.ttf in Resources */,
+				B988E8071EAC378C00D32247 /* FM Piano.wav in Resources */,
 				6B80D7E91E457CD8003996CF /* Montserrat-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
