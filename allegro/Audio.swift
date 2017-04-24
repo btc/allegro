@@ -34,20 +34,27 @@ class Audio {
 
     let sequence = AKSequencer()
     
+    let sampler = AKMIDISampler()
+    
     private var observers: [Weak] = [Weak]()
 
     init() {
-        let oscillator = AKFMOscillatorBank()
-        oscillator.modulatingMultiplier = 3
-        oscillator.modulationIndex = 0.3
-        let melody = AKMIDINode(node: oscillator)
+        sampler.name = "piano"
+        
+        guard let _ = try? sampler.loadWav("FM Piano") else {
+            Log.error?.message("Unable to load wav")
+            return
+        }
+        
         _ = sequence.newTrack()
-        sequence.tracks[0].setMIDIOutput(melody.midiIn)
-        AudioKit.output = melody
+        sequence.tracks[0].setMIDIOutput(sampler.midiIn)
+        AudioKit.output = sampler
     }
 
     func start() {
         AudioKit.start()
+        
+//        sampler.enableMIDI(sequence, name: "piano")
     }
 
     func stop() {
@@ -102,6 +109,10 @@ class Audio {
                 let pitch = midiPitch(for: note)
                 if !note.rest {
                     sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
+                    
+//                    sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
+                    // plays notes on top of each other because there is no delay
+                    // pitches are fine relative to each other but they aren't correct
                 }
             }
             curMeasure += 1
@@ -109,7 +120,7 @@ class Audio {
         }
 
         sequence.setTempo(Double(part.tempo))
-        sequence.play()
+//        sequence.play()
         notify()
 
         sequence.rewind()
