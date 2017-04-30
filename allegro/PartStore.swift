@@ -196,6 +196,14 @@ class PartStore {
         }
         return succeeded
     }
+    
+    func removeTie(atMeasureIndex i: Int, tie: Tie) -> Bool {
+        let success = part.removeTie(atMeasureIndex: i, tie: tie)
+        if success {
+            notify ()
+        }
+        return success
+    }
 
     func measure(at index: Int, extend: Bool) -> MeasureViewModel {
         if extend {
