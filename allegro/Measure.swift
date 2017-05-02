@@ -56,6 +56,11 @@ struct Measure {
         guard let i = index(of: position) else { return nil }
         return notes[i].note
     }
+    
+    func freespace(at position: Rational) -> FreePos? {
+        guard let i = indexOfFree(of: position) else { return nil }
+        return frees[i]
+    }
 
     mutating func removeNote(at position: Rational) -> Bool {
         return removeAndReturnNote(at: position) != nil
@@ -70,6 +75,15 @@ struct Measure {
     func index(of position: Rational) -> Int? {
         for (i, np) in notes.enumerated() {
             if np.pos == position {
+                return i
+            }
+        }
+        return nil
+    }
+    
+    func indexOfFree(of position: Rational) -> Int? {
+        for (i, fp) in frees.enumerated() {
+            if fp.pos == position {
                 return i
             }
         }

@@ -245,9 +245,7 @@ class SideMenuViewController: UIViewController {
     }
     
     func playButtonTapped() {
-        audio?.playFromCurrentMeasure(part: store.part, measure: store.currentMeasure) { currentMeasure in
-            self.store.currentMeasure = currentMeasure
-        }
+        audio?.playFromCurrentMeasure(part: store.part, beat: store.part.timeSignature.denominator, measure: store.currentMeasure)
         slideMenuController()?.closeRight()
     }
 
