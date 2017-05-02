@@ -60,6 +60,9 @@ class PartStore {
             }
         }
     }
+    
+    // used to track audio playback
+    var currentNotePosition: Rational = 0
 
     var selectedNote: Rational? {
         didSet {

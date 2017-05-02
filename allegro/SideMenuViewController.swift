@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Rational
 
 class SideMenuViewController: UIViewController {
 
@@ -245,7 +246,11 @@ class SideMenuViewController: UIViewController {
     }
     
     func playButtonTapped() {
-        audio?.playFromCurrentMeasure(part: store.part, beat: store.part.timeSignature.denominator, measure: store.currentMeasure)
+        audio?.playFromCurrentMeasure(part: store.part, beat: store.part.timeSignature.denominator, measure: store.currentMeasure) {
+            (currentMeasure: Int, currentNotePosition: Rational) in
+            self.store.currentMeasure = currentMeasure
+            self.store.currentNotePosition = currentNotePosition
+        }
         slideMenuController()?.closeRight()
     }
 

@@ -32,24 +32,19 @@ private class Weak {
 
 fileprivate struct TrackElem {
     var measureIndex: Int
-    var measurePosition: Rational
+    var measurePosition: Rational // may be freepace or note
     
     var midiPitch: UInt8? // if nil don't play anything
-    var waitTime: Double // seconds
+    var waitTime: TimeInterval // seconds
 }
 
 // 1. Generates MIDI from notes
 // 2. Calls the sampler to play those notes at the right time
 fileprivate class Sequencer {
     
-    var tempo: Double // beats per minute
     var sampler: AKSampler
-    var stop: Bool // TODO
+    var stop: Bool
     
-    private(set) var currentMeasure: Int
-    private(set) var currentNotePosition: Rational
-    
-    // measure index, midi pitch, position, duration
     var track: [TrackElem]
     
     // play just this note
@@ -58,87 +53,114 @@ fileprivate class Sequencer {
         sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
     }
     
-    // TODO escaping closure to capture measure index and measure position for UI?
     // loop and play each note
-    func play() {
+    func play(block: @escaping (Int, Rational) -> Void) {
         
         self.stop = false
         
-        for trackElem in track {
+        var trackElemIterator = track.makeIterator()
+        
+        var currStartTime = Date.distantPast // time that curr note was played
+        var currWait: TimeInterval = 0 // time to wait until next note
+
+        // TODO better step size
+        Timer.every(0.05.seconds) { (timer: Timer) -> Void in
+            
             if self.stop {
-                break
+                Log.info?.message("Audio playback timer stopped")
+                timer.invalidate()
+                return
             }
+
+            if (Date().timeIntervalSince(currStartTime) >= currWait) {
+                // pop next track elem
             
-            currentMeasure = trackElem.measureIndex
-            currentNotePosition = trackElem.measurePosition
-            
-            if let midiPitch = trackElem.midiPitch {
-                playPitch(pitch: midiPitch)
-            }
-            
-            // wait until next note
-            DispatchQueue.main.asyncAfter(deadline: .now() + trackElem.waitTime) {
-                () -> Void in
+                guard let trackElem = trackElemIterator.next() else {
+                    Log.info?.message("Audio playback done, stopping timer")
+                    timer.invalidate()
+                    self.stop = true
+                    return
+                }
+                
+                // pass info back to calling function
+                block(trackElem.measureIndex, trackElem.measurePosition)
+                
+                if let midiPitch = trackElem.midiPitch {
+                    // play unless nil (for rests and freespace)
+                    self.playPitch(pitch: midiPitch)
+                }
+                
+                currStartTime = Date()
+                currWait = trackElem.waitTime
             }
         }
-
-        self.stop = true
     }
     
     init(sampler: AKSampler) {
         self.sampler = sampler
-        self.tempo = 120
         stop = true
         track = []
-        currentMeasure = 0
-        currentNotePosition = 0
+    }
+    
+    // convert duration into the amount to time we have to wait
+    // eg.
+    // 1/4 note in 4/4 time -> 1/4 * 4 -> 1 beat
+    // 120 bpm / 60 = 2 beats per second -> 0.5 seconds per beat
+    func calcWaitTime(duration: Rational, tempo: Double, beat: Int) -> TimeInterval {
+        return (duration * Rational(beat)).double / (tempo / 60)
     }
     
     // load all notes into the track
     func build(part: Part, beat: Int, startMeasureIndex: Int) {
         
-        self.tempo = Double(part.tempo)
+        let tempo = Double(part.tempo)
         
         if !track.isEmpty {
             track = [] // replace it with a new one
         }
         
-        for index in stride(from: startMeasureIndex,
-                            through: part.measures.count - 1,
-                            by: 1) {
-                                
+        let endMeasure = findEndMeasure(part: part)
+        for index in stride(from: startMeasureIndex, to: endMeasure, by: 1) {
             let m = part.measures[index]
+            
             var currPos: Rational = 0
+            var currTime: TimeInterval = 0
             while currPos < m.timeSignature {
-                
-                // this is position from 0 at the start of the part
-//                let absolutePos = currPos + Rational(index) * m.timeSignature
                 
                 if let note = m.note(at: currPos) {
                     
                     // convert duration into the amount to time we have to wait
-                    let waitTime = (note.duration * Rational(beat)).double * (self.tempo / 60)
+                    let waitTime = calcWaitTime(duration: note.duration, tempo: tempo, beat: beat)
                     
-                    // add this note to the track
-                    track.append(TrackElem(measureIndex: index,
-                                           measurePosition: currPos,
-                                           midiPitch: note.midiPitch,
-                                           waitTime: waitTime))
+                    if note.rest {
+                        // add this note without a pitch
+                        track.append(TrackElem(measureIndex: index,
+                                               measurePosition: currPos,
+                                               midiPitch: nil,
+                                               waitTime: waitTime))
+                    } else {
+                        // add this note to the track
+                        track.append(TrackElem(measureIndex: index,
+                                               measurePosition: currPos,
+                                               midiPitch: note.midiPitch,
+                                               waitTime: waitTime))
+                    }
                     
+                    currTime += waitTime
                     currPos = currPos + note.duration
                     
                 } else if let freePos = m.freespace(at: currPos) {
                     
                     // convert duration into the amount to time we have to wait
-                    let waitTime = (freePos.duration * Rational(beat)).double * (self.tempo / 60)
+                    let waitTime = calcWaitTime(duration: freePos.duration, tempo: tempo, beat: beat)
                     
                     // add this note to the track without pitch so we don't play it
-                    
                     track.append(TrackElem(measureIndex: index,
                                            measurePosition: currPos,
                                            midiPitch: nil,
                                            waitTime: waitTime))
-                        
+                    
+                    currTime += waitTime
                     currPos = currPos + freePos.duration
                     
                 } else {
@@ -148,7 +170,7 @@ fileprivate class Sequencer {
         }
     }
     
-    // TODO use this to ignore empty measures
+    // find the last non-empty measure
     private func findEndMeasure(part: Part) -> Int {
         var endMeasure = part.measures.count - 1
         for index in stride(from: part.measures.count - 1, through: 0, by: -1) {
@@ -229,9 +251,9 @@ class Audio {
         }
     }
     
-    func playFromCurrentMeasure(part: Part, beat: Int, measure: Int) {
+    func playFromCurrentMeasure(part: Part, beat: Int, measure: Int, block: @escaping (Int, Rational) -> Void) {
         sequencer.build(part: part, beat: beat, startMeasureIndex: measure)
-        sequencer.play()
+        sequencer.play(block: block)
     }
     
 
