@@ -11,6 +11,7 @@ import Rational
 import MusicKit
 import SwiftyTimer
 
+// TODO make this into audioPlaybackChanged
 protocol AudioObserver: class {
     func audioChanged()
 }
@@ -29,41 +30,181 @@ private class Weak {
     }
 }
 
+fileprivate struct TrackElem {
+    var measureIndex: Int
+    var measurePosition: Rational
+    
+    var midiPitch: UInt8? // if nil don't play anything
+    var waitTime: Double // seconds
+}
 
+// 1. Generates MIDI from notes
+// 2. Calls the sampler to play those notes at the right time
+fileprivate class Sequencer {
+    
+    var tempo: Double // beats per minute
+    var sampler: AKSampler
+    var stop: Bool // TODO
+    
+    private(set) var currentMeasure: Int
+    private(set) var currentNotePosition: Rational
+    
+    // measure index, midi pitch, position, duration
+    var track: [TrackElem]
+    
+    // play just this note
+    func playPitch(pitch: UInt8) {
+        // TODO investigate channels
+        sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
+    }
+    
+    // TODO escaping closure to capture measure index and measure position for UI?
+    // loop and play each note
+    func play() {
+        
+        self.stop = false
+        
+        for trackElem in track {
+            if self.stop {
+                break
+            }
+            
+            currentMeasure = trackElem.measureIndex
+            currentNotePosition = trackElem.measurePosition
+            
+            if let midiPitch = trackElem.midiPitch {
+                playPitch(pitch: midiPitch)
+            }
+            
+            // wait until next note
+            DispatchQueue.main.asyncAfter(deadline: .now() + trackElem.waitTime) {
+                () -> Void in
+            }
+        }
+
+        self.stop = true
+    }
+    
+    init(sampler: AKSampler) {
+        self.sampler = sampler
+        self.tempo = 120
+        stop = true
+        track = []
+        currentMeasure = 0
+        currentNotePosition = 0
+    }
+    
+    // load all notes into the track
+    func build(part: Part, beat: Int, startMeasureIndex: Int) {
+        
+        self.tempo = Double(part.tempo)
+        
+        if !track.isEmpty {
+            track = [] // replace it with a new one
+        }
+        
+        for index in stride(from: startMeasureIndex,
+                            through: part.measures.count - 1,
+                            by: 1) {
+                                
+            let m = part.measures[index]
+            var currPos: Rational = 0
+            while currPos < m.timeSignature {
+                
+                // this is position from 0 at the start of the part
+//                let absolutePos = currPos + Rational(index) * m.timeSignature
+                
+                if let note = m.note(at: currPos) {
+                    
+                    // convert duration into the amount to time we have to wait
+                    let waitTime = (note.duration * Rational(beat)).double * (self.tempo / 60)
+                    
+                    // add this note to the track
+                    track.append(TrackElem(measureIndex: index,
+                                           measurePosition: currPos,
+                                           midiPitch: note.midiPitch,
+                                           waitTime: waitTime))
+                    
+                    currPos = currPos + note.duration
+                    
+                } else if let freePos = m.freespace(at: currPos) {
+                    
+                    // convert duration into the amount to time we have to wait
+                    let waitTime = (freePos.duration * Rational(beat)).double * (self.tempo / 60)
+                    
+                    // add this note to the track without pitch so we don't play it
+                    
+                    track.append(TrackElem(measureIndex: index,
+                                           measurePosition: currPos,
+                                           midiPitch: nil,
+                                           waitTime: waitTime))
+                        
+                    currPos = currPos + freePos.duration
+                    
+                } else {
+                    Log.error?.message("building track: current position is neither a note nor free!")
+                }
+            }
+        }
+    }
+    
+    // TODO use this to ignore empty measures
+    private func findEndMeasure(part: Part) -> Int {
+        var endMeasure = part.measures.count - 1
+        for index in stride(from: part.measures.count - 1, through: 0, by: -1) {
+            let noteCount = part.measures[index].notes.count
+            if noteCount > 0 {
+                return endMeasure
+            }
+            if noteCount == 0 {
+                endMeasure = index
+            }
+        }
+        return endMeasure
+    }
+}
+
+// Takes the Part and uses the sequencer to make MIDI
+// Sampler is called by sequencer, which is mixed to make the output
 class Audio {
-
-    let sequence = AKSequencer()
     
-    let sampler = AKMIDISampler()
-    
-    private var observers: [Weak] = [Weak]()
+    private let sampler: AKMIDISampler
+    private let mixer: AKMixer
+    private let sequencer: Sequencer
+    private var observers: [Weak]
 
     init() {
-        sampler.name = "piano"
+        self.observers = [Weak]()
         
-        guard let _ = try? sampler.loadWav("FM Piano") else {
+        self.sampler = AKMIDISampler()
+        self.sampler.name = "piano"
+        
+        self.sequencer = Sequencer(sampler: self.sampler)
+        
+        self.mixer = AKMixer(sampler)
+        mixer.volume = 1.0
+        
+        // TODO audio engineering to make it sound better
+        AudioKit.output = mixer
+        
+        // load the sample
+        guard let _ = try? self.sampler.loadWav("FM Piano") else {
             Log.error?.message("Unable to load wav")
             return
         }
-        
-        _ = sequence.newTrack()
-        sequence.tracks[0].setMIDIOutput(sampler.midiIn)
-        AudioKit.output = sampler
     }
 
     func start() {
         AudioKit.start()
-        
-//        sampler.enableMIDI(sequence, name: "piano")
     }
 
     func stop() {
-        sequence.stop()
+        sequencer.stop = true
         notify()
     }
     
     func isPlaying() -> Bool {
-        return sequence.isPlaying
+        return !sequencer.stop
     }
     
     func subscribe(_ observer: AudioObserver) {
@@ -88,113 +229,31 @@ class Audio {
         }
     }
     
-    func playFromCurrentMeasure(part: Part, measure: Int, block: @escaping (Int) -> Void) {
-        if !sequence.tracks[0].isEmpty {
-            sequence.tracks[0].clear()
-        }
-        let endMeasure = findEndMeasure(part: part)
-        let numMeasures = part.measures.count - measure
-        let sequenceLength = AKDuration(beats: Double(part.measures[0].timeSignature.numerator * numMeasures), tempo: Double(part.tempo))
-        sequence.setLength(sequenceLength)
-        var curPos = 0.0
-        var curMeasure = 0
-        
-        for index in stride(from: measure, through: part.measures.count - 1, by: 1) {
-            let m = part.measures[index]
-            for notePos in m.notes {
-                guard let note = m.note(at: notePos.pos) else { return }
-                curPos = (curMeasure + notePos.pos.double) * m.timeSignature.numerator
-                let akpos = AKDuration(beats: curPos)
-                let akdur = AKDuration(beats: note.duration.double)
-                let pitch = midiPitch(for: note)
-                if !note.rest {
-                    sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
-                    
-//                    sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
-                    // plays notes on top of each other because there is no delay
-                    // pitches are fine relative to each other but they aren't correct
-                }
-            }
-            curMeasure += 1
-
-        }
-
-        sequence.setTempo(Double(part.tempo))
-//        sequence.play()
-        notify()
-
-        sequence.rewind()
-        
-        /* 0.05 is an educated guess
-            The Timer is called every 0.05 seconds and it checks to see where in the measure we are and changes the current measure accordingly. If we reach the end measure, we stop playing the sequence. 
-         */
-        Timer.every(0.05.seconds) { (timer: Timer) -> Void in
-            let beatsPerMeasure = part.measures[0].timeSignature.numerator
-            let currentMeasure = floor(self.sequence.currentRelativePosition.beats/beatsPerMeasure) + measure
-            if currentMeasure >= Double(endMeasure) {
-                self.sequence.stop()
-                self.notify()
-            }
-            guard self.sequence.isPlaying else {
-                timer.invalidate()
-                return
-            }
-            block(Int(currentMeasure))
-        }
+    func playFromCurrentMeasure(part: Part, beat: Int, measure: Int) {
+        sequencer.build(part: part, beat: beat, startMeasureIndex: measure)
+        sequencer.play()
     }
     
-    func findEndMeasure(part: Part) -> Int {
-        var endMeasure = part.measures.count - 1
-        for index in stride(from: part.measures.count - 1, through: 0, by: -1) {
-            let noteCount = part.measures[index].notes.count
-            if noteCount > 0 {
-                return endMeasure
-            }
-            if noteCount == 0 {
-                endMeasure = index
-            }
-        }
-        return endMeasure
-    }
 
     func playNote(part: Part, measure: Int, position: Rational) {
-        if !sequence.tracks[0].isEmpty {
-            sequence.tracks[0].clear()
+        if let note = part.measures[measure].note(at: position) {
+            sequencer.playPitch(pitch: note.midiPitch)
         }
-
-        let m = part.measures[measure]
-
-        let sequenceLength = AKDuration(beats: Double(m.timeSignature.numerator), tempo: Double(part.tempo))
-        sequence.setLength(sequenceLength)
-
-        guard let note = m.note(at: position) else { return }
-
-        if note.rest { return } // don't play rests
-
-        // let akpos = AKDuration(beats: Double(m.timeSignature.numerator) * position.double)
-        let akpos = AKDuration(beats: 0)
-        let akdur = AKDuration(beats: note.duration.double)
-
-        let pitch = midiPitch(for: note)
-
-        sequence.tracks[0].add(noteNumber: MIDINoteNumber(pitch), velocity: 100, position: akpos, duration: akdur)
-        sequence.setTempo(Double(part.tempo))
-        sequence.play()
-        
-        sequence.rewind()
     }
-    
-    fileprivate func midiPitch(for note: Note) -> UInt8 {
+}
+
+fileprivate extension Note {
+    var midiPitch: UInt8 {
         var chroma: Chroma = .c
-        var octave = note.octave
-        switch note.accidental {
+        var octave = self.octave
+        switch self.accidental {
         case .sharp:
-            switch note.letter {
+            switch self.letter {
             case .A:
                 chroma = .as
             case .B:
                 chroma = .c
-                octave = note.octave + 1
+                octave = self.octave + 1
             case .C:
                 chroma = .cs
             case .D:
@@ -206,16 +265,16 @@ class Audio {
             case .G:
                 chroma = .gs
             }
-
+            
         case .flat:
-            switch note.letter {
+            switch self.letter {
             case .A:
                 chroma = .gs
             case .B:
                 chroma = .as
             case .C:
                 chroma = .b
-                octave = note.octave - 1
+                octave = self.octave - 1
             case .D:
                 chroma = .cs
             case .E:
@@ -225,9 +284,9 @@ class Audio {
             case .G:
                 chroma = .fs
             }
-
+            
         case .natural:
-            switch note.letter {
+            switch self.letter {
             case .A:
                 chroma = .a
             case .B:
@@ -245,8 +304,7 @@ class Audio {
             }
         default: break // doubles
         }
-
+        
         return UInt8(Pitch(chroma: chroma, octave: UInt(octave)).midi)
     }
-    
 }
