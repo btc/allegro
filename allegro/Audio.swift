@@ -116,7 +116,7 @@ fileprivate class Sequencer {
         return (duration * Rational(beat)).double / (tempo / 60)
     }
     
-    // load all notes into the track
+    // load all notes and freespaces into the track
     func build(part: Part, startMeasureIndex: Int) {
         
         if !track.isEmpty {
@@ -128,52 +128,38 @@ fileprivate class Sequencer {
             let m = part.measures[index]
             
             var currPos: Rational = 0
-            var currTime: TimeInterval = 0
             while currPos < m.timeSignature {
-                
+
+                var duration: Rational = 0
+                var midiPitch: UInt8?
+
                 if let note = m.note(at: currPos) {
-                    
-                    // convert duration into the amount to time we have to wait
-                    let waitTime = calcWaitTime(duration: note.duration, tempo: tempo, beat: beat)
-                    
-                    if note.rest {
-                        // add this note without a pitch
-                        track.append(TrackElem(measureIndex: index,
-                                               measurePosition: currPos,
-                                               midiPitch: nil,
-                                               waitTime: waitTime))
-                    } else {
-                        // add this note to the track
-                        track.append(TrackElem(measureIndex: index,
-                                               measurePosition: currPos,
-                                               midiPitch: note.midiPitch,
-                                               waitTime: waitTime))
+                    duration = note.duration
+                    if !note.rest {
+                        midiPitch = note.midiPitch
                     }
-                    
-                    currTime += waitTime
-                    currPos = currPos + note.duration
-                    
+
                 } else if let freePos = m.freespace(at: currPos) {
-                    
-                    // convert duration into the amount to time we have to wait
-                    let waitTime = calcWaitTime(duration: freePos.duration, tempo: tempo, beat: beat)
-                    
-                    // add this note to the track without pitch so we don't play it
-                    track.append(TrackElem(measureIndex: index,
-                                           measurePosition: currPos,
-                                           midiPitch: nil,
-                                           waitTime: waitTime))
-                    
-                    currTime += waitTime
-                    currPos = currPos + freePos.duration
-                    
+                    duration = freePos.duration
+
                 } else {
-                    Log.error?.message("building track: current position is neither a note nor free!")
+                    Log.error?.message("building audio track: current position is neither a note nor free!")
                 }
+
+                // convert duration into the amount to time we have to wait
+                let waitTime = calcWaitTime(duration: duration, tempo: tempo, beat: beat)
+
+                // add this note to the track without pitch so we don't play it
+                track.append(TrackElem(measureIndex: index,
+                                       measurePosition: currPos,
+                                       midiPitch: midiPitch, // nil for rest or freespace
+                                       waitTime: waitTime))
+
+                currPos = currPos + duration
             }
         }
     }
-    
+
     // find the last non-empty measure
     private func findEndMeasure(part: Part) -> Int {
         var endMeasure = part.measures.count - 1
