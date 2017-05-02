@@ -46,7 +46,10 @@ fileprivate class Sequencer {
     var stop: Bool
     
     var track: [TrackElem]
-    
+
+    var tempo: Double // beats per minute
+    var beat: Int // the note that gets the beat (denominator of time signature)
+
     // play just this note
     func playPitch(pitch: UInt8) {
         // TODO investigate channels
@@ -63,8 +66,9 @@ fileprivate class Sequencer {
         var currStartTime = Date.distantPast // time that curr note was played
         var currWait: TimeInterval = 0 // time to wait until next note
 
-        // TODO better step size
-        Timer.every(0.05.seconds) { (timer: Timer) -> Void in
+        // minimum step with 1/64 notes (leftover from double-dotted 1/16 note)
+        let step = calcWaitTime(duration: 1/64, tempo: self.tempo, beat: self.beat)
+        Timer.every(step.seconds) { (timer: Timer) -> Void in
             
             if self.stop {
                 Log.info?.message("Audio playback timer stopped")
@@ -73,8 +77,8 @@ fileprivate class Sequencer {
             }
 
             if (Date().timeIntervalSince(currStartTime) >= currWait) {
+
                 // pop next track elem
-            
                 guard let trackElem = trackElemIterator.next() else {
                     Log.info?.message("Audio playback done, stopping timer")
                     timer.invalidate()
@@ -100,6 +104,8 @@ fileprivate class Sequencer {
         self.sampler = sampler
         stop = true
         track = []
+        tempo = 120
+        beat = 4
     }
     
     // convert duration into the amount to time we have to wait
@@ -111,9 +117,7 @@ fileprivate class Sequencer {
     }
     
     // load all notes into the track
-    func build(part: Part, beat: Int, startMeasureIndex: Int) {
-        
-        let tempo = Double(part.tempo)
+    func build(part: Part, startMeasureIndex: Int) {
         
         if !track.isEmpty {
             track = [] // replace it with a new one
@@ -174,11 +178,9 @@ fileprivate class Sequencer {
     private func findEndMeasure(part: Part) -> Int {
         var endMeasure = part.measures.count - 1
         for index in stride(from: part.measures.count - 1, through: 0, by: -1) {
-            let noteCount = part.measures[index].notes.count
-            if noteCount > 0 {
+            if part.measures[index].notes.count > 0 {
                 return endMeasure
-            }
-            if noteCount == 0 {
+            } else {
                 endMeasure = index
             }
         }
@@ -251,8 +253,10 @@ class Audio {
         }
     }
     
-    func playFromCurrentMeasure(part: Part, beat: Int, measure: Int, block: @escaping (Int, Rational) -> Void) {
-        sequencer.build(part: part, beat: beat, startMeasureIndex: measure)
+    func playFromCurrentMeasure(part: Part, measure: Int, block: @escaping (Int, Rational) -> Void) {
+        sequencer.tempo = Double(part.tempo)
+        sequencer.beat = part.timeSignature.denominator
+        sequencer.build(part: part, startMeasureIndex: measure)
         sequencer.play(block: block)
     }
     
