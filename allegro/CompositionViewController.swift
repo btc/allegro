@@ -92,7 +92,7 @@ class CompositionViewController: UIViewController {
 
         store.subscribe(self)
         audio?.subscribe(self)
-        audio?.stop()
+        audio?.stop = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -164,7 +164,7 @@ class CompositionViewController: UIViewController {
     }
     
     func screenCoverTapped() {
-        audio?.stop()
+        audio?.stop = true
         Snackbar(message: "Audio playback stopped", duration: .short).show()
     }
 
@@ -193,7 +193,7 @@ extension CompositionViewController: PartStoreObserver {
 extension CompositionViewController: AudioObserver {
     func audioChanged() {
         if let audio = audio {
-            screenCover.isHidden = !audio.isPlaying()
+            screenCover.isHidden = audio.stop
         }
     }
     
