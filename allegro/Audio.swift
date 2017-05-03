@@ -11,14 +11,17 @@ import Rational
 import MusicKit
 import SwiftyTimer
 
-// TODO make this into audioPlaybackChanged
 protocol AudioObserver: class {
-    func audioChanged()
+    func audioPlaybackChanged(playing: Bool)
+    func audioPositionChanged(measure: Int, position: Rational)
 }
 
 extension AudioObserver {
-    func audioChanged() {
-        //default impl
+    func audioPlaybackChanged(playing: Bool) {
+        // default impl
+    }
+    func audioPositionChanged(measure: Int, position: Rational) {
+        // default impl
     }
 }
 
@@ -42,9 +45,20 @@ fileprivate struct TrackElem {
 // Sampler is called by sequencer, which is mixed to make the output
 class Audio {
 
-    var stop: Bool = true {
+    var isPlaying: Bool = false {
         didSet {
-            notify()
+            notifyPlaybackChanged()
+        }
+    }
+
+    private(set) var currentMeasure: Int = 0 {
+        didSet {
+            notifyPositionChanged()
+        }
+    }
+    private(set) var currentPosition: Rational = 0 {
+        didSet {
+            notifyPositionChanged()
         }
     }
 
@@ -82,7 +96,6 @@ class Audio {
     
     func subscribe(_ observer: AudioObserver) {
         observers.append(Weak(observer))
-        observer.audioChanged()
     }
     
     func unsubscribe(_ observer: AudioObserver) {
@@ -93,11 +106,19 @@ class Audio {
     }
     
     // general notification must always be sent to observers
-    private func notify() {
+    private func notifyPlaybackChanged() {
         // prunes released objects as it iterates
         observers = observers.filter {
             guard let value = $0.value else { return false }
-            value.audioChanged()
+            value.audioPlaybackChanged(playing: self.isPlaying)
+            return true
+        }
+    }
+
+    private func notifyPositionChanged() {
+        observers = observers.filter {
+            guard let value = $0.value else { return false }
+            value.audioPositionChanged(measure: self.currentMeasure, position: self.currentPosition)
             return true
         }
     }
@@ -117,9 +138,9 @@ class Audio {
     }
 
     // loop and play each note
-    private func play(block: @escaping (Int, Rational) -> Void) {
+    private func play() {
 
-        self.stop = false
+        self.isPlaying = true
 
         var trackElemIterator = track.makeIterator()
 
@@ -130,7 +151,7 @@ class Audio {
         let step = calcWaitTime(duration: 1/64, tempo: self.tempo, beat: self.beat)
         Timer.every(step.seconds) { (timer: Timer) -> Void in
 
-            if self.stop {
+            if !self.isPlaying {
                 Log.info?.message("Audio playback timer stopped")
                 timer.invalidate()
                 return
@@ -142,12 +163,13 @@ class Audio {
                 guard let trackElem = trackElemIterator.next() else {
                     Log.info?.message("Audio playback done, stopping timer")
                     timer.invalidate()
-                    self.stop = true
+                    self.isPlaying = false
                     return
                 }
 
-                // pass info back to calling function
-                block(trackElem.measureIndex, trackElem.measurePosition)
+                // update state
+                self.currentMeasure = trackElem.measureIndex
+                self.currentPosition = trackElem.measurePosition
 
                 if let midiPitch = trackElem.midiPitch {
                     // play unless nil (for rests and freespace)
@@ -226,12 +248,11 @@ class Audio {
 
     // build the track and play from the current measure
     // the block is called on current measure and current note position
-    func playFromCurrentMeasure(part: Part, measure: Int, block: @escaping (Int, Rational) -> Void) {
+    func playFromCurrentMeasure(part: Part, measure: Int) {
         tempo = Double(part.tempo)
         beat = part.timeSignature.denominator
         build(part: part, startMeasureIndex: measure)
-        play(block: block)
-        notify()
+        play()
     }
 
 }
