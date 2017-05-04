@@ -197,29 +197,31 @@ class MusicXMLParser {
     private static func parseMeasure(measureElement: AEXMLElement) -> (measureIndex: Int, measure: Measure) {
         var measure = Measure()
 
-        // TODO parse key signature
-
         // number is the index of the measure
         // should this default to something else?
         let numberString = measureElement.attributes["number"] ?? "0"
         let number = (Int(numberString) ?? 1) - 1
 
-        // check for key, as an int in the circle of fifths cf. Key.swift
-        if let keyElem = measureElement.firstChildMatch(name: "key") {
-            measure.keySignature.fifths = keyElem.safeValueInt(fallback: 0)
-        }
+        if let attributesElem = measureElement.firstChildMatch(name: "attributes") {
+            // ignore divisions, we always assume 16
 
-        // check for the time signature and convert to rational
-        if let timeElem = measureElement.firstChildMatch(name: "time") {
-            var numerator = 4
-            var denominator = 4
-            if let beatsElem = timeElem.firstChildMatch(name: "beats") {
-                numerator = beatsElem.safeValueInt(fallback: 4)
+            // check for key, as an int in the circle of fifths cf. Key.swift
+            if let keyElem = attributesElem.firstChildMatch(name: "key") {
+                measure.keySignature.fifths = keyElem.safeValueInt(fallback: 0)
             }
-            if let beatTypeElem = timeElem.firstChildMatch(name: "beat-type") {
-                denominator = beatTypeElem.safeValueInt(fallback: 4)
+
+            // check for the time signature and convert to rational
+            if let timeElem = attributesElem.firstChildMatch(name: "time") {
+                var numerator = 4
+                var denominator = 4
+                if let beatsElem = timeElem.firstChildMatch(name: "beats") {
+                    numerator = beatsElem.safeValueInt(fallback: 4)
+                }
+                if let beatTypeElem = timeElem.firstChildMatch(name: "beat-type") {
+                    denominator = beatTypeElem.safeValueInt(fallback: 4)
+                }
+                measure.timeSignature = Rational(numerator, denominator) ?? 4/4
             }
-            measure.timeSignature = Rational(numerator, denominator) ?? 4/4
         }
 
         // find all note elements and parse them
