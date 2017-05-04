@@ -45,6 +45,9 @@ fileprivate struct TrackElem {
 // Sampler is called by sequencer, which is mixed to make the output
 class Audio {
 
+    // minimum step with 1/64 notes (leftover from double-dotted 1/16 note)
+    private static let minimumDuration: Rational = 1/64
+
     var isPlaying: Bool = false {
         didSet {
             notifyPlaybackChanged()
@@ -64,17 +67,11 @@ class Audio {
 
     fileprivate var track: [TrackElem] = []
 
-    var tempo: Double = 120 // beats per minute
-    var beat: Int = 4 // the note that gets the beat (denominator of time signature)
-
-    private let sampler: AKMIDISampler
+    private let sampler: AKMIDISampler = AKMIDISampler()
     private let mixer: AKMixer
-    private var observers: [Weak]
+    private var observers: [Weak] = [Weak]()
 
     init() {
-        self.observers = [Weak]()
-        
-        self.sampler = AKMIDISampler()
         self.sampler.name = "piano"
 
         self.mixer = AKMixer(sampler)
@@ -138,7 +135,9 @@ class Audio {
     }
 
     // loop and play each note
-    private func play() {
+    // tempo is in beats per minute
+    // beat the note that gets the beat (denominator of time signature)
+    private func play(tempo: Double, beat: Int) {
 
         self.isPlaying = true
 
@@ -147,8 +146,7 @@ class Audio {
         var currStartTime = Date.distantPast // time that curr note was played
         var currWait: TimeInterval = 0 // time to wait until next note
 
-        // minimum step with 1/64 notes (leftover from double-dotted 1/16 note)
-        let step = calcWaitTime(duration: 1/64, tempo: self.tempo, beat: self.beat)
+        let step = calcWaitTime(duration: Audio.minimumDuration, tempo: tempo, beat: beat)
         Timer.every(step.seconds) { (timer: Timer) -> Void in
 
             if !self.isPlaying {
@@ -183,7 +181,7 @@ class Audio {
     }
 
     // load all notes and freespaces into the track
-    private func build(part: Part, startMeasureIndex: Int) {
+    private func build(part: Part, startMeasureIndex: Int, tempo: Double, beat: Int) {
 
         if !track.isEmpty {
             track = [] // replace it with a new one
@@ -249,10 +247,10 @@ class Audio {
     // build the track and play from the current measure
     // the block is called on current measure and current note position
     func playFromCurrentMeasure(part: Part, measure: Int) {
-        tempo = Double(part.tempo)
-        beat = part.timeSignature.denominator
-        build(part: part, startMeasureIndex: measure)
-        play()
+        let tempo = Double(part.tempo)
+        let beat = part.timeSignature.denominator
+        build(part: part, startMeasureIndex: measure, tempo: tempo, beat: beat)
+        play(tempo: tempo, beat: beat)
     }
 
 }
