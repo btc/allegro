@@ -41,8 +41,8 @@ fileprivate struct TrackElem {
     var waitTime: TimeInterval // seconds
 }
 
-// Takes the Part and uses the sequencer to make MIDI
-// Sampler is called by sequencer, which is mixed to make the output
+// Takes the Part and builds a MIDI track just like a sequencer
+// Each TrackElem is played according to the timing using the sampler
 class Audio {
 
     // minimum step with 1/64 notes (leftover from double-dotted 1/16 note)
@@ -50,22 +50,24 @@ class Audio {
 
     var isPlaying: Bool = false {
         didSet {
+            if !isPlaying {
+                currentMeasure = nil
+                currentPosition = nil
+            }
             notifyPlaybackChanged()
         }
     }
 
-    private(set) var currentMeasure: Int = 0 {
+    private var currentMeasure: Int? {
         didSet {
             notifyPositionChanged()
         }
     }
-    private(set) var currentPosition: Rational = 0 {
+    private var currentPosition: Rational? {
         didSet {
             notifyPositionChanged()
         }
     }
-
-    fileprivate var track: [TrackElem] = []
 
     private let sampler: AKMIDISampler = AKMIDISampler()
     private let mixer: AKMixer
@@ -82,7 +84,7 @@ class Audio {
         
         // load the sample
         guard let _ = try? self.sampler.loadWav("FM Piano") else {
-            Log.error?.message("Unable to load wav")
+            Log.error?.message("Unable to load FM Piano wav from bundle")
             return
         }
     }
@@ -96,8 +98,8 @@ class Audio {
     }
     
     func unsubscribe(_ observer: AudioObserver) {
-        observers = observers.filter {
-            guard let value = $0.value else { return false } // prune released objects
+        observers = observers.filter { observer in
+            guard let value = observer.value else { return false } // prune released objects
             return value !== observer
         }
     }
@@ -105,18 +107,19 @@ class Audio {
     // general notification must always be sent to observers
     private func notifyPlaybackChanged() {
         // prunes released objects as it iterates
-        observers = observers.filter {
-            guard let value = $0.value else { return false }
+        observers = observers.filter { observer in
+            guard let value = observer.value else { return false }
             value.audioPlaybackChanged(playing: self.isPlaying)
             return true
         }
     }
 
     private func notifyPositionChanged() {
-        observers = observers.filter {
-            guard let value = $0.value else { return false }
-            value.audioPositionChanged(measure: self.currentMeasure, position: self.currentPosition)
-            return true
+        observers.forEach { observer in
+            guard let value = observer.value else { return }
+            guard let measure = self.currentMeasure else { return }
+            guard let position = self.currentPosition else { return }
+            value.audioPositionChanged(measure: measure, position: position)
         }
     }
 
@@ -137,7 +140,7 @@ class Audio {
     // loop and play each note
     // tempo is in beats per minute
     // beat the note that gets the beat (denominator of time signature)
-    private func play(tempo: Double, beat: Int) {
+    private func play(track: [TrackElem], tempo: Double, beat: Int) {
 
         self.isPlaying = true
 
@@ -150,7 +153,7 @@ class Audio {
         Timer.every(step.seconds) { (timer: Timer) -> Void in
 
             if !self.isPlaying {
-                Log.info?.message("Audio playback timer stopped")
+                Log.info?.message("Audio playback interrupted, stopping timer")
                 timer.invalidate()
                 return
             }
@@ -181,11 +184,8 @@ class Audio {
     }
 
     // load all notes and freespaces into the track
-    private func build(part: Part, startMeasureIndex: Int, tempo: Double, beat: Int) {
-
-        if !track.isEmpty {
-            track = [] // replace it with a new one
-        }
+    private func build(part: Part, startMeasureIndex: Int, tempo: Double, beat: Int) -> [TrackElem] {
+        var track = [TrackElem]()
 
         let endMeasure = findEndMeasure(part: part)
         for index in stride(from: startMeasureIndex, to: endMeasure, by: 1) {
@@ -222,6 +222,7 @@ class Audio {
                 currPos = currPos + duration
             }
         }
+        return track
     }
 
     // find the last non-empty measure
@@ -249,8 +250,8 @@ class Audio {
     func playFromCurrentMeasure(part: Part, measure: Int) {
         let tempo = Double(part.tempo)
         let beat = part.timeSignature.denominator
-        build(part: part, startMeasureIndex: measure, tempo: tempo, beat: beat)
-        play(tempo: tempo, beat: beat)
+        let track = build(part: part, startMeasureIndex: measure, tempo: tempo, beat: beat)
+        play(track: track, tempo: tempo, beat: beat)
     }
 
 }
