@@ -115,11 +115,12 @@ class Audio {
     }
 
     private func notifyPositionChanged() {
-        observers.forEach { observer in
-            guard let value = observer.value else { return }
-            guard let measure = self.currentMeasure else { return }
-            guard let position = self.currentPosition else { return }
+        observers = observers.filter { observer in
+            guard let value = observer.value else { return false }
+            guard let measure = self.currentMeasure else { return true }
+            guard let position = self.currentPosition else { return true }
             value.audioPositionChanged(measure: measure, position: position)
+            return true
         }
     }
 
