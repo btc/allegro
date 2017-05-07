@@ -66,8 +66,13 @@ class Note {
     
     // Gives the true duration of the note after modifiers
     var duration: Rational {
-        return self.value.nominalDuration * self.dot.modifier
-        // TODO (niklele) there will be a triplet modifier as well
+        guard self.triplet != nil
+            else { return self.value.nominalDuration * self.dot.modifier }
+        if let tripletModifier = self.triplet?.modifier {
+            return self.value.nominalDuration * tripletModifier
+        } else {
+            return self.value.nominalDuration * self.dot.modifier
+        }
     }
     
     // number of dots on the right of the note that extend the duration
@@ -93,14 +98,18 @@ class Note {
     var octave: Int
     var accidental: Accidental
     var rest: Bool // true if the Note is a rest
+    weak var tie: Tie? // holds a reference to a Tie if this Note belongs to one
+    weak var triplet: Triplet? // holds a reference to a Triplet if this Note belongs to one
 
-    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false) {
+    init(value: Value, letter: Letter, octave: Int, accidental: Accidental = .natural, rest: Bool = false, tie: Tie? = nil, triplet: Triplet? = nil) {
         self.value = value
         self.letter = letter
         self.octave = octave
         self.accidental = accidental
         self.rest = rest
         self.dot = .none
+        self.tie = tie
+        self.triplet = triplet
     }
     
     static func == (lhs: Note, rhs: Note) -> Bool {

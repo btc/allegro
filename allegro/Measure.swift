@@ -28,6 +28,8 @@ struct Measure {
             frees = computeFrees()
         }
     }
+    
+    private(set) var ties: [Tie] = [Tie]()
 
     var capacity: Rational {
         return timeSignature
@@ -68,6 +70,14 @@ struct Measure {
 
     mutating func removeAndReturnNote(at position: Rational) -> Note? {
         guard let i = index(of: position) else { return nil }
+        // check if note is part of a tie
+        if let tie = notes[i].note.tie {
+            // contains tie
+            let success = removeTie(tie: tie)
+            if (success == false || notes[i].note.tie != nil) {
+                Log.error?.message("Error removing tie")
+            }
+        }
         return notes.remove(at: i).note
     }
 
@@ -203,7 +213,26 @@ struct Measure {
         }
         return false
     }
-
+    
+    // adds a Tie to this measure
+    // returns true on success
+    mutating func addTie(startPos: Rational, endPos: Rational) -> Bool {
+        guard let startNote = note(at: startPos) else {return false}
+        guard let endNote = note(at: endPos) else { return false}
+        ties.append(Tie(startNote: startNote, endNote: endNote))
+        return true
+    }
+    
+    // removes a Tie from this measure
+    mutating func removeTie(tie: Tie) -> Bool {
+        for (i, member) in ties.enumerated() {
+            if(member == tie) {
+                ties.remove(at: i)
+                return true
+            }
+        }
+        return false
+    }
 
     // Finds the nearest previous note with the same letter if it exists
     func getPrevLetterMatch(for letter: Note.Letter, at position: Rational) -> Note? {
