@@ -86,8 +86,6 @@
 		B978F84A1E7EF852001EE49C /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B978F8491E7EF852001EE49C /* HelpViewController.swift */; };
 		B978F8541E85AEAD001EE49C /* TempoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B978F8531E85AEAD001EE49C /* TempoViewController.swift */; };
 		B988BE0D1E68D9E5007BB32A /* PartSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B988BE0C1E68D9E5007BB32A /* PartSaver.swift */; };
-		B988E8061EAC378C00D32247 /* Bell.wav in Resources */ = {isa = PBXBuildFile; fileRef = B988E8041EAC378C00D32247 /* Bell.wav */; };
-		B988E8071EAC378C00D32247 /* FM Piano.wav in Resources */ = {isa = PBXBuildFile; fileRef = B988E8051EAC378C00D32247 /* FM Piano.wav */; };
 		B98BF2801E58FBEB000CCF3E /* MusicXMLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */; };
 		B9A0A68E1E774AC900F362B5 /* Montserrat-ExtraLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */; };
 		B9A0A68F1E774AC900F362B5 /* Montserrat-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = B9A0A68D1E774AC900F362B5 /* Montserrat-Light.otf */; };
@@ -95,6 +93,8 @@
 		B9AEF2811E40564900B0910E /* allegroViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */; };
 		B9AEF2831E60BF9200B0910E /* AEXMLElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AEF2821E60BF9200B0910E /* AEXMLElement.swift */; };
 		B9D325DF1EBFEF5800474A99 /* sawPiano1.exs in Resources */ = {isa = PBXBuildFile; fileRef = B9D325DE1EBFEF5800474A99 /* sawPiano1.exs */; };
+		B9D325E21EBFF87500474A99 /* Bell.wav in Resources */ = {isa = PBXBuildFile; fileRef = B9D325E01EBFF87500474A99 /* Bell.wav */; };
+		B9D325E31EBFF87500474A99 /* FM Piano.wav in Resources */ = {isa = PBXBuildFile; fileRef = B9D325E11EBFF87500474A99 /* FM Piano.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -214,8 +214,6 @@
 		B978F8491E7EF852001EE49C /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		B978F8531E85AEAD001EE49C /* TempoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempoViewController.swift; sourceTree = "<group>"; };
 		B988BE0C1E68D9E5007BB32A /* PartSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartSaver.swift; sourceTree = "<group>"; };
-		B988E8041EAC378C00D32247 /* Bell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Bell.wav; sourceTree = "<group>"; };
-		B988E8051EAC378C00D32247 /* FM Piano.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "FM Piano.wav"; sourceTree = "<group>"; };
 		B98BF27F1E58FBEB000CCF3E /* MusicXMLTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicXMLTests.swift; sourceTree = "<group>"; };
 		B9A0A68C1E774AC900F362B5 /* Montserrat-ExtraLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-ExtraLight.otf"; path = "fonts/Montserrat-ExtraLight.otf"; sourceTree = "<group>"; };
 		B9A0A68D1E774AC900F362B5 /* Montserrat-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Montserrat-Light.otf"; path = "fonts/Montserrat-Light.otf"; sourceTree = "<group>"; };
@@ -223,6 +221,8 @@
 		B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = allegroViewModelTests.swift; sourceTree = "<group>"; };
 		B9AEF2821E60BF9200B0910E /* AEXMLElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXMLElement.swift; sourceTree = "<group>"; };
 		B9D325DE1EBFEF5800474A99 /* sawPiano1.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = sawPiano1.exs; path = "audio samples/sawPiano1.exs"; sourceTree = "<group>"; };
+		B9D325E01EBFF87500474A99 /* Bell.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Bell.wav; path = "audio samples/Bell.wav"; sourceTree = "<group>"; };
+		B9D325E11EBFF87500474A99 /* FM Piano.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "FM Piano.wav"; path = "audio samples/FM Piano.wav"; sourceTree = "<group>"; };
 		BEA53266E630B8937E68457C /* Pods-allegroUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		DACD8BC72E26DC8A51C2E082 /* Pods-allegroTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -518,8 +518,8 @@
 			isa = PBXGroup;
 			children = (
 				B9D325DE1EBFEF5800474A99 /* sawPiano1.exs */,
-				B988E8041EAC378C00D32247 /* Bell.wav */,
-				B988E8051EAC378C00D32247 /* FM Piano.wav */,
+				B9D325E01EBFF87500474A99 /* Bell.wav */,
+				B9D325E11EBFF87500474A99 /* FM Piano.wav */,
 			);
 			name = "Audio Samples";
 			sourceTree = "<group>";
@@ -647,16 +647,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9A0A68E1E774AC900F362B5 /* Montserrat-ExtraLight.otf in Resources */,
+				B9D325E21EBFF87500474A99 /* Bell.wav in Resources */,
 				B9A0A68F1E774AC900F362B5 /* Montserrat-Light.otf in Resources */,
 				6B6E26F81E288F8200F9CF66 /* LaunchScreen.storyboard in Resources */,
 				6B6E26F51E288F8200F9CF66 /* Assets.xcassets in Resources */,
-				B988E8061EAC378C00D32247 /* Bell.wav in Resources */,
 				324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */,
 				B96902F01E6246E6006CF8D1 /* example0.xml in Resources */,
 				B9D325DF1EBFEF5800474A99 /* sawPiano1.exs in Resources */,
 				6B80D7E81E457CD8003996CF /* Montserrat-Bold.ttf in Resources */,
-				B988E8071EAC378C00D32247 /* FM Piano.wav in Resources */,
 				6B80D7E91E457CD8003996CF /* Montserrat-Regular.ttf in Resources */,
+				B9D325E31EBFF87500474A99 /* FM Piano.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

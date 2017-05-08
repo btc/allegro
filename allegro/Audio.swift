@@ -84,7 +84,12 @@ class Audio {
         
         // load the sample
 //        guard let _ = try? self.sampler.loadWav("FM Piano") else {
-//            Log.error?.message("Unable to load FM Piano wav from bundle")
+//            Log.error?.message("Unable to load FM Piano.wav from bundle")
+//            return
+//        }
+
+//        guard let _ = try? self.sampler.loadWav("Bell") else {
+//            Log.error?.message("Unable to load Bell.wav from bundle")
 //            return
 //        }
 
@@ -145,7 +150,6 @@ class Audio {
 
     private func stopPitch(pitch: UInt8?) {
         if let pitch = pitch {
-            Log.info?.message("stopping pitch \(pitch)")
             sampler.stop(noteNumber: MIDINoteNumber(pitch), channel: 0)
         }
     }
