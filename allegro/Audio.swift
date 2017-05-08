@@ -93,8 +93,13 @@ class Audio {
 //            return
 //        }
 
-        guard let _ = try? self.sampler.loadEXS24("sawPiano1") else {
-            Log.error?.message("Unable to load sawPiano1.exs from bundle")
+//        guard let _ = try? self.sampler.loadEXS24("sawPiano1") else {
+//            Log.error?.message("Unable to load sawPiano1.exs from bundle")
+//            return
+//        }
+
+        guard let _ = try? self.sampler.loadWav("Piano.ff.C5") else {
+            Log.error?.message("Unable to load Piano.ff.C5.wav from bundle")
             return
         }
     }
@@ -268,7 +273,7 @@ class Audio {
     // play a single note
     func playNote(part: Part, measure: Int, position: Rational) {
         if let note = part.measures[measure].note(at: position) {
-            let tempo = Double(part.tempo)
+            let tempo = Double(120)
             let beat = part.timeSignature.denominator
 
             // use 1/16 duration for this demo note
