@@ -83,8 +83,13 @@ class Audio {
         AudioKit.output = mixer
         
         // load the sample
-        guard let _ = try? self.sampler.loadWav("FM Piano") else {
-            Log.error?.message("Unable to load FM Piano wav from bundle")
+//        guard let _ = try? self.sampler.loadWav("FM Piano") else {
+//            Log.error?.message("Unable to load FM Piano wav from bundle")
+//            return
+//        }
+
+        guard let _ = try? self.sampler.loadEXS24("sawPiano1") else {
+            Log.error?.message("Unable to load sawPiano1.exs from bundle")
             return
         }
     }
@@ -138,6 +143,13 @@ class Audio {
         sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
     }
 
+    private func stopPitch(pitch: UInt8?) {
+        if let pitch = pitch {
+            Log.info?.message("stopping pitch \(pitch)")
+            sampler.stop(noteNumber: MIDINoteNumber(pitch), channel: 0)
+        }
+    }
+
     // loop and play each note
     // tempo is in beats per minute
     // beat the note that gets the beat (denominator of time signature)
@@ -150,12 +162,15 @@ class Audio {
         var currStartTime = Date.distantPast // time that curr note was played
         var currWait: TimeInterval = 0 // time to wait until next note
 
+        var lastPitch: UInt8?
+
         let step = calcWaitTime(duration: Audio.minimumDuration, tempo: tempo, beat: beat)
         Timer.every(step.seconds) { (timer: Timer) -> Void in
 
             if !self.isPlaying {
                 Log.info?.message("Audio playback interrupted, stopping timer")
                 timer.invalidate()
+                self.stopPitch(pitch: lastPitch)
                 return
             }
 
@@ -166,8 +181,12 @@ class Audio {
                     Log.info?.message("Audio playback done, stopping timer")
                     timer.invalidate()
                     self.isPlaying = false
+                    self.stopPitch(pitch: lastPitch)
                     return
                 }
+
+                // stop last note
+                self.stopPitch(pitch: lastPitch)
 
                 // update state
                 self.currentMeasure = trackElem.measureIndex
@@ -176,6 +195,9 @@ class Audio {
                 if let midiPitch = trackElem.midiPitch {
                     // play unless nil (for rests and freespace)
                     self.playPitch(pitch: midiPitch)
+
+                    // save this pitch so we can stop it
+                    lastPitch = midiPitch
                 }
 
                 currStartTime = Date()
@@ -242,7 +264,13 @@ class Audio {
     // play a single note
     func playNote(part: Part, measure: Int, position: Rational) {
         if let note = part.measures[measure].note(at: position) {
-            playPitch(pitch: note.midiPitch)
+            let tempo = Double(part.tempo)
+            let beat = part.timeSignature.denominator
+
+            // use 1/16 duration for this demo note
+            let waitTime = calcWaitTime(duration: Note.Value.sixteenth.nominalDuration, tempo: tempo, beat: beat)
+            let trackElem = TrackElem(measureIndex: measure, measurePosition: position, midiPitch: note.midiPitch, waitTime: waitTime)
+            play(track: [trackElem], tempo: tempo, beat: beat)
         }
     }
 

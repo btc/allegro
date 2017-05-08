@@ -94,6 +94,7 @@
 		B9ADCB821E2ED1F5001D72AE /* Key.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ADCB811E2ED1F5001D72AE /* Key.swift */; };
 		B9AEF2811E40564900B0910E /* allegroViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */; };
 		B9AEF2831E60BF9200B0910E /* AEXMLElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9AEF2821E60BF9200B0910E /* AEXMLElement.swift */; };
+		B9D325DF1EBFEF5800474A99 /* sawPiano1.exs in Resources */ = {isa = PBXBuildFile; fileRef = B9D325DE1EBFEF5800474A99 /* sawPiano1.exs */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -221,6 +222,7 @@
 		B9ADCB811E2ED1F5001D72AE /* Key.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Key.swift; sourceTree = "<group>"; };
 		B9AEF2801E40564900B0910E /* allegroViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = allegroViewModelTests.swift; sourceTree = "<group>"; };
 		B9AEF2821E60BF9200B0910E /* AEXMLElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AEXMLElement.swift; sourceTree = "<group>"; };
+		B9D325DE1EBFEF5800474A99 /* sawPiano1.exs */ = {isa = PBXFileReference; lastKnownFileType = file; name = sawPiano1.exs; path = "audio samples/sawPiano1.exs"; sourceTree = "<group>"; };
 		BEA53266E630B8937E68457C /* Pods-allegroUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		DACD8BC72E26DC8A51C2E082 /* Pods-allegroTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-allegroTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -515,6 +517,7 @@
 		B988E8031EAC377A00D32247 /* Audio Samples */ = {
 			isa = PBXGroup;
 			children = (
+				B9D325DE1EBFEF5800474A99 /* sawPiano1.exs */,
 				B988E8041EAC378C00D32247 /* Bell.wav */,
 				B988E8051EAC378C00D32247 /* FM Piano.wav */,
 			);
@@ -650,6 +653,7 @@
 				B988E8061EAC378C00D32247 /* Bell.wav in Resources */,
 				324C87A61E3972AF006F974D /* DejaVuSans.ttf in Resources */,
 				B96902F01E6246E6006CF8D1 /* example0.xml in Resources */,
+				B9D325DF1EBFEF5800474A99 /* sawPiano1.exs in Resources */,
 				6B80D7E81E457CD8003996CF /* Montserrat-Bold.ttf in Resources */,
 				B988E8071EAC378C00D32247 /* FM Piano.wav in Resources */,
 				6B80D7E91E457CD8003996CF /* Montserrat-Regular.ttf in Resources */,
