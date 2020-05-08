@@ -1089,7 +1089,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "b202fcc0-871e-4157-b1d6-f75c18801aa5";
 				PROVISIONING_PROFILE_SPECIFIER = "match Development gu.allegro";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1113,7 +1113,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "06798490-b451-4e54-9dff-eed34d1940f4";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore gu.allegro";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
