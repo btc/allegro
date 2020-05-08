@@ -1,9 +1,9 @@
 github "audiokit/AudioKit"
 github "benzguo/MusicKit"
 github "dekatotoro/SlideMenuControllerSwift"
-github "emaloney/CleanroomLogger" ~> 5.0.0
-github "hyperoslo/Pages" ~> 1.0.0
-github "Khan/SwiftTweaks" "v2.0-beta.1"
+github "emaloney/CleanroomLogger"
+github "hyperoslo/Pages"
+github "Khan/SwiftTweaks"
 github "MortimerGoro/MGSwipeTableCell"
 github "moritzsternemann/SwipyCell"
 github "radex/SwiftyTimer"
