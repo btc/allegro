@@ -129,7 +129,7 @@ class NoteActionView: UIView {
         fatalError("init(coder:) not supported")
     }
 
-    func moved(sender: UIPanGestureRecognizer) {
+    @objc func moved(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: self)
         if let v = sender.view, sender.state != .ended {
             let newX = v.center.x + translation.x
@@ -143,7 +143,7 @@ class NoteActionView: UIView {
         }
     }
 
-    func selected(sender: UILongPressGestureRecognizer) {
+    @objc func selected(sender: UILongPressGestureRecognizer) {
         if sender.state == .began {
             delegate?.actionRecognized(gesture: .select, by: self)
         }
@@ -155,13 +155,13 @@ class NoteActionView: UIView {
         }
     }
 
-    func swiped(sender: NoteSwipeActionGestureRecognizer) {
+    @objc func swiped(sender: NoteSwipeActionGestureRecognizer) {
         if let action = sender.action {
             delegate?.actionRecognized(gesture: action, by: self)
         }
     }
 
-    func tapped(sender: UITapGestureRecognizer) {
+    @objc func tapped(sender: UITapGestureRecognizer) {
         if sender.state == .ended {
             switch sender.numberOfTapsRequired {
             case 2:

@@ -31,7 +31,7 @@ class CompositionViewController: UIViewController {
     
     private let menuIndicator: UIView = {
         let v = UIButton()
-        v.setImage(#imageLiteral(resourceName: "arrow"), for: UIControlState.normal)
+        v.setImage(#imageLiteral(resourceName: "arrow"), for: UIControl.State.normal)
         v.imageView?.contentMode = .scaleAspectFit
         v.backgroundColor = .clear
         return v
@@ -103,7 +103,7 @@ class CompositionViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor.white
 
-        addChildViewController(measureViewCollection)
+        addChild(measureViewCollection)
 
         view.addSubview(measureViewCollection.view)
         view.addSubview(noteSelectorMenu)
@@ -163,12 +163,12 @@ class CompositionViewController: UIViewController {
         screenCover.frame = view.bounds
     }
     
-    func screenCoverTapped() {
+    @objc func screenCoverTapped() {
         audio?.isPlaying = false
         Snackbar(message: "Audio playback stopped", duration: .short).show()
     }
 
-    func pinched() {
+    @objc func pinched() {
         store.view = .overview
     }
 }

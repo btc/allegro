@@ -10,17 +10,17 @@ import Pages
 
 class HelpViewController: PagesController {
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if let pan = gestureRecognizers.first as? UIPanGestureRecognizer {
             navigationController?.interactivePopGestureRecognizer?.require(toFail: pan)
         }
-
-
+        
+        
         navigationController?.navigationBar.topItem?.title = "Help"
         navigationController?.navigationBar.backgroundColor = .white
-        
         let page1 = PageController()
         page1.title = "Help Page 1"
         page1.imageView.image = #imageLiteral(resourceName: "help_p1")
@@ -28,8 +28,8 @@ class HelpViewController: PagesController {
         let page2 = PageController()
         page2.title = "Help Page 2"
         page2.imageView.image = #imageLiteral(resourceName: "help_p2")
+        add([page1,page2])
         
-        add([page1, page2])
     }
     
     override func viewWillAppear(_ animated: Bool) {

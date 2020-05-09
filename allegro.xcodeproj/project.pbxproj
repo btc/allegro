@@ -27,8 +27,6 @@
 		6B29A8471E6F3F24007528A2 /* MGSwipeTableCell.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B29A8461E6F3F24007528A2 /* MGSwipeTableCell.framework */; };
 		6B2CA8BF1E43815A009BA7FC /* NoteGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2CA8BE1E43815A009BA7FC /* NoteGeometry.swift */; };
 		6B3290F11E3C49B200AE693B /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F01E3C49B200AE693B /* Audio.swift */; };
-		6B3290F31E3C4DD900AE693B /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F21E3C4DD900AE693B /* AudioKit.framework */; };
-		6B3290F51E3C5BFB00AE693B /* MusicKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F41E3C5BFA00AE693B /* MusicKit.framework */; };
 		6B3290F71E3D4F9700AE693B /* TTGSnackbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B3290F61E3D4F9700AE693B /* TTGSnackbar.framework */; };
 		6B3290F91E3D4FEB00AE693B /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3290F81E3D4FEB00AE693B /* Snackbar.swift */; };
 		6B3797FB1E42A8DF001F9246 /* NoteActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B3797FA1E42A8DF001F9246 /* NoteActionView.swift */; };
@@ -232,8 +230,6 @@
 			files = (
 				B978F8441E7DF0EB001EE49C /* Pages.framework in Frameworks */,
 				825430001E77412A00EE32E6 /* SwiftyTimer.framework in Frameworks */,
-				6B3290F31E3C4DD900AE693B /* AudioKit.framework in Frameworks */,
-				6B3290F51E3C5BFB00AE693B /* MusicKit.framework in Frameworks */,
 				6B0B267E1E2F2E5F00F1870A /* Rational.framework in Frameworks */,
 				6B29A8471E6F3F24007528A2 /* MGSwipeTableCell.framework in Frameworks */,
 				6B3290F71E3D4F9700AE693B /* TTGSnackbar.framework in Frameworks */,
@@ -533,9 +529,7 @@
 				6B6E26E71E288F8200F9CF66 /* Frameworks */,
 				6B6E26E81E288F8200F9CF66 /* Resources */,
 				84B0A79678CCABA9C190EA01 /* [CP] Embed Pods Frameworks */,
-				DA42C8FAD02770EFCC9A5FF6 /* [CP] Copy Pods Resources */,
 				6B6E271E1E2897A400F9CF66 /* ShellScript */,
-				6BE1E92F1E6C848000B01790 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -554,8 +548,6 @@
 				6B6E26FA1E288F8200F9CF66 /* Sources */,
 				6B6E26FB1E288F8200F9CF66 /* Frameworks */,
 				6B6E26FC1E288F8200F9CF66 /* Resources */,
-				E2C2EA73734A957A318784FC /* [CP] Embed Pods Frameworks */,
-				DC731A5C64E62C72909554E1 /* [CP] Copy Pods Resources */,
 				6B096E591E31D0CD00615723 /* CopyFiles */,
 			);
 			buildRules = (
@@ -576,8 +568,6 @@
 				6B6E27051E288F8200F9CF66 /* Sources */,
 				6B6E27061E288F8200F9CF66 /* Frameworks */,
 				6B6E27071E288F8200F9CF66 /* Resources */,
-				E06EB8309099F1BE49B38723 /* [CP] Embed Pods Frameworks */,
-				96118104A06B1C2C0DE0687B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -680,13 +670,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-allegro-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6B6E271E1E2897A400F9CF66 /* ShellScript */ = {
@@ -701,7 +694,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SlideMenuControllerSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/TTGSnackbar.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AEXML.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/AudioKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MusicKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwipyCell.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MGSwipeTableCell.framework",
@@ -712,20 +704,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		6BE1E92F1E6C848000B01790 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "$BUILT_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH/AudioKit.framework/fix-framework.sh";
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
 		};
 		8328071F08C6972560FF5516 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -733,13 +712,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-allegroTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		84B0A79678CCABA9C190EA01 /* [CP] Embed Pods Frameworks */ = {
@@ -748,58 +730,18 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-allegro/Pods-allegro-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AnimatedCollectionViewLayout/AnimatedCollectionViewLayout.framework",
+				"${BUILT_PRODUCTS_DIR}/DateToolsSwift/DateToolsSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AnimatedCollectionViewLayout.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DateToolsSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-allegro/Pods-allegro-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		96118104A06B1C2C0DE0687B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DA42C8FAD02770EFCC9A5FF6 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-allegro/Pods-allegro-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DC731A5C64E62C72909554E1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-allegro/Pods-allegro-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E00924FEA3884076A30D4DBC /* [CP] Check Pods Manifest.lock */ = {
@@ -808,43 +750,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-allegroUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		E06EB8309099F1BE49B38723 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-allegroUITests/Pods-allegroUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E2C2EA73734A957A318784FC /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-allegroTests/Pods-allegroTests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

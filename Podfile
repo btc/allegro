@@ -8,6 +8,7 @@ target 'allegro' do
   # Pods for allegro
   pod 'AnimatedCollectionViewLayout'
   pod 'DateToolsSwift'
+  pod 'AudioKit'
 
   target 'allegroTests' do
     inherit! :search_paths

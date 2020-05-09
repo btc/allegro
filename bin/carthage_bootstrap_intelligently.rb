@@ -14,7 +14,7 @@ if __FILE__ == $0
     puts "\n"
     puts "missing: #{framework_names.join(', ')}"
     puts "running `carthage bootstrap #{framework_names.join(' ')}`"
-    puts `carthage bootstrap #{framework_names.join(' ')}`
+    puts `carthage bootstrap --platform iOS #{framework_names.join(' ')}`
     puts "\n"
   end
 end

@@ -36,7 +36,7 @@ class MeasureViewCollection: UICollectionView {
     init(store: PartStore) {
 
         let layout = AnimatedCollectionViewLayout()
-        let animator = PageAttributeAnimator(scaleRate: 0.8)
+        let animator = PageAttributesAnimator(scaleRate: 0.8)
         layout.scrollDirection = .horizontal
         layout.animator = animator
 
@@ -64,7 +64,7 @@ class MeasureViewCollection: UICollectionView {
         fatalError("init(coder:) not supported")
     }
 
-    func pinched(sender: UIPinchGestureRecognizer) {
+    @objc func pinched(sender: UIPinchGestureRecognizer) {
         if sender.scale < 0.5 {
             store.view = .overview
         }

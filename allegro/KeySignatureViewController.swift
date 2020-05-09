@@ -16,7 +16,7 @@ class KeySignatureViewController: UIViewController {
         let v = UIButton()
         v.setTitleColor(.black, for: .normal)
         v.setTitleColor(.lightGray, for: .disabled)
-        v.setTitle("♯", for: UIControlState.normal)
+        v.setTitle("♯", for: UIControl.State.normal)
         v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 64)
         v.layer.borderColor = UIColor.black.cgColor
         v.layer.borderWidth = 1
@@ -29,7 +29,7 @@ class KeySignatureViewController: UIViewController {
         let v = UIButton()
         v.setTitleColor(.black, for: .normal)
         v.setTitleColor(.lightGray, for: .disabled)
-        v.setTitle("♭", for: UIControlState.normal)
+        v.setTitle("♭", for: UIControl.State.normal)
         v.titleLabel?.font = UIFont(name: "DejaVuSans", size: 64)
         v.layer.borderColor = UIColor.black.cgColor
         v.layer.borderWidth = 1
@@ -135,11 +135,11 @@ class KeySignatureViewController: UIViewController {
         }
     }
     
-    func sharpButtonTapped() {
+    @objc func sharpButtonTapped() {
         store.setKeySignature(keySignature: store.part.keySignature.successor)
     }
     
-    func flatButtonTapped() {
+    @objc func flatButtonTapped() {
         store.setKeySignature(keySignature: store.part.keySignature.predecessor)
     }
     

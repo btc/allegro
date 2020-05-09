@@ -1,5 +1,5 @@
 github "audiokit/AudioKit"
-github "benzguo/MusicKit"
+github "btc/MusicKit" "master"
 github "dekatotoro/SlideMenuControllerSwift"
 github "emaloney/CleanroomLogger"
 github "hyperoslo/Pages"

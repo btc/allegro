@@ -277,7 +277,7 @@ class MeasureView: UIView {
         }
     }
 
-    func longPressPan(sender: UIGestureRecognizer) {
+    @objc func longPressPan(sender: UIGestureRecognizer) {
         guard let store = store else { return }
 
         if store.mode == .edit && sender.state == .ended {
@@ -303,7 +303,7 @@ class MeasureView: UIView {
         return false
     }
 
-    func tap(sender: UIGestureRecognizer) {
+    @objc func tap(sender: UIGestureRecognizer) {
         guard let store = store else { return }
 
         if store.mode == .edit {

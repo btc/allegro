@@ -174,7 +174,7 @@ struct MeasureGeometry {
         positions.insert(Rational(0), at: 0)
         positions.append(measure.timeSignature)
         
-        let findIndex = notesCenterX.index { x < $0 }
+        let findIndex = notesCenterX.firstIndex { x < $0 }
         guard let noteAfterIndex = findIndex else { return Rational(0) }
         guard noteAfterIndex != 0 else { return Rational(0) }
         

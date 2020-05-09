@@ -23,7 +23,7 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
     }()
 
     fileprivate let partListing: UITableView = {
-        let v = UITableView(frame: .zero, style: UITableViewStyle.plain)
+        let v = UITableView(frame: .zero, style: UITableView.Style.plain)
         v.backgroundColor = .white
         v.register(PartListingCell.self, forCellReuseIdentifier: PartListingCell.reuseID)
         return v
@@ -83,11 +83,11 @@ class PartListingViewController: UIViewController, MGSwipeTableCellDelegate {
         partListing.frame = view.bounds
     }
 
-    func tutorialTapped() {
+    @objc func tutorialTapped() {
         navigationController?.pushViewController(TutorialViewController(), animated: true)
     }
 
-    func newCompositionTapped() {
+    @objc func newCompositionTapped() {
         let store = PartStore(part: newPart())
         let vc = CompositionViewController.create(store: store, audio: audio, filename: PartFileManager.nextFilename())
         navigationController?.pushViewController(vc, animated: true)
@@ -172,7 +172,7 @@ extension PartListingViewController: UITableViewDelegate {
         let part = PartFileManager.load(filename: filename)
 
         // open an alert
-        let alert = UIAlertController(title: "Part Title", message: "", preferredStyle: UIAlertControllerStyle.alert)
+        let alert = UIAlertController(title: "Part Title", message: "", preferredStyle: UIAlertController.Style.alert)
         alert.addTextField { (textField: UITextField) -> Void in
             if let title = part.title {
                 textField.text = title
@@ -188,8 +188,8 @@ extension PartListingViewController: UITableViewDelegate {
             self.partListing.reloadData()
         }
 
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: setTitle))
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: setTitle))
 
         self.present(alert, animated: true, completion: nil)
     }

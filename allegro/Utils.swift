@@ -28,7 +28,7 @@ extension UIColor {
     static let allegroBlue = UIColor(red:0.68, green:0.92, blue:1.0, alpha:1.0) // #AEEBFF
     static let allegroGray = UIColor.lightGray
     static let allegroPurple = UIColor(red:0.87, green:0.32, blue:0.63, alpha:1.0) // #DD51A0
-    static let allegroDarkGray = UIColor(colorLiteralRed: 0.46245, green: 0.46245, blue: 0.46245, alpha: 1.0) // #767676
+    static let allegroDarkGray = UIColor(red: 0.46245, green: 0.46245, blue: 0.46245, alpha: 1.0) // #767676
 }
 
 // TODO(btc): Handle localization

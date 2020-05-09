@@ -90,7 +90,7 @@ class Audio {
     }
 
     func start() {
-        AudioKit.start()
+        try! AudioKit.start()
     }
     
     func subscribe(_ observer: AudioObserver) {
@@ -135,7 +135,8 @@ class Audio {
     // play just this note
     private func playPitch(pitch: UInt8) {
         // TODO investigate channels
-        sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
+        // TODO(btc): maybe not how this should be handled but let's just get the code to compile for now
+        try? sampler.play(noteNumber: MIDINoteNumber(pitch), velocity: 100, channel: 0)
     }
 
     // loop and play each note

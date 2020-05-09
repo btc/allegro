@@ -1,15 +1,29 @@
 PODS:
   - AnimatedCollectionViewLayout (1.0.1)
+  - AudioKit (4.9.5):
+    - AudioKit/Core (= 4.9.5)
+    - AudioKit/UI (= 4.9.5)
+  - AudioKit/Core (4.9.5)
+  - AudioKit/UI (4.9.5):
+    - AudioKit/Core
   - DateToolsSwift (5.0.0)
 
 DEPENDENCIES:
   - AnimatedCollectionViewLayout
+  - AudioKit
   - DateToolsSwift
+
+SPEC REPOS:
+  trunk:
+    - AnimatedCollectionViewLayout
+    - AudioKit
+    - DateToolsSwift
 
 SPEC CHECKSUMS:
   AnimatedCollectionViewLayout: 00f0997fd26f0fd02d8b99765023b95570b5d826
+  AudioKit: ccf4e39c89ed6e5cbbce5fef58d819db39446437
   DateToolsSwift: 4207ada6ad615d8dc076323d27037c94916dbfa6
 
-PODFILE CHECKSUM: 349b32d6d62b2171f21b0c3a0664c070638ef6bc
+PODFILE CHECKSUM: 7883edc59c2d4d92af7389c616d71a0a9f4bf9d3
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.9.1

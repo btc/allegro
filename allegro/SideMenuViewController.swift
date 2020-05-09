@@ -8,6 +8,7 @@
 
 import UIKit
 import Rational
+import Pages
 
 class SideMenuViewController: UIViewController {
 
@@ -235,22 +236,22 @@ class SideMenuViewController: UIViewController {
         keyButton.keySigView.key = store.part.keySignature
     }
     
-    func timeSignaturesTapped() {
+    @objc func timeSignaturesTapped() {
         let vc = TimeSignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func keySignaturesTapped() {
+    @objc func keySignaturesTapped() {
         let vc = KeySignatureViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func playButtonTapped() {
+    @objc func playButtonTapped() {
         audio?.playFromCurrentMeasure(part: store.part, measure: store.currentMeasure)
         slideMenuController()?.closeRight()
     }
 
-    func exportButtonTapped() {
+    @objc func exportButtonTapped() {
         let part = PartFileManager.load(filename: filename)
         let xml = MusicXMLParser.generate(part: part).xml
 
@@ -263,12 +264,13 @@ class SideMenuViewController: UIViewController {
         present(activityViewController, animated: true, completion: nil)
     }
 
-    func helpButtonTapped() {
-        let vc = HelpViewController()
-        navigationController?.pushViewController(vc, animated: true)
+    @objc func helpButtonTapped() {
+   fatalError("TODO")
+        //let vc = HelpViewController(pages: [])
+        // navigationController?.pushViewController(vc, animated: true)
     }
     
-    func tempoButtonTapped() {
+    @objc func tempoButtonTapped() {
         let vc = TempoViewController(store: store)
         navigationController?.pushViewController(vc, animated: true)
     }

@@ -34,11 +34,11 @@ class CompositionModeToggleButton: UIButton {
     override var frame: CGRect {
         didSet {
             guard let w = imageView?.frame.size.width, let h = imageView?.frame.size.height else { return }
-            imageEdgeInsets = UIEdgeInsetsMake(h * 0.2, w * 0.2, h * 0.2, w * 0.2)
+            imageEdgeInsets = UIEdgeInsets(top: h * 0.2, left: w * 0.2, bottom: h * 0.2, right: w * 0.2)
         }
     }
 
-    func toggled() {
+    @objc func toggled() {
         guard let store = store else { return }
         switch store.mode {
         case .edit:

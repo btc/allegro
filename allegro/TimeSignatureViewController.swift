@@ -71,10 +71,10 @@ class TimeSignatureViewController: UIViewController, UIPickerViewDataSource, UIP
     private func setTimeSigPickerValues() {
         let numerator = store.part.timeSignature.numerator
         let denominator = store.part.timeSignature.denominator
-        if let numIndex = pickerData[0].index(of: String(numerator)) {
+        if let numIndex = pickerData[0].firstIndex(of: String(numerator)) {
             timeSigPickerView.selectRow(numIndex, inComponent: 0, animated: false)
         }
-        if let denomIndex = pickerData[1].index(of: String(denominator)) {
+        if let denomIndex = pickerData[1].firstIndex(of: String(denominator)) {
             timeSigPickerView.selectRow(denomIndex, inComponent: 1, animated: false)
         }
     }
